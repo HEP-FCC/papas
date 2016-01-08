@@ -1,0 +1,63 @@
+//
+//  Created by Alice Robson on 29/11/15.
+//
+//
+#ifndef  DISPLAY_DISPLAYPFOBJECTS_H
+#define DISPLAY_DISPLAYPFOBJECTS_H
+
+
+
+#include <unordered_map>
+#include <string>
+#include <utility>
+#include "TPolyLine.h"
+#include "TGraph.h"
+#include "TArc.h"
+#include "TEllipse.h"
+#include "TColor.h"
+#include "TVector3.h"
+#include "display/displaygeometry.h"
+#include "pfobjects.h"
+
+class Cluster;
+
+class GBlob  {
+public:
+   GBlob(const Cluster& cluster);
+   void Draw(const std::string & projection, const std::string & opt="") const ;
+private:
+   std::string m_layer;
+   std::unordered_map< std::string, std::unique_ptr<TEllipse>> m_contours;
+   std::unordered_map< std::string, std::unique_ptr<TEllipse>> m_inners;
+};
+
+
+
+
+class GTrajectory {
+public:
+   GTrajectory(const std::vector<TVector3>& points, int linestyle=1, int linecolor=1);
+   void setColor(int color);
+   void Draw(const std::string& projection,const std::string& opt="") const ;
+private:
+   bool m_DrawSmearedClusters ;
+   std::unordered_map<std::string,std::unique_ptr<TGraph>> m_graphs;
+};
+
+
+class GTrajectories :public Drawable  {
+public:
+   GTrajectories(const std::vector<TVector3>& points) ; //AJRTODO const std::list<Particle>&  particles);
+   GTrajectories(const Cluster & cluster) ; //AJRTODO const std::list<Particle>&  particles);
+   void Draw(const std::string& projection) const override;
+private:
+   std::list<GTrajectory> m_gTrajectories;
+   std::list<GBlob> m_gBlobs;
+};
+
+
+
+
+
+
+#endif

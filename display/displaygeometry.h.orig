@@ -1,0 +1,49 @@
+//
+//  Created by Alice Robson on 29/11/15.
+//
+//
+#ifndef  DISPLAY_DETECTOR_H
+#define DISPLAY_DETECTOR_H
+
+#include <map>
+#include <string>
+#include <memory>
+#include "TEllipse.h"
+#include "TBox.h"
+#include "TColor.h"
+#include "detector.h"
+
+
+class Drawable {
+public:
+   Drawable();
+   virtual void Draw(const std::string& projection) const =0;
+private:
+   
+};
+
+
+class GDetectorElement : public Drawable
+{
+public:
+   GDetectorElement(std::shared_ptr<const DetectorElement> de);
+   void Draw(const std::string& projection) const override;
+private:
+   std::shared_ptr<const DetectorElement> m_detElem;
+   std::list<std::unique_ptr<TEllipse>> m_circles;
+   std::list<std::unique_ptr<TBox>> m_boxes;
+};
+
+class GDetector: public Drawable {
+public:
+    GDetector(const BaseDetector& detector);
+    void Draw(const std::string& projection) const override;
+private:
+   GDetectorElement m_gECAL;
+   std::list<std::shared_ptr<Drawable>> m_drawElems;
+   // GDetectorElement m_gHCAL;
+};
+
+
+
+#endif
