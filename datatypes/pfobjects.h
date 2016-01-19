@@ -1,6 +1,6 @@
 //
 //  Created by Alice Robson on 29/11/15.
-//
+//  TODO RENAME THIS to DATATYPES
 //
 #ifndef  PFOBJECTS_H
 #define PFOBJECTS_H
@@ -9,42 +9,101 @@
 #include <list>
 #include <utility>
 #include "particle.h"
+#include "particledata.h"
 #include "TVector3.h"
+#include "path.h"
+#include <iostream>
 
 
 /// Function to create a new TLorentzVector
 /**
  \file pfobjects.h
- note it is not possible to use move or Rvalue references because TLorentzVector does not support move
+ note I beleiveit is not possible to use move or Rvalue references because TLorentzVector does not support move
  */
 TLorentzVector MakeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy);
 
-class PFObject {
+
+class Cluster  {
 public:
-   PFObject(double energy, const TVector3& position, const std::string& layer,
-            const Particle& particle);
-   PFObject(double energy, const TVector3& position, const std::string& layer);
+   Cluster(double energy, const TVector3& position, double size_m,
+           long id);
+   Cluster();
 
-   TVector3 getPosition()  const  {return m_position;};
-   double getEnergy()      const  {return m_energy;};
-   std::string getLayer()  const  {return m_layer;};
-   double getPt()    const       {return m_pt;};
-   double getEta()   const       {return m_position.Eta();};
-   int getPdgid()    const       {return m_particle.getPdgid();}
-   long getPFObjectID() const    {return m_objectid;}
-   void setEnergy(double energy) {m_energy = energy;};
+   //Cluster (const Cluster& c):  Momentum(c.m_energy,c.m_position),m_size(c.m_size) ,m_pt(c.m_pt) ,m_uniqueid(c.m_uniqueid){std::cout<< "copy cluster" <<std::endl;};//TODO rest of stuff
+   //  Cluster (Cluster&& c):  Momentum(c.m_energy,c.m_position),m_size(c.m_size) , m_pt(c.m_pt),m_uniqueid(c.m_uniqueid) {std::cout<< "move cluster" <<std::endl;};//TODO rest of stuff
+   //Cluster& operator =(const Cluster & c) ;
+   //Cluster& operator= (Cluster&& c) ;
+
+   double getAngularSize() const {return m_angularsize;};
+   double getSize() const     {return m_size;};
+   double getPt() const       {return m_pt;};
+   double getEnergy() const   {return m_energy;};
+   double getEta() const      {return m_position.Eta();};
+   long getID() const         {return m_uniqueid;}
+   const TVector3& getPosition() const {return m_position;};
+
+   std::pair<bool, double> isInside(const TVector3& point) const;
+   void setEnergy(double energy);
+   void setSize(double value) ;
+   static double s_maxenergy; //AJR is this in the right place
+
 protected:
-
+   double m_size;
+   double m_angularsize;
+   //std::list<Cluster*> m_subclusters;
+   double m_pt;
+   long m_uniqueid;
    TVector3 m_position;
    double m_energy;
-   std::string m_layer;
-   Particle m_particle; //probably remove this
-   double m_pt;
-   long m_objectid;
+
 };
 
-/*def __init__(self):
+
+/*
+
+class SmearedCluster: public Cluster {
+   SmearedCluster(const Cluster& mother, double energy, const TVector3& position,
+                  double size_m, const std::string& layer,
+                  Particle&);
+   SmearedCluster(const Cluster& mother, double energy, const TVector3& position,
+                  double size_m, const std::string& layer);
+private:
+   Cluster  m_mother;
+};*/
+
+
+class SimParticle: public Particle {
+public:
+   bool IsCharged() const;
+
+   //SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid=0);
+   //SimParticle(int pdgid, double theta, double  phi, double energy, TVector3&& vertex=TVector3(0., 0., 0.));
+
+   SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex = TVector3(0., 0.,
+               0.));
+   Path& getPath() {return m_path;}
+   const TVector3& getPathPosition(std::string name);
+private:
+   TVector3 m_vertex;
+   Path m_path;
+};
+/*
+
+ class Momentum {
+ public:
+ Momentum(double energy, const TVector3& position);
+ Momentum();
+ const TVector3& getPosition()  const  {return m_position;};
+ double getEnergy()      const  {return m_energy;};
+ double getEta()         const  {return m_position.Eta();};
+ virtual void setEnergy(double energy) {m_energy = energy;};
+ protected:
+ TVector3 m_position;
+ double m_energy;
+ };
+
+ def __init__(self):
  m_linked = []
  m_locked = False
  m_block_label = None
@@ -58,58 +117,8 @@ protected:
 
  def __repr__(self):
  return str(self)
- */
-
-class Cluster : public PFObject {
-public:
-   Cluster(double energy, const TVector3& position, double size_m,
-           const std::string& layer, Particle& particle);
-   Cluster(double energy, const TVector3& position, double size_m,
-           const std::string& layer);
-
-   double getAngularSize() const {return m_angularsize;};
-   double getSize() const {return m_size;};
-   std::list<Cluster*> getSubClusters() const {return m_subclusters;};
-   std::pair<bool, double> isInside(const TVector3& point) const;
-   Cluster* additem(Cluster* other);
-   std::string StringDescription();
-
-   void setSize(double value) ;
-   void setEnergy(double value) ;
-
-   static double s_maxenergy; //AJR is this in the right place
-
-private:
-   double m_size;
-   double m_angularsize;
-   std::list<Cluster*> m_subclusters;
-};
 
 
-class SmearedCluster: public Cluster {
-   SmearedCluster(const Cluster& mother, double energy, const TVector3& position,
-                  double size_m, const std::string& layer,
-                  Particle&);
-   SmearedCluster(const Cluster& mother, double energy, const TVector3& position,
-                  double size_m, const std::string& layer);
-private:
-   Cluster  m_mother;
-};
-
-
-class SimParticle: public Particle {
-public:
-   bool IsCharged() const;
-
-   //SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid=0);
-   //SimParticle(int pdgid, double theta, double  phi, double energy, TVector3&& vertex=TVector3(0., 0., 0.));
-
-   SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex = TVector3(0., 0.,
-               0.));
-private:
-   TVector3 m_vertex;
-};
-/*
  super(Particle, self).__init__(pdgid, charge, tlv)
  self.vertex = vertex
  self.path = None
@@ -124,9 +133,9 @@ private:
  #     import pdb; pdb.set_trace()
  return self.path.points
  else:
- raise AttributeError*/
+ raise AttributeError
 
-/*def set_path(self, path, option=None):
+def set_path(self, path, option=None):
  if option == 'w' or self.path is None:
  self.path = path
  self.track = Track(self.p3(), self.q(), self.path)

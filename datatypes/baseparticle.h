@@ -20,7 +20,9 @@ public:
    BaseParticle();
    BaseParticle(int pdgid, double charge, TLorentzVector& tlv, double status = 0);
    BaseParticle(int pdgid, double charge);
-
+   BaseParticle(long id, int pdgid, double charge, TLorentzVector& tlv,
+                double status = 0);
+   BaseParticle(long id, int pdgid, double charge);
    std::string StringDescription()
    const;                ///< String to describe the particle
 
@@ -38,7 +40,8 @@ public:
    bool   getStatus() const {return m_status;}           ///<status code, e.g. from generator. 1:stable.
    TVector3 getStart_vertex() const {return m_start_vertex ;}///<start vertex (3d point)
    TVector3 getEnd_vertex() const {return m_end_vertex;} ///<end vertex (3d point)
-
+protected:
+   long m_uniqueid; //to be used by virtual classes
 private:
    TLorentzVector m_tlv;
    int m_particleid;

@@ -6,45 +6,46 @@
 #include<cmath>
 #include<iostream>
 #include<utility>
+#include "identifier.h"
 
-PFObject::PFObject(double energy, const TVector3& position,
-                   const std::string& layer, const Particle& p) :
-   m_position(position),
-   m_layer(layer),
-   m_particle(p)
-{
-   setEnergy(energy);
-}
 
-PFObject::PFObject(double energy, const TVector3& position,
-                   const std::string& layer) :
-   m_position(position),
-   m_layer(layer),
-   m_particle(0., 0.)
-{
-   setEnergy(energy);
-}
+const double ParticleData::m_e = 0.000511;
+const double ParticleData::m_mu = 0.105;
+const double ParticleData::m_pi = 0.139;
+const double ParticleData::m_K0 = 0.498;
+const double ParticleData::m_n = 1.;
+const double ParticleData::m_p = 1.;
+
+std::unordered_map<int, std::pair<double, int>> ParticleData::m_datamap =  {
+   {11,  {ParticleData::m_e,   1}},
+   { -11, {ParticleData::m_e,  -1}},
+   {13,  {ParticleData::m_mu,  1}},
+   { -13, {ParticleData::m_mu, -1}},
+   {22,  {0,                   0}},
+   {130, {ParticleData::m_K0,  0}},
+   {211, {ParticleData::m_pi,  1}},
+   { -211, {ParticleData::m_pi, -1}}
+}  ;
+
 
 double Cluster::s_maxenergy = 0;
 
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m,
-                 const std::string& layer, Particle& p) :
-   PFObject(energy, position, layer, p), m_subclusters{this}
+                 long id) :
+   m_uniqueid(id),  m_position(position)
 {
    setSize(size_m);
    setEnergy(energy);
-
 }
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m,
-                 const std::string& layer) :
-   PFObject(energy, position, layer), m_subclusters{this}
+Cluster::Cluster() :
+   m_uniqueid(0), m_position( {0., 0., 0.})
 {
-   setSize(size_m);
-   setEnergy(energy);
-
+   setEnergy(0);
 }
+
+
 
 void Cluster::setSize(double value)
 {
@@ -71,7 +72,7 @@ std::pair<bool, double> Cluster::isInside(const TVector3& point) const
 
 }
 
-Cluster* Cluster::additem(Cluster* other)
+/*Cluster* Cluster::additem(Cluster* other)
 {
    if (other->getLayer() != m_layer)
       std::cout <<
@@ -86,7 +87,8 @@ Cluster* Cluster::additem(Cluster* other)
    m_subclusters.splice(m_subclusters.begin(),
                         m_subclusters); //other->getSubClusters());
    return this;
-}
+}*/
+
 
 void Cluster::setEnergy(double energy)
 {
@@ -97,19 +99,28 @@ void Cluster::setEnergy(double energy)
 }
 
 
+/*
+ Cluster& Cluster::operator=(Cluster&& c) {
+ m_energy=c.m_energy;
+ m_position=c.m_position;
+ m_size=c.m_size;
+ m_pt=c.m_pt;
+ m_uniqueid=c.m_uniqueid;
+ std::cout<< "move assign cluster" <<std::endl;
+ return *this;
+ };
 
-std::string Cluster::StringDescription()
-{
-   return "A string o decribe a cluser TODO";
-   /*eturn '{classname:15}: {layer:10} {energy:7.2f} {theta:5.2f} {phi:5.2f}'.format(
-    classname = m___class__.__name__,
-    layer = m_layer,
-    energy = m_energy,
-    theta = math.pi/2. - m_position.Theta(),
-    phi = m_position.Phi()*/
-}
+ Cluster& Cluster::operator=(const Cluster& c) {
+ m_energy=c.m_energy;
+ m_position=c.m_position;
+ m_size=c.m_size;
+ m_pt=c.m_pt;
+ m_uniqueid=c.m_uniqueid;
+ std::cout<< "copy cluster" <<std::endl;
+ return *this;
+ };*/
 
-
+/*
 SmearedCluster::SmearedCluster(const Cluster& mother, double energy,
                                const TVector3& position, double size_m,
                                const std::string& layer, Particle& p):
@@ -122,19 +133,31 @@ SmearedCluster::SmearedCluster(const Cluster& mother, double energy,
                                const std::string& layer):
    Cluster(energy,  position,  size_m, layer),
    m_mother(mother) {}
+*/
 
 
+//TODO make work with helix path
 SimParticle::SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex) :
-   Particle(pdgid, 0.0, tlv), m_vertex(vertex)
+   Particle(Identifier::makeParticleID(fastsim::enumSource::SIMULATION), pdgid,
+            0.0, tlv),
+   m_vertex(vertex),
+   m_path(tlv, vertex)
 {
+
 };
+
+
+const TVector3& SimParticle::getPathPosition(std::string name)
+{
+
+   return m_path.getNamedPoint(name);
+
+}
 
 TLorentzVector MakeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy)
 {
-
-   //mass, charge = particle_data[pdgid] //AJRTODO
-   double mass = 0. ;
+   double mass = ParticleData::getParticleMass(pdgid);
    double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
    double costheta = cos(theta);
    double sintheta = sin(theta);
@@ -146,6 +169,9 @@ TLorentzVector MakeParticleLorentzVector(int pdgid, double theta, double  phi,
                      energy);
    std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
              p4.Et() << " ";
+   std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
+             " " << cosphi <<
+             " " << sintheta << " ";
    return p4;
 }
 

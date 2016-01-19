@@ -5,16 +5,15 @@
 //
 //
 
-#ifndef identifier_h
-#define identifier_h
+#ifndef simpleidentifier_h
+#define simpleidentifier_h
 #include <stdint.h>
 
 
-enum class enumDataType {PARTICLE,TRACK,CLUSTER};
-enum class enumSubType {RAW,MERGED,SMEARED};
+enum class enumDataType {PARTICLE, TRACK, CLUSTER};
+enum class enumSubType {RAW, MERGED, SMEARED};
 
-class Identifier
-{
+class Identifier {
 public:
    Identifier() {};
    static long makeIdentifier(enumDataType datatype, enumSubType subtype);

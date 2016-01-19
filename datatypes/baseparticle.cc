@@ -9,12 +9,13 @@
 #include "baseparticle.h"
 #include <iostream>
 #include <sstream> //AJRTODO temp
+#include "enums.h"
+#include "identifier.h"
 
 
 
-
-BaseParticle::BaseParticle()
-{}
+//BaseParticle::BaseParticle()
+//{}
 
 std::string BaseParticle::StringDescription() const
 {
@@ -39,21 +40,55 @@ std::cout<<m_tlv.X() <<" " <<m_tlv.Y() <<" "<<m_tlv.Z() <<" "<<m_tlv.Et() <<" ";
 
 BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector& tlv,
                            double status) :
+   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
    m_tlv(tlv), m_particleid(pdgid), m_charge(charge), m_status(status)
+
 {
+
+   /*std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
+             tlv.Et() << " ";
+   std::cout << m_tlv.X() << " " << m_tlv.Y() << " " << m_tlv.Z() << " " <<
+             m_tlv.Et() << " ";*/
+}
+
+
+BaseParticle::BaseParticle(int pdgid, double charge) :
+   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+   m_particleid(pdgid), m_charge(charge), m_status(0)
+{
+   m_tlv = TLorentzVector{0., 0., 0., 0.};
+   ;
+}
+
+BaseParticle::BaseParticle() :
+   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+   m_particleid(0), m_charge(0), m_status(0)
+{
+   m_tlv = TLorentzVector{0., 0., 0., 0.};
+
+}
+
+BaseParticle::BaseParticle(long id, int pdgid, double charge) :
+   m_uniqueid(id), m_particleid(pdgid), m_charge(charge), m_status(0)
+{
+   m_tlv = TLorentzVector{0., 0., 0., 0.};
+
+}
+
+
+BaseParticle::BaseParticle(long id, int pdgid, double charge,
+                           TLorentzVector& tlv,
+                           double status) :
+   m_uniqueid(id), m_tlv(tlv), m_particleid(pdgid), m_charge(charge),
+   m_status(status)
+{
+
+
    std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
              tlv.Et() << " ";
    std::cout << m_tlv.X() << " " << m_tlv.Y() << " " << m_tlv.Z() << " " <<
              m_tlv.Et() << " ";
 }
-
-
-BaseParticle::BaseParticle(int pdgid, double charge) :
-   m_particleid(pdgid), m_charge(charge), m_status(0)
-{
-   m_tlv = TLorentzVector{0., 0., 0., 0.};
-}
-
 
 
 
