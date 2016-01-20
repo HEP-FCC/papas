@@ -11,7 +11,7 @@
 #include "TEllipse.h"
 #include "TBox.h"
 #include "TColor.h"
-#include "../detectors/detector.h"
+#include "detector.h"
 
 /// This is the base class used for other elements that are to be drawn.
 /// The key thing is to have the Draw element
@@ -27,14 +27,16 @@ private:
 class GDetectorElement : public Drawable {
 public:
    GDetectorElement(std::shared_ptr<const DetectorElement> de);
+   //GDetectorElement(const DetectorElement& de);
    void Draw(const std::string& projection) const override;
 private:
    ///Shared_ptr to the detector element
    std::shared_ptr<const DetectorElement> m_detElem;
-   
+   //const DetectorElement & m_detElem;
+
    ///lists of shared_pointer  to circles to be used to plot the detector element
    std::list<std::unique_ptr<TEllipse>> m_circles;
-   
+
    ///lists of shared_pointer  to boxes to be used to plot the detector element
    std::list<std::unique_ptr<TBox>> m_boxes;
 };
@@ -47,13 +49,13 @@ public:
 private:
    ///ECAL graphical detector element
    GDetectorElement m_gECAL;
-   
+
    ///HCAL graphical detector element
    GDetectorElement m_gHCAL;
    /// will contain shared_ptrs to GDetectorElements and GTrajectories to be plotted
-   
+
    std::list<std::shared_ptr<Drawable>> m_drawElems;
-   
+
 };
 
 

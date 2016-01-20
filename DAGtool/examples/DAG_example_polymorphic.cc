@@ -84,25 +84,16 @@ int main()
 
    // and now define the polytree
    // add the directed (parent -> child) branches of the polytree
-   n0.addChild(&n1);
-   n0.addChild(&n2);
-   n0.addChild(&n3);
-   n1.addParent(&n0);
-   n2.addParent(&n0);
-   n3.addParent(&n0);
-   n1.addChild(&n4);
-   n4.addParent(&n1);
-   n1.addChild(&n5);
-   n5.addParent(&n1);
-   n1.addChild(&n6);
-   n6.addParent(&n1);
-   n7.addChild(&n8);
-   n8.addParent(&n7);
-   n7.addChild(&n4);
-   n4.addParent(&n7);
-   n3.addChild(&n6);
-   n6.addParent(&n3);
-
+   n0.addChild(n1);
+   n0.addChild(n2);
+   n0.addChild(n3);
+   n1.addChild(n4);
+   n1.addChild(n5);
+   n1.addChild(n6);
+   n7.addChild(n8);
+   n7.addChild(n4);
+   n3.addChild(n6);
+   
    //USE NODE 0 AS THE START NODE
 
    //BFSVisitor uses an iterative method to traverse

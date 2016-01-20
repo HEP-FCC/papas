@@ -10,19 +10,19 @@
 
 
 
-DetectorElement::DetectorElement(const std::string& name,
-                                 const  VolumeCylinder& volume , const Material& material) :
-   m_volume(volume), m_material(material), m_name(name)
+BaseDetectorElement::BaseDetectorElement(fastsim::enumLayer layer,
+      const  VolumeCylinder& volume , const Material& material) :
+   m_volume(volume), m_material(material), m_layer(layer)
 {}
 
-
-
-BaseDetector::BaseDetector() : m_cylinders()
+BaseDetector::BaseDetector()
 {
+
 }
 
+
 //aim to make this a const function and to do sort at initialisation
-const std::list<SurfaceCylinder> BaseDetector::getSortedCylinders()
+const std::list<SurfaceCylinder>& BaseDetector::getSortedCylinders()
 {
    //Return list of surface cylinders sorted by increasing radius.'''
 
@@ -35,15 +35,43 @@ const std::list<SurfaceCylinder> BaseDetector::getSortedCylinders()
    return m_cylinders;*/
 }
 
+//const DetectorElement& BaseDetector::getElement(fastsim::enumLayer layer) const
 std::shared_ptr<const DetectorElement> BaseDetector::getElement(
-   const std::string& elemname) const
+   fastsim::enumLayer layer) const
 {
-   return m_detectorElements.find(elemname)->second;
+
+   switch (layer) {
+      case fastsim::enumLayer::ECAL:
+         return m_ECAL;
+         break;
+      case fastsim::enumLayer::HCAL:
+         return m_HCAL;
+         break;
+      case fastsim::enumLayer::NONE:
+      case fastsim::enumLayer::TRACKER:
+      case fastsim::enumLayer::__COUNT: //hmmm yucky side effect of clever enums
+         return m_ECAL; //TODO
+         break;
+         //TODO add track and field
+   }
+
+
+   //TODO is this the best route or should it throw
+   return nullptr;
 }
 
-
-
 /*
+ Experiments
+
+ BaseDetector::BaseDetector(const DetectorElement & ecal) : m_ECAL(&ecal),  m_cylinders()
+ {
+ }
+ BaseDetector::BaseDetector(std::shared_ptr<const DetectorElement> ecal,std::shared_ptr<const DetectorElement> hcal) : m_ECAL(ecal),m_HCAL(hcal)
+ {
+ }*/
+/*BaseDetector::BaseDetector(DetectorElement && ecal,DetectorElement && hcal) : m_ECAL(std::move(ecal)),m_HCAL(std::move(hcal))
+ {
+ }
 
 BaseECAL::BaseECAL(const std::string& name, const VolumeCylinder& volume, const Material& material) :
    DetectorElement(name, volume, material)

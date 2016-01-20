@@ -2,13 +2,18 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "display/displaygeometry.h"
+#include "displaygeometry.h"
 #include <memory>
 
 
-std::map<std::string, int> gCOLORMap {
+std::map<std::string, int> goldCOLORMap {
    {"ECAL" , kRed - 10},
    {"HCAL" , kBlue - 10}
+};
+
+std::map<fastsim::enumLayer, int> gCOLORMap {
+   {fastsim::enumLayer::ECAL , kRed - 10},
+   {fastsim::enumLayer::HCAL , kBlue - 10}
 };
 
 void GDetectorElement::Draw(const std::string& projection)
@@ -37,37 +42,38 @@ Drawable::Drawable()
 }
 
 GDetector::GDetector(const BaseDetector& detector) :
-   m_gECAL(detector.getElement("ECAL")), m_gHCAL(detector.getElement("HCAL"))
+   m_gECAL(detector.getECAL()), m_gHCAL(detector.getHCAL())
 {
 
 }
 
 void GDetector::Draw(const std::string& projection) const
 {
-   
+
    m_gHCAL.Draw(projection);
    m_gECAL.Draw(projection);
 }
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
+//GDetectorElement::GDetectorElement(const DetectorElement& de) :
    m_detElem(de)
 {
    //std::list<SurfaceCylinder* > cylinders{m_detElem->getVolume()->Outer(),
    //   m_detElem->getVolume()->Inner()};
-   
+
    //For each inner and outer cyclinder create a cyclinder (circular cross section) for xy , yz, xz projections
    //        create a box (longways cross section) for thetaphi projections
-   
-   for (auto const& elem : {m_detElem->getVolume()->Outer(), m_detElem->getVolume()->Inner()}) { //AJRTODO should be if inner ......
+
+   for (auto const& elem : {m_detElem->getVol().Outer(), m_detElem->getVol().Inner()}) { //AJRTODO should be if inner ......
       double radius =  elem->getRadius();
       double dz = elem->Z();
-      
+
       m_circles.push_back(std::unique_ptr<TEllipse> { new TEllipse(0., 0., radius, radius)});
       m_boxes.push_back(std::unique_ptr<TBox> { new TBox(-dz, -radius, dz, radius)});
    }
 
    //Choose color according to which element it is
-   int color = gCOLORMap[m_detElem->getName()];
+   int color = gCOLORMap[m_detElem->getLayer()];
    for (auto& shape : m_circles) {
       shape->SetFillColor(color);
       shape->SetFillStyle(1001);

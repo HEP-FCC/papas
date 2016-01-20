@@ -96,7 +96,7 @@ namespace DAG {
       typedef std::unordered_set<Node*> Nodeset; //Allows find with no repeat nodes
       /// Constructor
       Node(T v);
-      /// Needed but why
+      /// Needed for putting a Node inside a unordered_map
       Node();
       ///Key function for visitor pattern
       void accept(Visitor<TNode>& visitor);
@@ -105,8 +105,7 @@ namespace DAG {
 
       void setChildren(const Nodeset& nodes) { m_children = nodes; }
       void setParents(const Nodeset& nodes)  { m_parents = nodes; }
-      void addChild(Node* node)              { m_children.insert(node); }
-      void addParent(Node* node)             { m_parents.insert(node); }
+      void addChild(Node& node)             ; 
       const Nodeset& getChildren() const     { return m_children; }
       const Nodeset& getParents() const      { return m_parents; }
       /*bool isLeaf() const                    { return m_children.size() == 0;}
@@ -116,6 +115,8 @@ namespace DAG {
       T m_val; ///< thing that the node is encapsulating (eg identifier )
       Nodeset m_children; ///< direct child nodes
       Nodeset m_parents;  ///< direct parent nodes
+      void addParent(Node& node)             { m_parents.insert(&node); }
+
    };
 
 
@@ -175,6 +176,16 @@ namespace DAG {
       : m_val(T())
    {
    }
+   
+   template<typename T>
+   void Node<T>::addChild(Node& node)
+   {
+         m_children.insert(&node);
+         node.addParent(*this);
+      
+   } // is this better
+   
+   
 
    /**
     accept the visitor

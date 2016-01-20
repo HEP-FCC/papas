@@ -15,15 +15,19 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-#this should come from env variables..... but isn't working just yet'
-set(BOOST_ROOT /usr/local/boost_1_59_0)
+#this should come from env variables
+#set(BOOST_ROOT /usr/local/boost_1_59_0)
 find_package(Boost 1.59.0 REQUIRED)
 set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/src/)
-include_directories( ${Boost_INCLUDE_DIRS})
+include_directories( ${Boost_INCLUDE_DIRS} )
 
+include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
+${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
+set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root)
 
-add_executable(main ../main.cpp)
-target_link_libraries(main fastsim ${ROOT_LIBRARIES} )
+add_executable(mainexe ../main.cpp)
+target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} )
+
 
 
 

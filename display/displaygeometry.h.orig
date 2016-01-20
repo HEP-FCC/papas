@@ -13,35 +13,49 @@
 #include "TColor.h"
 #include "detector.h"
 
-
+/// This is the base class used for other elements that are to be drawn.
+/// The key thing is to have the Draw element
 class Drawable {
 public:
    Drawable();
-   virtual void Draw(const std::string& projection) const =0;
+   virtual void Draw(const std::string& projection) const = 0;
 private:
-   
+
 };
 
-
-class GDetectorElement : public Drawable
-{
+/// Class to draw the HCAL and ECAL detectors
+class GDetectorElement : public Drawable {
 public:
    GDetectorElement(std::shared_ptr<const DetectorElement> de);
+   //GDetectorElement(const DetectorElement& de);
    void Draw(const std::string& projection) const override;
 private:
+   ///Shared_ptr to the detector element
    std::shared_ptr<const DetectorElement> m_detElem;
+   //const DetectorElement & m_detElem;
+   
+   ///lists of shared_pointer  to circles to be used to plot the detector element
    std::list<std::unique_ptr<TEllipse>> m_circles;
+   
+   ///lists of shared_pointer  to boxes to be used to plot the detector element
    std::list<std::unique_ptr<TBox>> m_boxes;
 };
 
+///Graphical representation of the detector - holds all the GDetectorElements together
 class GDetector: public Drawable {
 public:
-    GDetector(const BaseDetector& detector);
-    void Draw(const std::string& projection) const override;
+   GDetector(const BaseDetector& detector);
+   void Draw(const std::string& projection) const override;
 private:
+   ///ECAL graphical detector element
    GDetectorElement m_gECAL;
+   
+   ///HCAL graphical detector element
+   GDetectorElement m_gHCAL;
+   /// will contain shared_ptrs to GDetectorElements and GTrajectories to be plotted
+   
    std::list<std::shared_ptr<Drawable>> m_drawElems;
-   // GDetectorElement m_gHCAL;
+   
 };
 
 

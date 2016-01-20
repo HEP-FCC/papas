@@ -6,30 +6,31 @@
 #include "displaycore.h"
 #include "displaygeometry.h"
 #include "displaypfobjects.h"
-
 #include <cmath>
 
 
 
 
-Display::Display(std::list<enumProjection> views)
+Display::Display(std::list<Projection> views)
 {
+   //TODO consider making views concrete objects
    if (views.size() == 0) {
-      views = {enumProjection::xy, enumProjection::yz, enumProjection::xz};
+      views = {Projection::xy, Projection::yz, Projection::xz};
    }
-   ///Creates viewpanes //AJRTODO think about using an ENUM instead
+   ///Creates viewpanes //AJRTODO use an ENUM instead
    for (auto view : views) {
-      //std::cout<< view << " " << view.find("thetaphi") << " and  " << view.npos <<std::endl;
-      if (view == enumProjection::xy | view == enumProjection::yz | view == enumProjection::xz) {
-         m_views[to_str(view).c_str()] = std::unique_ptr<ViewPane> {new ViewPane(view,
-                  100, -4, 4, 100, -4, 4)
+      if (view == Projection::xy | view == Projection::yz | view == Projection::xz) {
+         m_views[to_str(view)] = std::unique_ptr<ViewPane> {
+            new ViewPane(view,
+            100, -4, 4, 100, -4, 4)
          };
-      }
-      else if (view == enumProjection::ECAL_thetaphi|| view == enumProjection::HCAL_thetaphi) { //AJRTODO check this
-         m_views[to_str(view).c_str()] = std::unique_ptr<ViewPane> {new ViewPane(view,
-                  100, -M_PI / 2., M_PI / 2.,
-                  100, -M_PI, M_PI,
-                  500, 1000)
+      } else if (view == Projection::ECAL_thetaphi
+                 || view == Projection::HCAL_thetaphi) { //AJRTODO check this
+         m_views[to_str(view)] = std::unique_ptr<ViewPane> {
+            new ViewPane(view,
+            100, -M_PI / 2., M_PI / 2.,
+            100, -M_PI, M_PI,
+            500, 1000)
          };
       }
    }
@@ -65,6 +66,7 @@ void Display::Unzoom()
       view.second->UnZoom();
    }
 }
+
 void Display::Draw() const
 {
    for (auto const& view : m_views) {
@@ -73,32 +75,21 @@ void Display::Draw() const
 }
 
 
-/**
- * \param[in]  name  Name to show at top of viewpane
- * \param[in]  projection Which projections (usually same as name)
- * \param[in]  nx Number of points on x axis
- * \param[in]  xmin Minimum value for x axis
- * \param[in]  xmax Maximum value for x axis
- * \param[in]  ny Number of points on y axis
- * \param[in]  ymin Minimum value for y axis
- * \param[in]  ymax Maximum value for y axis
- * \param[in]  dx ?
- * \param[in]  dy ?
- */
 
-ViewPane::ViewPane(enumProjection p, int nx,
+ViewPane::ViewPane(Projection p, int nx,
                    double xmin, double xmax, int ny, double ymin, double ymax,  int dx , int dy) :
-m_canvas( to_str(p).c_str() ,to_str(p).c_str() , 50. + ViewPane::nviews * (dx + 10.), 50.,
-            dx, dy), m_projection(p)
+   m_canvas(to_str(p).c_str(), to_str(p).c_str(),
+            50. + ViewPane::nviews * (dx + 10.), 50.,
+            dx, dy),
+   m_projection(p)
 {
 
-  
    TH1::AddDirectory(false);
-   m_hist = TH2F( to_str(p).c_str() , to_str(p).c_str() , nx, xmin, xmax, ny, ymin, ymax);
+   m_hist = TH2F(to_str(p).c_str(), to_str(p).c_str(), nx, xmin, xmax, ny, ymin,
+                 ymax);
    TH1::AddDirectory(true);
    m_hist.Draw();
    m_hist.SetStats(false);
-
    ViewPane::nviews += 1 ;
 }
 
@@ -110,9 +101,10 @@ m_canvas( to_str(p).c_str() ,to_str(p).c_str() , 50. + ViewPane::nviews * (dx + 
 void ViewPane::Register(std::shared_ptr<Drawable> obj, int layer,
                         bool clearable)
 {
+   //TODO think if shared_ptr is best way
    m_registered.push_back(std::pair<std::shared_ptr<Drawable> , int> { obj, layer});
-   //std::cout<<"vector "<< m_registered.size();
-   if (!clearable) { // these things we always want
+
+   if (!clearable) { // these are the things we always want to see
       m_locked.push_back(std::pair<std::shared_ptr<Drawable> , int> {obj, layer});
    }
 }
@@ -130,9 +122,9 @@ void ViewPane::Draw()
    // NB for this needed to avoid use of map which cannot be sorted on its second element
    std::sort(m_registered.begin(), m_registered.end(),
              [](const std::pair<std::shared_ptr<Drawable>, int>& left,
-                const std::pair<std::shared_ptr<Drawable>, int>& right) {
-                return left.second < right.second;
-             });
+   const std::pair<std::shared_ptr<Drawable>, int>& right) {
+      return left.second < right.second;
+   });
    //std::cout << "vector " << m_registered.size();
 
    //Now draw all registered items
@@ -160,3 +152,17 @@ void ViewPane::UnZoom()
    m_canvas.Modified();
    m_canvas.Update();
 }
+
+
+/**
+ * \param[in]  name  Name to show at top of viewpane
+ * \param[in]  projection Which projections (usually same as name)
+ * \param[in]  nx Number of points on x axis
+ * \param[in]  xmin Minimum value for x axis
+ * \param[in]  xmax Maximum value for x axis
+ * \param[in]  ny Number of points on y axis
+ * \param[in]  ymin Minimum value for y axis
+ * \param[in]  ymax Maximum value for y axis
+ * \param[in]  dx ?
+ * \param[in]  dy ?
+ */

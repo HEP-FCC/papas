@@ -5,140 +5,173 @@
 #ifndef  SIMULATOR_H
 #define SIMULATOR_H
 #include <string>
-#include <unordered_set>
-#include "../detectors/detector.h"
-#include "../pfobjects/pfobjects.h"
-#include "../DAG/directedacyclicgraph.h"
+#include <unordered_map>
+#include <map>
+#include "enums.h"
+#include "detector.h"
+#include "pfobjects.h"
+#include "directedacyclicgraph.h"
+
+#include "identifier.h"
+#include "propagator.h"
 
 class Particle;
 
-typedef DAG::Node<const long> simNode;
-typedef std::shared_ptr<simNode> spNode;
-typedef std::unordered_set<long,Cluster> ClusterMap;
-typedef std::unordered_set<long,Particle> ParticleMap;
-typedef std::unordered_set<long,spNode> Nodeset;
+typedef DAG::Node<long> simNode;
+typedef std::unordered_map<long, simNode> Nodes; ///TODO rename to Nodes
+typedef std::unordered_map<long, Cluster> Clusters;
+//typedef std::unordered_set<long,Track> Tracks;
+typedef std::unordered_map<long, Particle> Particles;
 
-
-#endif
-/*
 class Simulator {
 public:
-   Simulator(BaseDetector&);  //AJRTODO add logger
-   void simulatePhoton(Particle& ptc); //Underconstruction
-   long makeCluster(Particle& ptc, int layer  ,double fraction=1., double size=None);
-   long addParticle(Particle& ptc);
-   void linkItems(long,long);
+   Simulator(const BaseDetector&);  //AJRTODO add logger
+   void simulate();
+   void simulatePhoton(SimParticle& ptc);
+   void Propagate(SimParticle& ptc); //more args needed
    
+   const Cluster& addECALCluster(SimParticle& ptc, double fraction = 1.,
+                                 double csize = 0.);
+   const Cluster& addHCALCluster(SimParticle& ptc, double fraction = 1.,
+                                 double csize = 0.);
+   const Cluster& smearCluster(const Cluster& parent);
+   void addParticle(const SimParticle& ptc);
+   const Clusters& getClusters() {return m_clusters;};
    
-   
+   //Clusterset ExportSimulatedClusters() const;
+   //Particleset ExportSimulatedParticles() const;
+
 private:
-   StraightLinePropagator m_propStraightLine;
-   BaseDetector m_detector;
-   ClusterMap m_ECALClusters;
-   ClusterMap m_ECALMergedClusters;
-   //etc
-   ParticleMap m_Particles;
-   Nodelist m_ParticleNodes;
+   long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype); //move to private
+   long makeParticleID(fastsim::enumSource source);
+   const Cluster& addCluster(SimParticle& ptc, fastsim::enumLayer layer,
+                             double fraction = 1., double csize = 0.);
+   const Cluster& makeCluster(long clusterid, double energy, TVector3& pos,
+                              double csize = 0.);
+   void addNode(const long newid, const long parentid = 0);
+   std::shared_ptr<const DetectorElement> getElem(fastsim::enumLayer layer);
+   const BaseDetector& m_detector;
+   // all clusters
+   Clusters m_clusters;
+   //etc Trackset m_Tracks
+   //All particles
+   Particles m_particles;
+   //this will have identifier for everything that has
+   //been simulated and so acts as a lookup table
+   Nodes m_nodes;
+   StraightLinePropagator m_propStraight;
+   //HelixPropagator m_propHelix;
 };
 
 
 
 
-Simulator::makeCluster(
-
 #endif
+
+
+
+
+
 
 ///Simulator
-
-
-class DAG
+/*class LongHash
 {
-   
-   MergeClusters(layer)
-   //find all nodes of type smearedcluster in a detectorElement
-   //find any pairs that are too close
-   // create new merged cluster and add in some edges to original clusters
-   SmearClusters(layer)
-   // find nodes of type cluster in a detectorElement
-   // smear each cluster saving as new node with pointer to the SmearedCluster
-   // add in link from cluster to smearedcluster
-   SmearTracks
-   //find nodes of type Tracker
-   //smear each track and save as new node with pointer to SmearedTrack
-   PTNode* AddParticleNode(PFParticle*,label="particle", type=pdgid)
-   PTNode* AddClusterNode(Cluster*, label="cluster", type="merged/smeared/raw")
-   PTNode* AddTrackNode(Track*, label="track", type="smeared/raw")
-   PTNodeset GetEndClusters(layer)
-   // returns list of end cluster nodes
-   PTNodeset GetSmearedTracks()
-   //returns list of smeared track nodes
-}
+public:
+   size_t operator()(const long l) const
+   {
+      return std::hash<long>()(l);
+   }
+};*/
+
+/*
+ class DAG
+ {
+
+ MergeClusters(layer)
+ //find all nodes of type smearedcluster in a detectorElement
+ //find any pairs that are too close
+ // create new merged cluster and add in some edges to original clusters
+ SmearClusters(layer)
+ // find nodes of type cluster in a detectorElement
+ // smear each cluster saving as new node with pointer to the SmearedCluster
+ // add in link from cluster to smearedcluster
+ SmearTracks
+ //find nodes of type Tracker
+ //smear each track and save as new node with pointer to SmearedTrack
+ PTNode* AddParticleNode(PFParticle*,label="particle", type=pdgid)
+ PTNode* AddClusterNode(Cluster*, label="cluster", type="merged/smeared/raw")
+ PTNode* AddTrackNode(Track*, label="track", type="smeared/raw")
+ PTNodeset GetEndClusters(layer)
+ // returns list of end cluster nodes
+ PTNodeset GetSmearedTracks()
+ //returns list of smeared track nodes
+ }
 
 
 
- 
-
-Class ReconstructPolyTree: public PolyTree
 
 
+ Class ReconstructPolyTree: public PolyTree
 
 
 
-Class Reconstructor
-
-ReconstuctPolyTree graph
-
-FindDistances
-FindClosest
-MakeEdges
-AddClustersFromPolyTree
-AddTracksFromPolyTree
-BuildLinks
-MakeParticles
-Reconstruct
-Simplify
-
-SimulatePhoton
-PTNode* pt_particle= makeParticle;
-PTNode* pt_cluster_eval= makeCluster
-pt_graph.addEdgeParentChild(pt_particle, pt_cluster);
 
 
-MakeCluster(...)
-new cluster
-return makeNode(cluster)
-#endif
+ Class Reconstructor
+
+ ReconstuctPolyTree graph
+
+ FindDistances
+ FindClosest
+ MakeEdges
+ AddClustersFromPolyTree
+ AddTracksFromPolyTree
+ BuildLinks
+ MakeParticles
+ Reconstruct
+ Simplify
+
+ SimulatePhoton
+ PTNode* pt_particle= makeParticle;
+ PTNode* pt_cluster_eval= makeCluster
+ pt_graph.addEdgeParentChild(pt_particle, pt_cluster);
 
 
-/*Propogator* Simulator::propagator(Particle& ptc){
+ MakeCluster(...)
+ new cluster
+ return makeNode(cluster)
+ #endif
+
+
+ Propogator* Simulator::propagator(Particle& ptc){
  bool is_neutral = abs(ptc.q())<0.5;
  //if (is_neutral)
  return prop_straight;
  //else return prop_helix;
  //return prop_straight if is_neutral else self.prop_helix
  }
- 
+
  Simulator::propagate(ptc){
  //propagate the particle to all detector cylinders'''
  Propagator(ptc).propagate([ptc], m_detector.cylinders(),
  m_detector.elements['field'].magnitude)
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
  from heppy_fcc.fastsim.propagator import StraightLinePropagator, HelixPropagatorom heppy_fcc.fastsim.pfobjects import Cluster, SmearedCluster, SmearedTrack
  from heppy_fcc.fastsim.pfobjects import Particle as PFSimParticle
- 
+
  from pfalgo.sequence import PFSequence
  import random
  import sys
  import copy
  import shelve
- 
+
  from ROOT import TVector3
- 
+
  def pfsimparticle(ptc):
  '''Create a PFSimParticle from a particle.
  The PFSimParticle will have the same p4, vertex, charge, pdg ID.
@@ -148,9 +181,9 @@ return makeNode(cluster)
  charge = ptc.q()
  pid = ptc.pdgid()
  return PFSimParticle(tp4, vertex, charge, pid)
- 
+
  class Simulator(object):
- 
+
  def __init__(self, detector, logger=None):
  self.verbose = True
  self.detector = detector
@@ -161,27 +194,27 @@ return makeNode(cluster)
  self.logger = logger
  self.prop_helix = HelixPropagator()
  self.prop_straight = StraightLinePropagator()
- 
+
  def write_ptcs(self, dbname):
  db = shelve.open(dbname)
  db['ptcs'] = self.ptcs
  db.close()
- 
+
  def reset(self):
  self.particles = None
  self.ptcs = None
  Cluster.max_energy = 0.
  SmearedCluster.max_energy = 0.
- 
+
  def propagator(self, ptc):
  is_neutral = abs(ptc.q())<0.5
  return self.prop_straight if is_neutral else self.prop_helix
- 
+
  def propagate(self, ptc):
  '''propagate the particle to all detector cylinders'''
  self.propagator(ptc).propagate([ptc], self.detector.cylinders(),
  self.detector.elements['field'].magnitude)
- 
+
  def make_cluster(self, ptc, detname, fraction=1., size=None):
  '''adds a cluster in a given detector, with a given fraction of
  the particle energy.'''
@@ -198,7 +231,7 @@ return makeNode(cluster)
  cylname, ptc)
  ptc.clusters[cylname] = cluster
  return cluster
- 
+
  def smear_cluster(self, cluster, detector, accept=False):
  '''Returns a copy of self with a smeared energy.
  If accept is False (default), returns None if the smeared
@@ -216,7 +249,7 @@ return makeNode(cluster)
  return smeared_cluster
  else:
  return None
- 
+
  def smear_track(self, track, detector, accept=False):
  #TODO smearing depends on particle type!
  ptres = detector.pt_resolution(track)
@@ -229,19 +262,19 @@ return makeNode(cluster)
  return smeared_track
  else:
  return None
- 
+
  def simulate_photon(self, ptc):
  detname = 'ecal'
  ecal = self.detector.elements[detname]
  self.prop_straight.propagate_one(ptc,
  ecal.volume.inner)
- 
+
  cluster = self.make_cluster(ptc, detname)
  smeared = self.smear_cluster(cluster, ecal)
  if smeared:
  ptc.clusters_smeared[smeared.layer] = smeared
- 
- 
+
+
  def simulate_electron(self, ptc):
  ecal = self.detector.elements['ecal']
  self.prop_helix.propagate_one(ptc,
@@ -255,11 +288,11 @@ return makeNode(cluster)
  self.detector.elements['tracker'])
  if smeared_track:
  ptc.track_smeared = smeared_track
- 
- 
+
+
  def simulate_neutrino(self, ptc):
  self.propagate(ptc)
- 
+
  def simulate_hadron(self, ptc):
  ecal = self.detector.elements['ecal']
  hcal = self.detector.elements['hcal']
@@ -294,19 +327,19 @@ return makeNode(cluster)
  self.detector.elements['tracker'])
  if smeared_track:
  ptc.track_smeared = smeared_track
- 
+
  def simulate_muon(self, ptc):
  self.propagate(ptc)
  smeared_track = self.smear_track(ptc.track,
  self.detector.elements['tracker'])
  if smeared_track:
  ptc.track_smeared = smeared_track
- 
+
  def smear_muon(self, ptc):
  self.propagate(ptc)
  smeared = copy.deepcopy(ptc)
  return smeared
- 
+
  def smear_electron(self, ptc):
  ecal = self.detector.elements['ecal']
  self.prop_helix.propagate_one(ptc,
@@ -314,7 +347,7 @@ return makeNode(cluster)
  self.detector.elements['field'].magnitude )
  smeared = copy.deepcopy(ptc)
  return smeared
- 
+
  def simulate(self, ptcs):
  self.reset()
  self.ptcs = []
@@ -342,9 +375,9 @@ return makeNode(cluster)
  self.pfsequence = PFSequence(self.ptcs, self.detector, self.logger)
  self.particles = copy.copy(self.pfsequence.pfreco.particles)
  self.particles.extend(smeared)
- 
+
  if __name__ == '__main__':
- 
+
  import math
  import logging
  from vectors import Point
@@ -354,14 +387,14 @@ return makeNode(cluster)
  from heppy_fcc.display.core import Display
  from heppy_fcc.display.geometry import GDetector
  from heppy_fcc.display.pfobjects import GTrajectories
- 
+
  display_on = True
  detector = cms
- 
+
  logging.basicConfig(level='INFO')
  logger = logging.getLogger('Simulator')
  logger.addHandler( logging.StreamHandler(sys.stdout) )
- 
+
  for i in range(1):
  if not i%100:
  print i
@@ -374,7 +407,7 @@ return makeNode(cluster)
  particle(22, math.pi/2., math.pi/2.+0.0, 10.)
  ]
  simulator.simulate(particles)
- 
+
  if display_on:
  display = Display(['xy', 'yz',
  'ECAL_thetaphi',

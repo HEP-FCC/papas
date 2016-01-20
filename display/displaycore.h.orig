@@ -9,25 +9,134 @@
 #include <list>
 #include <string>
 
+
 #include "TCanvas.h"
 #include "TH1.h"
 #include "TH2F.h"
-
-
+#include "enummanager.h"
 
 class ViewPane;
 class Drawable;
 
+///Display Class
+/** Class to manage the  different display projections
+ 
+ It contains several viewpanes each of which is a different projection
+ 
+ */
+ENUM_WITH_STRINGS(Projection,xy, yz, xz, ECAL_thetaphi, HCAL_thetaphi);
+
+
 class Display {
 public:
-   Display(std::list<std::string> views={}) ;
-   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable=true);
+   ///Constructor using a list of projections names
+   Display(std::list<Projection> views = {}) ;
+   
+   ///Which things to draw (and which are locked  ie clearable=false)
+   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   
+   ///Clear all drawable elements except those that are locked
    void Clear();
+   //AJRTODO does this need Zoom?
    void Unzoom();
    void Draw() const;
 private:
+   ///Map containing the views //TODO make enum
    std::unordered_map<std::string, std::unique_ptr<ViewPane>> m_views;
 };
+
+
+///ViewPane Class
+/**
+ * Class to manage provide a window in which to display graphs
+ */
+class ViewPane {
+public:
+   ///Constructor
+   ViewPane(Projection p, int nx, double xmin,
+            double xmax, int ny, double ymin, double ymax,
+            int dx = 600, int dy = 600);
+
+   ///Keeps a register of things to draw and what layer they are
+   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   
+   void Clear();
+   void Draw();
+   void Zoom(double xmin, double xmax, double ymin, double  ymax);
+   void UnZoom();
+
+   ///Static counter to say how many viewpanes there are in total
+   static int nviews;
+private:
+   ///Use this vector of pairs structure so that we can sort on the values (=layer)
+   ///and on the objects
+   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_registered;
+   
+   ///Works alongside m_registered and says which are locked
+   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_locked;
+   
+   ///What we will draw onto (ROOT graphics)
+   TCanvas m_canvas;
+   
+   /// The graph (ROOT graphics)
+   TH2F m_hist;
+   
+   ///One of "xy", "yz", "zx" and some more not yet implemented
+   Projection m_projection;
+
+}  ;
+
+//Static counter
+int ViewPane::nviews = 0;
+
+#endif
+/*
+class ViewPane {
+public:
+   ///Constructor
+   ViewPane(std::string name, std::string projection, int nx, double xmin,
+            double xmax, int ny, double ymin, double ymax,
+            int dx = 600, int dy = 600);
+   
+   ///Keeps a register of things to draw and what layer they are
+   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   
+   void Clear();
+   void Draw();
+   void Zoom(double xmin, double xmax, double ymin, double  ymax);
+   void Unzoom();
+   
+   ///Static counter to say how many viewpanes there are in total
+   static int nviews;
+private:
+   ///Use this vector of pairs structure so that we can sort on the values (=layer)
+   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_registered;
+   
+   ///Works alongside m_registered and says which are locked
+   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_locked;
+   
+   ///What we will draw onto (ROOT graphics)
+   TCanvas m_canvas;
+   /// The graph (ROOT graphics)
+   TH2F m_hist;
+   
+   ///One of "xy", "yz", "zx" and some more not yet implemented
+   std::string m_projection;
+   
+}  ;
+*/
+
+
+
+
+
+//AJRTODO void   ViewPane::save(std::string outdir, ?? filetype):
+/*
+ fname = '{outdir}/{name}.{filetype}'.format(outdir=outdir,
+ name=m_canvas.GetName(),
+ filetype=filetype)
+ canvas.SaveAs(fname)
+ */
 
 
 
@@ -37,37 +146,3 @@ private:
  for view in m_views.values():
  view.save(outdir, filetype)
  ViewPane::      */
-
-class ViewPane{
-public:
-   ViewPane(std::string name, std::string projection, int nx, double xmin, double xmax, int ny, double ymin, double ymax,
-            int dx=600, int dy=600);
-   
-   void Register(std::shared_ptr<Drawable> obj, int layer,bool clearable=true);
-   void Clear();
-   void Draw();
-   void Zoom(double xmin, double xmax, double ymin,double  ymax);
-   void Unzoom();
-   
-   static int nviews;
-private:
-   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_registered; //use this instead of a map so that we can sort on the values (=layer)
-   std::vector<std::pair<std::shared_ptr<Drawable>, int>> m_locked;
-   TCanvas m_canvas;
-   TH2F m_hist;
-   std::string m_projection;
-   
-}  ;
-
-//Static variable
-int ViewPane::nviews=0;
-
-#endif
-
-//AJRTODO void   ViewPane::save(std::string outdir, ?? filetype):
-/*
- fname = '{outdir}/{name}.{filetype}'.format(outdir=outdir,
- name=m_canvas.GetName(),
- filetype=filetype)
- canvas.SaveAs(fname)
- */

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <limits>
+#include "enums.h"
 
 
 const int c_vecsize = 10000;
@@ -18,10 +19,10 @@ const double c_exp_lambda = 3.5; //AJR where does this come from
 */
 class Material {
 public:
-   Material(const std::string&, double x0, double lambda);
+   Material(fastsim::enumLayer layer, double x0, double lambda);
    virtual double PathLength(/*AJRTODO const Particle &*/);
 private:
-   const std::string m_name;
+   fastsim::enumLayer m_layer;
    double m_x0;
    double m_lambdaI;
 };
@@ -30,10 +31,10 @@ private:
 //Temporary
 class TestMaterial: public Material {
 public:
-   TestMaterial(const std::string&, double x0, double lambda);
+   TestMaterial(fastsim::enumLayer layer, double x0, double lambda);
    double PathLength(/*Particle &*/);
 private:
-   const std::string m_name;
+   //fastsim::enumLayer m_layer;
    //double m_x0;
    //double m_lambdaI;
 };

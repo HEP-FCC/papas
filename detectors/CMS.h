@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include "detector.h"
+#include "enums.h"
 
 class Track;
 
@@ -26,62 +27,67 @@ class VolumeCylinder;
       It is intended to be replaced by users to match the required detector characteristics
 
  */
-class ECAL: public BaseECAL {
+class ECAL: public DetectorElement {
 public:
    //AJRTODO check whether both cosntructors are needed
    ///constructor - allows the Material and Volume to be created on the fly
-   ECAL(const std::string& name, const VolumeCylinder&& volume,
+   ECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
         const Material&& material, double eta_crack, double emin,
         const std::vector<double>&&
         eres);
-   
+
    ///constructor - requires the Material and Volume to be already in existance
-   ECAL(const std::string& name, const VolumeCylinder& volume,
+   /*ECAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
         const Material& material , double eta_crack, double emin,
-        const std::vector<double>&
-        eres);
-   
-   double cluster_size(const Particle& ptc) const override;
+        const std::vector<double>& eres);*/
+
+   double clusterSize(const Particle& ptc) const override;
    bool acceptance(const Cluster& cluster)  const override;
-   double energy_resolution(double energy)  const override;
+   double energyResolution(double energy)  const override;
    //TODOAJR space_resolution(self, ptc):
 private:
    double m_eta_crack;
    double m_emin;
-   std::vector<double> m_eres;
+   std::vector<double> m_eres;  ///energy resolution
 };
 
 
-class HCAL: public BaseHCAL {
+class HCAL: public DetectorElement {
 public:
-   //AJRTODO NB BaseECAl and BaseHcal are vert similar at the moment
-   
+   //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   HCAL(const std::string& name, const VolumeCylinder&& volume,
+   HCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
         const Material&& material,
         const std::vector<double>&&
         eres);
    ///constructor - requires the Material and Volume to be already in existance
-   HCAL(const std::string& name, const VolumeCylinder& volume,
+   HCAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
         const Material& material ,
         const std::vector<double>&
         eres);
-   
-   double cluster_size(const Particle& ptc) const override;
+
+   double clusterSize(const Particle& ptc) const override;
    bool acceptance(const Cluster& cluster)  const override;
-   double energy_resolution(double energy)  const override;
+   double energyResolution(double energy)  const override;
    //TODOAJR space_resolution(self, ptc):
 private:
-   std::vector<double> m_eres;
+   std::vector<double> m_eres; ///energy resolution
+};
+
+class CMS: public BaseDetector {
+public:
+   CMS();
+private:
+
 };
 
 // Below here is TODO
-
+/*
 class Tracker: public DetectorElement {
 //TODO acceptance and resolution depend on the particle type
 public:
    Tracker();
-   bool acceptance(const Track& track);
+   bool acceptance(const Track& track) const override;
    double pt_resolution(const Track& track);
 protected:
 
@@ -101,13 +107,8 @@ private:
 };
 
 
-class CMS: public BaseDetector {
-public:
-   CMS();
-private:
-   //std::map<std::string,DetectorElement*> m_elements;
-};
 
+*/
 
 #endif
 

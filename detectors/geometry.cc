@@ -13,18 +13,11 @@ SurfaceCylinder::SurfaceCylinder(const std::string& name, double rad ,
 
 }
 
-//SurfaceCylinder::SurfaceCylinder(const string& name): m_name(name),m_radius(0.0), m_z(0.0) {
-//}
-
-/*VolumeCylinder::VolumeCylinder(const string& name, double outerrad, double outerz)
-    :m_name(name), m_outer("_"+name+"out",outerrad,outerz),m_inner("none")
-    {
-
-    }*/
 
 VolumeCylinder::VolumeCylinder(const std::string& name, double outerrad,
                                double outerz, double innerrad, double innerz) :
-   m_name(name), m_outer("_" + name + "out", outerrad, outerz),
+   m_name(name),
+   m_outer("_" + name + "out", outerrad, outerz),
    m_inner("_" + name + "in", innerrad, innerz)
 {
    if (innerrad > outerrad) {
@@ -47,5 +40,6 @@ bool VolumeCylinder::Contains(const TVector3& point) const
       return perp >= m_inner.getRadius() & perp < m_outer.getRadius();
    } else if (std::abs(point.Z()) < m_outer.Z()) {
       return perp < m_outer.getRadius();
-   } else return false;
+   } else
+      return false;
 }

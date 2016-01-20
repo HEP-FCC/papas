@@ -11,21 +11,22 @@
 #include "CMS.h"
 #include "material.h"
 #include "geometry.h"
-#include "pfobjects/pfobjects.h"
+#include "pfobjects.h"
 
+/*
+ ECAL::ECAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
+ const  Material& material , double eta_crack,
+ double emin, const std::vector<double>& eres) :
+ DetectorElement(layer,   volume,  material), m_eta_crack(eta_crack), m_emin(emin),
+ m_eres(eres)
+ {}*/
 
-ECAL::ECAL(const std::string& name, const VolumeCylinder& volume,
-           const  Material& material , double eta_crack,
-           double emin, const std::vector<double>& eres) :
-BaseECAL(name,   volume,  material), m_eta_crack(eta_crack), m_emin(emin),
-m_eres(eres)
-{}
-
-ECAL::ECAL(const std::string& name, const VolumeCylinder&& volume,
+ECAL::ECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
            const Material&& material, double eta_crack,
            double emin, const std::vector<double>&& eres) :
-BaseECAL(name,   volume,  material), m_eta_crack(eta_crack), m_emin(emin),
-m_eres(eres)
+   DetectorElement(layer,   volume,  material), m_eta_crack(eta_crack),
+   m_emin(emin),
+   m_eres(eres)
 {}
 
 
@@ -35,7 +36,7 @@ m_eres(eres)
  @param ptc particle
  @return size of resulting cluster
  */
-double ECAL::cluster_size(const Particle& ptc) const
+double ECAL::clusterSize(const Particle& ptc) const
 {
    //simplified version TODOAJR
    int pdgid = 22 ; //= abs(ptc->pdgid()) //AJRTODO implement particle
@@ -62,7 +63,7 @@ bool ECAL::acceptance(const Cluster& cluster) const
 }
 
 
-double ECAL::energy_resolution(double energy) const
+double ECAL::energyResolution(double energy) const
 {
    double stoch = m_eres[0] / sqrt(energy);
    double noise = m_eres[1] / energy;
@@ -73,35 +74,52 @@ double ECAL::energy_resolution(double energy) const
 
 CMS::CMS() : BaseDetector()
 {
-   std::string name = "ECAL";
-   m_detectorElements["ECAL"] = std::shared_ptr<const DetectorElement> {new ECAL(name,
-                                                                                 VolumeCylinder(name, 1.55, 2.1, 1.30, 2),
-                                                                                 Material(name, 8.9e-3, 0.275),
-                                                                                 0.15, // eta_crack
-                                                                                 0.4, //emin
-                                                                                 std::vector<double> {.073, .1, .005})
-   }; //eres
-   
-   //TODOAJR add in  tracker etc below
-   
-   
-   ///NONe e
-   name = "HCAL";
-   m_detectorElements["HCAL"] = std::shared_ptr<const DetectorElement> {new HCAL(name,
-                                                                                 VolumeCylinder(name, 2.9, 3.6, 1.9, 2.6),
-                                                                                 Material(name, 0.0, 0.175),
-                                                                                 std::vector<double> {1.1, 0., 0.})
+   //ECAL detector Element
+   fastsim::enumLayer layer = fastsim::enumLayer::ECAL;
+   m_ECAL = std::shared_ptr<const DetectorElement> {
+      new ECAL(layer,
+      VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
+      Material(layer, 8.9e-3, 0.275),
+      0.15, // eta_crack
+      0.4, //emin
+      std::vector<double> {.073, .1, .005}
+              )
    };
+
+   //HCAL detector element
+   layer = fastsim::enumLayer::HCAL;
+   m_HCAL = std::shared_ptr<const DetectorElement> {
+      new HCAL(layer,
+      VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6, 1.9, 2.6),
+      Material(layer, 0.0, 0.175),
+      std::vector<double> {1.1, 0., 0.})
+   };
+
+   //TODO is a concrete object approach needed?
+
+   /*m_detectorElements.emplace(layer,std::move(ECAL(layer,
+    VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
+    Material(layer, 8.9e-3, 0.275),
+    0.15, // eta_crack
+    0.4, //emin
+    std::vector<double> {.073, .1, .005})))*/
+
+
+   //TODOAJR add in  tracker etc below
+
+
+
+
 }
 
-HCAL::HCAL(const std::string& name, const VolumeCylinder& volume,
+HCAL::HCAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
            const  Material& material , const std::vector<double>& eres) :
-BaseHCAL(name,   volume,  material),m_eres(eres)
+   DetectorElement(layer,   volume,  material), m_eres(eres)
 {}
 
-HCAL::HCAL(const std::string& name, const VolumeCylinder&& volume,
+HCAL::HCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
            const Material&& material, const std::vector<double>&& eres) :
-BaseHCAL(name,   volume,  material),m_eres(eres)
+   DetectorElement(layer,   volume,  material), m_eres(eres)
 {}
 
 
@@ -111,8 +129,9 @@ BaseHCAL(name,   volume,  material),m_eres(eres)
  @param ptc particle
  @return size of resulting cluster
  */
-double HCAL::cluster_size(const Particle& ptc) const
+double HCAL::clusterSize(const Particle& ptc) const
 {
+   //TODO
    return 0.2;
 }
 
@@ -124,21 +143,21 @@ bool HCAL::acceptance(const Cluster& cluster) const
 {
    double energy = cluster.getEnergy();
    double eta = fabs(cluster.getEta());
+
    //AJRTOCHECK should this be more parameterized et eta_crack etc
-   
-   if (eta < 3. )
-      return energy>4.;
+   if (eta < 3.)
+      return energy > 4.;
    else if (eta < 5.)
-      return energy>7.;
+      return energy > 7.;
    else
       return false;
-   
+
 }
 
 
-double HCAL::energy_resolution(double energy) const
+double HCAL::energyResolution(double energy) const
 {
-   return m_eres[0]/ sqrt( energy );
+   return m_eres[0] / sqrt(energy);
 }
 
 
@@ -148,31 +167,14 @@ double HCAL::energy_resolution(double energy) const
 
 
 /*
- 
- HCAL::HCAL():
- DetectorElement("HCAL", "HCAL",2.9, 3.6, 1.9, 2.6,"HCAL", 0., 0.17), //AJRTODO was (.... .... , None, 0.17))
- m_eres (3,0.)
- {
- 
- m_eres[0]=1.1;
- m_eres[1]=0.;
- m_eres[2]= 0.;
- }
- 
- double HCAL::energy_resolution( double energy){
- return m_eres[0]/ sqrt( energy ) ;
- }
- 
- double cluster_size(const  Particle& ptc){
- return 0.2;}
- 
- 
+
+
  Tracker::Tracker()
  :
  DetectorElement("tracker", "tracker", 1.29, 1.99,"void", 0, 0)
  {}
- 
- 
+
+
  DField::DField(double magnitude):
  DetectorElement("tracker","field",  2.9, 3.6,"void",0.,0.),
  m_magnitude(magnitude)
@@ -205,18 +207,18 @@ double HCAL::energy_resolution(double energy) const
  else
  return false;
  }
- 
+
  double Tracker::pt_resolution(const Track& track){
  # TODO: depends on the field
  pt = track.pt;
  return 5e-3;
  }
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
  bool ECAL::acceptance(self, cluster):
  energy = cluster.energy
  eta = abs(cluster.position.Eta())
@@ -226,7 +228,7 @@ double HCAL::energy_resolution(double energy) const
  return energy>self.emin and cluster.pt>0.5
  else:
  return False
- 
+
  def ECAL::space_resolution(self, ptc):
  pass
  */

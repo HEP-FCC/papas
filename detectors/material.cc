@@ -2,25 +2,13 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
+#include <random>
 #include "material.h"
 
-#include <random>
-//class Particle;
-
-
-/* Decides whether a cluster will be seen by a detector
- @param name Name of material
- @param x0 ??set to
- @param lambdaI ??? AJRTODO
- @return true is cluster is detected, false it if is too small to be seen
- */
-
-Material::Material(const std::string& name, double x0,
-                   double lambdaI) : m_name(name), m_x0(x0), m_lambdaI(lambdaI)
+Material::Material(fastsim::enumLayer layer, double x0, double lambdaI) :
+   m_layer(layer), m_x0(x0), m_lambdaI(lambdaI)
 {
 }
-
-
 
 double Material::PathLength(/*AJRTODO const Particle& ptc)*/)
 {
@@ -36,24 +24,21 @@ double Material::PathLength(/*AJRTODO const Particle& ptc)*/)
    freepath = m_lambdaI; //AJRTODO remove this reinstate above
 
    if (freepath == 0.) {
-      return std::numeric_limits<double>::max(); //AJR or float?
+      return std::numeric_limits<double>::max(); //maximum value for a double
    } else { // make random number exp distribution
       std::default_random_engine generator;
       std::exponential_distribution<double> distribution(
-         c_exp_lambda); //AJR doubl check as expected & write test
+         c_exp_lambda); //AJR double check as expected & write test
       double rnumber = distribution(generator);
       return rnumber;
    }
 }
 
 
-
-TestMaterial::TestMaterial(const std::string&  name, double x0,
-                           double lambdaI): Material(name, x0, lambdaI)
+TestMaterial::TestMaterial(fastsim::enumLayer layer, double x0,
+                           double lambdaI): Material(layer, x0, lambdaI)
 {
 }
-
-
 
 double TestMaterial::PathLength(/*AJRTODO const Particle& ptc)*/)
 {

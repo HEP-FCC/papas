@@ -79,25 +79,16 @@ int main()
    // and now define the polytree
    // add the directed (parent -> child) branches of the polytree
    // each link requires an addChild and an addParent
-   n0.addChild(&n1); // link between n0 and n1
-   n1.addParent(&n0);
-   n0.addChild(&n2); // link between n0 and n2 etc
-   n2.addParent(&n0);
-   n0.addChild(&n3);
-   n3.addParent(&n0);
-   n1.addChild(&n4);
-   n4.addParent(&n1);
-   n1.addChild(&n5);
-   n5.addParent(&n1);
-   n1.addChild(&n6);
-   n6.addParent(&n1);
-   n7.addChild(&n8);
-   n8.addParent(&n7);
-   n7.addChild(&n4);
-   n4.addParent(&n7);
-   n3.addChild(&n6);
-   n6.addParent(&n3);
-
+   n0.addChild(n1); // link between n0 and n1
+   n0.addChild(n2); // link between n0 and n2 etc
+   n0.addChild(n3);
+   n1.addChild(n4);
+   n1.addChild(n5);
+   n1.addChild(n6);
+   n7.addChild(n8);
+   n7.addChild(n4);
+   n3.addChild(n6);
+   
 
    //Start at node 0 for the following examples
 
@@ -139,7 +130,7 @@ int main()
    std::cout << "Node" << std::endl;
    DAG::BFSRecurseVisitor<INode> bfsrecursive;
    for (auto n : bfs.traverseUndirected(n0)) {
-      if (n->isLeaf())
+      if (n->getChildren().size() == 0)//isLeaf
          std::cout <<  Identifier::getUniqueID(n->getValue()) - 1  << std::endl;
    }
    return 0;

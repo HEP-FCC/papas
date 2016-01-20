@@ -16,8 +16,8 @@
 #include "TEllipse.h"
 #include "TColor.h"
 #include "TVector3.h"
-#include "../display/displaygeometry.h"
-#include "../pfobjects/pfobjects.h"
+#include "displaygeometry.h"
+#include "pfobjects.h"
 
 class Cluster;
 
@@ -56,7 +56,7 @@ class GTrajectories : public Drawable  {
 public:
    /// Initial implementation for a line (should accept list of particles eventually (or equiv))
    GTrajectories(const std::vector<TVector3>& points);
-    /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
+   /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
    GTrajectories(const Cluster& cluster);
    void Draw(const std::string& projection) const override;
 private:

@@ -1,83 +1,91 @@
-#include "display/displaygeometry.h"
+//
+//  Created by Alice Robson on 09/11/15.
+//
+//
+#include "displaygeometry.h"
 #include <memory>
 
 
-std::map<std::string,int> gCOLORMap {
-   {"ECAL" , kRed-10},
-   {"HCAL" , kBlue-10}
+std::map<std::string, int> goldCOLORMap {
+   {"ECAL" , kRed - 10},
+   {"HCAL" , kBlue - 10}
 };
 
-void GDetectorElement::Draw(const std::string& projection) const //AJRTODO change to an enum?
+std::map<fastsim::enumLayer, int> gCOLORMap {
+   {fastsim::enumLayer::ECAL , kRed - 10},
+   {fastsim::enumLayer::HCAL , kBlue - 10}
+};
+
+void GDetectorElement::Draw(const std::string& projection)
+const //AJRTODO change to an enum?
 {
-   if (projection=="xy" ){
-      
-      for (auto const& circle : m_circles)
-      {
+   if (projection == "xy") {
+
+      for (auto const& circle : m_circles) {
          circle->Draw("same");
       }
-   }
-   else if (projection=="yz"|  projection=="xz" ){
-      
-      for (auto const & box : m_boxes)
-      {
+   } else if (projection == "yz" |  projection == "xz") {
+
+      for (auto const& box : m_boxes) {
          box->Draw("samel");
       }
-   }
-   else if (projection.find("thetaphi")!=projection.npos) {
+   } else if (projection.find("thetaphi") != projection.npos) {
    }
    //else
    //AJRTODO throw error
 };
 
 
-Drawable::Drawable() {
+Drawable::Drawable()
+{
    ;
 }
 
 GDetector::GDetector(const BaseDetector& detector) :
-m_gECAL(detector.getElement("ECAL")) // not ready yet, m_gHCAL(detector.getElement("hcal"))
+   m_gECAL(detector.getECAL()), m_gHCAL(detector.getHCAL())
 {
-   
+
 }
 
-void GDetector::Draw(const std::string & projection) const
+void GDetector::Draw(const std::string& projection) const
 {
-   //m_detector->getElement("HCAL")->Draw(projection);
+   
+   m_gHCAL.Draw(projection);
    m_gECAL.Draw(projection);
-   // m_gHCAL.Draw(projection);
 }
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
-m_detElem (de)
+//GDetectorElement::GDetectorElement(const DetectorElement& de) :
+   m_detElem(de)
 {
    //std::list<SurfaceCylinder* > cylinders{m_detElem->getVolume()->Outer(),
    //   m_detElem->getVolume()->Inner()};
-   for (auto const & elem : {m_detElem->getVolume()->Outer(),m_detElem->getVolume()->Inner()}) //AJRTODO should be if inner ......
-   {
+   
+   //For each inner and outer cyclinder create a cyclinder (circular cross section) for xy , yz, xz projections
+   //        create a box (longways cross section) for thetaphi projections
+   
+   for (auto const& elem : {m_detElem->getVol().Outer(), m_detElem->getVol().Inner()}) { //AJRTODO should be if inner ......
       double radius =  elem->getRadius();
-      m_circles.push_back(std::unique_ptr<TEllipse> { new TEllipse(0., 0., radius,radius)} );
-      
       double dz = elem->Z();
+      
+      m_circles.push_back(std::unique_ptr<TEllipse> { new TEllipse(0., 0., radius, radius)});
       m_boxes.push_back(std::unique_ptr<TBox> { new TBox(-dz, -radius, dz, radius)});
    }
-   
-   int color = gCOLORMap[m_detElem->getName()];
-   for (auto & shape : m_circles)
-   {
-      
-      
+
+   //Choose color according to which element it is
+   int color = gCOLORMap[m_detElem->getLayer()];
+   for (auto& shape : m_circles) {
       shape->SetFillColor(color);
       shape->SetFillStyle(1001);
-      // else:
+      // else: //TODOAJR
       //     shape.SetFillStyle(0);
       shape->SetLineColor(1);
       shape->SetLineStyle(1) ;
-      color=0; //Set color = 0 for inner circle
+      color = 0; //Set color = 0 for inner circle
    }
-   
 }
 /*
- 
+
  void GDetectorElement::Draw(std::string projection){
  if  (projection == "xy"){
  for (auto circle : m_circles) {
@@ -120,14 +128,14 @@ m_detElem (de)
 
 /*
  if __name__ == '__main__':
- 
+
  from ROOT import TCanvas, TH2F
  from heppy_fcc.fastsim.detectors.CMS import CMS
  from heppy_fcc.display.core import Display
- 
+
  cms = CMS()
  gcms = GDetector(cms)
- 
+
  display = Display()
  display.register(gcms, 0)
  display.draw()

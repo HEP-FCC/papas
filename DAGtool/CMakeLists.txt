@@ -28,10 +28,12 @@ include_directories(
 )
 
 file(GLOB headers examples/*.h directedacyclicgraph.h)
-add_executable(DAG_id examples/DAG_example_longidnode.cc  ${headers} examples/simpleidentifier.cc )
+add_executable(DAG_id examples/DAG_example_longidnode.cc   examples/simpleidentifier.cc )
 add_executable(DAG_poly examples/DAG_example_polymorphic.cc  directedacyclicgraph.h )
+add_executable(DAG_id2 examples/DAG_example_longidnode.cc   examples/simpleidentifier.cc )
 
 target_link_libraries(DAG_id )
+target_link_libraries(DAG_id2 )
 target_link_libraries(DAG_poly )
 
 #If the Boost Package is found then the fianl example can be compiled.

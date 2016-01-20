@@ -5,7 +5,7 @@ project(fastsim)
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 ### where to find the executables
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}") 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}") 
 
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
@@ -31,11 +31,12 @@ find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF
 
 include(${ROOT_USE_FILE})
 
-include_directories(${CMAKE_SOURCE_DIR}/fastsim)
+include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
+${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
 
 add_subdirectory(fastsim)
 add_subdirectory(main)
-add_subdirectory(DAG)
+add_subdirectory(DAGtool)
 
 
 

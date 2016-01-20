@@ -37,49 +37,7 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-#this should come from env variables..... but isn't working just yet'
-set(BOOST_ROOT /usr/local/boost_1_59_0)
-find_package(Boost 1.59.0 REQUIRED)
-include_directories( ${Boost_INCLUDE_DIRS}   /Users/alice/fcc/cpp/papas/src/  )
-
-
-ROOT_GENERATE_DICTIONARY(fastsim_Dict ../fastsim/my_utilities.h  LINKDEF ../fastsim/my_utilities_LinkDef.h)
-add_library(fastsim SHARED
-../detectors/CMS.h
-../detectors/detector.h
-../detectors/geometry.h
-../detectors/material.h
-../pfobjects/particle.h
-../pfobjects/pfobjects.h
-../pfobjects/baseparticle.h
-../simulation/simulator.h
-../utility/identifier.h
-../utility/identifier.cc
-../DAG/directedacyclicgraph.h
-../fastsim/my_utilities.h
-../fastsim/my_utilities.cpp
-../detectors/material.cc
-../detectors/detector.cc
-../detectors/geometry.cc
-../detectors/CMS.cc
-../pfobjects/particle.cc
-../pfobjects/baseparticle.cc
-../pfobjects/pfobjects.cc
-../simulation/simulator.cc
-../utility/enummanager.h
-../utility/enumhelper.h
-../pfobjects/path.h
-../pfobjects/path.cc
-../utility/deltar.h
-../utility/deltar.cc
-../display/displaygeometry.cc
-../display/displaygeometry.h
-../display/displaycore.cc
-../display/displaycore.h
-../display/displaypfobjects.cc
-../display/displaypfobjects.h
-fastsim_Dict.cxx)
-target_link_libraries(fastsim ${ROOT_LIBRARIES}  )
+MESSAGE( STATUS "Doxygen engaging " )
 
 FIND_PACKAGE( Doxygen )
 IF( DOXYGEN_FOUND )
@@ -88,10 +46,10 @@ IF( DOXYGEN_FOUND )
 ADD_CUSTOM_TARGET( doc )
 ADD_CUSTOM_COMMAND( TARGET doc
 COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-"${PROJECT_SOURCE_DIR}/README.md" "${PROJECT_SOURCE_DIR}/doc/README.md"
+"${PROJECT_SOURCE_DIR}/../README.md" "${PROJECT_SOURCE_DIR}/../doc/README.md"
 COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile"
-WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-COMMENT "Building API Documentation in ${PROJECT_SOURCE_DIR}/doc... "
+WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/../doc"
+COMMENT "Building API Documentation in ${PROJECT_SOURCE_DIR}/../doc... "
 VERBATIM )
 
 ELSE()
@@ -101,6 +59,47 @@ MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
 SET( INSTALL_DOC OFF )
 ENDIF()
 ENDIF()
+
+#this should come from env variables
+#set(BOOST_ROOT /usr/local/boost_1_59_0)
+#set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root)
+find_package(Boost 1.59.0 REQUIRED)
+
+#make this automated
+set (MAINDIR /Users/alice/fcc/cpp/papas/src/)
+file(GLOB_RECURSE sources     
+${MAINDIR}/datatypes/*.cc ${MAINDIR}/datatypes/*.h
+${MAINDIR}/fastsim/*.cc ${MAINDIR}/fastsim/*.h
+${MAINDIR}/utility/*.cc ${MAINDIR}/utility/*.h
+${MAINDIR}/display/*.cc ${MAINDIR}/display/*.h
+${MAINDIR}/detectors/*.cc ${MAINDIR}/detectors/*.h
+${MAINDIR}/simulation/*.cc ${MAINDIR}/simulation/*.h)
+
+include_directories( ${Boost_INCLUDE_DIRS}
+${CMAKE_CURRENT_SOURCE_DIR}
+${MAINDIR}/datatypes/
+${MAINDIR}/fastsim/
+${MAINDIR}/display/
+${MAINDIR}/detectors/
+${MAINDIR}/simulation/
+${MAINDIR}/utility
+${MAINDIR}/utility/
+${MAINDIR}/DAGtool/
+)
+
+
+
+#get_cmake_property(_variableNames VARIABLES)
+#foreach (_variableName ${_variableNames})
+#message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
+
+ROOT_GENERATE_DICTIONARY(fastsim_Dict my_utilities.h  LINKDEF my_utilities_LinkDef.h)
+add_library(fastsim SHARED ${sources} ${MAINDIR}/DAGtool/directedacyclicgraph.h
+fastsim_Dict.cxx)
+target_link_libraries(fastsim ${ROOT_LIBRARIES}  )
+
+
 
 
 

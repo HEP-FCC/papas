@@ -7,12 +7,16 @@
 
 
 #include <string>
-#include <unordered_map>
+//#include <unordered_map>
+#include <map>
 #include <list>
-#include <memory>
+//#include <memory>
+
+//#include "enum.h"
+
+
 #include "material.h"
 #include "geometry.h"
-
 class Particle;
 class Material;
 class VolumeCylinder;
@@ -22,25 +26,24 @@ class Cluster;
  Class base for ECAL, HCAL, Track and field
 */
 
-class DetectorElement {
+class BaseDetectorElement {
 public:
-   DetectorElement(const std::string& name, const VolumeCylinder&& volume,
-                   const Material&&
-                   material); ///< allows the Material and Volume to be created on the fly
+   BaseDetectorElement(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+                       const Material&&
+                       material); ///< allows the Material and Volume to be created on the fly
 
-   DetectorElement(const std::string& name, const VolumeCylinder&  volume,
-                   const Material&
-                   material); ///< requires the Material and Volume to be already in existance
+   BaseDetectorElement(fastsim::enumLayer layer, const VolumeCylinder&  volume,
+                       const Material&
+                       material); ///< requires the Material and Volume to be already in existance
    //AJRTODO assumes a volume will not change once created which seems reasonable
-   const VolumeCylinder* getVolume() const   ///< return the volume cyclinder
-   {
-      return &m_volume;
-   };
-   const std::string getName() const {return m_name;};
+   //to change to reference
+   const VolumeCylinder* getVolume() const  {return &m_volume; }///< return the volume cyclinder
+   const VolumeCylinder& getVol() const  {return m_volume; }///< return the volume cyclinder
+   fastsim::enumLayer getLayer() const {return m_layer;};
 protected:
    VolumeCylinder m_volume;
    Material m_material;
-   std::string m_name;
+   fastsim::enumLayer m_layer;
 private:
 };
 
@@ -48,35 +51,17 @@ private:
 /**
  Holds virtual functions that the user must define when creating their own ECAL class
 */
-class BaseECAL: public DetectorElement {
+class DetectorElement: public BaseDetectorElement {
 public:
-   using DetectorElement::DetectorElement;
-
-   virtual double energy_resolution(double energy) const = 0;
-   virtual double cluster_size(const Particle& ptc) const = 0 ;
-   virtual bool acceptance(const Cluster&) const = 0;
+   using BaseDetectorElement::BaseDetectorElement;
+   virtual double energyResolution(double energy) const = 0;
+   virtual double clusterSize(const Particle& ptc) const = 0 ;
+   virtual bool   acceptance(const Cluster&) const = 0;
+   //virtual bool   acceptance(const Track& track) const= 0;
    //virtual double space_resolution(Particle* ptc)=0;
 private:
 
 };
-
-
-///BaseECAL
-/**
- Holds virtual functions that the user must define when creating their own ECAL class
- */
-class BaseHCAL: public DetectorElement {
-public:
-   using DetectorElement::DetectorElement;
-   
-   virtual double energy_resolution(double energy) const = 0;
-   virtual double cluster_size(const Particle& ptc) const = 0 ;
-   virtual bool acceptance(const Cluster&) const = 0;
-   //virtual double space_resolution(Particle* ptc)=0;
-private:
-   
-};
-
 ///BaseDetector
 /**
    Class from which user can provide their own detector code
@@ -85,12 +70,32 @@ private:
 class BaseDetector {
 public:
    BaseDetector();
-   const std::list<SurfaceCylinder>  getSortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
-   std::shared_ptr<const DetectorElement> getElement(const std::string&) const;
+   //BaseDetector(std::shared_ptr<const DetectorElement> ECAL ,std::shared_ptr<const DetectorElement> HCAL);
+   //BaseDetector( DetectorElement& ECAL, DetectorElement& HCAL);
+   //BaseDetector( DetectorElement&& ECAL,DetectorElement&& HCAL);
+   const std::list<SurfaceCylinder>&
+   getSortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
+   std::shared_ptr<const DetectorElement> getElement(fastsim::enumLayer layer)
+   const;
+   std::shared_ptr<const DetectorElement> getECAL() const {return m_ECAL;};
+   std::shared_ptr<const DetectorElement> getHCAL() const {return m_HCAL;};
+   /*const DetectorElement& getElement( fastsim::enumLayer layer) const;
+   const DetectorElement& getECAL() const;
+   const DetectorElement& getHCAL() const;*/
 protected:
    //AJRTODO may replace this with explicit HCAL, ECAL etc
-   std::unordered_map<std::string, std::shared_ptr<const DetectorElement>>
-         m_detectorElements;
+   //need a po inter in this so that it i polymorphic
+   //TODO decide if should be a unique pointer etc?
+   //std::map<fastsim::enumLayer, std::shared_ptr<const DetectorElement>> m_detectorElements;
+   //NOW const?
+   //std::map<fastsim::enumLayer, DetectorElement> m_detectorElements;
+   //const DetectorElement& m_ECAL; //allow for polymorphism
+   //const DetectorElement& m_HCAL;
+   //DetectorElement& Field;
+   //DetectorElement& Treacker;
+
+   std::shared_ptr<const DetectorElement> m_ECAL;
+   std::shared_ptr<const DetectorElement> m_HCAL;
 private:
    std::list<SurfaceCylinder> m_cylinders; // or use pointers here?
 

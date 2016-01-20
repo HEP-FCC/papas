@@ -3,8 +3,8 @@
 //
 //
 #include <iostream>
-#include "display/displaypfobjects.h"
-
+#include "displaypfobjects.h"
+#include "identifier.h"
 
 
 
@@ -18,15 +18,16 @@ GBlob::GBlob(const Cluster& cluster)
    double ithetaphiradius = thetaphiradius * cluster.getEnergy() / max_energy;
 
    //set the layer
-   m_layer = cluster.getLayer();
+   m_layer = to_str(Identifier::getLayer(cluster.getID()));
 
    //set the color according to particle type
    int color = 1;
-   if (cluster.getPdgid() == 22 or cluster.getPdgid() == 11)
+   /*TODO
+    if (cluster.getPdgid() == 22 or cluster.getPdgid() == 11)
       color = 2;
    else if (cluster.getPdgid() > 0)
       color = 4;
-
+   */
    //AJRTODO implement the other projections
    //
    //TEllipse m_contourYz = TEllipse(pos.Z(), pos.Y(), radius);
@@ -47,12 +48,12 @@ GBlob::GBlob(const Cluster& cluster)
    m_inners["yz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), iradius)};
    m_contours["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), radius)};
    m_inners["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), iradius)};
-   m_contours["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(),thetaphiradius)};
-   m_inners["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(),ithetaphiradius)};
-   m_contours["HCAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(),thetaphiradius)};
-   m_inners["HCAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(),ithetaphiradius)};
-                                                                       //                              ithetaphiradius))};
-   
+   m_contours["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), thetaphiradius)};
+   m_inners["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), ithetaphiradius)};
+   m_contours["HCAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), thetaphiradius)};
+   m_inners["HCAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), ithetaphiradius)};
+   //                              ithetaphiradius))};
+
    //Loop thorugh inners and outers applying settings
    for (auto const& contour : m_contours) {
       contour.second->SetLineColor(color);
@@ -76,9 +77,10 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
 
    //find the approprite projection and plot it
    if (m_contours.find(projection) != m_contours.end()) {
-      m_contours.at(projection)->Draw(useopt.c_str()); // "at" instead of  []; otherwise fails because of const ness
+      m_contours.at(projection)->Draw(
+         useopt.c_str()); // "at" instead of  []; otherwise fails because of const ness
    }
-   
+
    //TODOAJR else
    // raise ValueError('implement drawing for projection ' + projection )
    if (m_inners.find(projection) != m_inners.end()) {
@@ -125,7 +127,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
       X.push_back(points[i].X());
       Y.push_back(points[i].Y());
       Z.push_back(points[i].Z());
-      
+
       //first point is wrong and should be tppoint = description.p4().Vect()
       tX.push_back(M_PI_2 - points[i].Theta());
       tY.push_back(points[i].Phi());
@@ -136,14 +138,14 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
    m_graphs["xy"] = std::unique_ptr<TGraph> {new TGraph(npoints, &X[0], &Y[0])};
    m_graphs["yz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &Y[0])};
    m_graphs["xz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &X[0])};
-   
+
    m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
    m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
 
-   
-   
+
+
    //AJRTODO add in other projections
-   
+
    //set graph styles
    for (auto const& graph : m_graphs) {
       graph.second->SetMarkerStyle(2);
@@ -166,7 +168,8 @@ void GTrajectory::Draw(const std::string&   projection ,
 {
    std::string usedopt = "lpsame"; //AJRTODO
 
-   m_graphs.at(projection) ->Draw(usedopt.c_str()); // "at" instead of  [] otherwise fails because of const ness
+   m_graphs.at(projection) ->Draw(
+      usedopt.c_str()); // "at" instead of  [] otherwise fails because of const ness
 
    // raise ValueError('implement drawing for projection ' + projection )
 
@@ -175,7 +178,7 @@ void GTrajectory::Draw(const std::string&   projection ,
 
 ///Constructor for showing tracks
 GTrajectories::GTrajectories(const  std::vector<TVector3>& points)
-   //AJRTODO const std::list<Particle>& particles)
+//AJRTODO const std::list<Particle>& particles)
 {
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
    m_gTrajectories.push_back(GTrajectory(points));
