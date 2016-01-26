@@ -27,11 +27,14 @@ class VolumeCylinder;
       It is intended to be replaced by users to match the required detector characteristics
 
  */
-class ECAL: public DetectorElement {
+
+//CMSECAL inherit from ECAL clustersize/acceptance/energy resolution
+//ECAL inherits from DetectorElement
+class CMSECAL: public ECAL {
 public:
    //AJRTODO check whether both cosntructors are needed
    ///constructor - allows the Material and Volume to be created on the fly
-   ECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+   CMSECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
         const Material&& material, double eta_crack, double emin,
         const std::vector<double>&&
         eres);
@@ -52,16 +55,16 @@ private:
 };
 
 
-class HCAL: public DetectorElement {
+class CMSHCAL: public HCAL {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   HCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+   CMSHCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
         const Material&& material,
         const std::vector<double>&&
         eres);
    ///constructor - requires the Material and Volume to be already in existance
-   HCAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
+   CMSHCAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
         const Material& material ,
         const std::vector<double>&
         eres);
@@ -73,6 +76,36 @@ public:
 private:
    std::vector<double> m_eres; ///energy resolution
 };
+
+class CMSTracker: public Tracker {
+public:
+   //TODO consider best approach for below?
+   ///constructor - allows the Material and Volume to be created on the fly
+   CMSTracker(fastsim::enumLayer layer, const VolumeCylinder&& volume );
+   ///constructor - requires the Material and Volume to be already in existance
+   CMSTracker(fastsim::enumLayer layer, const VolumeCylinder& volume);
+   virtual double getPtResolution(const Track&) const override;
+   virtual bool   acceptance(const Track&) const override;
+      //TODOAJR space_resolution(self, ptc):
+private:
+    
+};
+class CMSField: public Field {
+public:
+   //TODO consider best approach for below?
+   ///constructor - allows the Material and Volume to be created on the fly
+   CMSField(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+              double
+              );
+   ///constructor - requires the Material and Volume to be already in existance
+   CMSField(fastsim::enumLayer layer, const VolumeCylinder& volume, double);
+   //virtual double ptResolution(const Track&) const override;
+   //virtual bool   acceptance(const Track&) const override;
+   //TODOAJR space_resolution(self, ptc):
+private:
+    double m_magnitude;
+};
+
 
 class CMS: public BaseDetector {
 public:

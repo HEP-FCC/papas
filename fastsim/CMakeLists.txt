@@ -96,7 +96,7 @@ ${MAINDIR}/DAGtool/
 
 ROOT_GENERATE_DICTIONARY(fastsim_Dict my_utilities.h  LINKDEF my_utilities_LinkDef.h)
 add_library(fastsim SHARED ${sources} ${MAINDIR}/DAGtool/directedacyclicgraph.h
-fastsim_Dict.cxx)
+${MAINDIR}/utility/random.cc ${MAINDIR}/utility/random.h fastsim_Dict.cxx)
 target_link_libraries(fastsim ${ROOT_LIBRARIES}  )
 
 

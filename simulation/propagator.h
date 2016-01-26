@@ -2,44 +2,48 @@
 #ifndef propogator_h
 #define propogator_h
 #include "detector.h"
-#include "pfobjects.h"
+#include "datatypes.h"
 
 
 class Propagator {
 public:
-   Propagator(const BaseDetector& det);
-   virtual void propagateOne(SimParticle& ptc, fastsim::enumLayer Layer,
-                             bool inner = true) = 0;
+   Propagator();
+   //virtual void propagateOne(SimParticle& ptc, fastsim::enumLayer Layer,
+   //                          bool inner = true) = 0;
+   
+   virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder & cyl)=0;
+
+protected:
    virtual void propagateOne(SimParticle& ptc, std::string cylindername,
                              double cylinderz, double cylinderradius) = 0;
 
-protected:
-   const BaseDetector& m_detector;
+};
+
+class StraightLinePropagator  {
+public:
+   StraightLinePropagator();
+   //void propagateOne(SimParticle& ptc, fastsim::enumLayer Layer,
+   //                  bool inner = true) override;
+   void propagateOne(SimParticle& ptc, const SurfaceCylinder & cyl) ;
+
+private:
+   void propagateOne(SimParticle& ptc, std::string cylindername, double cylinderz,
+                     double cylinderradius) ;
+
 
 };
 
-class StraightLinePropagator : public Propagator {
+class HelixPropagator {
 public:
-   using Propagator::Propagator;
-   void propagateOne(SimParticle& ptc, fastsim::enumLayer Layer,
-                     bool inner = true) override;
-   void propagateOne(SimParticle& ptc, std::string cylindername, double cylinderz,
-                     double cylinderradius) override;
-
-private:
-
-
-};
-
-class HelixPropagator : public Propagator {
-public:
-   HelixPropagator(const BaseDetector& det, double field);
-   void propagateOne(SimParticle& ptc, fastsim::enumLayer Layer,
-                     bool inner = true) override;
-   void propagateOne(SimParticle& ptc, std::string cylindername, double cylinderz,
-                     double cylinderradius) override;
-private:
+   HelixPropagator( double field);
+   virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder & cyl,const Field& field,
+                             bool debugInfo) ;
+   private:
    double m_field;
+   void propagateOne(SimParticle& ptc, std::string cylindername, double cylinderz,
+                     double cylinderradius,const Field& field,
+                     bool debugInfo) ;
+
 
 };
 #endif

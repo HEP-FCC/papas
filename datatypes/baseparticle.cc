@@ -59,12 +59,11 @@ BaseParticle::BaseParticle(int pdgid, double charge) :
    m_tlv = TLorentzVector{0., 0., 0., 0.};
    ;
 }
-
+//TODO tidy tlv
 BaseParticle::BaseParticle() :
    m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
    m_particleid(0), m_charge(0), m_status(0)
 {
-   m_tlv = TLorentzVector{0., 0., 0., 0.};
 
 }
 

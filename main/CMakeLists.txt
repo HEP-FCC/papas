@@ -25,9 +25,10 @@ include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CM
 ${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
 set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root)
 
+
+
+#add_subdirectory(../tests)
+
+
 add_executable(mainexe ../main.cpp)
 target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} )
-
-
-
-

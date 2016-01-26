@@ -11,6 +11,9 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
+//temp
+#include <iostream>
+
 
 /// Path followed by a particle in 3D space.
 class Path {
@@ -19,8 +22,10 @@ class Path {
    ///Path base class is for straightline.
    ///
 public:
-   Path(const TLorentzVector& p4, const TVector3& origin);
-   void addPoint(std::string label, TVector3& vec) { m_points[label] = vec;}
+   typedef std::unordered_map<std::string, TVector3> Points;
+   Path(const TLorentzVector& p4, TVector3 origin);
+   Path();
+   void addPoint(std::string label, TVector3 vec) { std::cout<<label ; m_points[label] = vec;}
 
    double getTimeAtZ(double z) const ;
    double getDeltaT(double path_length) const;
@@ -31,29 +36,32 @@ public:
    const TVector3& getOrigin() const {return m_origin ;};
    const TVector3& getNamedPoint(std::string name);
    virtual TVector3 getPointAtTime(double time) const;
-
+   const Points& getPoints(){ return m_points;};
 protected:
    //TODO think whether these TVector3s are OK (or should be pointers).
    TVector3 m_udir;
    double m_speed;
    TVector3 m_origin;
-   std::unordered_map<std::string, TVector3>
-   m_points; //TODO make this an enumeration
-
+   //TODO make this an enumeration
+   Points m_points;
 private:
 };
 
 //TODO underdevelopment
 class Helix : public Path {
 public:
+   Helix();
    Helix(double field, double charge, const TLorentzVector& p4,
          const TVector3& origin);
    std::vector<double> getPolarAtTime(double time) const;
    double getTimeAtPhi(double phi) const;
    double getPhi(double x, double y) const;
+   double getRho() const {return m_rho;};
    double getPathLength(double deltat) const;
    TVector3 getPointFromPolar(const std::vector<double>& polar) const;
    TVector3 getPointAtTime(double time) const override;
+   TVector3 getExtremePointXY() const  {return m_extremePointXY;};
+   TVector3 getCenterXY() const {return m_centerXY;};
 
 private:
    //double m_charge;
@@ -63,9 +71,10 @@ private:
    double m_phiMin; ///Minimum angle of ARC
    double m_phiMax;
    TVector3 m_vOverOmega;
-   TVector3 m_centerXy;
-   TVector3 m_extremePointXy;
+   TVector3 m_centerXY;
+   TVector3 m_extremePointXY;
 };
+
 
 
 

@@ -1,3 +1,4 @@
+
 //
 //  main.cpp
 //
@@ -21,7 +22,7 @@
 #include "detectors/geometry.h"
 #include "detectors/CMS.h"
 #include "particle.h"
-#include "pfobjects.h"
+#include "datatypes.h"
 #include "simulation/simulator.h"
 #include "path.h"
 #include "displaygeometry.h"
@@ -31,7 +32,7 @@
 
 
 
-int xmain(int argc, char* argv[]){
+int main(int argc, char* argv[]){
    
    
    
@@ -49,13 +50,17 @@ int xmain(int argc, char* argv[]){
    Simulator sim= Simulator{CMSDetector};
    
    //simulate some photons
-   for (int i=0; i<10;i++  )
-   {
-      TLorentzVector tlvphoton=MakeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100.*i);
+   for (int i=1; i<2;i++  )
+   { //todo  lower case m
+      TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100.*(i));
       SimParticle photon = SimParticle(22, tlvphoton) ;
       sim.addParticle(photon);
       sim.simulatePhoton(photon);
+      
    }
+   //lower case
+   sim.Experiment(); //Write lists of connected items
+   
  
    //TODO try to remove/reduce use of shared_ptrs here.
    Display display = Display({Projection::xy,Projection::yz});

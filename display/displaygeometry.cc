@@ -65,8 +65,8 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
    //        create a box (longways cross section) for thetaphi projections
 
    for (auto const& elem : {m_detElem->getVol().Outer(), m_detElem->getVol().Inner()}) { //AJRTODO should be if inner ......
-      double radius =  elem->getRadius();
-      double dz = elem->Z();
+      double radius =  elem.getRadius();
+      double dz = elem.Z();
 
       m_circles.push_back(std::unique_ptr<TEllipse> { new TEllipse(0., 0., radius, radius)});
       m_boxes.push_back(std::unique_ptr<TBox> { new TBox(-dz, -radius, dz, radius)});

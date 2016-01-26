@@ -21,23 +21,23 @@ class Particle;
 class Material;
 class VolumeCylinder;
 class Cluster;
+class Track;
 ///DetectorElement
 /**
  Class base for ECAL, HCAL, Track and field
 */
 
-class BaseDetectorElement {
+
+//TODO rename this t DEtector Ekenebt
+class DetectorElement {
 public:
-   BaseDetectorElement(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+   DetectorElement(fastsim::enumLayer layer, const VolumeCylinder&& volume,
                        const Material&&
                        material); ///< allows the Material and Volume to be created on the fly
 
-   BaseDetectorElement(fastsim::enumLayer layer, const VolumeCylinder&  volume,
+   DetectorElement(fastsim::enumLayer layer, const VolumeCylinder&  volume,
                        const Material&
                        material); ///< requires the Material and Volume to be already in existance
-   //AJRTODO assumes a volume will not change once created which seems reasonable
-   //to change to reference
-   const VolumeCylinder* getVolume() const  {return &m_volume; }///< return the volume cyclinder
    const VolumeCylinder& getVol() const  {return m_volume; }///< return the volume cyclinder
    fastsim::enumLayer getLayer() const {return m_layer;};
 protected:
@@ -47,21 +47,56 @@ protected:
 private:
 };
 
-///BaseECAL
 /**
  Holds virtual functions that the user must define when creating their own ECAL class
 */
-class DetectorElement: public BaseDetectorElement {
+// get rid of this
+class ECAL :public DetectorElement {
 public:
-   using BaseDetectorElement::BaseDetectorElement;
+   using DetectorElement::DetectorElement;
    virtual double energyResolution(double energy) const = 0;
    virtual double clusterSize(const Particle& ptc) const = 0 ;
-   virtual bool   acceptance(const Cluster&) const = 0;
+   virtual bool   acceptance(const Cluster& ptc) const = 0;
    //virtual bool   acceptance(const Track& track) const= 0;
    //virtual double space_resolution(Particle* ptc)=0;
 private:
 
 };
+
+class HCAL :public DetectorElement {
+public:
+   using DetectorElement::DetectorElement;
+   virtual double energyResolution(double energy) const = 0;
+   virtual double clusterSize(const Particle& ptc) const = 0 ;
+   virtual bool   acceptance(const Cluster& ptc) const = 0;
+   //virtual bool   acceptance(const Track& track) const= 0;
+   //virtual double space_resolution(Particle* ptc)=0;
+private:
+   
+};
+
+class Field: public DetectorElement {
+public:
+   using DetectorElement::DetectorElement;
+   //virtual double ptResolution(const Track&) const = 0;
+   //virtual bool   acceptance(const Track&) const = 0;
+   //virtual bool   acceptance(const Track& track) const= 0;
+   //virtual double space_resolution(Particle* ptc)=0;
+protected:
+   double m_magnitude;
+};
+
+
+class Tracker: public DetectorElement {
+public:
+   using DetectorElement::DetectorElement;
+   virtual double getPtResolution(const Track&) const = 0;
+   virtual bool   acceptance(const Track&) const = 0;   //virtual bool   acceptance(const Track& track) const= 0;
+   //virtual double space_resolution(Particle* ptc)=0;
+protected:
+   //double m_magnitude;
+};
+
 ///BaseDetector
 /**
    Class from which user can provide their own detector code
@@ -77,8 +112,10 @@ public:
    getSortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
    std::shared_ptr<const DetectorElement> getElement(fastsim::enumLayer layer)
    const;
-   std::shared_ptr<const DetectorElement> getECAL() const {return m_ECAL;};
-   std::shared_ptr<const DetectorElement> getHCAL() const {return m_HCAL;};
+   std::shared_ptr<const ECAL> getECAL() const {return m_ECAL;};
+   std::shared_ptr<const HCAL> getHCAL() const {return m_HCAL;};
+   std::shared_ptr<const Tracker> getTracker() const {return m_Tracker;};
+   std::shared_ptr<const Field> getField() const {return m_Field;};
    /*const DetectorElement& getElement( fastsim::enumLayer layer) const;
    const DetectorElement& getECAL() const;
    const DetectorElement& getHCAL() const;*/
@@ -93,9 +130,14 @@ protected:
    //const DetectorElement& m_HCAL;
    //DetectorElement& Field;
    //DetectorElement& Treacker;
+   //CMSECAL cmsthing;
+   //ECAL (cmsthings);
+   std::shared_ptr<const ECAL> m_ECAL;
+   std::shared_ptr<const HCAL> m_HCAL;
+   std::shared_ptr<const Tracker> m_Tracker;
+   std::shared_ptr<const Field> m_Field;
 
-   std::shared_ptr<const DetectorElement> m_ECAL;
-   std::shared_ptr<const DetectorElement> m_HCAL;
+   
 private:
    std::list<SurfaceCylinder> m_cylinders; // or use pointers here?
 

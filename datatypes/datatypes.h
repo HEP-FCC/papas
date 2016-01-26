@@ -2,8 +2,8 @@
 //  Created by Alice Robson on 29/11/15.
 //  TODO RENAME THIS to DATATYPES
 //
-#ifndef  PFOBJECTS_H
-#define PFOBJECTS_H
+#ifndef  datatypes_H
+#define datatypes_H
 
 #include <string>
 #include <list>
@@ -17,10 +17,10 @@
 
 /// Function to create a new TLorentzVector
 /**
- \file pfobjects.h
+ \file datatypes.h
  note I beleiveit is not possible to use move or Rvalue references because TLorentzVector does not support move
  */
-TLorentzVector MakeParticleLorentzVector(int pdgid, double theta, double  phi,
+TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy);
 
 
@@ -29,7 +29,8 @@ public:
    Cluster(double energy, const TVector3& position, double size_m,
            long id);
    Cluster();
-
+   Cluster( Cluster && c);
+   Cluster (const Cluster& c) = default;
    //Cluster (const Cluster& c):  Momentum(c.m_energy,c.m_position),m_size(c.m_size) ,m_pt(c.m_pt) ,m_uniqueid(c.m_uniqueid){std::cout<< "copy cluster" <<std::endl;};//TODO rest of stuff
    //  Cluster (Cluster&& c):  Momentum(c.m_energy,c.m_position),m_size(c.m_size) , m_pt(c.m_pt),m_uniqueid(c.m_uniqueid) {std::cout<< "move cluster" <<std::endl;};//TODO rest of stuff
    //Cluster& operator =(const Cluster & c) ;
@@ -41,7 +42,7 @@ public:
    double getEnergy() const   {return m_energy;};
    double getEta() const      {return m_position.Eta();};
    long getID() const         {return m_uniqueid;}
-   const TVector3& getPosition() const {return m_position;};
+   TVector3 getPosition() const {return m_position;};
 
    std::pair<bool, double> isInside(const TVector3& point) const;
    void setEnergy(double energy);
@@ -72,6 +73,35 @@ private:
    Cluster  m_mother;
 };*/
 
+class Track{
+public:
+   Track(const TVector3& p3, double charge,const  Path& path, long id);
+   
+
+   double getPt() const       {return m_p3.Perp();};
+   double getEnergy() const   {return m_p3.Mag();};
+   double getEta() const      {return m_p3.Eta();};
+   double getCharge() const   {return m_charge;};
+   long getID() const         {return m_uniqueid;}
+   //const TVector3& getPosition() const {return m_position;};
+   
+   std::pair<bool, double> isInside(const TVector3& point) const;
+   void setEnergy(double energy);
+   void setSize(double value) ;
+   static double s_maxenergy; //AJR is this in the right place
+   
+protected:
+   
+   double m_pt;
+   long m_uniqueid;
+   TVector3 m_p3;
+   const Path& m_path;
+   double m_charge;
+};
+   
+
+
+
 
 class SimParticle: public Particle {
 public:
@@ -82,11 +112,17 @@ public:
 
    SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex = TVector3(0., 0.,
                0.));
-   Path& getPath() {return m_path;}
+   //SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex = TVector3(0., 0.,
+   //                                                                         0.));
+   Path& getPath() {if (m_isHelix) return m_helix; else return m_path;};
+   //Helix& getHelix() {return m_helix;}
    const TVector3& getPathPosition(std::string name);
+   
 private:
    TVector3 m_vertex;
    Path m_path;
+   Helix m_helix;
+   bool m_isHelix;
 };
 /*
 
@@ -148,37 +184,7 @@ def set_path(self, path, option=None):
 
 
 /*
- class Track{
- Track(TVector3& p3, double charge, Path& path, Particle& p):
-
- TVector3 m_p3 ;= p3
- m_pt = p3.Perp()
- m_energy = p3.Mag()  #TODO clarify energy and momentum
- m_charge = charge
- m_path = path
- m_particle = particle
- m_layer = 'tracker'
-
- super(Track, self).__init__()
- self.p3 = p3
- self.pt = p3.Perp()
- self.energy = p3.Mag()  #TODO clarify energy and momentum
- self.charge = charge
- self.path = path
- self.particle = particle
- self.layer = 'tracker'
-
- def __str__(self):
- return '{classname:15}: {e:7.2f} {pt:7.2f} {theta:5.2f} {phi:5.2f}'.format(
- classname = self.__class__.__name__,
- pt = self.pt,
- e = self.energy,
- theta = math.pi/2. - self.p3.Theta(),
- phi = self.p3.Phi()
- )
- }
-
-
+ 
 
  class Track(PFObject):
 

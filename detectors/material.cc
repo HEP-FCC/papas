@@ -2,11 +2,11 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include <random>
+
 #include "material.h"
 
 Material::Material(fastsim::enumLayer layer, double x0, double lambdaI) :
-   m_layer(layer), m_x0(x0), m_lambdaI(lambdaI)
+m_layer(layer), m_x0(x0), m_lambdaI(lambdaI),m_randExp(new fastsim::RandExponential(lambdaI))
 {
 }
 
@@ -26,11 +26,13 @@ double Material::PathLength(/*AJRTODO const Particle& ptc)*/)
    if (freepath == 0.) {
       return std::numeric_limits<double>::max(); //maximum value for a double
    } else { // make random number exp distribution
-      std::default_random_engine generator;
+      /*std::default_random_engine generator;
       std::exponential_distribution<double> distribution(
          c_exp_lambda); //AJR double check as expected & write test
-      double rnumber = distribution(generator);
-      return rnumber;
+      double rnumber = distribution(generator);*/
+      //fastsim::RandExponential rexp(m_lambdaI);
+      //return rexp() ;
+      return (*m_randExp)();
    }
 }
 

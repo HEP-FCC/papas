@@ -37,7 +37,7 @@ ${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}
 add_subdirectory(fastsim)
 add_subdirectory(main)
 add_subdirectory(DAGtool)
-
+add_subdirectory(tests)
 
 
 

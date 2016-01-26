@@ -10,7 +10,7 @@
 
 
 
-BaseDetectorElement::BaseDetectorElement(fastsim::enumLayer layer,
+DetectorElement::DetectorElement(fastsim::enumLayer layer,
       const  VolumeCylinder& volume , const Material& material) :
    m_volume(volume), m_material(material), m_layer(layer)
 {}

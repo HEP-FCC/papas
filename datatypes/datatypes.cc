@@ -2,7 +2,7 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "pfobjects.h"
+#include "datatypes.h"
 #include<cmath>
 #include<iostream>
 #include<utility>
@@ -45,6 +45,16 @@ Cluster::Cluster() :
    setEnergy(0);
 }
 
+
+Cluster::Cluster( Cluster && c) :
+m_size(c.m_size),
+m_angularsize(c.m_angularsize),
+m_pt(c.m_pt),
+m_uniqueid(c.m_uniqueid),
+m_energy(c.m_energy)
+{
+   m_position=c.m_position;
+}
 
 
 void Cluster::setSize(double value)
@@ -99,6 +109,16 @@ void Cluster::setEnergy(double energy)
 }
 
 
+Track::Track(const TVector3& p3, double charge,const  Path& path, long id) :
+m_p3(p3),m_charge(charge),m_path(path),m_uniqueid(id)
+{
+   
+}
+   
+   
+
+
+
 /*
  Cluster& Cluster::operator=(Cluster&& c) {
  m_energy=c.m_energy;
@@ -140,10 +160,12 @@ SmearedCluster::SmearedCluster(const Cluster& mother, double energy,
 SimParticle::SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex) :
    Particle(Identifier::makeParticleID(fastsim::enumSource::SIMULATION), pdgid,
             0.0, tlv),
-   m_vertex(vertex),
-   m_path(tlv, vertex)
+m_vertex(vertex),
+m_path(tlv,vertex),
+m_helix(),
+m_isHelix(false)
 {
-
+   
 };
 
 
@@ -154,7 +176,7 @@ const TVector3& SimParticle::getPathPosition(std::string name)
 
 }
 
-TLorentzVector MakeParticleLorentzVector(int pdgid, double theta, double  phi,
+TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy)
 {
    double mass = ParticleData::getParticleMass(pdgid);

@@ -2,27 +2,32 @@
 
 //#include <iostream>
 #include "path.h"
-#include "pfobjects.h"
+#include "datatypes.h"
 #include "propagator.h"
+#include "geotools.h"
 
-Propagator::Propagator(const BaseDetector& det)
-   : m_detector(det)
+
+
+
+Propagator::Propagator()
 {
+}
 
+StraightLinePropagator::StraightLinePropagator()
+{
 }
 
 void StraightLinePropagator::propagateOne(SimParticle& ptc,
-      std::string cylindername, double cylinderz, double cylinderradius)
+                                          std::string cylindername,
+                                          double cylinderz,
+                                          double cylinderradius)
 {
    Path& line = ptc.getPath();
-   //print particle.p3().X(),particle.p3().Y(),particle.p3().Z()
-   //print particle.vertex.X(),particle.vertex.Y(),particle.vertex.Z()
-   //particle.set_path( line )
-
+   
    TVector3 udir = line.getUdir();
    TVector3 origin = line.getOrigin();
    double theta = udir.Theta();
-
+   
    double zbar = line.getUdir().Z(); // Z of unit vex
    if (zbar != 0) {
       double destz = (zbar > 0) ? cylinderz : -cylinderz;
@@ -44,70 +49,87 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
          // positive propagation -> correct solution.
          double kp = (-b + sqrt(delta)) / (2 * a);
          // print delta, km, kp
-         TVector3 destination = origin + udir * kp;
+         destination = origin + udir * kp;
          //TODO deal with Z == 0
          //TODO deal with overlapping cylinders
-         std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
-                   destination.Z() << std::endl;
-         line.addPoint(cylindername, destination);
+         
       }
-
+      std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
+      destination.Z() << std::endl;
+      line.addPoint(cylindername, destination);
    }
 }
-void StraightLinePropagator::propagateOne(SimParticle& ptc,
-      fastsim::enumLayer layer, bool inner)
-{
-   //DetectorElement elem= ;
-   const VolumeCylinder& V = m_detector.getElement(layer)->getVol();
-   propagateOne(ptc, V.InnerName(), V.Inner()->Z(), V.Inner()->getRadius());
-   //TODO outer as well
+/*void StraightLinePropagator::propagateOne(SimParticle& ptc,
+ fastsim::enumLayer layer, bool inner)
+ {
+ //DetectorElement elem= ;
+ const VolumeCylinder& V = m_detector.getElement(layer)->getVol();
+ propagateOne(ptc, V.InnerName(), V.Inner().Z(), V.Inner().getRadius());
+ //TODO outer as well
+ 
+ }*/
 
+void StraightLinePropagator::propagateOne(SimParticle& ptc,
+                                          const SurfaceCylinder & cyl)
+{
+   propagateOne(ptc, cyl.getName(), cyl.Z(), cyl.getRadius());
 }
 
-/*
-            class HelixPropagator(Propagator):
+/*class HelixPropagator: public Propagator{
+ propagateOne(SimParticle& ptc,
+ const SurfaceCylinder & cyl,const Field& field, bool debugInfo=False);
+ 
+ };*/
 
-            def propagate_one(self, particle, cylinder, field, debug_info=None):
-            helix = Helix(field, particle.q(), particle.p4(),
-                          particle.vertex)
-            particle.set_path(helix)
-            is_looper = helix.extreme_point_xy.Mag() < cylinder.rad
-            is_positive = particle.p4().Z() > 0.
-            if not is_looper:
-               xm, ym, xp, yp = circle_intersection(helix.center_xy.X(),
-                                                    helix.center_xy.Y(),
-                                                    helix.rho,
-                                                    cylinder.rad)
- // particle.points[cylinder.name+'_m'] = Point(xm,ym,0)
- // particle.points[cylinder.name+'_p'] = Point(xp,yp,0)
-               phi_m = helix.phi(xm, ym)
-               phi_p = helix.phi(xp, yp)
-               dest_time = helix.time_at_phi(phi_p)
-               destination = helix.point_at_time(dest_time)
-               if destination.Z()*helix.udir.Z()<0.:
-                  dest_time = helix.time_at_phi(phi_m)
-                  destination = helix.point_at_time(dest_time)
-                  if abs(destination.Z())<cylinder.z:
-                     particle.points[cylinder.name] = destination
-                     print  str(particle.pdgid) + " : helix point "  + cylinder.name + str( destination.Z())
-                     else:
-                        is_looper = True
-                        if is_looper:
-# extrapolating to endcap
-                           destz = cylinder.z if helix.udir.Z() > 0. else -cylinder.z
-                              dest_time = helix.time_at_z(destz)
-                              destination = helix.point_at_time(dest_time)
-# destz = cylinder.z if positive else -cylinder.z
-                              particle.points[cylinder.name] = destination
-                              print "helix point"  + cylinder.name
+void HelixPropagator::propagateOne(SimParticle& ptc,
+                                   const SurfaceCylinder & cyl,
+                                   const Field& field,
+                                   bool debugInfo)
+{
+   Helix& helix =dynamic_cast<Helix&>(ptc.getPath());
+   //Helix(field, ptc.getQ(), ptc.getP4(), ptc.getVertex);
+   //ptc.setPath(helix);
+   bool is_looper = helix.getExtremePointXY().Mag() < cyl.getRadius();
+   //bool is_positive = (ptc.getP4().Z() > 0.);
+   if (!is_looper) {
+      auto intersect =
+      circleIntersection(helix.getCenterXY().X(),helix.getCenterXY().Y(), helix.getRho(), cyl.getRadius());
+      
+      double phi_m = helix.getPhi(intersect[1].first, intersect[1].second);
+      double phi_p = helix.getPhi(intersect[2].first, intersect[2].second);
+      double dest_time = helix.getTimeAtPhi(phi_p);
+      TVector3 destination = helix.getPointAtTime(dest_time);
+      if (destination.Z()*helix.getUdir().Z()<0.) {
+         dest_time = helix.getTimeAtPhi(phi_m);
+         destination = helix.getPointAtTime(dest_time);
+      }
+      if (fabs(destination.Z())<cyl.Z()){
+         helix.addPoint(cyl.getName(),destination);
+      }
+      else
+         is_looper = true;
+      }
+   if (is_looper)
+   {
+      double destz = cyl.Z();
+      if (helix.getUdir().Z() > 0.)
+         destz = -destz;
+      double dest_time = helix.getTimeAtZ(destz);
+      TVector3 destination = helix.getPointAtTime(dest_time);
+      // destz = cylinder.z if positive else -cylinder.z
+      helix.addPoint(cyl.getName(), destination);
+   }
+   
+}
 
-                              info = Info()
-                              info.is_positive = is_positive
-                              info.is_looper = is_looper
-                              return info
 
-                              straight_line = StraightLinePropagator()
 
-                              helix = HelixPropagator()
-
- */
+      
+       
+       
+       
+       
+       
+       
+       
+    

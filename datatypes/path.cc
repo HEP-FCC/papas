@@ -13,7 +13,12 @@
 double gconstc = 299792458.0; //TODO constants.c)
 
 //Path::Path(const TLorentzVector& p4, std::shared_ptr<const TVector3> origin):
-Path::Path(const TLorentzVector& p4, const TVector3& origin) :
+
+Path::Path()
+{
+}
+
+Path::Path(const TLorentzVector& p4, TVector3 origin) :
    m_udir(p4.Vect().Unit()),
    m_speed(p4.Beta() * gconstc),
    m_origin(origin.X(), origin.Y(), origin.Z())
@@ -64,7 +69,9 @@ const TVector3& Path::getNamedPoint(std::string name)
    return m_points[name];
 }
 
-
+Helix::Helix()
+{
+}
 
 //Helix::Helix( double field,double charge,const TLorentzVector&  p4,std::shared_ptr<const TVector3> origin) :
 Helix::Helix(double field, double charge, const TLorentzVector&  p4,
@@ -80,14 +87,14 @@ Helix::Helix(double field, double charge, const TLorentzVector&  p4,
    m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
    TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();
    TVector3 origin_xy = TVector3(origin.X(), origin.Y(), 0.);
-   m_centerXy = origin_xy - charge * momperp_xy * m_rho;
-   TVector3 m_extremePoint_xy = TVector3(m_rho, 0., 0.);
-   if (m_centerXy.X() != 0 or m_centerXy.Y() != 0)
-      m_extremePointXy = m_centerXy + m_centerXy.Unit() * m_rho;
+   m_centerXY = origin_xy - charge * momperp_xy * m_rho;
+   m_extremePointXY = TVector3(m_rho, 0., 0.);
+   if (m_centerXY.X() != 0 or m_centerXY.Y() != 0)
+      m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
 
    // calculate phi range with the origin at the center,
    // for display purposes
-   TVector3 center_to_origin = origin_xy - m_centerXy;
+   TVector3 center_to_origin = origin_xy - m_centerXY;
    m_phi0 = center_to_origin.Phi();
    m_phiMin = m_phi0 * 180 / M_PI;
    m_phiMax = m_phiMin + 360.;
@@ -110,7 +117,7 @@ double Helix::getTimeAtPhi(double phi)  const
 double Helix::getPhi(double x, double y)  const
 {
    TVector3 xy = TVector3(x, y, 0.);
-   xy -= m_centerXy;
+   xy -= m_centerXY;
    return xy.Phi();
 }
 
@@ -120,7 +127,7 @@ TVector3 Helix::getPointFromPolar(const std::vector<double>& polar) const
    double z = polar[1];
    double phi = polar[2];
 
-   TVector3 xy = m_centerXy + m_rho * TVector3(cos(phi), sin(phi), 0.);
+   TVector3 xy = m_centerXY + m_rho * TVector3(cos(phi), sin(phi), 0.);
    return TVector3(xy.X(), xy.Y(), z);
 }
 

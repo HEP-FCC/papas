@@ -9,7 +9,7 @@
 #include <map>
 #include "enums.h"
 #include "detector.h"
-#include "pfobjects.h"
+#include "datatypes.h"
 #include "directedacyclicgraph.h"
 
 #include "identifier.h"
@@ -28,28 +28,33 @@ public:
    Simulator(const BaseDetector&);  //AJRTODO add logger
    void simulate();
    void simulatePhoton(SimParticle& ptc);
-   void Propagate(SimParticle& ptc); //more args needed
-   
    const Cluster& addECALCluster(SimParticle& ptc, double fraction = 1.,
                                  double csize = 0.);
    const Cluster& addHCALCluster(SimParticle& ptc, double fraction = 1.,
                                  double csize = 0.);
-   const Cluster& smearCluster(const Cluster& parent);
+   const Cluster& smearECALCluster(const Cluster& parent);
+   const Cluster& smearHCALCluster(const Cluster& parent);
+
    void addParticle(const SimParticle& ptc);
-   const Clusters& getClusters() {return m_clusters;};
+   const Clusters& getClusters() const {return m_clusters;} ;
+   void Experiment();
    
    //Clusterset ExportSimulatedClusters() const;
    //Particleset ExportSimulatedParticles() const;
 
 private:
+   void Propagate(SimParticle& ptc,const SurfaceCylinder &); //more args needed
    long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype); //move to private
    long makeParticleID(fastsim::enumSource source);
    const Cluster& addCluster(SimParticle& ptc, fastsim::enumLayer layer,
                              double fraction = 1., double csize = 0.);
    const Cluster& makeCluster(long clusterid, double energy, TVector3& pos,
                               double csize = 0.);
+   const Cluster& addSmearedCluster(const Cluster& parent, const Cluster& smeared);
+   const Cluster& makeSmearedCluster(const Cluster& parent,double energyresolution );
    void addNode(const long newid, const long parentid = 0);
    std::shared_ptr<const DetectorElement> getElem(fastsim::enumLayer layer);
+   
    const BaseDetector& m_detector;
    // all clusters
    Clusters m_clusters;

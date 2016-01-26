@@ -91,7 +91,8 @@ namespace DAG {
 
    ///Node class for visitor pattern templated on T the item of interest
    template <typename T> //T is the item of interest inside the Node
-   class Node {    public:
+   class Node {
+   public:
       typedef Node<T> TNode;
       typedef std::unordered_set<Node*> Nodeset; //Allows find with no repeat nodes
       /// Constructor
@@ -100,26 +101,21 @@ namespace DAG {
       Node();
       ///Key function for visitor pattern
       void accept(Visitor<TNode>& visitor);
-       /// return the node item
+      ///Add in a link (this will set the reverse parent link in the other node)
+      void addChild(Node& node);
+      /// return the node item
       const T& getValue() const              { return m_val;};
-
-      void setChildren(const Nodeset& nodes) { m_children = nodes; }
-      void setParents(const Nodeset& nodes)  { m_parents = nodes; }
-      void addChild(Node& node)             ; 
       const Nodeset& getChildren() const     { return m_children; }
       const Nodeset& getParents() const      { return m_parents; }
-      /*bool isLeaf() const                    { return m_children.size() == 0;}
-      bool isRoot() const                    { return m_parents.size() == 0;}*/
-
+      
    protected:
       T m_val; ///< thing that the node is encapsulating (eg identifier )
       Nodeset m_children; ///< direct child nodes
       Nodeset m_parents;  ///< direct parent nodes
-      void addParent(Node& node)             { m_parents.insert(&node); }
-
+      void addParent(Node& node)             { m_parents.insert(&node); } //private as only available via addChild
    };
-
-
+   
+   
 
    //Breadth First Search implementation of BFSVisitor (iterative)
    template <typename N> ///N is the Node
@@ -177,13 +173,16 @@ namespace DAG {
    {
    }
    
+   
    template<typename T>
    void Node<T>::addChild(Node& node)
    {
+      //AddChild automatically adds in the parent link - this should be a safer route and avoid
+      //missing links
          m_children.insert(&node);
          node.addParent(*this);
       
-   } // is this better
+   } 
    
    
 

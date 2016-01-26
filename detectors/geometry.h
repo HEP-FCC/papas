@@ -36,8 +36,8 @@ public:
    VolumeCylinder(const std::string& name, double outerrad, double outerz,
                   double innerrad = 0., double innerz = 0.);
    bool Contains(const TVector3& point) const;
-   const SurfaceCylinder* Inner() const {return &m_inner;}; // pointer or reference???
-   const SurfaceCylinder* Outer() const {return &m_outer;};
+   const SurfaceCylinder& Inner() const {return m_inner;}; 
+   const SurfaceCylinder& Outer() const {return m_outer;};
    const std::string InnerName() const {return m_inner.getName();};
    ~VolumeCylinder();
 
