@@ -36,8 +36,7 @@ private:
 class HelixPropagator {
 public:
    HelixPropagator( double field);
-   virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder & cyl,const Field& field,
-                             bool debugInfo) ;
+   virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder & cyl) ;
    private:
    double m_field;
    void propagateOne(SimParticle& ptc, std::string cylindername, double cylinderz,

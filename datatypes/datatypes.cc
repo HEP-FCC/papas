@@ -18,13 +18,13 @@ const double ParticleData::m_p = 1.;
 
 std::unordered_map<int, std::pair<double, int>> ParticleData::m_datamap =  {
    {11,  {ParticleData::m_e,   1}},
-   { -11, {ParticleData::m_e,  -1}},
+   {-11, {ParticleData::m_e,  -1}},
    {13,  {ParticleData::m_mu,  1}},
-   { -13, {ParticleData::m_mu, -1}},
+   {-13, {ParticleData::m_mu, -1}},
    {22,  {0,                   0}},
    {130, {ParticleData::m_K0,  0}},
    {211, {ParticleData::m_pi,  1}},
-   { -211, {ParticleData::m_pi, -1}}
+   {-211,{ParticleData::m_pi, -1}}
 }  ;
 
 
@@ -39,23 +39,6 @@ Cluster::Cluster(double energy, const TVector3& position, double size_m,
    setEnergy(energy);
 }
 
-Cluster::Cluster() :
-   m_uniqueid(0), m_position( {0., 0., 0.})
-{
-   setEnergy(0);
-}
-
-
-Cluster::Cluster( Cluster && c) :
-m_size(c.m_size),
-m_angularsize(c.m_angularsize),
-m_pt(c.m_pt),
-m_uniqueid(c.m_uniqueid),
-m_energy(c.m_energy)
-{
-   m_position=c.m_position;
-}
-
 
 void Cluster::setSize(double value)
 {
@@ -67,20 +50,64 @@ void Cluster::setSize(double value)
    //   import pdb; pdb.set_trace()
 }
 
-
-
-std::pair<bool, double> Cluster::isInside(const TVector3& point) const
+void Cluster::setEnergy(double energy)
 {
-   /*AJRTODOsubdists = [ (subc.position - point).Mag() for subc in m_subclusters ]
+   m_energy = energy;
+   if (energy > s_maxenergy)
+      s_maxenergy = energy;
+   m_pt = energy * m_position.Unit().Perp() ;
+}
+
+
+
+
+/*Cluster::Cluster( Cluster && c) :
+m_size(c.m_size),
+m_angularsize(c.m_angularsize),
+m_pt(c.m_pt),
+m_uniqueid(c.m_uniqueid),
+m_energy(c.m_energy)
+{
+   m_position=c.m_position;
+}
+
+
+ Cluster& Cluster::operator=(Cluster&& c) {
+ m_energy=c.m_energy;
+ m_position=c.m_position;
+ m_size=c.m_size;
+ m_pt=c.m_pt;
+ m_uniqueid=c.m_uniqueid;
+ std::cout<< "move assign cluster" <<std::endl;
+ return *this;
+ };
+ 
+ Cluster& Cluster::operator=(const Cluster& c) {
+ m_energy=c.m_energy;
+ m_position=c.m_position;
+ m_size=c.m_size;
+ m_pt=c.m_pt;
+ m_uniqueid=c.m_uniqueid;
+ std::cout<< "copy cluster" <<std::endl;
+ return *this;
+ };*/
+
+
+
+
+
+
+/*std::pair<bool, double> Cluster::isInside(const TVector3& point) const
+{
+   AJRTODOsubdists = [ (subc.position - point).Mag() for subc in m_subclusters ]
     dist = min(subdists)
     if dist < m_size():
     return True, dist
     else:
-    */
+ 
    double dist = 0.5;
    return std::pair<bool, double>(false, dist);
-
-}
+}*/
 
 /*Cluster* Cluster::additem(Cluster* other)
 {
@@ -100,80 +127,26 @@ std::pair<bool, double> Cluster::isInside(const TVector3& point) const
 }*/
 
 
-void Cluster::setEnergy(double energy)
+
+
+Track::Track(const TVector3 p3, double charge,const  Path& path, long id) :
+m_uniqueid(id),m_p3(p3),m_charge(charge),m_path(&path)
 {
-   m_energy = energy;
-   if (energy > s_maxenergy)
-      s_maxenergy = energy;
-   m_pt = energy * m_position.Unit().Perp() ;
 }
 
 
-Track::Track(const TVector3& p3, double charge,const  Path& path, long id) :
-m_p3(p3),m_charge(charge),m_path(path),m_uniqueid(id)
+SimParticle::SimParticle(long uniqueid,int pdgid, TLorentzVector tlv, double  field,TVector3 vertex) :
+   Particle(uniqueid, pdgid, ParticleData::getParticleCharge(pdgid), tlv),
+   m_vertex(vertex),
+   m_path(tlv,vertex),
+   m_helix(field,getCharge(),tlv,vertex),
+   m_isHelix(fabs(getCharge())>0.5)
 {
-   
-}
-   
-   
-
-
-
-/*
- Cluster& Cluster::operator=(Cluster&& c) {
- m_energy=c.m_energy;
- m_position=c.m_position;
- m_size=c.m_size;
- m_pt=c.m_pt;
- m_uniqueid=c.m_uniqueid;
- std::cout<< "move assign cluster" <<std::endl;
- return *this;
- };
-
- Cluster& Cluster::operator=(const Cluster& c) {
- m_energy=c.m_energy;
- m_position=c.m_position;
- m_size=c.m_size;
- m_pt=c.m_pt;
- m_uniqueid=c.m_uniqueid;
- std::cout<< "copy cluster" <<std::endl;
- return *this;
- };*/
-
-/*
-SmearedCluster::SmearedCluster(const Cluster& mother, double energy,
-                               const TVector3& position, double size_m,
-                               const std::string& layer, Particle& p):
-   Cluster(energy,  position,  size_m, layer, p),
-   m_mother(mother)
-{}
-
-SmearedCluster::SmearedCluster(const Cluster& mother, double energy,
-                               const TVector3& position, double size_m,
-                               const std::string& layer):
-   Cluster(energy,  position,  size_m, layer),
-   m_mother(mother) {}
-*/
-
-
-//TODO make work with helix path
-SimParticle::SimParticle(int pdgid, TLorentzVector& tlv, TVector3&& vertex) :
-   Particle(Identifier::makeParticleID(fastsim::enumSource::SIMULATION), pdgid,
-            0.0, tlv),
-m_vertex(vertex),
-m_path(tlv,vertex),
-m_helix(),
-m_isHelix(false)
-{
-   
 };
 
-
-const TVector3& SimParticle::getPathPosition(std::string name)
+TVector3 SimParticle::getPathPosition(std::string name)
 {
-
-   return m_path.getNamedPoint(name);
-
+   return getPath().getNamedPoint(name);
 }
 
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
@@ -208,7 +181,7 @@ Particle(pdgid, charge, tlv), m_vertex(vertex) {
 }*/
 
 bool SimParticle::IsCharged() const
-{
+{ //TODO ask Colin
    unsigned int kind = abs(getPdgid());
    if (kind == 11 || kind == 22) {
       return true;

@@ -63,7 +63,7 @@ double Path::getVPerp() const
    return m_speed * m_udir.Perp();
 }
 
-const TVector3& Path::getNamedPoint(std::string name)
+TVector3 Path::getNamedPoint(std::string name)
 {
    //TODO check for existance
    return m_points[name];
@@ -73,7 +73,7 @@ Helix::Helix()
 {
 }
 
-//Helix::Helix( double field,double charge,const TLorentzVector&  p4,std::shared_ptr<const TVector3> origin) :
+
 Helix::Helix(double field, double charge, const TLorentzVector&  p4,
              const TVector3& origin) :
    Path(p4, origin),
@@ -81,14 +81,13 @@ Helix::Helix(double field, double charge, const TLorentzVector&  p4,
    m_vOverOmega(p4.Vect())
 {
 
-   std::cout << " rho" << m_rho << " perp" << p4.Perp() << std::endl;
-   //AJRTODO
    m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
    m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
    TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();
    TVector3 origin_xy = TVector3(origin.X(), origin.Y(), 0.);
    m_centerXY = origin_xy - charge * momperp_xy * m_rho;
    m_extremePointXY = TVector3(m_rho, 0., 0.);
+   
    if (m_centerXY.X() != 0 or m_centerXY.Y() != 0)
       m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
 
@@ -143,12 +142,24 @@ TVector3 Helix::getPointAtTime(double time)  const
    return std::move(TVector3(x, y, z));
 }
 
+TVector3 Helix::getPointAtZ(double z)  const
+{
+   double time = getTimeAtZ(z);
+   return getPointAtTime(time);
+}
+
+TVector3 Helix::getPointAtPhi(double phi)  const
+{
+   double time = getTimeAtPhi(phi);
+   return getPointAtTime(time);
+}
+
 double Helix::getPathLength(double deltat)  const
 {
    ///ds2 = dx2+dy2+dz2 = [w2rho2 + vz2] dt2'''
 
-   std::cout << m_omega << " rho " << m_rho << " vz " << getVZ() << " deltat " <<
-             deltat;
+   //std::cout << m_omega << " rho " << m_rho << " vz " << getVZ() << " deltat " <<
+   //          deltat;
    return sqrt(m_omega * m_omega * m_rho * m_rho + getVZ() * getVZ()) * deltat;
 }
 

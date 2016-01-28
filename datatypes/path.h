@@ -32,9 +32,9 @@ public:
    double getVZ() const ;
    double getVPerp() const ;
    double getSpeed() const {return m_speed;};
-   const TVector3& getUdir() const {return m_udir ;};
-   const TVector3& getOrigin() const {return m_origin ;};
-   const TVector3& getNamedPoint(std::string name);
+   TVector3 getUdir() const {return m_udir ;};
+   TVector3 getOrigin() const {return m_origin ;};
+   TVector3 getNamedPoint(std::string name);
    virtual TVector3 getPointAtTime(double time) const;
    const Points& getPoints(){ return m_points;};
 protected:
@@ -60,6 +60,8 @@ public:
    double getPathLength(double deltat) const;
    TVector3 getPointFromPolar(const std::vector<double>& polar) const;
    TVector3 getPointAtTime(double time) const override;
+   TVector3 getPointAtZ(double z)  const;
+   TVector3 getPointAtPhi(double phi)  const;
    TVector3 getExtremePointXY() const  {return m_extremePointXY;};
    TVector3 getCenterXY() const {return m_centerXY;};
 

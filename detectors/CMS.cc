@@ -38,8 +38,8 @@ CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
  */
 double CMSECAL::clusterSize(const Particle& ptc) const
 {
-   //simplified version TODOAJR
-   int pdgid = 22 ; //= abs(ptc->pdgid()) //AJRTODO implement particle
+   
+   int pdgid =  abs(ptc.getPdgid()) ;
    if (pdgid == 22 | pdgid == 11)
       return 0.04;
    else
@@ -201,11 +201,11 @@ double CMSTracker::getPtResolution(const Track& track) const
 
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0)),m_magnitude(magnitude)
+Field(layer,   volume,  Material(layer,0,0),magnitude)
 {}
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder&& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0)),m_magnitude(magnitude)
+Field(layer,   volume,  Material(layer,0,0),magnitude)
 {}
 
 

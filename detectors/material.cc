@@ -10,28 +10,20 @@ m_layer(layer), m_x0(x0), m_lambdaI(lambdaI),m_randExp(new fastsim::RandExponent
 {
 }
 
-double Material::PathLength(/*AJRTODO const Particle& ptc)*/)
+double Material::getPathLength(bool is_em) const
 {
    //AJRTODO check with Colin about what happens if x= is none
    double freepath;
-   /*if (ptc.is_em()){
+   if (is_em){
        freepath = m_x0;
    }
    else{
-       freepath= m_lambaI;
-   }*/
-   freepath = m_x0;
-   freepath = m_lambdaI; //AJRTODO remove this reinstate above
-
+       freepath= m_lambdaI;
+   }
+   
    if (freepath == 0.) {
       return std::numeric_limits<double>::max(); //maximum value for a double
-   } else { // make random number exp distribution
-      /*std::default_random_engine generator;
-      std::exponential_distribution<double> distribution(
-         c_exp_lambda); //AJR double check as expected & write test
-      double rnumber = distribution(generator);*/
-      //fastsim::RandExponential rexp(m_lambdaI);
-      //return rexp() ;
+   } else { 
       return (*m_randExp)();
    }
 }

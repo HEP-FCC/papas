@@ -64,7 +64,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
    //For each inner and outer cyclinder create a cyclinder (circular cross section) for xy , yz, xz projections
    //        create a box (longways cross section) for thetaphi projections
 
-   for (auto const& elem : {m_detElem->getVol().Outer(), m_detElem->getVol().Inner()}) { //AJRTODO should be if inner ......
+   for (auto const& elem : {m_detElem->getVolumeCylinder().Outer(), m_detElem->getVolumeCylinder().Inner()}) { //AJRTODO should be if inner ......
       double radius =  elem.getRadius();
       double dz = elem.Z();
 

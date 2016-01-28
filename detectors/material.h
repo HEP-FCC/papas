@@ -20,7 +20,7 @@ const double c_exp_lambda = 3.5; //AJR where does this come from
 class Material {
 public:
    Material(fastsim::enumLayer layer, double x0, double lambda);
-   virtual double PathLength(/*AJRTODO const Particle &*/);
+   virtual double getPathLength(bool is_em) const;
 private:
    fastsim::enumLayer m_layer;
    double m_x0;

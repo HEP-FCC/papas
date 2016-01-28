@@ -49,25 +49,36 @@ int main(int argc, char* argv[]){
    //Create simulator
    Simulator sim= Simulator{CMSDetector};
    
-   //simulate some photons
+   
+   //Photons
    for (int i=1; i<2;i++  )
-   { //todo  lower case m
+   {
       TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100.*(i));
-      SimParticle photon = SimParticle(22, tlvphoton) ;
-      sim.addParticle(photon);
+      SimParticle& photon =sim.addParticle(22, tlvphoton);
       sim.simulatePhoton(photon);
+   }
+  
+   
+   //Hadrons
+   for (int i=1; i<20;i++  )
+   {
+      TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
+      SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
+      sim.simulateHadron(hadron);
       
    }
+
    //lower case
    sim.Experiment(); //Write lists of connected items
    
  
    //TODO try to remove/reduce use of shared_ptrs here.
-   Display display = Display({Projection::xy,Projection::yz});
+   //Display display = Display({Projection::xy,Projection::yz});
+   Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
    display.Register(gdetector, 0);
   
-   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+   
    //GDetector gdetector{CMSDetector};
    // display.Register(std::move(gdetector), 0);
    

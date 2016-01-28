@@ -18,9 +18,9 @@
 class BaseParticle {
 public:
    BaseParticle();
-   BaseParticle(int pdgid, double charge, TLorentzVector& tlv, double status = 0);
+   BaseParticle(int pdgid, double charge, TLorentzVector tlv, double status = 0);
    BaseParticle(int pdgid, double charge);
-   BaseParticle(long id, int pdgid, double charge, TLorentzVector& tlv,
+   BaseParticle(long id, int pdgid, double charge, TLorentzVector tlv,
                 double status = 0);
    BaseParticle(long id, int pdgid, double charge);
    std::string StringDescription()
@@ -36,7 +36,7 @@ public:
    double getPhi() const {return m_tlv.Phi();}           ///<azymuthal angle (from x axis, in the transverse plane)
    double getM() const {return m_tlv.M();}               ///< mass
    int    getPdgid() const {return m_particleid;}        ///< particle type (an integer value)
-   double getQ() const {return m_charge;}                ///< particle charge
+   double getCharge() const {return m_charge;}                ///< particle charge
    bool   getStatus() const {return m_status;}           ///<status code, e.g. from generator. 1:stable.
    TVector3 getStart_vertex() const {return m_start_vertex ;}///<start vertex (3d point)
    TVector3 getEnd_vertex() const {return m_end_vertex;} ///<end vertex (3d point)

@@ -38,8 +38,9 @@ public:
    DetectorElement(fastsim::enumLayer layer, const VolumeCylinder&  volume,
                        const Material&
                        material); ///< requires the Material and Volume to be already in existance
-   const VolumeCylinder& getVol() const  {return m_volume; }///< return the volume cyclinder
+   const VolumeCylinder& getVolumeCylinder() const  {return m_volume; }///< return the volume cyclinder
    fastsim::enumLayer getLayer() const {return m_layer;};
+   const Material& getMaterial() const {return m_material;}
 protected:
    VolumeCylinder m_volume;
    Material m_material;
@@ -77,7 +78,14 @@ private:
 
 class Field: public DetectorElement {
 public:
-   using DetectorElement::DetectorElement;
+   Field(fastsim::enumLayer layer, const VolumeCylinder&& volume,
+                   const Material&&
+                   material, double magnitude); ///< allows the Material and Volume to be created on the fly
+   
+   Field(fastsim::enumLayer layer, const VolumeCylinder&  volume,
+                   const Material&
+                   material, double magnitude);
+   double getMagnitude() const { return m_magnitude;};
    //virtual double ptResolution(const Track&) const = 0;
    //virtual bool   acceptance(const Track&) const = 0;
    //virtual bool   acceptance(const Track& track) const= 0;

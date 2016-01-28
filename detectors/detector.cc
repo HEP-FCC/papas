@@ -60,6 +60,11 @@ std::shared_ptr<const DetectorElement> BaseDetector::getElement(
    return nullptr;
 }
 
+Field::Field(fastsim::enumLayer layer,
+                                 const  VolumeCylinder& volume , const Material& material, double magnitude) :
+DetectorElement(layer,volume,material), m_magnitude(magnitude)
+{}
+
 /*
  Experiments
 

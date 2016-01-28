@@ -23,7 +23,7 @@ void Identifier::setCounter(int
 }
 
 //TODO rename as OBJECTTYpe not PFObjectType
-long Identifier::makeIdentifier(fastsim::enumPFObjectType
+long Identifier::makeIdentifier(fastsim::enumDataType
                                 type, // 6 bits  (to be refined later )
                                 fastsim::enumLayer layer,       // 4 bits
                                 fastsim::enumSubtype subtype,   // 3 bits
@@ -65,10 +65,10 @@ fastsim::enumSource Identifier::getSource(long id)
    return static_cast<fastsim::enumSource>(source);
 }
 
-fastsim::enumPFObjectType Identifier::getPFObjectType(long id)
+fastsim::enumDataType Identifier::getDataType(long id)
 {
    int type = id & 0b111111 ;//(preserve the 6 rightmost bits)
-   return static_cast<fastsim::enumPFObjectType>(type);
+   return static_cast<fastsim::enumDataType>(type);
 }
 
 int Identifier::getUniqueID(long id)
@@ -79,20 +79,41 @@ int Identifier::getUniqueID(long id)
 long Identifier::makeClusterID(fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)
 {
-   return        Identifier::makeIdentifier(fastsim::enumPFObjectType::CLUSTER,
+   return        Identifier::makeIdentifier(fastsim::enumDataType::CLUSTER,
                  layer,
                  subtype,
                  fastsim::enumSource::SIMULATION);
 }
 
-
+long Identifier::makeTrackID( fastsim::enumSubtype subtype)
+{
+   return        Identifier::makeIdentifier(fastsim::enumDataType::TRACK,
+                                            fastsim::enumLayer::TRACKER,
+                                            subtype,
+                                            fastsim::enumSource::SIMULATION);
+}
 long Identifier::makeParticleID(eSource source)
 {
-   return Identifier::makeIdentifier(fastsim::enumPFObjectType::PARTICLE,
+   return Identifier::makeIdentifier(fastsim::enumDataType::PARTICLE,
                                      fastsim::enumLayer::NONE,
                                      fastsim::enumSubtype::RAW,
                                      source);
 }
+
+
+bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+                               fastsim::enumSubtype subtype)
+{
+   return (Identifier::getLayer(id)==layer && Identifier::getSubtype(id)==subtype && Identifier::getDataType(id)==datatype);
+}
+
+bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+                                 fastsim::enumSubtype subtype,fastsim::enumSource source)
+{
+   return (Identifier::getLayer(id)==layer && Identifier::getSubtype(id)==subtype && Identifier::getDataType(id)==datatype
+           && Identifier::getSource(id)==source);
+}
+
 
 
 
@@ -103,19 +124,19 @@ int test()
 {
    using namespace fastsim;
    Identifier::setCounter(7777);
-   long id=Identifier::makeIdentifier(enumPFObjectType::TRACK,
+   long id=Identifier::makeIdentifier(enumDataType::TRACK,
                                       enumLayer::TRACKER,
                                       enumSubtype::SMEARED,
                                       enumSource::RECONSTRUCTION);
 
 
-   long id2=Identifier::makeIdentifier(enumPFObjectType::CLUSTER,
+   long id2=Identifier::makeIdentifier(enumDataType::CLUSTER,
                                        enumLayer::HCAL,
                                        enumSubtype::MERGED,
                                        enumSource::SIMULATION);
 
-   enumPFObjectType type=Identifier::getPFObjectType(id);
-   enumPFObjectType type2=Identifier::getPFObjectType(id2);
+   enumDataType type=Identifier::getDataType(id);
+   enumDataType type2=Identifier::getDataType(id2);
    enumSource source =Identifier::getSource(id2);
    enumLayer layer =Identifier::getLayer(id2);
    enumSubtype subtype=Identifier::getSubtype(id2);

@@ -21,14 +21,13 @@ class Cluster;
 class Material;
 class VolumeCylinder;
 
-///ECAL Class (CMS implementation)
+///CMSECAL Class (CMS implementation)
 /** This ECAL is implmented specifically for CMS
 
       It is intended to be replaced by users to match the required detector characteristics
 
  */
-
-//CMSECAL inherit from ECAL clustersize/acceptance/energy resolution
+//CMSECAL inherits from ECAL clustersize/acceptance/energy resolution
 //ECAL inherits from DetectorElement
 class CMSECAL: public ECAL {
 public:
@@ -87,23 +86,21 @@ public:
    virtual double getPtResolution(const Track&) const override;
    virtual bool   acceptance(const Track&) const override;
       //TODOAJR space_resolution(self, ptc):
-private:
-    
+private:    
 };
+
 class CMSField: public Field {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
    CMSField(fastsim::enumLayer layer, const VolumeCylinder&& volume,
-              double
+              double magnitude
               );
    ///constructor - requires the Material and Volume to be already in existance
    CMSField(fastsim::enumLayer layer, const VolumeCylinder& volume, double);
-   //virtual double ptResolution(const Track&) const override;
-   //virtual bool   acceptance(const Track&) const override;
-   //TODOAJR space_resolution(self, ptc):
+   
 private:
-    double m_magnitude;
+   
 };
 
 
@@ -113,77 +110,4 @@ public:
 private:
 
 };
-
-// Below here is TODO
-/*
-class Tracker: public DetectorElement {
-//TODO acceptance and resolution depend on the particle type
-public:
-   Tracker();
-   bool acceptance(const Track& track) const override;
-   double pt_resolution(const Track& track);
-protected:
-
-private:
-   //VolumeCylinder m_temp_volume;
-   //Material m_temp_mat ;
-   std::vector<double> m_eres;
-};
-
-
-
-class DField: public DetectorElement {
-public:
-   DField(double magnitude);
-private:
-   double m_magnitude;
-};
-
-
-
-*/
-
 #endif
-
-/*AJRTODO def acceptance(self, cluster):
-    energy = cluster.energy
-    eta = abs(cluster.position.Eta())
-    if eta < 3. :
-        return energy>4.
-    elif eta < 5.:
-        return energy>7.
-    else:
-        return False
-
-def space_resolution(self, ptc):
-    pass
-
-
-
-class Tracker(DetectorElement):
-#TODO acceptance and resolution depend on the particle type
-
-def __init__(self):
-    volume = VolumeCylinder('tracker', 1.29, 1.99)
-    mat = material.void
-    super(Tracker, self).__init__('tracker', volume,  mat)
-
-def acceptance(self, track):
-    # return False
-    pt = track.pt
-    eta = abs(track.p3.Eta())
-    if eta < 2.5 and pt>0.5:
-        return random.uniform(0,1)<1. # CMS without tracker material effects
-    else:
-        return False
-
-def pt_resolution(self, track):
-    # TODO: depends on the field
-    pt = track.pt
-    return 5e-3
-
-
-
-
-cms = CMS()
-*/

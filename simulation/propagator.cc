@@ -59,15 +59,7 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
       line.addPoint(cylindername, destination);
    }
 }
-/*void StraightLinePropagator::propagateOne(SimParticle& ptc,
- fastsim::enumLayer layer, bool inner)
- {
- //DetectorElement elem= ;
- const VolumeCylinder& V = m_detector.getElement(layer)->getVol();
- propagateOne(ptc, V.InnerName(), V.Inner().Z(), V.Inner().getRadius());
- //TODO outer as well
- 
- }*/
+
 
 void StraightLinePropagator::propagateOne(SimParticle& ptc,
                                           const SurfaceCylinder & cyl)
@@ -75,48 +67,46 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
    propagateOne(ptc, cyl.getName(), cyl.Z(), cyl.getRadius());
 }
 
-/*class HelixPropagator: public Propagator{
- propagateOne(SimParticle& ptc,
- const SurfaceCylinder & cyl,const Field& field, bool debugInfo=False);
- 
- };*/
+
+
+HelixPropagator::HelixPropagator(double field) :
+   m_field(field)
+{
+}
+
 
 void HelixPropagator::propagateOne(SimParticle& ptc,
-                                   const SurfaceCylinder & cyl,
-                                   const Field& field,
-                                   bool debugInfo)
+                                   const SurfaceCylinder & cyl)
 {
    Helix& helix =dynamic_cast<Helix&>(ptc.getPath());
-   //Helix(field, ptc.getQ(), ptc.getP4(), ptc.getVertex);
-   //ptc.setPath(helix);
+   
    bool is_looper = helix.getExtremePointXY().Mag() < cyl.getRadius();
-   //bool is_positive = (ptc.getP4().Z() > 0.);
+   double udir_z=helix.getUdir().Z();
+   
    if (!is_looper) {
       auto intersect =
       circleIntersection(helix.getCenterXY().X(),helix.getCenterXY().Y(), helix.getRho(), cyl.getRadius());
       
-      double phi_m = helix.getPhi(intersect[1].first, intersect[1].second);
-      double phi_p = helix.getPhi(intersect[2].first, intersect[2].second);
-      double dest_time = helix.getTimeAtPhi(phi_p);
-      TVector3 destination = helix.getPointAtTime(dest_time);
-      if (destination.Z()*helix.getUdir().Z()<0.) {
-         dest_time = helix.getTimeAtPhi(phi_m);
-         destination = helix.getPointAtTime(dest_time);
+      double phi_m = helix.getPhi(intersect[0].first, intersect[0].second);
+      double phi_p = helix.getPhi(intersect[1].first, intersect[1].second);
+      
+      TVector3 destination = helix.getPointAtPhi(phi_p);
+      if (destination.Z()*udir_z<0.) {
+         destination = helix.getPointAtPhi(phi_m);
       }
+      
       if (fabs(destination.Z())<cyl.Z()){
          helix.addPoint(cyl.getName(),destination);
       }
       else
          is_looper = true;
-      }
+   }
    if (is_looper)
    {
       double destz = cyl.Z();
-      if (helix.getUdir().Z() > 0.)
+      if (udir_z < 0.)
          destz = -destz;
-      double dest_time = helix.getTimeAtZ(destz);
-      TVector3 destination = helix.getPointAtTime(dest_time);
-      // destz = cylinder.z if positive else -cylinder.z
+      TVector3 destination = helix.getPointAtZ(destz);
       helix.addPoint(cyl.getName(), destination);
    }
    
