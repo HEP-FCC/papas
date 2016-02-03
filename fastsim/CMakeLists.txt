@@ -64,7 +64,9 @@ ENDIF()
 #set(BOOST_ROOT /usr/local/boost_1_59_0)
 #set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root)
 find_package(Boost 1.59.0 REQUIRED)
-
+if (BOOST_found)
+include_directories( ${Boost_INCLUDE_DIRS})
+endif()
 #make this automated
 set (MAINDIR /Users/alice/fcc/cpp/papas/src/)
 file(GLOB_RECURSE sources     
@@ -73,9 +75,10 @@ ${MAINDIR}/fastsim/*.cc ${MAINDIR}/fastsim/*.h
 ${MAINDIR}/utility/*.cc ${MAINDIR}/utility/*.h
 ${MAINDIR}/display/*.cc ${MAINDIR}/display/*.h
 ${MAINDIR}/detectors/*.cc ${MAINDIR}/detectors/*.h
-${MAINDIR}/simulation/*.cc ${MAINDIR}/simulation/*.h)
+${MAINDIR}/simulation/*.cc ${MAINDIR}/simulation/*.h
+${MAINDIR}/pfalgo/*.cc ${MAINDIR}/pfalgo/*.h)
 
-include_directories( ${Boost_INCLUDE_DIRS}
+include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}
 ${MAINDIR}/datatypes/
 ${MAINDIR}/fastsim/
@@ -85,6 +88,7 @@ ${MAINDIR}/simulation/
 ${MAINDIR}/utility
 ${MAINDIR}/utility/
 ${MAINDIR}/DAGtool/
+${MAINDIR}/pfalgo/
 )
 
 

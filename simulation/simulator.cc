@@ -208,9 +208,9 @@ const Track& Simulator::addTrack(SimParticle& ptc)
    return track; //check this defaults OK
 }
 
-const Track& Simulator::makeTrack(long trackid, TVector3 pos, double charge,const Path& path)
+const Track& Simulator::makeTrack(long trackid, TVector3 pos, double charge, Path& path)
 {
-   m_tracks.emplace(trackid, std::move(Track{ pos, charge,path ,trackid}));
+   m_tracks.emplace(trackid, Track{ pos, charge,path ,trackid});
    return m_tracks[trackid];
 }
 
@@ -247,23 +247,23 @@ void Simulator::Experiment()
    }
 }
 
-const IDs&  Simulator::getECALSmearedClusterIDs(long nodeid) {
+IDs Simulator::getLinkedECALSmearedClusterIDs(long nodeid) {
    return getMatchingIDs(nodeid,
                          fastsim::enumDataType::CLUSTER,
                          fastsim::enumLayer::ECAL,
                          fastsim::enumSubtype::SMEARED,
                          fastsim::enumSource::SIMULATION);
+   //return ids;
 }
-                         
-const IDs&  Simulator::getRawTrackIDs(long nodeid) {
+
+IDs  Simulator::getLinkedRawTrackIDs(long nodeid) {
    return getMatchingIDs(nodeid,
                          fastsim::enumDataType::TRACK,
                          fastsim::enumLayer::NONE,
                          fastsim::enumSubtype::RAW,
                          fastsim::enumSource::SIMULATION);
 }
-
-const IDs&  Simulator::getSmearedTrackIDs(long nodeid) {
+IDs  Simulator::getLinkedSmearedTrackIDs(long nodeid) {
    return getMatchingIDs(nodeid,
                          fastsim::enumDataType::TRACK,
                          fastsim::enumLayer::NONE,
@@ -271,7 +271,25 @@ const IDs&  Simulator::getSmearedTrackIDs(long nodeid) {
                          fastsim::enumSource::SIMULATION);
 }
 
-const IDs&  Simulator::getConnectedIDs(long nodeid) {
+IDs  Simulator::getLinkedParticleIDs(long nodeid) {
+   return getMatchingIDs(nodeid,
+                         fastsim::enumDataType::PARTICLE,
+                         fastsim::enumLayer::NONE,
+                         fastsim::enumSubtype::RAW,
+                         fastsim::enumSource::SIMULATION);
+}
+
+IDs  Simulator::getParentParticleIDs(long nodeid) {
+   return getMatchingParentIDs(nodeid,
+                         fastsim::enumDataType::PARTICLE,
+                         fastsim::enumLayer::NONE,
+                         fastsim::enumSubtype::RAW,
+                         fastsim::enumSource::SIMULATION);
+}
+
+
+
+IDs  Simulator::getLinkedIDs(long nodeid) {
    DAG::BFSVisitor<SimNode> bfs;
    IDs foundids;
    foundids.reserve(1000); //TODO how
@@ -280,14 +298,14 @@ const IDs&  Simulator::getConnectedIDs(long nodeid) {
    {
       foundids.push_back(r->getValue());
    }
-   return std::move(foundids);
+   return foundids;
 }
 
-const IDs& Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source)
+IDs Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source)
 {
    DAG::BFSVisitor<SimNode> bfs;
    IDs foundids;
-   foundids.reserve(1000); //TODO set sizes sensible.... how
+   //foundids.reserve(1000); //TODO set sizes sensible.... how
    auto res =bfs.traverseUndirected(m_nodes[nodeid]);
    for (auto r : res)
    {
@@ -296,7 +314,25 @@ const IDs& Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype
          foundids.push_back(id);
       }
    }
-   return std::move(foundids);
+   return foundids;
 }
+
+IDs Simulator::getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source)
+{
+   DAG::BFSVisitor<SimNode> bfs;
+   IDs foundids;
+   //foundids.reserve(1000); //TODO set sizes sensible.... how
+   auto res =bfs.traverseParents(m_nodes[nodeid]);
+   for (auto r : res)
+   {
+      long id=r->getValue();
+      if(Identifier::isUniqueIDMatch(id, datatype,layer, type,source)) {
+         foundids.push_back(id);
+      }
+   }
+   return foundids;
+}
+
+
 
 

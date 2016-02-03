@@ -44,9 +44,9 @@ void testRandomExp();
 
 int main(int argc, char* argv[]){
    //testRandom();
-testRandomNorm();
+   testRandomNorm();
    testRandomExp();
-    testStraightLine();
+   testStraightLine();
    testCylinder();
    testHelix();
    testClusterPT();
@@ -242,7 +242,8 @@ void testStraightLine(){
    auto cyl2 = SurfaceCylinder("cyl2", 2, 1);
    
    TLorentzVector tlv{1, 0, 1, 2.};
-   SimParticle photon = SimParticle(22,tlv ,{0,0,0}) ;
+   long uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
+   SimParticle photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
    auto points=photon.getPath().getPoints();
@@ -255,7 +256,8 @@ void testStraightLine(){
    test_almost( "SL3",points["cyl2"].Z(), 1. );
    
    tlv=TLorentzVector(1, 0, -1, 2.);
-   photon = SimParticle(22,tlv ,{0,0,0}) ;
+   uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
+   photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
    points=photon.getPath().getPoints();
@@ -267,7 +269,7 @@ void testStraightLine(){
    
    
    tlv=TLorentzVector(1, 0, 1, 2.);
-   photon = SimParticle(22,tlv , {0,0,1.5});
+   photon = SimParticle(uid,22,tlv ,0., {0,0,1.5});
    propStraight.propagateOne(photon, cyl1);
    points=photon.getPath().getPoints();
    test_almost( "SL7",points["cyl1"].Perp(), 0.5 );
@@ -275,7 +277,7 @@ void testStraightLine(){
    
    
    tlv=TLorentzVector(1, 0, -1, 2.);
-   photon = SimParticle(22,tlv , {0,0,-1.5});
+   photon = SimParticle(uid,22,tlv , 0.,{0,0,-1.5});
    propStraight.propagateOne(photon, cyl1);
    points=photon.getPath().getPoints();
    test_almost( "SL8",points["cyl1"].Perp(), 0.5 );

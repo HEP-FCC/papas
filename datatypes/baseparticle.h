@@ -23,10 +23,8 @@ public:
    BaseParticle(long id, int pdgid, double charge, TLorentzVector tlv,
                 double status = 0);
    BaseParticle(long id, int pdgid, double charge);
-   std::string StringDescription()
-   const;                ///< String to describe the particle
+   std::string StringDescription() const;                ///< String to describe the particle
 
-   //AJRTODO cant move these next 2 so should I use a pointer or a copy?
    const TLorentzVector getP4() const {return m_tlv;}    ///< 4-momentum, px, py, pz, E
    const TVector3 getP3() const {return m_tlv.Vect();}   ///< 3-momentum px, py, pz
    double getE() const {return m_tlv.E();}               ///<Energy

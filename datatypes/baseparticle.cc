@@ -82,11 +82,10 @@ BaseParticle::BaseParticle(long id, int pdgid, double charge,
    m_status(status)
 {
 
-
-   std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
+   /*std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
              tlv.Et() << " ";
    std::cout << m_tlv.X() << " " << m_tlv.Y() << " " << m_tlv.Z() << " " <<
-             m_tlv.Et() << " ";
+             m_tlv.Et() << " ";*/
 }
 
 

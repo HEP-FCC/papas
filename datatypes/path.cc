@@ -48,7 +48,7 @@ TVector3 Path::getPointAtTime(double  time) const
 {
    ///Returns the 3D point on the path at a given time'''
    TVector3 ppoint = m_origin + m_udir * m_speed * time;
-   return std::move(ppoint); //AJRTODO check this works OK
+   return ppoint; //AJRTODO check this works OK
 }
 
 double Path::getVZ() const
@@ -63,10 +63,17 @@ double Path::getVPerp() const
    return m_speed * m_udir.Perp();
 }
 
-TVector3 Path::getNamedPoint(std::string name)
+bool Path::hasNamedPoint(std::string name) const//TODO change to enum
 {
-   //TODO check for existance
-   return m_points[name];
+   return (m_points.find(name) != m_points.end());
+}
+
+TVector3 Path::getNamedPoint(std::string name) //const //TODO change to enum
+{
+   if (hasNamedPoint(name)) {
+      return m_points[name]; //TODO consider why does not work if function is const
+   }
+   else return TVector3(0,0,0); //todo consider if this is sufficient for issing value case
 }
 
 Helix::Helix()
@@ -139,7 +146,7 @@ TVector3 Helix::getPointAtTime(double time)  const
               + m_vOverOmega.X() * sin(m_omega * time);
    double y = m_origin.Y() - m_vOverOmega.X() * (1 - cos(m_omega * time))
               + m_vOverOmega.Y() * sin(m_omega * time);
-   return std::move(TVector3(x, y, z));
+   return TVector3(x, y, z);
 }
 
 TVector3 Helix::getPointAtZ(double z)  const

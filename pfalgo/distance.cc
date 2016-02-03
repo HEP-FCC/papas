@@ -7,3 +7,5 @@
 //
 
 #include "distance.h"
+
+//Implemented via datatypes.cc

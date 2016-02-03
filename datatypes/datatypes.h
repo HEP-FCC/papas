@@ -14,12 +14,14 @@
 #include "particledata.h"
 #include "TVector3.h"
 #include "path.h"
+#include "../pfalgo/distance.h"
 #include <iostream>
 
 
 /// Function to create a new TLorentzVector
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy);
+class Track;
 
 
 class Cluster  {
@@ -36,8 +38,10 @@ public:
    double getEta() const      {return m_position.Eta();};
    long getID() const         {return m_uniqueid;}
    TVector3 getPosition() const {return m_position;};
-
-   //std::pair<bool, double> isInside(const TVector3& point) const;
+   DistanceData getDistance(const Cluster& clust) const;
+   DistanceData getDistance(const Track& track) ;//const;
+   bool isInside(const TVector3& point) const;
+   double getPointDistance(const TVector3& point) const;
    void setEnergy(double energy);
    void setSize(double value) ;
    static double s_maxenergy; //AJR is this in the right place
@@ -55,7 +59,7 @@ protected:
 
 class Track{
 public:
-   Track(TVector3 p3, double charge,const  Path& path, long id);
+   Track(TVector3 p3, double charge,Path& path, long id);
    Track() =default;
    Track(const Track& T) =default;
 
@@ -70,12 +74,16 @@ public:
    void setSize(double value) ;
    static double s_maxenergy; //AJR is this in the right place
    
+   DistanceData getDistance(const Cluster& clust) ; //const; can't get to compile with const due to path issue
+   DistanceData getDistance(const Track& track) const;
+
+   
 protected:
    long m_uniqueid;
    double m_pt;
    TVector3 m_p3;
    double m_charge;
-   const Path* m_path; //not owned by track but useful to know where it is
+   Path* m_path; //not owned by track but useful to know where it is
 };
 
 
@@ -86,7 +94,7 @@ public:
    SimParticle(long uniqueid, int pdgid, TLorentzVector tlv, double  field=0.,
                TVector3 vertex= TVector3(0., 0.,0.));
    
-   Path& getPath() {if (m_isHelix) return m_helix; else return m_path;};
+   Path& getPath()   {if (m_isHelix) return m_helix; else return m_path;};
    Helix& getHelix() {return m_helix;}
    TVector3 getPathPosition(std::string name);
    

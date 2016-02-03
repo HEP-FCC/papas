@@ -114,6 +114,10 @@ bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsi
            && Identifier::getSource(id)==source);
 }
 
+bool Identifier::isSmeared(long id)
+{
+   return (Identifier::getSubtype(id)==fastsim::enumSubtype::SMEARED );
+}
 
 
 

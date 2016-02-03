@@ -38,6 +38,7 @@ public:
                                fastsim::enumSubtype subtype,fastsim::enumSource source);
    static bool isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                         fastsim::enumSubtype subtype);
+   static bool isSmeared(long id);
 
    static void setCounter(int startid);  ///intended for use once at start
 

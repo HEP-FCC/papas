@@ -39,5 +39,5 @@ std::vector<std::pair<double,double>> circleIntersection(double x1,double  y1, d
    }
    //return {mpair,ppair};
    
-   return std::move(std::vector<std::pair<double,double>>{mpair,ppair});
+   return std::vector<std::pair<double,double>>{mpair,ppair};
 }

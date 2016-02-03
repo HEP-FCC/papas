@@ -34,9 +34,10 @@ public:
    double getSpeed() const {return m_speed;};
    TVector3 getUdir() const {return m_udir ;};
    TVector3 getOrigin() const {return m_origin ;};
-   TVector3 getNamedPoint(std::string name);
+   bool hasNamedPoint(std::string name) const;
+   TVector3 getNamedPoint(std::string name); //const; can't get to compile with const
    virtual TVector3 getPointAtTime(double time) const;
-   const Points& getPoints(){ return m_points;};
+   const Points& getPoints() const { return m_points;};
 protected:
    //TODO think whether these TVector3s are OK (or should be pointers).
    TVector3 m_udir;

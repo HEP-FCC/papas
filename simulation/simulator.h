@@ -35,19 +35,23 @@ public:
    SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0.,
                                                                                      0.));
    const Clusters& getClusters() const {return m_clusters;} ;
-   void Experiment();
+   //const Clusters& getSmearedClusters() const  ;
    
+   void Experiment();
+   IDs getLinkedECALSmearedClusterIDs(long nodeid);
+   IDs getLinkedParticleIDs (long nodeid);
+   IDs getParentParticleIDs (long nodeid);
    //Clusterset ExportSimulatedClusters() const;
    //Particleset ExportSimulatedParticles() const;
 
 private:
    void Propagate(SimParticle& ptc,const SurfaceCylinder &); //more args needed
    
-   const IDs& getECALSmearedClusterIDs(long nodeid);
-   const IDs& getRawTrackIDs(long nodeid);
-   const IDs& getSmearedTrackIDs(long nodeid);
-   const IDs& getParticleIDs (long nodeid);
-   const IDs& getConnectedIDs(long nodeid);
+   
+   IDs getLinkedRawTrackIDs(long nodeid);
+   IDs getLinkedSmearedTrackIDs(long nodeid);
+   
+   IDs getLinkedIDs(long nodeid);
 
    long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype);
    long makeParticleID(fastsim::enumSource source);
@@ -69,18 +73,19 @@ private:
    
 
    const Track& addTrack(SimParticle& ptc);
-   const Track& makeTrack(long trackid, TVector3 pos, double charge,const Path& path);
+   const Track& makeTrack(long trackid, TVector3 pos, double charge,Path& path);
    
    void addNode(const long newid, const long parentid = 0);
    std::shared_ptr<const DetectorElement> getElem(fastsim::enumLayer layer);
    
-   const IDs& getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
+   IDs getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
+   IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
    
    Clusters m_clusters;    /// all clusters
    Tracks m_tracks;        /// all tracks
    Particles m_particles;  /// all particles
    
-   //this will have identifier for everything that has
+   //this will have a keyed entry for everything that has
    //been simulated and so acts as a lookup table
    Nodes m_nodes;
    

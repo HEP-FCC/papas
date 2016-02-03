@@ -30,9 +30,15 @@
 #include "displaypfobjects.h"
 #include "TVector3.h"
 
+//#include <RInside.h>
 
+//void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
+   
+   
+   //MyClass someFunction();
+   //RInside R(argc, argv);
    
    
    
@@ -49,27 +55,54 @@ int main(int argc, char* argv[]){
    //Create simulator
    Simulator sim= Simulator{CMSDetector};
    
+   IDs smeared_clust_IDs;
    
    //Photons
-   for (int i=1; i<2;i++  )
+   for (int i=1; i<10;i++  )
    {
-      TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100.*(i));
+      TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
       SimParticle& photon =sim.addParticle(22, tlvphoton);
       sim.simulatePhoton(photon);
+      
+      IDs c_IDs=sim.getLinkedECALSmearedClusterIDs(photon.getID());
+      smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
+      
    }
-  
    
+   std::vector<double> w;
+   w.reserve(10000);
+   const Clusters& clusters =sim.getClusters();
+   for (auto x :smeared_clust_IDs)
+   {
+      w.push_back( clusters.find(x)->second.getEnergy());
+   }
+   //r_density_plot(w, R);
+   
+   
+   /*
+   //Check density plot for smeared Photons
+   std::vector<double> w;
+   w.reserve(10000);
+   for (auto x :sim.getClusters())
+   { if (Identifier::isSmeared(x.second.getID()))
+      w.push_back( x.second.getEnergy());
+   }
+   r_density_plot(w, R);
+   */
+    
+    
    //Hadrons
-   for (int i=1; i<20;i++  )
+   /*for (int i=1; i<20;i++  )
    {
       TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
       SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
       sim.simulateHadron(hadron);
       
-   }
+   }*/
 
    //lower case
    sim.Experiment(); //Write lists of connected items
+   
    
  
    //TODO try to remove/reduce use of shared_ptrs here.
@@ -249,4 +282,43 @@ void testing() { //change to concrete object or unique pointer is there is an is
    c1->Update();
    c1->Modified();
    c1->Connect("Closed()", "TApplication", gApplication, "Terminate()"); //new
+}
+
+/*void r_density_plot(const std::vector<double>& v, RInside& R)
+{
+   
+   R["y"] = v;            // assign weights
+   std::string txt = "tmpf <- tempfile('curve'); "
+   "pdf(tmpf); "
+   "plot(density(y)); "
+   "dev.off(); "
+   " tmpf "
+   ;
+   std::string newtmpfile = R.parseEval(txt);        // evaluate assignment
+   system(("open " + newtmpfile ).c_str());
+   //unlink(newtmpfile.c_str());
+}*/
+
+
+class MyClass{
+public:
+   MyClass();
+   MyClass(const MyClass &other);
+   MyClass someFunction();
+};
+
+MyClass::MyClass()
+{
+   
+}
+
+MyClass::MyClass(const MyClass &other)
+{
+   std::cout << "Copy constructor was called" << std::endl;
+}
+
+MyClass someFunction()
+{
+   MyClass dummy;
+   return dummy;
 }

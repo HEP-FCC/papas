@@ -2,11 +2,14 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "datatypes.h"
+
 #include<cmath>
 #include<iostream>
 #include<utility>
+#include "datatypes.h"
 #include "identifier.h"
+#include "deltar.h"
+#include "distance.h"
 
 
 const double ParticleData::m_e = 0.000511;
@@ -58,6 +61,21 @@ void Cluster::setEnergy(double energy)
    m_pt = energy * m_position.Unit().Perp() ;
 }
 
+DistanceData Cluster::getDistance(const Cluster& clust) const{
+   fastsim::enumLayer layer1 = Identifier::getLayer(m_uniqueid);
+   fastsim::enumLayer layer2 = Identifier::getLayer(clust.getID());
+      double dR = deltaR(m_position.Theta(),
+                  m_position.Phi(),
+                  clust.getPosition().Theta(),
+                         clust.getPosition().Phi());
+      bool link_ok = dR < m_angularsize + clust.getAngularSize();
+      return DistanceData{layer1,layer2,link_ok,dR};
+}
+   
+/*DistanceData Cluster::getDistance(const Track& track) {
+   return track.getDistance(this);
+}*/
+
 
 
 
@@ -97,17 +115,25 @@ m_energy(c.m_energy)
 
 
 
-/*std::pair<bool, double> Cluster::isInside(const TVector3& point) const
+bool Cluster::isInside(const TVector3& point) const
 {
-   AJRTODOsubdists = [ (subc.position - point).Mag() for subc in m_subclusters ]
+   return (getPointDistance(point)< m_size);
+   //AJR TODO
+   /*subdists = [ (subc.position - point).Mag() for subc in m_subclusters ]
     dist = min(subdists)
     if dist < m_size():
     return True, dist
     else:
  
    double dist = 0.5;
-   return std::pair<bool, double>(false, dist);
-}*/
+   return std::pair<bool, double>(false, dist);*/
+}
+
+double Cluster::getPointDistance(const TVector3& point) const
+{
+   //AJRTODO min of sub cluster distances
+   return (m_position-point).Mag();
+}
 
 /*Cluster* Cluster::additem(Cluster* other)
 {
@@ -129,9 +155,32 @@ m_energy(c.m_energy)
 
 
 
-Track::Track(const TVector3 p3, double charge,const  Path& path, long id) :
+Track::Track(const TVector3 p3, double charge,Path& path, long id) :
 m_uniqueid(id),m_p3(p3),m_charge(charge),m_path(&path)
 {
+}
+
+DistanceData Track::getDistance(const Track& track) const{
+   fastsim::enumLayer layer1 = Identifier::getLayer(m_uniqueid);
+   fastsim::enumLayer layer2 = Identifier::getLayer(track.getID());
+   return DistanceData{layer1,layer2,false,0};
+}
+
+DistanceData Track::getDistance(const Cluster& clust) {
+   fastsim::enumLayer layer1 = Identifier::getLayer(m_uniqueid);
+   fastsim::enumLayer layer2 = Identifier::getLayer(clust.getID());
+   
+   std::string lname="_ECALin";
+   if(layer2==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
+      lname="_HCALin";
+   
+   if (m_path->hasNamedPoint(lname)) { //check exists {
+      TVector3 pos =m_path->getNamedPoint(lname);
+      if (clust.isInside(pos)) {
+         return DistanceData{layer1,layer2,true,clust.getPointDistance(pos)};
+      }
+   }
+   return DistanceData{layer1,layer2,false,0};
 }
 
 
@@ -162,11 +211,11 @@ TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
                      momentum * sintheta * sinphi,
                      momentum * costheta,
                      energy);
-   std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
+   /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
              p4.Et() << " ";
    std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
              " " << cosphi <<
-             " " << sintheta << " ";
+             " " << sintheta << " ";*/
    return p4;
 }
 
@@ -181,7 +230,7 @@ Particle(pdgid, charge, tlv), m_vertex(vertex) {
 }*/
 
 bool SimParticle::IsCharged() const
-{ //TODO ask Colin
+{ //TODO ask Colin if this is really OK
    unsigned int kind = abs(getPdgid());
    if (kind == 11 || kind == 22) {
       return true;

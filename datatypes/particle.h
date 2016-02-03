@@ -8,7 +8,7 @@
 #include <cmath>
 #include "baseparticle.h"
 
-//TOD porbably get rid of this class layer
+//TODO porbably get rid of this class layer and call BaseParticle Particle
 class Particle: public BaseParticle {
 public:
    using BaseParticle::BaseParticle;
