@@ -71,7 +71,7 @@ void  Simulator::simulateHadron(SimParticle& ptc)
          const Cluster& ecalclust = addECALCluster(ptc,track.getID(),frac_ecal);
             //For now, using the hcal resolution and acceptance for hadronic cluster
             //in the ECAL. That's not a bug!
-         addSmearedHCALCluster(ecalclust); // TODO ask colin why(cluster, hcal)
+         addSmearedHCALCluster(ecalclust); // TODO to be revised by COlin
                                            //name of call needs to be improved
       }
    }
@@ -133,10 +133,10 @@ const Cluster& Simulator::addCluster(SimParticle& ptc, long parentid,fastsim::en
                                      double fraction, double csize)
 {
    //TODO change string to ENUM
-   std::string clyname = m_detector.getElement(layer)->getVolumeCylinder().InnerName();
+   std::string cylname = m_detector.getElement(layer)->getVolumeCylinder().InnerName();
    long clusterid = Identifier::makeClusterID(layer, fastsim::enumSubtype::RAW);
    double energy = ptc.getP4().E() * fraction;
-   TVector3 pos = ptc.getPathPosition(clyname); //assume path already set in particle
+   TVector3 pos = ptc.getPathPosition(cylname); //assume path already set in particle
    
    const Cluster& cluster = makeCluster(clusterid, energy, pos, csize);
    addNode(cluster.getID(), parentid); //a track may be the parent of a cluster
@@ -234,7 +234,7 @@ std::shared_ptr<const DetectorElement> Simulator::getElem(
    return m_detector.getElement(layer);
 }
 
-void Simulator::Experiment()
+void Simulator::Testing()
 {
    
    DAG::BFSVisitor<SimNode> bfs;

@@ -21,6 +21,8 @@
 /// Function to create a new TLorentzVector
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
       double energy);
+
+//TODO remove this and the getDistance functions
 class Track;
 
 
@@ -29,8 +31,9 @@ public:
    Cluster(double energy, const TVector3& position, double size_m,
            long id);
    Cluster()=default;
-   //Cluster(Cluster && c) = default;
-   //Cluster(const Cluster& c) = default;
+   Cluster(Cluster && c)  =default;
+   Cluster(const Cluster& c)  {
+      std::cout<< "copy" ;} ;//= default;
    double getAngularSize() const {return m_angularsize;};
    double getSize() const     {return m_size;};
    double getPt() const       {return m_pt;};
@@ -60,7 +63,7 @@ protected:
 class Track{
 public:
    Track(TVector3 p3, double charge,Path& path, long id);
-   Track() =default;
+   Track() : m_path(Path::NullPath),m_uniqueid(0) {};
    Track(const Track& T) =default;
 
    double getPt() const       {return m_p3.Perp();};
@@ -83,7 +86,8 @@ protected:
    double m_pt;
    TVector3 m_p3;
    double m_charge;
-   Path* m_path; //not owned by track but useful to know where it is
+   Path& m_path; //not owned by track but useful to know where it is
+   
 };
 
 
@@ -95,6 +99,7 @@ public:
                TVector3 vertex= TVector3(0., 0.,0.));
    
    Path& getPath()   {if (m_isHelix) return m_helix; else return m_path;};
+   const Path& getConstPath() const   {if (m_isHelix) return m_helix; else return m_path;};
    Helix& getHelix() {return m_helix;}
    TVector3 getPathPosition(std::string name);
    

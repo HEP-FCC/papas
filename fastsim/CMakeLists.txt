@@ -91,6 +91,27 @@ ${MAINDIR}/DAGtool/
 ${MAINDIR}/pfalgo/
 )
 
+project(event)
+
+# You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
+#   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
+#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} )
+
+#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
+find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
+
+#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
+include(${ROOT_USE_FILE}  )
+
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+add_definitions(${ROOT_CXX_FLAGS})
+
+
+find_package(GTest)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+
 
 
 #get_cmake_property(_variableNames VARIABLES)
@@ -101,7 +122,7 @@ ${MAINDIR}/pfalgo/
 ROOT_GENERATE_DICTIONARY(fastsim_Dict my_utilities.h  LINKDEF my_utilities_LinkDef.h)
 add_library(fastsim SHARED ${sources} ${MAINDIR}/DAGtool/directedacyclicgraph.h
 ${MAINDIR}/utility/random.cc ${MAINDIR}/utility/random.h fastsim_Dict.cxx)
-target_link_libraries(fastsim ${ROOT_LIBRARIES}  )
+target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES} )
 
 
 

@@ -83,6 +83,17 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
       shape->SetLineStyle(1) ;
       color = 0; //Set color = 0 for inner circle
    }
+   color = gCOLORMap[m_detElem->getLayer()];
+
+   for (auto& shape : m_boxes) {
+      shape->SetFillColor(color);
+      shape->SetFillStyle(1001);
+      // else: //TODOAJR
+      //     shape.SetFillStyle(0);
+      shape->SetLineColor(1);
+      shape->SetLineStyle(1) ;
+      color = 0; //Set color = 0 for inner
+   }
 }
 /*
 

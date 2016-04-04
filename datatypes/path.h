@@ -38,14 +38,16 @@ public:
    TVector3 getNamedPoint(std::string name); //const; can't get to compile with const
    virtual TVector3 getPointAtTime(double time) const;
    const Points& getPoints() const { return m_points;};
+   
+   static Path NullPath; //this allows classes used in stl containers to include a reference to a path
 protected:
-   //TODO think whether these TVector3s are OK (or should be pointers).
    TVector3 m_udir;
    double m_speed;
    TVector3 m_origin;
    //TODO make this an enumeration
    Points m_points;
 private:
+   
 };
 
 //TODO underdevelopment

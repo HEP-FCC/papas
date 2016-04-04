@@ -23,12 +23,19 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 
 include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
 ${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
-set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root)
 
+find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
+#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
+include(${ROOT_USE_FILE})
 
+#set (DYLD_LIBRARY_PATH /Users/alice/local/root/lib)
+
+find_package(GTest)
+include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
+message(${ROOT_LIBRARIES})
 
 add_executable(tests tests.cc)
-target_link_libraries(tests fastsim ${ROOT_LIBRARIES} )
+target_link_libraries(tests fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
 
 

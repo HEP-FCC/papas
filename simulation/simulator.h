@@ -35,9 +35,12 @@ public:
    SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0.,
                                                                                      0.));
    const Clusters& getClusters() const {return m_clusters;} ;
+   const Tracks& getTracks() const {return m_tracks;} ;
+   const Particles& getParticles() const {return m_particles;} ;
+   
    //const Clusters& getSmearedClusters() const  ;
    
-   void Experiment();
+   void Testing();
    IDs getLinkedECALSmearedClusterIDs(long nodeid);
    IDs getLinkedParticleIDs (long nodeid);
    IDs getParentParticleIDs (long nodeid);

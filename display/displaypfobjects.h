@@ -43,6 +43,8 @@ class GTrajectory {
 public:
    GTrajectory(const std::vector<TVector3>& points, int linestyle = 1,
                int linecolor = 1);
+   GTrajectory(const SimParticle& particle, int linestyle = 1,
+               int linecolor = 1);
    void setColor(int color);
    void Draw(const std::string& projection, const std::string& opt = "") const ;
 private:
@@ -58,6 +60,8 @@ public:
    GTrajectories(const std::vector<TVector3>& points);
    /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
    GTrajectories(const Cluster& cluster);
+   GTrajectories(const Track& track);
+   GTrajectories(const SimParticle& particle);
    void Draw(const std::string& projection) const override;
 private:
    ///all the tracks

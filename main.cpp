@@ -15,6 +15,9 @@
 #include "TLorentzVector.h"
 #include "TApplication.h"
 
+//gtest test
+#include "gtest/gtest.h"
+
 
 //SSD libs
 #include "fastsim/my_utilities.h"
@@ -39,7 +42,9 @@ int main(int argc, char* argv[]){
    
    //MyClass someFunction();
    //RInside R(argc, argv);
-   
+   //Gtest  hah
+   //::testing::InitGoogleTest(&argc, argv);
+   //#return RUN_ALL_TESTS();
    
    
    // ROOT App to allow graphs to be plotted
@@ -92,16 +97,16 @@ int main(int argc, char* argv[]){
     
     
    //Hadrons
-   /*for (int i=1; i<20;i++  )
+   for (int i=1; i<20;i++  )
    {
       TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
       SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
       sim.simulateHadron(hadron);
       
-   }*/
+   }
 
    //lower case
-   sim.Experiment(); //Write lists of connected items
+   sim.Testing(); //Write lists of connected items
    
    
  
@@ -120,6 +125,12 @@ int main(int argc, char* argv[]){
    {
       std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
       display.Register(gcluster,2);
+      
+   }
+   for (auto & sp : sim.getParticles())
+   {
+      std::shared_ptr<GTrajectories> gsimParticle (new GTrajectories(sp.second)) ;
+      display.Register(gsimParticle,2);
       
    }
    display.Draw();
@@ -256,7 +267,7 @@ void test_graphs()
 }
 
 
-void testing() { //change to concrete object or unique pointer is there is an issue
+void mytesting() { //change to concrete object or unique pointer is there is an issue
    TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
    c1->SetFillColor(42);
    c1->SetGrid();
@@ -321,4 +332,10 @@ MyClass someFunction()
 {
    MyClass dummy;
    return dummy;
+}
+
+
+TEST(fastsim, dummy){
+   bool success = true;
+   EXPECT_EQ(true, success);
 }

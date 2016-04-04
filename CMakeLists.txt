@@ -28,8 +28,13 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 ### add CERN ROOT
 find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF GRAF3D  RIO Hist Tree Net   )
-
+message(${ROOT_INCLUDE_DIRS})
+message("hellow from alice")
+#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
+
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+add_definitions(${ROOT_CXX_FLAGS})
 
 include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
 ${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
@@ -37,7 +42,7 @@ ${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}
 add_subdirectory(fastsim)
 add_subdirectory(main)
 add_subdirectory(DAGtool)
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 
 

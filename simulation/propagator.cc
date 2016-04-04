@@ -54,8 +54,10 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
          //TODO deal with overlapping cylinders
          
       }
-      std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
-      destination.Z() << std::endl;
+#if 0
+         std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
+          destination.Z() << std::endl;
+#endif
       line.addPoint(cylindername, destination);
    }
 }

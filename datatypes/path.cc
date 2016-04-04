@@ -76,6 +76,9 @@ TVector3 Path::getNamedPoint(std::string name) //const //TODO change to enum
    else return TVector3(0,0,0); //todo consider if this is sufficient for issing value case
 }
 
+//static null member
+Path Path::NullPath=Path();
+
 Helix::Helix()
 {
 }

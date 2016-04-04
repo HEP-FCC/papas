@@ -78,8 +78,8 @@ DistanceData Cluster::getDistance(const Cluster& clust) const{
 
 
 
-
-/*Cluster::Cluster( Cluster && c) :
+/*
+Cluster::Cluster( Cluster && c) :
 m_size(c.m_size),
 m_angularsize(c.m_angularsize),
 m_pt(c.m_pt),
@@ -156,7 +156,7 @@ double Cluster::getPointDistance(const TVector3& point) const
 
 
 Track::Track(const TVector3 p3, double charge,Path& path, long id) :
-m_uniqueid(id),m_p3(p3),m_charge(charge),m_path(&path)
+m_uniqueid(id),m_p3(p3),m_charge(charge),m_path(path)
 {
 }
 
@@ -166,7 +166,7 @@ DistanceData Track::getDistance(const Track& track) const{
    return DistanceData{layer1,layer2,false,0};
 }
 
-DistanceData Track::getDistance(const Cluster& clust) {
+DistanceData Track::getDistance(const Cluster& clust)  {
    fastsim::enumLayer layer1 = Identifier::getLayer(m_uniqueid);
    fastsim::enumLayer layer2 = Identifier::getLayer(clust.getID());
    
@@ -174,8 +174,8 @@ DistanceData Track::getDistance(const Cluster& clust) {
    if(layer2==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
       lname="_HCALin";
    
-   if (m_path->hasNamedPoint(lname)) { //check exists {
-      TVector3 pos =m_path->getNamedPoint(lname);
+   if (m_path.hasNamedPoint(lname)) { //check exists {
+      TVector3 pos =m_path.getNamedPoint(lname);
       if (clust.isInside(pos)) {
          return DistanceData{layer1,layer2,true,clust.getPointDistance(pos)};
       }
