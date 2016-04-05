@@ -20,7 +20,7 @@ class Particle;
 typedef DAG::Node<long> SimNode;
 typedef std::unordered_map<long, SimNode> Nodes; ///TODO rename to Nodes
 typedef std::unordered_map<long, Cluster> Clusters;
-typedef std::unordered_map<long,Track> Tracks;
+typedef std::unordered_map<long, Track> Tracks;
 typedef std::unordered_map<long, SimParticle> Particles;
 typedef std::vector<long> IDs;
 

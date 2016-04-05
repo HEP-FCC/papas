@@ -34,11 +34,13 @@
 #include "TVector3.h"
 
 //#include <RInside.h>
-
+void tryMapMoveObject();
 //void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
    
+   tryMapMoveObject();
+   return 0;
    
    //MyClass someFunction();
    //RInside R(argc, argv);
@@ -313,24 +315,43 @@ void mytesting() { //change to concrete object or unique pointer is there is an 
 
 class MyClass{
 public:
-   MyClass();
+   MyClass(std::string);
+   MyClass(MyClass &other);
    MyClass(const MyClass &other);
+   MyClass(const MyClass &&other);
+   MyClass(MyClass &&other);
    MyClass someFunction();
+
+   std::string m_str;
 };
 
-MyClass::MyClass()
+MyClass::MyClass(std::string str)
+:m_str(str)
 {
    
 }
 
 MyClass::MyClass(const MyClass &other)
 {
-   std::cout << "Copy constructor was called" << std::endl;
+   std::cout << "Copy constructor was called" << m_str << std::endl;
+}
+
+
+MyClass::MyClass(MyClass &&other)
+{
+   m_str=std::move(other.m_str);
+   std::cout << "Move constructor was called" << m_str << std::endl;
+}
+MyClass::MyClass(const MyClass &&other)
+{
+   m_str=std::move(other.m_str);
+
+   std::cout << "const Move constructor was called" << m_str << std::endl;
 }
 
 MyClass someFunction()
 {
-   MyClass dummy;
+   MyClass dummy("dummy");
    return dummy;
 }
 
@@ -339,3 +360,29 @@ TEST(fastsim, dummy){
    bool success = true;
    EXPECT_EQ(true, success);
 }
+
+
+void tryMapMoveObject()
+{//illustrates moving items from one map to another
+   std::unordered_map<int,const MyClass> map;
+   map.reserve(10);
+   map.emplace(1,MyClass("one"));
+   map.emplace(2,MyClass("two"));
+   map.emplace(3,MyClass("three"));
+   std::unordered_map<int,const MyClass> map2;
+   std::unordered_map<int,const MyClass> map1;
+   
+   for ( auto & m : map)
+   {
+     if (m.first==1 || m.first==3)
+         map2.emplace(m.first, std::move(m.second));
+      else
+         map1.emplace(m.first, std::move(m.second));
+        }
+   std::cout << map.size()<<map2.size()<<map1.size();
+   
+   return;
+
+   
+}
+

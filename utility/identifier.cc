@@ -3,9 +3,9 @@
 //
 //  Created by Alice Robson on 05/01/16.
 //
-//Encode information into a unqiue identifier
+//Encode information into a unique identifier
 //
-// accessible intro to us eof bitwise operations can be found here
+// accessible intro to use of bitwise operations can be found here
 //http://stackoverflow.com/questions/6556961/use-of-the-bitwise-operators-to-pack-multiple-values-in-one-int
 //
 
@@ -13,18 +13,15 @@
 #include "enums.h"
 
 
-int Identifier::s_counter =
-   0; /// static which will be used to create a unique long
+int Identifier::s_counter = 0; /// static which will be used to create a unique long
 
-void Identifier::setCounter(int
-                            startid) /// allows user to start counter at another point
+void Identifier::setCounter(int startid) /// allows user to start counter at another point
 {
    s_counter = startid;
 }
 
 //TODO rename as OBJECTTYpe not PFObjectType
-long Identifier::makeIdentifier(fastsim::enumDataType
-                                type, // 6 bits  (to be refined later )
+long Identifier::makeIdentifier(fastsim::enumDataType type,     // 6 bits  (to be refined later )
                                 fastsim::enumLayer layer,       // 4 bits
                                 fastsim::enumSubtype subtype,   // 3 bits
                                 fastsim::enumSource source,     // 3 bits
@@ -119,7 +116,21 @@ bool Identifier::isSmeared(long id)
    return (Identifier::getSubtype(id)==fastsim::enumSubtype::SMEARED );
 }
 
-
+char Identifier::typeShortCode(long id)
+{
+  auto layer = Identifier::getLayer(id);
+  auto dataType = Identifier::getDataType(id);
+  if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::ECAL)
+    return 'e';
+  else if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::HCAL)
+    return 'h';
+  else if (dataType==fastsim::enumDataType::TRACK)
+    return 't';
+  else if (dataType==fastsim::enumDataType::PARTICLE)
+    return 'p';
+  else
+    return 'x';
+}
 
 
 /*
