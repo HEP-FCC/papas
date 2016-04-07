@@ -32,13 +32,19 @@
 #include "displaycore.h"
 #include "displaypfobjects.h"
 #include "TVector3.h"
+#include "Edge.h"
+#include "PFBlock.h"
+
+extern int test_edges();
+extern int test_blocks();
 
 //#include <RInside.h>
 void tryMapMoveObject();
 //void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
-   
+   test_edges();
+   test_blocks();
    tryMapMoveObject();
    return 0;
    

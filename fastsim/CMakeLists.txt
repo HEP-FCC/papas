@@ -76,7 +76,8 @@ ${MAINDIR}/utility/*.cc ${MAINDIR}/utility/*.h
 ${MAINDIR}/display/*.cc ${MAINDIR}/display/*.h
 ${MAINDIR}/detectors/*.cc ${MAINDIR}/detectors/*.h
 ${MAINDIR}/simulation/*.cc ${MAINDIR}/simulation/*.h
-${MAINDIR}/pfalgo/*.cc ${MAINDIR}/pfalgo/*.h)
+${MAINDIR}/pfalgo/*.cc ${MAINDIR}/pfalgo/*.h
+${MAINDIR}/reconstruction/*.cpp ${MAINDIR}/reconstruction/*.h)
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}
@@ -89,6 +90,7 @@ ${MAINDIR}/utility
 ${MAINDIR}/utility/
 ${MAINDIR}/DAGtool/
 ${MAINDIR}/pfalgo/
+${MAINDIR}/reconstruction/
 )
 
 project(event)
@@ -111,7 +113,7 @@ add_definitions(${ROOT_CXX_FLAGS})
 find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-
+message(${sources})
 
 
 #get_cmake_property(_variableNames VARIABLES)

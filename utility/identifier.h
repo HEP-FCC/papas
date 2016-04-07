@@ -26,13 +26,20 @@ public:
                              int uniqueid = Identifier::s_counter);
   static long makeAnotherIdentifier(long
                                     existingid);///uses same enums as existing id  but sets a new uniqueID.
-  static long makeClusterID(eLayer layer, eSubtype subtype = eSubtype::RAW);
   
+  static long makeClusterID(eLayer layer, eSubtype subtype = eSubtype::RAW);
   static long makeECALClusterID(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterID(eLayer::ECAL, subtype); };
   static long makeHCALClusterID(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterID(eLayer::HCAL, subtype); };
   static long makeParticleID(eSource source);
   static long makeTrackID( fastsim::enumSubtype subtype= eSubtype::RAW);
+  static long makeBlockID();
   
+  
+  
+  static bool isEcal(long id);
+  static bool isHcal(long id);
+  static bool isTrack(long id);
+  static bool isBlock(long id);
   
   static bool isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                               fastsim::enumSubtype subtype,fastsim::enumSource source);

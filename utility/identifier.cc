@@ -9,7 +9,11 @@
 //http://stackoverflow.com/questions/6556961/use-of-the-bitwise-operators-to-pack-multiple-values-in-one-int
 //
 
+
+
 #include "identifier.h"
+
+//#include "enummanager.h"
 #include "enums.h"
 
 
@@ -89,6 +93,15 @@ long Identifier::makeTrackID( fastsim::enumSubtype subtype)
                                             subtype,
                                             fastsim::enumSource::SIMULATION);
 }
+
+long Identifier::makeBlockID( )
+{
+  return        Identifier::makeIdentifier(fastsim::enumDataType::BLOCK,
+                                           fastsim::enumLayer::NONE,
+                                           fastsim::enumSubtype::NONE,
+                                           fastsim::enumSource::RECONSTRUCTION);
+}
+
 long Identifier::makeParticleID(eSource source)
 {
    return Identifier::makeIdentifier(fastsim::enumDataType::PARTICLE,
@@ -97,6 +110,26 @@ long Identifier::makeParticleID(eSource source)
                                      source);
 }
 
+
+bool Identifier::isEcal(long id)
+{
+  return (Identifier::getLayer(id)==fastsim::enumLayer::ECAL);
+}
+
+bool Identifier::isHcal(long id)
+{
+  return (Identifier::getLayer(id)==fastsim::enumLayer::ECAL);
+}
+
+bool Identifier::isTrack(long id)
+{
+  return (Identifier::getDataType(id)==fastsim::enumDataType::TRACK);
+}
+
+bool Identifier::isBlock(long id)
+{
+  return (Identifier::getDataType(id)==fastsim::enumDataType::BLOCK);
+}
 
 bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)

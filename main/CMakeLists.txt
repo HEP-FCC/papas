@@ -23,7 +23,7 @@ include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/DAGtool )
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
-${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation  )
+${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/reconstruction  )
 
 set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/src/)
 #R support
