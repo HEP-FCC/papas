@@ -8,6 +8,10 @@
 
 #include "PFEvent.h"
 #include "PFBlock.h"
+PFEvent::PFEvent()
+{
+  
+}
 
 bool PFEvent::compare(longID id1, longID id2) const //TODO check direction of sort
 {

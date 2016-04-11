@@ -59,8 +59,8 @@ public:
    @param[in] pfevent: allows access to the underlying elements given a uniqueid
    must provide a get_object function
    */
-  PFBlock(const std::vector<longID>&  element_ids, std::unordered_map<long long, const class Edge>& edges);
-  
+  PFBlock(const std::vector<longID>&  elementIDs, std::unordered_map<long long, const class Edge>& edges);
+  PFBlock();
   const std::vector<longID> elementIDs() const { return m_elementIDs;}
   const Edge& Edge(long long key) const { return m_edges.find(key)->second;}
   
@@ -81,7 +81,7 @@ Arguments:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of longIDs that are linked to the uniqueid
   */
-   std::vector<longID> linkedIDs(longID uniqueid, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+   std::vector<longID> linkedIDs(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
   
  
   std::string shortName() const; ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
@@ -89,6 +89,7 @@ Arguments:
   int  countHcal() const ; ///< Counts how many hcal cluster ids are in the block
   int  countTracks() const; ///< Counts how many tracks are in the block
   int  size() const ; ///< length of the element_unqiueids
+  longID uniqueID() const {return m_uniqueID;}; ///<Unique ID of the block
   
   friend std::ostream& operator<<(std::ostream& os, const PFBlock& block); ///< print block
 private:;

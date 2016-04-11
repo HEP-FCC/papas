@@ -7,6 +7,7 @@
 #include "PFEvent.h"
 #include "Edge.h"
 #include "PFBlock.h"
+#include "directedacyclicgraph.h"
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *
@@ -21,43 +22,46 @@
 //TODO namespace
 class PFEvent;
 
+typedef long longID;
+typedef std::unordered_map<long long, const class Edge> Edges;
+typedef DAG::Node<longID> PFNode;
+typedef  std::unordered_map<longID,PFNode> Nodes;
+typedef  std::unordered_map<longID, PFBlock> Blocks;
+typedef  std::vector<longID> IDs;
+const PFEvent emptyconstPFEvent;
+Nodes emptyNodes;
+const Nodes emptyconstNodes;
+
+
 class BlockBuilder {
-  typedef long longID;
 public:
-  BlockBuilder(const PFEvent& pfevent);
+  BlockBuilder(IDs ids,
+               Edges& edges,
+               Nodes& historynodes = emptyNodes ,
+               const PFEvent& pfevent = emptyconstPFEvent );
   
+  const Blocks blocks() const {return m_blocks;} ;
+  //BlockBuilder(ids, edges);
+  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); ///< print block
+
 private:
-  void sortIDs(std::vector<longID>& ids);
+  void makeBlocks();
+  void sortIDs(IDs& ids);
   //void sortEgdes
   bool compareEdges( long long key1, long long key2, longID uniqueid) const;
   //bool compare(longID id1, longID id2) const;
+ 
+  IDs m_elementIDs; //
+  Edges& m_edges; //< all the edges corresponding to the ids
+  Nodes& m_historyNodes; //<optional, allows history to be updated
   const PFEvent& m_pfEvent; //allows access to the underlying objects
-  std::unordered_map<long long, Edge> m_edges;
+  Nodes m_localNodes; //<local nodes used in building blocks
+  Blocks m_blocks;//< the blocks made by blockbuilder
+  
+
 };
 
-void BlockBuilder::sortIDs(std::vector<longID>& ids)
-{
-  std::sort( ids.begin(), ids.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
-}
 
-bool BlockBuilder::compareEdges(long long key1, long long key2, longID uniqueid) const//TODO check direction of sort
-{
-  //sort by the type eg ecal hcal
-  // and then in order of decreasing energy
-  Edge e1 = m_edges.find(key1)->second; // should part of this be a static function in Edges?
-  Edge e2 = m_edges.find(key2)->second;
-  if (e1.distance() < e2.distance())
-    return true;
-  else if (e1.distance() > e2.distance())
-    return false;
-  // the distance for edge1 and edge 2 is same
-  // so return based on edgetype and end energy comparison for the items
-  // at the other end from uniqueID
-  double energy1 = m_pfEvent.getEnergy(e1.otherID(uniqueid));
-  double energy2 = m_pfEvent.getEnergy(e2.otherID(uniqueid));
-  
-  return (energy1 > energy2) ;
-}
 
 
 

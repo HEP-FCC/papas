@@ -99,6 +99,15 @@ namespace DAG {
       Node(T v);
       /// Needed for putting a Node inside a unordered_map
       Node();
+      // ideally no copying because it means nodes are no longer unique
+      TNode& operator=(TNode&)=delete;
+      TNode& operator=(const TNode&)=delete;
+      //However, unordered_map requires these to be available
+      Node(TNode&) {std::cout << "Unexpected Node copy";};
+      Node(const TNode&) {std::cout << "Unexpected Node copy =";};
+      TNode& operator=(TNode&& other)=default;
+      Node(TNode&& other)=default;
+     
       ///Key function for visitor pattern
       void accept(Visitor<TNode>& visitor);
       ///Add in a link (this will set the reverse parent link in the other node)
@@ -133,6 +142,7 @@ namespace DAG {
       const  Nodevector& traverseChildren(N& node)   override;
       const  Nodevector& traverseParents(N& node)    override;
       const  Nodevector& traverseUndirected(N& node) override;
+      bool alreadyVisited(N* node) const;
 
    protected:
       /// which nodes have been visited (reset each time a traversal is made)
@@ -146,6 +156,10 @@ namespace DAG {
                             BFSVisitor<N>::enumVisitType visittype) ; //the iterative method
 
    };
+  
+ 
+
+  
 
 
    ///Breadth First Search alternative implementation using recursion
@@ -157,8 +171,58 @@ namespace DAG {
       virtual void traverse(const typename BFSVisitor<N>::Nodeset& nodes,
                             typename BFSVisitor<N>::enumVisitType visittype) override;
    };
-
+  
+  template <typename T> ///N is the Node
+  class FloodFill {
+    ///used for returning results
    
+    typedef Node<T> TNode;
+    typedef std::unordered_map<T, TNode> Nodemap ;
+    typedef std::unordered_set<TNode*> Nodeset ;
+    typedef std::vector<TNode*> Nodevector ;
+  public:
+    FloodFill();
+    std::vector<Nodevector> traverse(Nodemap&) ;
+  private:
+    /// which nodes have been visited (reset each time a traversal is made)
+    Nodeset m_visited;
+    
+  };
+  ///Iterate through all nodes and
+  ///use Breadth first search to find connected groups'''
+  
+  template <typename T>
+  FloodFill<T>::FloodFill()
+  {
+  }
+  
+  
+  template <typename T>
+  std::vector<typename FloodFill<T>::Nodevector> FloodFill<T>::traverse(FloodFill<T>::Nodemap& nodes)
+  {
+    std::vector<Nodevector>  m_blocks;
+    //NOT tested
+    for ( auto& elem : nodes) {
+      std::cout << elem.first << ": " << elem.second.getValue();
+      TNode* node = &(elem.second);
+      //auto key = elem.first;
+      
+      if (m_visited.find(node) != m_visited.end()) //already done so skip the rest
+        continue;
+      
+      //find connected nodes
+      BFSRecurseVisitor<TNode> bfs;
+      Nodevector result=bfs.traverseUndirected(*node);
+      for (TNode* n : result )  //set all connected elements to have a visited flag =true
+        m_visited.insert(n);
+      m_blocks.push_back(result);
+    }
+    return m_blocks;
+  }
+  
+  
+
+  
    ///Constructor
    template<typename T>
    Node<T>::Node(T v)
@@ -221,6 +285,15 @@ namespace DAG {
       m_result.push_back(node); //add to result
       m_visited.insert(node);   //mark it as visited
    }
+  
+  template<typename N>
+  bool BFSVisitor<N>::alreadyVisited(N* node) const
+  {
+    if( m_visited.find(node) == m_visited.end())
+      return false;
+    return true;
+  }
+
 
    /**
     traverse the nodes using Breadth First Search implemented using a Queue
@@ -238,7 +311,7 @@ namespace DAG {
       std::queue<N*> nodeQueue;
 
       // Mark the current node as visited and enqueue it
-      for (auto node : nodes) {
+      for (auto & node : nodes) {
          if (m_visited.find(node) ==
                m_visited.end()) { //if node is not listed as already being visited
             node->accept(*this); //mark as visited and add to results
@@ -307,11 +380,22 @@ namespace DAG {
             //and store these into visitnextnodes
             if (visittype == pt::CHILDREN | visittype ==
                   pt::UNDIRECTED) //may need additional check whether already visited here
-               visitnextnodes.insert(node->getChildren().begin(), node->getChildren().end());
+              for (const auto child : node->getChildren()) {
+                if (!this->alreadyVisited(child))
+                   visitnextnodes.insert(child);
+              }
+           if (visittype == pt::PARENTS | visittype ==
+               pt::UNDIRECTED) //may need additional check whether already visited here
+             for (const auto parent : node->getParents())
+             {
+               if (!this->alreadyVisited(parent))
+                 visitnextnodes.insert(parent);
+             }
 
-            if (visittype == pt::PARENTS | visittype ==
+            /*if (visittype == pt::PARENTS | visittype ==
                   pt::UNDIRECTED) //Add in parents to layer to visit
-               visitnextnodes.insert(node->getParents().begin(), node->getParents().end());
+              if (node->getParents().size()>0)
+                visitnextnodes.insert(node->getParents().begin(), node->getParents().end());*/
          }
       }
       traverse(visitnextnodes, visittype);

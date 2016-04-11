@@ -45,6 +45,14 @@ m_elementIDs(element_ids){
   }
 }
 
+PFBlock::PFBlock():
+m_uniqueID(-1),
+m_isActive(false),
+m_blockCount(-1),
+m_elementIDs()
+{
+  
+}
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
   return std::count_if(m_elementIDs.begin(), m_elementIDs.end(),

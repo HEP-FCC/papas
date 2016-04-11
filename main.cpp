@@ -37,6 +37,7 @@
 
 extern int test_edges();
 extern int test_blocks();
+extern int testBlockBuilder();
 
 //#include <RInside.h>
 void tryMapMoveObject();
@@ -45,6 +46,7 @@ void tryMapMoveObject();
 int main(int argc, char* argv[]){
    test_edges();
    test_blocks();
+  testBlockBuilder();
    tryMapMoveObject();
    return 0;
    

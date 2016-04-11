@@ -62,7 +62,7 @@ Edge::EdgeType Edge::makeEdgeType() const {
 
 
 std::ostream& operator<<(std::ostream& os, const Edge& edge) {
-  os << "Edge: " << edge.m_id1<<"<->" << edge.m_distance;
+  os << "Edge: " << edge.m_id1<<"<->"<<edge.m_id2<<": " << edge.m_distance;
   os << " (link = " << std::boolalpha << edge.m_isLinked << ")" ;
   return os;
 }
