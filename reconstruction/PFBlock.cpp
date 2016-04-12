@@ -11,7 +11,7 @@
 //#include <boost/format.hpp>
 #include <iostream>
 #include <iomanip>
-#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <algorithm>
 #include "identifier.h"
@@ -21,15 +21,12 @@
 
 int PFBlock::tempBlockCount = 0;
 
-PFBlock::PFBlock(const std::vector<longID>&  element_ids, std::unordered_map<edgeKey, const class Edge>& edges) :
+PFBlock::PFBlock(const PFBlock::IDs&  element_ids, PFBlock::Edges& edges) :
 m_uniqueID(Identifier::makeBlockID()),
 m_isActive(true),
 m_blockCount(PFBlock::tempBlockCount),
 m_elementIDs(element_ids){
   PFBlock::tempBlockCount += 1;
-  
-  //todo move sorting up
-  //std::sort( m_elementUniqueIDs.begin(), m_elementUniqueIDs.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
   
   //extract the relevant parts of the complete set of edges and store this within the block
   //note the edges will be removed from the edges unordered_map
@@ -131,7 +128,7 @@ std::vector<long> PFBlock::linkedIDs(longID uniqueid, Edge::EdgeType edgetype) c
    track3 energy = 4,  dist to hcal = 0
    this will return {track2, track3, track1}
    */
-  std::vector<longID> linkedIDs;
+  IDs linkedIDs;
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     linkedIDs.push_back(m_edges.find(key)->second.otherID(uniqueid));
   }
@@ -271,8 +268,8 @@ int test_blocks() {
   PFBlock::longID id5 = Identifier::makeHCALClusterID();
   PFBlock::longID id6 = Identifier::makeTrackID();
   
-  std::vector<PFBlock::longID> ids {id1,id2,id3};
-  std::vector<PFBlock::longID> ids2 {id4,id5,id6};
+  PFBlock::IDs ids {id1,id2,id3};
+  PFBlock::IDs ids2 {id4,id5,id6};
   
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
@@ -282,7 +279,7 @@ int test_blocks() {
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
   
-  std::unordered_map<long long, const Edge> edges;
+  PFBlock::Edges edges;
   
   edges.emplace(edge.key(),  edge);
   edges.emplace(edge1.key(), edge1);

@@ -4,16 +4,30 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include "PFEvent.h"
-#include "Edge.h"
-#include "PFBlock.h"
+
 #include "directedacyclicgraph.h"
+
+class PFEvent;
+class PFBlock;
+class Edge;
+
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *
- *  @brief An BlockBuilder created blocks of connected elements
- *
- *  Example usage: BlockBuilder b = BlockBuilder...;
+ * BlockBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link info
+ * It uses the distances/links between elements to construct a set of connected blocks
+ * Each element will end up in one (and only one) block
+ * Blocks retain information of the elements and the distances between elements
+ * The blocks can be used for future particle reconstruction
+ * The ids must be unique and are expected to come from the Identifier class
+ 
+ 
+ Usage example:
+ 
+ BlockBuilder builder {ids, edges, history_nodes, pfevent};
+ for (b in builder.blocks()) {
+ ...
+ }
  *
  *  @author  Alice Robson
  *  @date    2016-04-06
@@ -22,48 +36,57 @@
 //TODO namespace
 class PFEvent;
 
+//TODO figure out best place to keep the typedefs
 typedef long longID;
 typedef std::unordered_map<long long, const class Edge> Edges;
 typedef DAG::Node<longID> PFNode;
-typedef  std::unordered_map<longID,PFNode> Nodes;
-typedef  std::unordered_map<longID, PFBlock> Blocks;
-typedef  std::vector<longID> IDs;
-const PFEvent emptyconstPFEvent;
-Nodes emptyNodes;
-const Nodes emptyconstNodes;
+typedef std::unordered_map<longID,PFNode> Nodes;
+typedef std::unordered_map<longID, PFBlock> Blocks;
+typedef std::vector<longID> IDs;
+
+//Allow optional parameters where construction arguments are references
+extern Nodes emptyNodes;
+extern const Nodes emptyconstNodes;
+extern const PFEvent emptyconstPFEvent;
+
 
 
 class BlockBuilder {
 public:
+  /** Constructor
+   
+   * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
+   * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
+   *            an edge records the distance and links between two ids
+   * @param[inout] historyNodes : optional unordered_map that describes which elements are parents of which blocks
+   *                     if a history_nodes tree is provided then
+   *                     the new history will be added into the exisiting history
+   * pfevent : //TODO remove this. the particle flow event object which is needed so that the underlying object can
+   *    be retrieved
+   */
   BlockBuilder(IDs ids,
                Edges& edges,
-               Nodes& historynodes = emptyNodes ,
+               Nodes& historynodes = emptyNodes,
                const PFEvent& pfevent = emptyconstPFEvent );
   
-  const Blocks blocks() const {return m_blocks;} ;
-  //BlockBuilder(ids, edges);
-  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); ///< print block
-
-private:
-  void makeBlocks();
-  void sortIDs(IDs& ids);
-  //void sortEgdes
-  bool compareEdges( long long key1, long long key2, longID uniqueid) const;
-  //bool compare(longID id1, longID id2) const;
- 
-  IDs m_elementIDs; //
-  Edges& m_edges; //< all the edges corresponding to the ids
-  Nodes& m_historyNodes; //<optional, allows history to be updated
-  const PFEvent& m_pfEvent; //allows access to the underlying objects
-  Nodes m_localNodes; //<local nodes used in building blocks
-  Blocks m_blocks;//< the blocks made by blockbuilder
+  //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
+  const Blocks blocks() const {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class
   
-
+private:
+  void makeBlocks(); // does the main work
+  void sortIDs(IDs& ids); //sorts elements by type
+  
+  //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
+  
+  IDs m_elementIDs; ///<uniqueids to be grouped into blocks
+  Edges& m_edges; ///< all the edges corresponding to the ids
+  Nodes& m_historyNodes; ///<optional, allows history to be updated
+  const PFEvent& m_pfEvent; ///<allows access to the underlying objects
+  Nodes m_localNodes; ///<local nodes used in building blocks
+  Blocks m_blocks;///< the blocks made by blockbuilder
+  
 };
-
-
-
-
 
 
 #endif /* BlockBuilder_h */

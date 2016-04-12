@@ -49,7 +49,8 @@ class PFBlock {
 public:
   typedef long longID;
   typedef long long edgeKey;
-
+  typedef std::vector<longID>  IDs;
+  typedef std::unordered_map<long long, const class Edge> Edges;
 
   /** Constructor
    @param[in] element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
@@ -59,16 +60,14 @@ public:
    @param[in] pfevent: allows access to the underlying elements given a uniqueid
    must provide a get_object function
    */
-  PFBlock(const std::vector<longID>&  elementIDs, std::unordered_map<long long, const class Edge>& edges);
+  PFBlock(const IDs&  elementIDs, Edges& edges);
   PFBlock();
-  const std::vector<longID> elementIDs() const { return m_elementIDs;}
+  const IDs elementIDs() const { return m_elementIDs;}
   const Edge& Edge(long long key) const { return m_edges.find(key)->second;}
   
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing distance
-  
-Arguments:
   @param[in] uniqueid : is the id of item of interest
   @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
   @return vector of long long keys to linked edges
@@ -81,15 +80,16 @@ Arguments:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of longIDs that are linked to the uniqueid
   */
-   std::vector<longID> linkedIDs(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+   IDs linkedIDs(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
   
- 
+
   std::string shortName() const; ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int  countEcal() const; ///< Counts how many ecal cluster ids are in the block
   int  countHcal() const ; ///< Counts how many hcal cluster ids are in the block
   int  countTracks() const; ///< Counts how many tracks are in the block
   int  size() const ; ///< length of the element_unqiueids
   longID uniqueID() const {return m_uniqueID;}; ///<Unique ID of the block
+  bool isActive() const {return m_isActive;}; ///Blocks that have been split will be deactivated
   
   friend std::ostream& operator<<(std::ostream& os, const PFBlock& block); ///< print block
 private:;
@@ -100,8 +100,8 @@ private:;
   bool m_isActive; // if a block is subsequently split it will be deactivated
   static int tempBlockCount; //sequential numbering of blocks, not essential but helpful for debugging
   int m_blockCount ; //sequential numbering of blocks, not essential but helpful for debugging
-  std::vector<longID>  m_elementIDs; //elements in this block ordered by type and decreasing energy
-  std::unordered_map<long long,const class Edge> m_edges; //all the edges for elements in this block
+  IDs  m_elementIDs; //elements in this block ordered by type and decreasing energy
+  Edges m_edges; //all the edges for elements in this block
   const class Edge& getEdge(longID id1, longID id2) const;
   
   

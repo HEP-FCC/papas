@@ -103,8 +103,10 @@ namespace DAG {
       TNode& operator=(TNode&)=delete;
       TNode& operator=(const TNode&)=delete;
       //However, unordered_map requires these to be available
+      //TODO make this more formal
       Node(TNode&) {std::cout << "Unexpected Node copy";};
       Node(const TNode&) {std::cout << "Unexpected Node copy =";};
+      //Move is good
       TNode& operator=(TNode&& other)=default;
       Node(TNode&& other)=default;
      
@@ -171,55 +173,6 @@ namespace DAG {
       virtual void traverse(const typename BFSVisitor<N>::Nodeset& nodes,
                             typename BFSVisitor<N>::enumVisitType visittype) override;
    };
-  
-  template <typename T> ///N is the Node
-  class FloodFill {
-    ///used for returning results
-   
-    typedef Node<T> TNode;
-    typedef std::unordered_map<T, TNode> Nodemap ;
-    typedef std::unordered_set<TNode*> Nodeset ;
-    typedef std::vector<TNode*> Nodevector ;
-  public:
-    FloodFill();
-    std::vector<Nodevector> traverse(Nodemap&) ;
-  private:
-    /// which nodes have been visited (reset each time a traversal is made)
-    Nodeset m_visited;
-    
-  };
-  ///Iterate through all nodes and
-  ///use Breadth first search to find connected groups'''
-  
-  template <typename T>
-  FloodFill<T>::FloodFill()
-  {
-  }
-  
-  
-  template <typename T>
-  std::vector<typename FloodFill<T>::Nodevector> FloodFill<T>::traverse(FloodFill<T>::Nodemap& nodes)
-  {
-    std::vector<Nodevector>  m_blocks;
-    //NOT tested
-    for ( auto& elem : nodes) {
-      std::cout << elem.first << ": " << elem.second.getValue();
-      TNode* node = &(elem.second);
-      //auto key = elem.first;
-      
-      if (m_visited.find(node) != m_visited.end()) //already done so skip the rest
-        continue;
-      
-      //find connected nodes
-      BFSRecurseVisitor<TNode> bfs;
-      Nodevector result=bfs.traverseUndirected(*node);
-      for (TNode* n : result )  //set all connected elements to have a visited flag =true
-        m_visited.insert(n);
-      m_blocks.push_back(result);
-    }
-    return m_blocks;
-  }
-  
   
 
   
@@ -379,23 +332,19 @@ namespace DAG {
             //Now add in all the children/parent/undirected links for the next depth
             //and store these into visitnextnodes
             if (visittype == pt::CHILDREN | visittype ==
-                  pt::UNDIRECTED) //may need additional check whether already visited here
+                  pt::UNDIRECTED)
               for (const auto child : node->getChildren()) {
                 if (!this->alreadyVisited(child))
                    visitnextnodes.insert(child);
               }
            if (visittype == pt::PARENTS | visittype ==
-               pt::UNDIRECTED) //may need additional check whether already visited here
+               pt::UNDIRECTED)
              for (const auto parent : node->getParents())
              {
                if (!this->alreadyVisited(parent))
                  visitnextnodes.insert(parent);
              }
 
-            /*if (visittype == pt::PARENTS | visittype ==
-                  pt::UNDIRECTED) //Add in parents to layer to visit
-              if (node->getParents().size()>0)
-                visitnextnodes.insert(node->getParents().begin(), node->getParents().end());*/
          }
       }
       traverse(visitnextnodes, visittype);
@@ -448,6 +397,11 @@ namespace DAG {
    }
 
 }
+
+
+
+
+
 
 
 #endif /* DirectedAcyclicGraph */
