@@ -50,7 +50,7 @@ public:
   typedef long longID;
   typedef long long edgeKey;
   typedef std::vector<longID>  IDs;
-  typedef std::unordered_map<long long, const class Edge> Edges;
+  typedef std::unordered_map<long long, class Edge> Edges;
 
   /** Constructor
    @param[in] element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
@@ -63,7 +63,8 @@ public:
   PFBlock(const IDs&  elementIDs, Edges& edges);
   PFBlock();
   const IDs elementIDs() const { return m_elementIDs;}
-  const Edge& Edge(long long key) const { return m_edges.find(key)->second;}
+  Edge Edge(long long key) { return m_edges.find(key)->second;}
+  const class Edge& Edge(long long key) const { return m_edges.find(key)->second;}
   
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
@@ -90,6 +91,8 @@ public:
   int  size() const ; ///< length of the element_unqiueids
   longID uniqueID() const {return m_uniqueID;}; ///<Unique ID of the block
   bool isActive() const {return m_isActive;}; ///Blocks that have been split will be deactivated
+  void setActive(bool active) {m_isActive=active;}; ///active/ deactivate block
+  Edges& edges() {return m_edges;}
   
   friend std::ostream& operator<<(std::ostream& os, const PFBlock& block); ///< print block
 private:;

@@ -1,0 +1,55 @@
+//
+//  BlockSplitter.cpp
+//  fastsim
+//
+//  Created by Alice Robson on 12/04/16.
+//
+//
+
+#include "BlockSplitter.h"
+#include "PFBlock.h"
+#include "BlockBuilder.h"
+
+//const BlockBuilder emptyBlockBuilder;
+
+
+
+BlockSplitter::BlockSplitter(const Edges& unlinkEdges,
+                             PFBlock& block,
+                             Nodes& historynodes) :
+m_blocks()
+{
+  Edges modifiedEdges;
+  for (const auto & edge : block.edges()) { //copy edges
+    Edge e = edge.second;
+    //if (unlinkEdges.find(edge.first)!= unlinkEdges.end() )
+    //     e.setLinked(false);
+    //modifiedEdges.emplace(e.key(), e);
+  }
+  
+  //BlockBuilder bbuilder{block.elementIDs(), modifiedEdges, historynodes};
+  //m_blocks = bbuilder.blocks();
+  block.setActive(false);
+  
+}
+
+/*
+ #Plan 1 was to link new blocks to original blocks. But this makes use of the history nodes
+ # rather cumbersome. needs to be debated further removed for now
+ ##the new blocks are subblocks of the original block
+ ##so keep note of this in the history (at least for now)
+ ## nb in some cases the new block will be the same as the original block although
+ ## the edges will have changed (for python these changes will also be seen in
+ ## the original block)
+ #if (self.history_nodes != None ):
+ #for subblockid in self.blocks.keys():
+ #if len(block.element_uniqueids)>5:
+ #print "*****split", block
+ #pass
+ ##self.history_nodes[block.uniqueid].add_child(history_nodes[subblockid])
+ 
+ #set the original block to be inactive*/
+ 
+ 
+ 
+ 

@@ -1,22 +1,20 @@
-#ifndef RECONSTRUCTION_BLOCKBUILDER_H
-#define RECONSTRUCTION_BLOCKBUILDER_H
+#ifndef RECONSTRUCTION_GRAPHBUILDER_H
+#define RECONSTRUCTION_GRAPHBUILDER_H
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 
 #include "directedacyclicgraph.h"
-#include "GraphBuilder.h"
 
 class PFEvent;
 class PFBlock;
 class Edge;
-class GraphBuilder;
 
 
-/** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
+/** @class   rec::GraphBuilder Reconstruction/Reconstruction/GraphBuilder.h GraphBuilder.h
  *
- * BlockBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link info
+ * GraphBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link info
  * It uses the distances/links between elements to construct a set of connected blocks
  * Each element will end up in one (and only one) block
  * Blocks retain information of the elements and the distances between elements
@@ -26,7 +24,7 @@ class GraphBuilder;
  
  Usage example:
  
- BlockBuilder builder {ids, edges, history_nodes, pfevent};
+ GraphBuilder builder {ids, edges, history_nodes, pfevent};
  for (b in builder.blocks()) {
  ...
  }
@@ -50,7 +48,7 @@ typedef std::vector<longID> IDs;
 extern Nodes emptyNodes;
 extern const Nodes emptyconstNodes;
 
-class BlockBuilder: public GraphBuilder {
+class GraphBuilder {
 public:
   /** Constructor
    
@@ -61,27 +59,28 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  BlockBuilder(IDs ids,
-               Edges& edges,
-               Nodes& historynodes = emptyNodes );
-  BlockBuilder();
-  //BlockBuilder& operator = (const BlockBuilder&) ;
- 
-  //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
-  const Blocks blocks() const {return m_blocks;}; ///<return the unordered map of the resulting blocks;
-  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class
+  GraphBuilder(IDs ids,
+               Edges& edges);
+  GraphBuilder();
+  //GraphBuilder& operator = (const GraphBuilder&) ;
+  GraphBuilder& operator = (const GraphBuilder&) ;
+  const std::vector<IDs>  subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
+  std::vector<IDs>  m_subGraphs;///< vector of subgraphs made by graphbuilder
   
+protected:
+   void sortIDs(IDs& ids);
+   Edges& m_edges;
 private:
-  void makeBlocks(); // does the main work
-                     //void sortIDs(IDs& ids); //sorts elements by type
+  //void makeGraphs(); // does the main work
+   //sorts elements by type
   
   //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
   
-  Nodes& m_historyNodes; ///<optional, allows history to be updated
-  //Nodes m_localNodes; ///<local nodes used in building blocks
-  Blocks m_blocks;///< the blocks made by blockbuilder
+  IDs m_elementIDs; ///<uniqueids to be grouped into subgraphs
+   ///< all the edges corresponding to the ids
+  Nodes m_localNodes; ///<local nodes used in building subgraphs
   
 };
 
 
-#endif /* BlockBuilder_h */
+#endif /* GraphBuilder_h */

@@ -39,6 +39,7 @@ extern int test_edges();
 extern int test_blocks();
 extern int test_BlockBuilder();
 extern int test_FloodFill();
+extern int test_GraphBuilder();
 //#include <RInside.h>
 void tryMapMoveObject();
 //void r_density_plot(const std::vector<double>& v, RInside &);
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]){
    test_blocks();
    test_BlockBuilder();
    test_FloodFill();
+   test_GraphBuilder();
    tryMapMoveObject();
    return 0;
    

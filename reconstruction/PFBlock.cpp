@@ -176,7 +176,7 @@ std::string PFBlock::edgeMatrixString() const {
 for example:-
 
 distances:
-E0       H1       T2       T3
+         E0       H1       T2       T3
 E0       .
 H1  0.0267        .
 T2  0.0000   0.0000        .
@@ -209,7 +209,7 @@ T3  0.0287   0.0825      ---        .
     rowstr = "";
     //make short name for the row element eg E3, H5 etc
     os<<std::setw(18)<< Identifier::typeShortCode(e1) + std::to_string(countrow);
-    
+    countrow += 1;
     for (auto e2 : m_elementIDs) { //these will be the columns
       if (e1 == e2) {
         os << "        .";
@@ -221,7 +221,7 @@ T3  0.0287   0.0825      ---        .
         os << "      xxx";
       else {
         os<< std::setw(9)<<std::fixed  << getEdge(e1,e2).distance() ;
-                countrow += 1;
+        
       }
       
     }

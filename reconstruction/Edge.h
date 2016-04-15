@@ -39,6 +39,7 @@ public:
   longID id1() const {return m_id1;};
   longID id2() const {return m_id2;};
   bool isLinked() const {return m_isLinked;}  ///<boolean to mark if this edge links the two elements
+  void setLinked(bool link) { m_isLinked=link;};
   double distance() const {return m_distance;} ///<distance between the two elements
   long long key() const {return m_key;} ///<unique key for this edge that can be found from the two element ids
   EdgeType edgeType() const {return m_edgeType;} ///<describes what types of elements are connected
