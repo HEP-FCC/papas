@@ -78,7 +78,8 @@ public:
   BlockSplitter(const Edges& unlinkEdges,
                 PFBlock& block,
                 Nodes& historynodes = emptyNodes);
-  const Blocks blocks() const {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+  Blocks blocks()  {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+  friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);
   
 private:
   Blocks m_blocks;

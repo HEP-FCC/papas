@@ -99,11 +99,11 @@ int main()
    std::cout << "Node : Nodetype" << std::endl;
    DAG::BFSVisitor<INode> bfs;
    for (auto n : bfs.traverseChildren(n0)) {
-      long id = Identifier::getUniqueID(n->getValue());
-      if (Identifier::getDataType(n->getValue()) ==  enumDataType::CLUSTER)
+      long id = Identifier::uniqueID(n->value());
+      if (Identifier::dataType(n->value()) ==  enumDataType::CLUSTER)
          std::cout << id - 1  << " :CLUSTER"  <<
                    std::endl; //subtract 1 to match the node number
-      else if (Identifier::getDataType(n->getValue()) == enumDataType::TRACK)
+      else if (Identifier::dataType(n->value()) == enumDataType::TRACK)
          std::cout <<  id - 1 << " :TRACK"  <<
                    std::endl; //subtract 1 to match the node number
    }
@@ -114,11 +114,11 @@ int main()
    std::cout << std::endl << "TRAVERSE UNDIRECTED (start Node 0)  " << std::endl;
    std::cout << "Node : LEAF/ROOT" << std::endl;
    for (auto n : bfs.traverseUndirected(n0)) {
-      std::cout << Identifier::getUniqueID(n->getValue()) - 1
+      std::cout << Identifier::uniqueID(n->value()) - 1
                 ; //subtract 1 to match the node number
-      if (n->getChildren().size() == 0)
+      if (n->children().size() == 0)
          std::cout <<  " LEAF"   ;
-      else if (n->getParents().size() == 0)
+      else if (n->parents().size() == 0)
          std::cout <<  " ROOT"   ;
       std::cout << std::endl;
    }
@@ -130,8 +130,8 @@ int main()
    std::cout << "Node" << std::endl;
    DAG::BFSRecurseVisitor<INode> bfsrecursive;
    for (auto n : bfs.traverseUndirected(n0)) {
-      if (n->getChildren().size() == 0)//isLeaf
-         std::cout <<  Identifier::getUniqueID(n->getValue()) - 1  << std::endl;
+      if (n->children().size() == 0)//isLeaf
+         std::cout <<  Identifier::uniqueID(n->value()) - 1  << std::endl;
    }
    return 0;
 }

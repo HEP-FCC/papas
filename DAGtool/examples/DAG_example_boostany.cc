@@ -102,11 +102,11 @@ int main()
       //check the boost::any type to see if it is an int or a middle
       //once the type is identified can cast to the appropriate type
       //and then use it as required
-      if (n->getValue().type() == typeid(int)) {
-         std::cout << "Integer: " << boost::any_cast<int> (n->getValue())  << std::endl;
+      if (n->value().type() == typeid(int)) {
+         std::cout << "Integer: " << boost::any_cast<int> (n->value())  << std::endl;
       }
-      if (n->getValue().type() == typeid(Middle)) {
-         boost::any_cast<Middle>(n->getValue()).Write() ;
+      if (n->value().type() == typeid(Middle)) {
+         boost::any_cast<Middle>(n->value()).Write() ;
       }
    }
 

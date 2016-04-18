@@ -64,22 +64,19 @@ public:
   BlockBuilder(IDs ids,
                Edges& edges,
                Nodes& historynodes = emptyNodes );
-  BlockBuilder();
+  //BlockBuilder(); //needed for unordered_map to compile but not actually used
   //BlockBuilder& operator = (const BlockBuilder&) ;
- 
   //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
-  const Blocks blocks() const {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+  Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class
   
 private:
   void makeBlocks(); // does the main work
-                     //void sortIDs(IDs& ids); //sorts elements by type
+  Nodes& m_historyNodes; ///<optional, allows history to be updated
+  Blocks m_blocks;///< the blocks made by blockbuilder
   
   //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
-  
-  Nodes& m_historyNodes; ///<optional, allows history to be updated
-  //Nodes m_localNodes; ///<local nodes used in building blocks
-  Blocks m_blocks;///< the blocks made by blockbuilder
+  //void sortIDs(IDs& ids); //sorts elements by type
   
 };
 

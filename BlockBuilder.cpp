@@ -32,14 +32,14 @@ BlockBuilder::BlockBuilder(
   
   
 }
-
+/*
 BlockBuilder::BlockBuilder() :
 GraphBuilder(),
 m_historyNodes(emptyNodes),
 m_blocks()
-{
-  
-}
+{;
+  std::cout<<"when is this used";
+}*/
 
 /*BlockBuilder& BlockBuilder::operator=(const BlockBuilder& b)
 {
@@ -52,7 +52,7 @@ m_blocks()
 
 
 void BlockBuilder::makeBlocks() {
-  /** uses the bas GraphBuilder to work out which elements are connected
+  /** uses the base class  GraphBuilder to work out which elements are connected
    Each set of connected elements will be used to make a new PFBlock
    */
   
@@ -63,10 +63,9 @@ void BlockBuilder::makeBlocks() {
     PFBlock block {elementIDs,  m_edges};
     
     //put the block in the unordered map of blocks using move
-    m_blocks.emplace(block.uniqueID(),block);
+    m_blocks.emplace(block.uniqueID(),std::move(block));
     
     //update the history nodes (if they exist)
-    
     if (m_historyNodes.size()>0) {
       //make a new history node for the block and add into the history Nodes
       PFNode blocknode{block.uniqueID()};
@@ -82,7 +81,7 @@ void BlockBuilder::makeBlocks() {
 
 std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
   //TODO move to helper
-  for (auto block : builder.m_blocks) {
+  for (const auto& block : builder.m_blocks) {
     os  << block.second << std::endl;
   }
   return os;
@@ -108,8 +107,8 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
  // the distance for edge1 and edge 2 is same
  // so return based on edgetype and end energy comparison for the items
  // at the other end from uniqueID
- double energy1 = m_pfEvent.getEnergy(e1.otherID(uniqueid));
- double energy2 = m_pfEvent.getEnergy(e2.otherID(uniqueid));
+ double energy1 = m_pfEvent.energy(e1.otherID(uniqueid));
+ double energy2 = m_pfEvent.energy(e2.otherID(uniqueid));
  
  return (energy1 > energy2) ;
  }*/
@@ -139,12 +138,12 @@ int test_BlockBuilder() {
   
   std::unordered_map<long long, class Edge> edges;
   
-  edges.emplace(edge.key(),  edge);
-  edges.emplace(edge1.key(), edge1);
-  edges.emplace(edge2.key(), edge2);
-  edges.emplace(edge4.key(), edge4);
-  edges.emplace(edge5.key(), edge5);
-  edges.emplace(edge6.key(), edge6);
+  edges.emplace(edge.key(),  std::move(edge ));
+  edges.emplace(edge1.key(), std::move(edge1));
+  edges.emplace(edge2.key(), std::move(edge2));
+  edges.emplace(edge4.key(), std::move(edge4));
+  edges.emplace(edge5.key(), std::move(edge5));
+  edges.emplace(edge6.key(), std::move(edge6));
   
 
   //create history nodes

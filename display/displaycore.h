@@ -33,13 +33,13 @@ public:
    Display(std::list<Projection> views = {}) ;
 
    ///Which things to draw (and which are locked  ie clearable=false)
-   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   void addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
 
    ///Clear all drawable elements except those that are locked
-   void Clear();
+   void clear();
    //AJRTODO does this need Zoom?
-   void Unzoom();
-   void Draw() const;
+   void unZoom();
+   void draw() const;
 private:
    ///Map containing the views //TODO make enum
    std::unordered_map<std::string, std::unique_ptr<ViewPane>> m_views;
@@ -58,12 +58,12 @@ public:
             int dx = 600, int dy = 600);
 
    ///Keeps a register of things to draw and what layer they are
-   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   void addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
 
-   void Clear();
-   void Draw();
-   void Zoom(double xmin, double xmax, double ymin, double  ymax);
-   void UnZoom();
+   void clear();
+   void draw();
+   void zoom(double xmin, double xmax, double ymin, double  ymax);
+   void unZoom();
 
    ///Static counter to say how many viewpanes there are in total
    static int nviews;
@@ -99,7 +99,7 @@ public:
             int dx = 600, int dy = 600);
 
    ///Keeps a register of things to draw and what layer they are
-   void Register(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
+   void addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
 
    void Clear();
    void Draw();

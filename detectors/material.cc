@@ -10,7 +10,7 @@ m_layer(layer), m_x0(x0), m_lambdaI(lambdaI),m_randExp(new fastsim::RandExponent
 {
 }
 
-double Material::getPathLength(bool is_em) const
+double Material::pathLength(bool is_em) const
 {
    //AJRTODO check with Colin about what happens if x= is none
    double freepath;

@@ -1,5 +1,5 @@
 #include "edge.h"
-#include "identifier.h"
+#include "Identifier.h"
 
 Edge::Edge(longID id1, longID id2, bool isLinked, double distance) :
 m_id1(id1),

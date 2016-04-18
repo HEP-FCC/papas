@@ -23,7 +23,7 @@
  for (auto & nodevector : FFill.traverse(myNodes)) {
  std::cout << "Block: ";
  for (auto &node : nodevector) {
- std::cout<< node->getValue()<< ", " ;
+ std::cout<< node->value()<< ", " ;
  }
  }
  std::cout<< std::endl;

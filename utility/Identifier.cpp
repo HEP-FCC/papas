@@ -11,7 +11,7 @@
 
 
 
-#include "identifier.h"
+#include "Identifier.h"
 
 //#include "enummanager.h"
 #include "enums.h"
@@ -48,31 +48,31 @@ long Identifier::makeAnotherIdentifier(long id)
    return newid;
 }
 
-fastsim::enumLayer Identifier::getLayer(long id)
+fastsim::enumLayer Identifier::layer(long id)
 {
    int layer = (id >> 6) & 0b1111 ;//(4 bits)
    return static_cast<fastsim::enumLayer>(layer);
 }
 
-fastsim::enumSubtype Identifier::getSubtype(long id)
+fastsim::enumSubtype Identifier::subType(long id)
 {
    int subtype = (id >> 10) & 0b111 ;//(3 bits)
    return static_cast<fastsim::enumSubtype>(subtype);
 }
 
-fastsim::enumSource Identifier::getSource(long id)
+fastsim::enumSource Identifier::source(long id)
 {
    int source = (id >> 13) & 0b111 ;//(3 bits)
    return static_cast<fastsim::enumSource>(source);
 }
 
-fastsim::enumDataType Identifier::getDataType(long id)
+fastsim::enumDataType Identifier::dataType(long id)
 {
    int type = id & 0b111111 ;//(preserve the 6 rightmost bits)
    return static_cast<fastsim::enumDataType>(type);
 }
 
-int Identifier::getUniqueID(long id)
+int Identifier::uniqueID(long id)
 {
    return (id >> 16);
 }
@@ -110,49 +110,53 @@ long Identifier::makeParticleID(eSource source)
                                      source);
 }
 
+bool Identifier::isCluster(long id)
+{
+  return (isEcal(id) || isHcal(id) );
+}
 
 bool Identifier::isEcal(long id)
 {
-  return (Identifier::getLayer(id)==fastsim::enumLayer::ECAL);
+  return (Identifier::layer(id)==fastsim::enumLayer::ECAL);
 }
 
 bool Identifier::isHcal(long id)
 {
-  return (Identifier::getLayer(id)==fastsim::enumLayer::ECAL);
+  return (Identifier::layer(id)==fastsim::enumLayer::ECAL);
 }
 
 bool Identifier::isTrack(long id)
 {
-  return (Identifier::getDataType(id)==fastsim::enumDataType::TRACK);
+  return (Identifier::dataType(id)==fastsim::enumDataType::TRACK);
 }
 
 bool Identifier::isBlock(long id)
 {
-  return (Identifier::getDataType(id)==fastsim::enumDataType::BLOCK);
+  return (Identifier::dataType(id)==fastsim::enumDataType::BLOCK);
 }
 
 bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)
 {
-   return (Identifier::getLayer(id)==layer && Identifier::getSubtype(id)==subtype && Identifier::getDataType(id)==datatype);
+   return (Identifier::layer(id)==layer && Identifier::subType(id)==subtype && Identifier::dataType(id)==datatype);
 }
 
 bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                                  fastsim::enumSubtype subtype,fastsim::enumSource source)
 {
-   return (Identifier::getLayer(id)==layer && Identifier::getSubtype(id)==subtype && Identifier::getDataType(id)==datatype
-           && Identifier::getSource(id)==source);
+   return (Identifier::layer(id)==layer && Identifier::subType(id)==subtype && Identifier::dataType(id)==datatype
+           && Identifier::source(id)==source);
 }
 
 bool Identifier::isSmeared(long id)
 {
-   return (Identifier::getSubtype(id)==fastsim::enumSubtype::SMEARED );
+   return (Identifier::subType(id)==fastsim::enumSubtype::SMEARED );
 }
 
 char Identifier::typeShortCode(long id)
 {
-  auto layer = Identifier::getLayer(id);
-  auto dataType = Identifier::getDataType(id);
+  auto layer = Identifier::layer(id);
+  auto dataType = Identifier::dataType(id);
   if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::ECAL)
     return 'e';
   else if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::HCAL)
@@ -183,11 +187,11 @@ int test()
                                        enumSubtype::MERGED,
                                        enumSource::SIMULATION);
 
-   enumDataType type=Identifier::getDataType(id);
-   enumDataType type2=Identifier::getDataType(id2);
-   enumSource source =Identifier::getSource(id2);
-   enumLayer layer =Identifier::getLayer(id2);
-   enumSubtype subtype=Identifier::getSubtype(id2);
+   enumDataType type=Identifier::dataType(id);
+   enumDataType type2=Identifier::dataType(id2);
+   enumSource source =Identifier::source(id2);
+   enumLayer layer =Identifier::layer(id2);
+   enumSubtype subtype=Identifier::subtype(id2);
    return 0;
 }*/
 

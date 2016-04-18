@@ -14,7 +14,7 @@
 #include <unordered_set>
 #include <vector>
 #include <algorithm>
-#include "identifier.h"
+#include "Identifier.h"
 #include "Edge.h"
 #
 //#include "PFEvent.h"
@@ -215,12 +215,12 @@ T3  0.0287   0.0825      ---        .
         os << "        .";
         break;
       }
-      else if (getEdge(e1,e2).distance() <0)
+      else if (edge(e1,e2).distance() <0)
         os << "      ---";
-      else if (getEdge(e1,e2).isLinked()==false)
+      else if (edge(e1,e2).isLinked()==false)
         os << "      xxx";
       else {
-        os<< std::setw(9)<<std::fixed  << getEdge(e1,e2).distance() ;
+        os<< std::setw(9)<<std::fixed  << edge(e1,e2).distance() ;
         
       }
       
@@ -231,7 +231,7 @@ T3  0.0287   0.0825      ---        .
 }
 
 
-const Edge& PFBlock::getEdge(longID id1, longID id2) const {
+const Edge& PFBlock::edge(longID id1, longID id2) const {
  /// Find the edge corresponding to e1 e2
  ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either order gives same result)
  ///                        '''
@@ -280,13 +280,15 @@ int test_blocks() {
   Edge edge6 = Edge(id5, id6, true, 123.0);
   
   PFBlock::Edges edges;
+  edges.reserve(100);
   
-  edges.emplace(edge.key(),  edge);
-  edges.emplace(edge1.key(), edge1);
-  edges.emplace(edge2.key(), edge2);
-  edges.emplace(edge4.key(), edge4);
-  edges.emplace(edge5.key(), edge5);
-  edges.emplace(edge6.key(), edge6);
+  //edges.emplace(10000.0,  std::move(edge));
+  edges.emplace(edge.key(),  std::move(edge ));
+  edges.emplace(edge1.key(), std::move(edge1));
+  edges.emplace(edge2.key(), std::move(edge2));
+  edges.emplace(edge4.key(), std::move(edge4));
+  edges.emplace(edge5.key(), std::move(edge5));
+  edges.emplace(edge6.key(), std::move(edge6));
   
   
   PFBlock block(ids, edges);

@@ -102,15 +102,15 @@ int main()
    std::cout << std::endl << "TRAVERSE  LEAF CHILDREN (starting from 0)  " <<
              std::endl;
    for (auto y : bfs.traverseChildren(n0)) {
-      if (y->getChildren().size() == 0)
-         y->getValue().Write();
+      if (y->children().size() == 0)
+         y->value().Write();
    }
 
    //Find all the nodes connected (undirected) with node 0
    std::cout << std::endl << "POLYMORPHIC TRAVERSE UNDIRECTED (starting from 0)  "
              << std::endl;
    for (const auto& n : bfs.traverseUndirected(n0))
-      n->getValue().Write();
+      n->value().Write();
 
    return 0;
 }

@@ -9,6 +9,7 @@
 #include "BlockSplitter.h"
 #include "PFBlock.h"
 #include "BlockBuilder.h"
+#include "Identifier.h"
 
 //const BlockBuilder emptyBlockBuilder;
 
@@ -20,17 +21,27 @@ BlockSplitter::BlockSplitter(const Edges& unlinkEdges,
 m_blocks()
 {
   Edges modifiedEdges;
-  for (const auto & edge : block.edges()) { //copy edges
+  for (auto  edge : block.edges()) { //copy edges
     Edge e = edge.second;
-    //if (unlinkEdges.find(edge.first)!= unlinkEdges.end() )
-    //     e.setLinked(false);
-    //modifiedEdges.emplace(e.key(), e);
+    if (unlinkEdges.find(edge.first)!= unlinkEdges.end() ) {
+      e.setLinked(false);
+    }
+    modifiedEdges.emplace(e.key(), std::move(e));
   }
   
-  //BlockBuilder bbuilder{block.elementIDs(), modifiedEdges, historynodes};
-  //m_blocks = bbuilder.blocks();
+  BlockBuilder bbuilder{block.elementIDs(), modifiedEdges, historynodes};
+  m_blocks = bbuilder.blocks();
   block.setActive(false);
   
+}
+
+
+std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
+  //TODO move to helper
+  for (auto block : builder.m_blocks) {
+    os  << block.second << std::endl;
+  }
+  return os;
 }
 
 /*
@@ -49,7 +60,54 @@ m_blocks()
  ##self.history_nodes[block.uniqueid].add_child(history_nodes[subblockid])
  
  #set the original block to be inactive*/
- 
+int test_BlockSplitter() {
+  PFBlock::longID id1 = Identifier::makeECALClusterID();
+  PFBlock::longID id2 = Identifier::makeHCALClusterID();
+  PFBlock::longID id3 = Identifier::makeTrackID();
+  
+  PFBlock::longID id4 = Identifier::makeECALClusterID();
+  PFBlock::longID id5 = Identifier::makeHCALClusterID();
+  PFBlock::longID id6 = Identifier::makeTrackID();
+  
+  std::vector<PFBlock::longID> ids {id1,id2,id3, id4,id5,id6};
+  
+  Edge edge = Edge(id1, id2, false, 0.00023);
+  Edge edge1 = Edge(id1, id3, true, 10030.0);
+  Edge edge2 = Edge(id2, id3, true, 0.00005);
+  
+  Edge edge4 = Edge(id4, id5, false, 3.1234);
+  Edge edge5 = Edge(id4, id6, true, 0.1234);
+  Edge edge6 = Edge(id5, id6, true, 123.0);
+  
+  std::unordered_map<long long, class Edge> edges;
+  
+  edges.emplace(edge.key(),  std::move(edge));
+  edges.emplace(edge1.key(), std::move(edge1));
+  edges.emplace(edge2.key(), std::move(edge2));
+  edges.emplace(edge4.key(), std::move(edge4));
+  edges.emplace(edge5.key(), std::move(edge5));
+  edges.emplace(edge6.key(), std::move(edge6));
+  
+  
+  //create history nodes
+  Nodes historyNodes;
+  for (auto id : ids)
+    historyNodes.emplace(id, std::move(PFNode(id)));
+  
+  
+  auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
+  
+  Edges to_unlink;
+  to_unlink[edge1.key()] = edge1;
+  for (auto & block : blockbuilder.blocks()) {
+    auto blocksplitter = BlockSplitter( to_unlink, block.second);
+    std::cout <<  block.second;
+    std::cout << blocksplitter;
+  }
+  
+  return 0;
+  
+}
  
  
  

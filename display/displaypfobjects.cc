@@ -4,28 +4,28 @@
 //
 #include <iostream>
 #include "displaypfobjects.h"
-#include "identifier.h"
+#include "Identifier.h"
 
 
 
 GBlob::GBlob(const Cluster& cluster)
 {
-   TVector3 pos = cluster.getPosition();
-   double radius = cluster.getSize();
-   double thetaphiradius = cluster.getAngularSize();
-   double max_energy = Cluster::s_maxenergy;
-   double iradius = radius * cluster.getEnergy() / max_energy;
-   double ithetaphiradius = thetaphiradius * cluster.getEnergy() / max_energy;
+   TVector3 pos = cluster.position();
+   double radius = cluster.size();
+   double thetaphiradius = cluster.angularSize();
+   double max_energy = Cluster::s_maxEnergy;
+   double iradius = radius * cluster.energy() / max_energy;
+   double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
    //set the layer
-   m_layer = to_str(Identifier::getLayer(cluster.getID()));
+   m_layer = to_str(Identifier::layer(cluster.ID()));
 
    //set the color according to particle type
    int color = 1;
    /*TODO
-    if (cluster.getPdgid() == 22 or cluster.getPdgid() == 11)
+    if (cluster.pdgid() == 22 or cluster.pdgid() == 11)
       color = 2;
-   else if (cluster.getPdgid() > 0)
+   else if (cluster.pdgid() > 0)
       color = 4;
    */
    //AJRTODO implement the other projections
@@ -157,7 +157,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
 GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
-   const std::unordered_map<std::string, TVector3>& points=particle.getConstPath().getPoints();
+   const std::unordered_map<std::string, TVector3>& points=particle.constPath().points();
    int npoints = points.size();
    std::vector<double> X;
    std::vector<double> Y;
@@ -231,7 +231,7 @@ GTrajectories::GTrajectories(const  std::vector<TVector3>& points)
 GTrajectories::GTrajectories(const  SimParticle& particle)
 //AJRTODO const std::list<Particle>& particles)
 {
-   //Path& path= sp.getPath();
+   //Path& path= sp.path();
    
    //std::vector<TVector3>& points= track.get
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory

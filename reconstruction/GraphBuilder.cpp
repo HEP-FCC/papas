@@ -1,13 +1,5 @@
 
 
-#include "GraphBuilder.h"
-//
-//  GraphBuilder.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 07/04/16.
-//
-//
 
 #include "GraphBuilder.h"
 #include "Identifier.h"
@@ -21,19 +13,18 @@ Edges emptyEdges;
 
 GraphBuilder::GraphBuilder(IDs ids,
                            Edges& edges) :
-m_elementIDs(ids),
-m_edges(edges)
+m_edges(edges),
+m_elementIDs(ids)
 {
   
   //create local nodes ready to use to make the blocks
   for (auto id : ids)
     m_localNodes.emplace(id, PFNode(id));
   
-  //use the edge information to say what is linked and add this
-  //into the local blocks
+  //use the edge information to say what is linked and add this into the local blocks
   for (const auto& edge : m_edges){
-    Edge e = edge.second;
-    if  (e.isLinked())  //this is an undirected link - OK for undirected searches
+    const Edge& e = edge.second;
+    if  (e.isLinked())  //note this is an undirected link - OK for undirected searches
       m_localNodes[e.id1()].addChild(m_localNodes[e.id2()]);
   }
   
@@ -46,7 +37,7 @@ m_edges(edges)
     //we need the vector of ids and the map of edges in order to make the block
     IDs subgraph;
     for (auto& node : group) {
-      subgraph.push_back(node->getValue());
+      subgraph.push_back(node->value());
     }
     m_subGraphs.push_back(subgraph);
   }
@@ -105,52 +96,13 @@ void GraphBuilder::sortIDs(std::vector<longID>& ids)
  // the distance for edge1 and edge 2 is same
  // so return based on edgetype and end energy comparison for the items
  // at the other end from uniqueID
- double energy1 = m_pfEvent.getEnergy(e1.otherID(uniqueid));
- double energy2 = m_pfEvent.getEnergy(e2.otherID(uniqueid));
+ double energy1 = m_pfEvent.energy(e1.otherID(uniqueid));
+ double energy2 = m_pfEvent.energy(e2.otherID(uniqueid));
  
  return (energy1 > energy2) ;
  }*/
 
 
 
-int test_GraphBuilder() {
-  
-  
-  longID id1 = Identifier::makeECALClusterID();
-  longID id2 = Identifier::makeHCALClusterID();
-  longID id3 = Identifier::makeTrackID();
-  
-  longID id4 = Identifier::makeECALClusterID();
-  longID id5 = Identifier::makeHCALClusterID();
-  longID id6 = Identifier::makeTrackID();
-  
-  std::vector<longID> ids {id1,id2,id3, id4,id5,id6};
-  
-  Edge edge =  Edge(id1, id2, false, 0.00023);
-  Edge edge1 = Edge(id1, id3, true, 10030.0);
-  Edge edge2 = Edge(id2, id3, true, 0.00005);
-  
-  Edge edge4 = Edge(id4, id5, false, 3.1234);
-  Edge edge5 = Edge(id4, id6, true, 0.1234);
-  Edge edge6 = Edge(id5, id6, true, 123.0);
-  
-  std::unordered_map<long long, class Edge> edges;
-  
-  edges.emplace(edge.key(),  edge);
-  edges.emplace(edge1.key(), edge1);
-  edges.emplace(edge2.key(), edge2);
-  edges.emplace(edge4.key(), edge4);
-  edges.emplace(edge5.key(), edge5);
-  edges.emplace(edge6.key(), edge6);
-  
-  
-  
-  
-  
-  auto graphbuilder = GraphBuilder(ids, edges);
-  
-  //std::cout<<graphbuilder;
-  return 0;
-}
 
 

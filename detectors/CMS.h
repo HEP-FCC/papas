@@ -83,7 +83,7 @@ public:
    CMSTracker(fastsim::enumLayer layer, const VolumeCylinder&& volume );
    ///constructor - requires the Material and Volume to be already in existance
    CMSTracker(fastsim::enumLayer layer, const VolumeCylinder& volume);
-   virtual double getPtResolution(const Track&) const override;
+   virtual double ptResolution(const Track&) const override;
    virtual bool   acceptance(const Track&) const override;
       //TODOAJR space_resolution(self, ptc):
 private:    

@@ -23,7 +23,7 @@
 #include "CMS.h"
 #include "particle.h"
 #include "datatypes.h"
-#include "simulator.h"
+#include "Simulator.h"
 #include "path.h"
 #include "displaygeometry.h"
 #include "displaycore.h"
@@ -77,14 +77,14 @@ TEST(fastsim, Helix)
    TLorentzVector p4 = TLorentzVector();
    p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
    Helix helix(3.8, 1, p4,TVector3(0,0,0));
-   double length = helix.getPathLength(1.0e-9);
-   TVector3 junk = helix.getPointAtTime(1e-9);
+   double length = helix.pathLength(1.0e-9);
+   TVector3 junk = helix.pointAtTime(1e-9);
    
    EXPECT_EQ(junk.Z(), 0);
    EXPECT_NEAR(junk.X(), 0.2939983, 1e-6);
    EXPECT_NEAR(junk.Y(), -0.050697917, 1e-6);
    EXPECT_NEAR(length,    0.299792,1e-5);
-   EXPECT_NEAR(helix.getDeltaT(length),1e-9,1e-14);
+   EXPECT_NEAR(helix.deltaT(length),1e-9,1e-14);
 }
 
 TEST(fastsim,Structures){
@@ -111,8 +111,8 @@ void testGraphs()
    
    /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.Register(gtrajectories,1);
-   display.Register(gcluster,2);
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
    display.Draw();*/
    
    //Testing graphics
@@ -121,7 +121,7 @@ void testGraphs()
     Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
     std::vector<TVector3> tvec;
     
-    std::cout <<"cluster "<< cluster.getPt()<<"\n";
+    std::cout <<"cluster "<< cluster.pt()<<"\n";
     
     std::vector<TVector3> tvec;
     tvec.push_back(TVector3(0.,0.,0.));
@@ -133,12 +133,12 @@ void testGraphs()
     //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
     
     std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-    display.Register(gdetector, 0);
+    display.addToRegister(gdetector, 0);
     
     std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
     std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-    display.Register(gtrajectories,1);
-    display.Register(gcluster,2);
+    display.addToRegister(gtrajectories,1);
+    display.addToRegister(gcluster,2);
     display.Draw();*/
    
    
@@ -184,10 +184,10 @@ TEST(fastsim,ClusterPT){
    
    ///Test that pT is correctly set
    Cluster    cluster = Cluster(10., TVector3(1,0,0), 1, 1);
-   EXPECT_NEAR(cluster.getPt(),10.000, 1e-6);
+   EXPECT_NEAR(cluster.pt(),10.000, 1e-6);
    
    cluster.setEnergy(5.);
-   EXPECT_NEAR(cluster.getPt(),5.000, 1e-6);
+   EXPECT_NEAR(cluster.pt(),5.000, 1e-6);
    
 }
 
@@ -234,7 +234,7 @@ TEST(fastsim,StraightLine){
    SimParticle photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
-   auto points=photon.getPath().getPoints();
+   auto points=photon.path().points();
    
    // test extrapolation to barrel
    EXPECT_EQ(points.size(),3);
@@ -249,7 +249,7 @@ TEST(fastsim,StraightLine){
    photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
-   points=photon.getPath().getPoints();
+   points=photon.path().points();
    EXPECT_EQ(points.size(),3);
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
    EXPECT_NEAR(points["cyl1"].Z(), -1. ,1e-6);
@@ -261,21 +261,21 @@ TEST(fastsim,StraightLine){
    tlv=TLorentzVector(1, 0, 1, 2.);
    photon = SimParticle(uid,22,tlv ,0., {0,0,1.5});
    propStraight.propagateOne(photon, cyl1);
-   points=photon.getPath().getPoints();
+   points=photon.path().points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
 
    // extrapolating from a vertex close to -endcap
    tlv=TLorentzVector(1, 0, -1, 2.);
    photon = SimParticle(uid,22,tlv , 0.,{0,0,-1.5});
    propStraight.propagateOne(photon, cyl1);
-   points=photon.getPath().getPoints();
+   points=photon.path().points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
    
    // extrapolating from a non-zero radius
    tlv=TLorentzVector(0, 0.5, 1, 2.);
    photon = SimParticle(uid,22,tlv , 0.,{0.,0.5,0,});
    propStraight.propagateOne(photon, cyl1);
-   points=photon.getPath().getPoints();
+   points=photon.path().points();
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
    EXPECT_NEAR(points["cyl1"].Z(), 1.,1e-6 );
    

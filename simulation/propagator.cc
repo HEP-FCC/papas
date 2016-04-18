@@ -22,13 +22,13 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
                                           double cylinderz,
                                           double cylinderradius)
 {
-   Path& line = ptc.getPath();
+   Path& line = ptc.path();
    
-   TVector3 udir = line.getUdir();
+   TVector3 udir = line.udir();
    TVector3 origin = line.getOrigin();
    double theta = udir.Theta();
    
-   double zbar = line.getUdir().Z(); // Z of unit vex
+   double zbar = line.udir().Z(); // Z of unit vex
    if (zbar != 0) {
       double destz = (zbar > 0) ? cylinderz : -cylinderz;
       double length = (destz - origin.Z()) / cos(theta); //TODO check Length >0
@@ -80,21 +80,21 @@ HelixPropagator::HelixPropagator(double field) :
 void HelixPropagator::propagateOne(SimParticle& ptc,
                                    const SurfaceCylinder & cyl)
 {
-   Helix& helix =dynamic_cast<Helix&>(ptc.getPath());
+   Helix& helix =dynamic_cast<Helix&>(ptc.path());
    
-   bool is_looper = helix.getExtremePointXY().Mag() < cyl.getRadius();
-   double udir_z=helix.getUdir().Z();
+   bool is_looper = helix.extremePointXY().Mag() < cyl.getRadius();
+   double udir_z=helix.udir().Z();
    
    if (!is_looper) {
       auto intersect =
-      circleIntersection(helix.getCenterXY().X(),helix.getCenterXY().Y(), helix.getRho(), cyl.getRadius());
+      circleIntersection(helix.centerXY().X(),helix.centerXY().Y(), helix.rho(), cyl.getRadius());
       
-      double phi_m = helix.getPhi(intersect[0].first, intersect[0].second);
-      double phi_p = helix.getPhi(intersect[1].first, intersect[1].second);
+      double phi_m = helix.phi(intersect[0].first, intersect[0].second);
+      double phi_p = helix.phi(intersect[1].first, intersect[1].second);
       
-      TVector3 destination = helix.getPointAtPhi(phi_p);
+      TVector3 destination = helix.pointAtPhi(phi_p);
       if (destination.Z()*udir_z<0.) {
-         destination = helix.getPointAtPhi(phi_m);
+         destination = helix.pointAtPhi(phi_m);
       }
       
       if (fabs(destination.Z())<cyl.Z()){
@@ -108,7 +108,7 @@ void HelixPropagator::propagateOne(SimParticle& ptc,
       double destz = cyl.Z();
       if (udir_z < 0.)
          destz = -destz;
-      TVector3 destination = helix.getPointAtZ(destz);
+      TVector3 destination = helix.pointAtZ(destz);
       helix.addPoint(cyl.getName(), destination);
    }
    

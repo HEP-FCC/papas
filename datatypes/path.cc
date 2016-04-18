@@ -33,31 +33,31 @@ Path::Path(const TLorentzVector& p4, TVector3 origin) :
  */
 double Path::getTimeAtZ(double z) const
 {
-   double dest_time = (z - m_origin.Z()) / getVZ();
+   double dest_time = (z - m_origin.Z()) / vZ();
    return dest_time;
 }
 
 
-double Path::getDeltaT(double path_length) const
+double Path::deltaT(double path_length) const
 {
    ///Time needed to follow a given path length'''
    return path_length / m_speed;
 }
 
-TVector3 Path::getPointAtTime(double  time) const
+TVector3 Path::pointAtTime(double  time) const
 {
    ///Returns the 3D point on the path at a given time'''
    TVector3 ppoint = m_origin + m_udir * m_speed * time;
    return ppoint; //AJRTODO check this works OK
 }
 
-double Path::getVZ() const
+double Path::vZ() const
 {
    ///Speed magnitude along z axis'''
    return m_speed * m_udir.Z();
 }
 
-double Path::getVPerp() const
+double Path::vPerp() const
 {
    ///Speed magnitude in the transverse plane'''
    return m_speed * m_udir.Perp();
@@ -68,7 +68,7 @@ bool Path::hasNamedPoint(std::string name) const//TODO change to enum
    return (m_points.find(name) != m_points.end());
 }
 
-TVector3 Path::getNamedPoint(std::string name) //const //TODO change to enum
+TVector3 Path::namedPoint(std::string name) //const //TODO change to enum
 {
    if (hasNamedPoint(name)) {
       return m_points[name]; //TODO consider why does not work if function is const
@@ -109,28 +109,28 @@ Helix::Helix(double field, double charge, const TLorentzVector&  p4,
    m_phiMax = m_phiMin + 360.;
 }
 
-std::vector<double> Helix::getPolarAtTime(double time)  const
+std::vector<double> Helix::polarAtTime(double time)  const
 {
-   double z = getVZ() * time + m_origin.Z();
+   double z = vZ() * time + m_origin.Z();
 
    double phi = - m_omega * time + m_phi0;
    return std::vector<double> {m_rho, z, phi};
 }
 
-double Helix::getTimeAtPhi(double phi)  const
+double Helix::timeAtPhi(double phi)  const
 {
    double time = deltaPhi(m_phi0, phi) / m_omega;
    return time;
 }
 
-double Helix::getPhi(double x, double y)  const
+double Helix::phi(double x, double y)  const
 {
    TVector3 xy = TVector3(x, y, 0.);
    xy -= m_centerXY;
    return xy.Phi();
 }
 
-TVector3 Helix::getPointFromPolar(const std::vector<double>& polar) const
+TVector3 Helix::pointFromPolar(const std::vector<double>& polar) const
 {
 
    double z = polar[1];
@@ -141,10 +141,10 @@ TVector3 Helix::getPointFromPolar(const std::vector<double>& polar) const
 }
 
 
-TVector3 Helix::getPointAtTime(double time)  const
+TVector3 Helix::pointAtTime(double time)  const
 {
 
-   double z = getVZ() * time + m_origin.Z();
+   double z = vZ() * time + m_origin.Z();
    double x = m_origin.X() + m_vOverOmega.Y() * (1 - cos(m_omega * time))
               + m_vOverOmega.X() * sin(m_omega * time);
    double y = m_origin.Y() - m_vOverOmega.X() * (1 - cos(m_omega * time))
@@ -152,25 +152,25 @@ TVector3 Helix::getPointAtTime(double time)  const
    return TVector3(x, y, z);
 }
 
-TVector3 Helix::getPointAtZ(double z)  const
+TVector3 Helix::pointAtZ(double z)  const
 {
    double time = getTimeAtZ(z);
-   return getPointAtTime(time);
+   return pointAtTime(time);
 }
 
-TVector3 Helix::getPointAtPhi(double phi)  const
+TVector3 Helix::pointAtPhi(double phi)  const
 {
-   double time = getTimeAtPhi(phi);
-   return getPointAtTime(time);
+   double time = timeAtPhi(phi);
+   return pointAtTime(time);
 }
 
-double Helix::getPathLength(double deltat)  const
+double Helix::pathLength(double deltat)  const
 {
    ///ds2 = dx2+dy2+dz2 = [w2rho2 + vz2] dt2'''
 
-   //std::cout << m_omega << " rho " << m_rho << " vz " << getVZ() << " deltat " <<
+   //std::cout << m_omega << " rho " << m_rho << " vz " << vZ() << " deltat " <<
    //          deltat;
-   return sqrt(m_omega * m_omega * m_rho * m_rho + getVZ() * getVZ()) * deltat;
+   return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat;
 }
 
 

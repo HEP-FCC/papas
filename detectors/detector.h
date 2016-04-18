@@ -38,8 +38,8 @@ public:
    DetectorElement(fastsim::enumLayer layer, const VolumeCylinder&  volume,
                        const Material&
                        material); ///< requires the Material and Volume to be already in existance
-   const VolumeCylinder& getVolumeCylinder() const  {return m_volume; }///< return the volume cyclinder
-   fastsim::enumLayer getLayer() const {return m_layer;};
+   const VolumeCylinder& volumeCylinder() const  {return m_volume; }///< return the volume cyclinder
+   fastsim::enumLayer layer() const {return m_layer;};
    const Material& getMaterial() const {return m_material;}
 protected:
    VolumeCylinder m_volume;
@@ -98,7 +98,7 @@ protected:
 class Tracker: public DetectorElement {
 public:
    using DetectorElement::DetectorElement;
-   virtual double getPtResolution(const Track&) const = 0;
+   virtual double ptResolution(const Track&) const = 0;
    virtual bool   acceptance(const Track&) const = 0;   //virtual bool   acceptance(const Track& track) const= 0;
    //virtual double space_resolution(Particle* ptc)=0;
 protected:
@@ -117,15 +117,15 @@ public:
    //BaseDetector( DetectorElement& ECAL, DetectorElement& HCAL);
    //BaseDetector( DetectorElement&& ECAL,DetectorElement&& HCAL);
    const std::list<SurfaceCylinder>&
-   getSortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
-   std::shared_ptr<const DetectorElement> getElement(fastsim::enumLayer layer)
+   sortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
+   std::shared_ptr<const DetectorElement> element(fastsim::enumLayer layer)
    const;
-   std::shared_ptr<const ECAL> getECAL() const {return m_ECAL;};
-   std::shared_ptr<const HCAL> getHCAL() const {return m_HCAL;};
+   std::shared_ptr<const ECAL> ECAL() const {return m_ECAL;};
+   std::shared_ptr<const HCAL> HCAL() const {return m_HCAL;};
    std::shared_ptr<const Tracker> getTracker() const {return m_Tracker;};
    std::shared_ptr<const Field> getField() const {return m_Field;};
-   /*const DetectorElement& getElement( fastsim::enumLayer layer) const;
-   const DetectorElement& getECAL() const;
+   /*const DetectorElement& element( fastsim::enumLayer layer) const;
+   const DetectorElement& eCAL() const;
    const DetectorElement& getHCAL() const;*/
 protected:
    //AJRTODO may replace this with explicit HCAL, ECAL etc
@@ -140,8 +140,8 @@ protected:
    //DetectorElement& Treacker;
    //CMSECAL cmsthing;
    //ECAL (cmsthings);
-   std::shared_ptr<const ECAL> m_ECAL;
-   std::shared_ptr<const HCAL> m_HCAL;
+   std::shared_ptr<const class ECAL> m_ECAL;
+   std::shared_ptr<const class HCAL> m_HCAL;
    std::shared_ptr<const Tracker> m_Tracker;
    std::shared_ptr<const Field> m_Field;
 

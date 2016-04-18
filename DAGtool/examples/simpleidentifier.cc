@@ -25,19 +25,19 @@ long Identifier::makeIdentifier(enumDataType datatype,   // 2 bits
    return id;
 }
 
-enumSubType Identifier::getSubType(long id)
+enumSubType Identifier::subType(long id)
 {
    int subtype = (id >> 2) & 0b111 ;//(3 bits)
    return static_cast<enumSubType>(subtype);
 }
 
-enumDataType Identifier::getDataType(long id)
+enumDataType Identifier::dataType(long id)
 {
    int datatype = (id) & 0b11 ;//(2 bits)
    return static_cast<enumDataType>(datatype);
 }
 
-int Identifier::getUniqueID(long id)
+int Identifier::uniqueID(long id)
 {
    return (id >> 5);
 }

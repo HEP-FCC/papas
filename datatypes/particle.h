@@ -12,7 +12,7 @@
 class Particle: public BaseParticle {
 public:
    using BaseParticle::BaseParticle;
-   long getID() const
+   long ID() const
    {
       return m_uniqueid;
    }

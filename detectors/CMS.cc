@@ -39,7 +39,7 @@ CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
 double CMSECAL::clusterSize(const Particle& ptc) const
 {
    
-   int pdgid =  abs(ptc.getPdgid()) ;
+   int pdgid =  abs(ptc.pdgid()) ;
    if (pdgid == 22 | pdgid == 11)
       return 0.04;
    else
@@ -52,12 +52,12 @@ double CMSECAL::clusterSize(const Particle& ptc) const
  */
 bool CMSECAL::acceptance(const Cluster& cluster) const
 {
-   double energy = cluster.getEnergy();
-   double eta = fabs(cluster.getEta());
+   double energy = cluster.energy();
+   double eta = fabs(cluster.eta());
    if (eta < m_eta_crack)
       return energy > m_emin;
    else if (eta < 3.)
-      return (energy > m_emin &  cluster.getPt() > 0.5);
+      return (energy > m_emin &  cluster.pt() > 0.5);
    else
       return false;
 }
@@ -76,7 +76,7 @@ CMS::CMS() : BaseDetector()
 {
    //ECAL detector Element
    fastsim::enumLayer layer = fastsim::enumLayer::ECAL;
-   m_ECAL = std::shared_ptr<const ECAL> {
+   m_ECAL = std::shared_ptr<const class ECAL> {
       new CMSECAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
       Material(layer, 8.9e-3, 0.275),
@@ -88,7 +88,7 @@ CMS::CMS() : BaseDetector()
 
    //HCAL detector element
    layer = fastsim::enumLayer::HCAL;
-   m_HCAL = std::shared_ptr<const HCAL> {
+   m_HCAL = std::shared_ptr<const class HCAL> {
       new CMSHCAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6, 1.9, 2.6),
       Material(layer, 0.0, 0.175),
@@ -155,8 +155,8 @@ double CMSHCAL::clusterSize(const Particle& ptc) const
  */
 bool CMSHCAL::acceptance(const Cluster& cluster) const
 {
-   double energy = cluster.getEnergy();
-   double eta = fabs(cluster.getEta());
+   double energy = cluster.energy();
+   double eta = fabs(cluster.eta());
 
    //AJRTOCHECK should this be more parameterized et eta_crack etc
    if (eta < 3.)
@@ -183,8 +183,8 @@ Tracker(layer,   volume,  Material(layer,0,0)){}
 
 bool CMSTracker::acceptance(const Track& track) const
 {
-   double pt = track.getPt();
-   double eta = fabs(track.getEta());
+   double pt = track.pt();
+   double eta = fabs(track.eta());
    if (eta < 2.5 and pt>0.5)
       return true; //TODO random.uniform(0,1)<1. ; //# CMS without tracker material effects
    else
@@ -192,9 +192,9 @@ bool CMSTracker::acceptance(const Track& track) const
    
 }
 
-double CMSTracker::getPtResolution(const Track& track) const
+double CMSTracker::ptResolution(const Track& track) const
 {
-   double pt = track.getPt();
+   double pt = track.pt();
    //TODO
    return 5e-3;
 }

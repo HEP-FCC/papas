@@ -115,9 +115,9 @@ namespace DAG {
       ///Add in a link (this will set the reverse parent link in the other node)
       void addChild(Node& node);
       /// return the node item
-      const T& getValue() const              { return m_val;};
-      const Nodeset& getChildren() const     { return m_children; }
-      const Nodeset& getParents() const      { return m_parents; }
+      const T& value() const              { return m_val;};
+      const Nodeset& children() const     { return m_children; }
+      const Nodeset& parents() const      { return m_parents; }
       
    protected:
       T m_val; ///< thing that the node is encapsulating (eg identifier )
@@ -282,7 +282,7 @@ namespace DAG {
          // next item in the queue
          if (visittype == pt::CHILDREN | visittype ==
                pt::UNDIRECTED) { //use the children
-            for (auto node : nodeQueue.front()->getChildren()) {
+            for (auto node : nodeQueue.front()->children()) {
                if (m_visited.find(node) ==
                      m_visited.end()) { //check node is not already being visited
                   node->accept(*this);
@@ -291,7 +291,7 @@ namespace DAG {
             }
          }
          if (visittype == pt::PARENTS | visittype == pt::UNDIRECTED) { //use the parents
-            for (auto node : nodeQueue.front()->getParents()) {
+            for (auto node : nodeQueue.front()->parents()) {
                if (m_visited.find(node) ==
                      m_visited.end()) { //check node is not already being visited
                   node->accept(*this);
@@ -333,13 +333,13 @@ namespace DAG {
             //and store these into visitnextnodes
             if (visittype == pt::CHILDREN | visittype ==
                   pt::UNDIRECTED)
-              for (const auto child : node->getChildren()) {
+              for (const auto child : node->children()) {
                 if (!this->alreadyVisited(child))
                    visitnextnodes.insert(child);
               }
            if (visittype == pt::PARENTS | visittype ==
                pt::UNDIRECTED)
-             for (const auto parent : node->getParents())
+             for (const auto parent : node->parents())
              {
                if (!this->alreadyVisited(parent))
                  visitnextnodes.insert(parent);

@@ -26,7 +26,7 @@
 #include "detectors/CMS.h"
 #include "particle.h"
 #include "datatypes.h"
-#include "simulation/simulator.h"
+#include "simulation/Simulator.h"
 #include "path.h"
 #include "displaygeometry.h"
 #include "displaycore.h"
@@ -38,21 +38,28 @@
 extern int test_edges();
 extern int test_blocks();
 extern int test_BlockBuilder();
-extern int test_FloodFill();
-extern int test_GraphBuilder();
+
+
+extern int test_BlockSplitter();
+extern int test_Distance();
 //#include <RInside.h>
 void tryMapMoveObject();
 //void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
-   test_edges();
-   test_blocks();
-   test_BlockBuilder();
-   test_FloodFill();
-   test_GraphBuilder();
-   tryMapMoveObject();
-   return 0;
-   
+  test_edges();
+  test_blocks();
+  test_BlockBuilder();
+  
+  
+  
+  //::testing::InitGoogleTest(&argc, argv);
+  //return RUN_ALL_TESTS();
+  
+  
+  tryMapMoveObject();
+  //return 0;
+  
    //MyClass someFunction();
    //RInside R(argc, argv);
    //Gtest  hah
@@ -73,7 +80,8 @@ int main(int argc, char* argv[]){
    //Create simulator
    Simulator sim= Simulator{CMSDetector};
    
-   IDs smeared_clust_IDs;
+  // R test of smearing
+  //IDs smeared_clust_IDs;
    
    //Photons
    for (int i=1; i<10;i++  )
@@ -81,45 +89,44 @@ int main(int argc, char* argv[]){
       TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
       SimParticle& photon =sim.addParticle(22, tlvphoton);
       sim.simulatePhoton(photon);
-      
-      IDs c_IDs=sim.getLinkedECALSmearedClusterIDs(photon.getID());
-      smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
+      // R test of smearing
+      //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.ID());
+      //smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
       
    }
-   
-   std::vector<double> w;
+  //Hadrons
+  for (int i=1; i<20;i++  )
+  {
+    TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
+    SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
+    sim.simulateHadron(hadron);
+    
+  }
+  
+   /* Rtest of smearing
+  std::vector<double> w;
    w.reserve(10000);
-   const Clusters& clusters =sim.getClusters();
+   const Clusters& clusters =sim.clusters();
    for (auto x :smeared_clust_IDs)
    {
-      w.push_back( clusters.find(x)->second.getEnergy());
+      w.push_back( clusters.find(x)->second.energy());
    }
-   //r_density_plot(w, R);
+   r_density_plot(w, R);*/
    
    
    /*
    //Check density plot for smeared Photons
    std::vector<double> w;
    w.reserve(10000);
-   for (auto x :sim.getClusters())
-   { if (Identifier::isSmeared(x.second.getID()))
-      w.push_back( x.second.getEnergy());
+   for (auto x :sim.clusters())
+   { if (Identifier::isSmeared(x.second.ID()))
+      w.push_back( x.second.energy());
    }
    r_density_plot(w, R);
    */
     
-    
-   //Hadrons
-   for (int i=1; i<20;i++  )
-   {
-      TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
-      SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
-      sim.simulateHadron(hadron);
-      
-   }
-
-   //lower case
-   sim.Testing(); //Write lists of connected items
+  
+   sim.testing(); //Write lists of connected items
    
    
  
@@ -127,26 +134,26 @@ int main(int argc, char* argv[]){
    //Display display = Display({Projection::xy,Projection::yz});
    Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-   display.Register(gdetector, 0);
+   display.addToRegister(gdetector, 0);
   
    
    //GDetector gdetector{CMSDetector};
-   // display.Register(std::move(gdetector), 0);
+   // display.addToRegister(std::move(gdetector), 0);
    
    //plot clusters
-   for (auto & cl : sim.getClusters())
+   for (auto & cl : sim.clusters())
    {
       std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
-      display.Register(gcluster,2);
+      display.addToRegister(gcluster,2);
       
    }
-   for (auto & sp : sim.getParticles())
+   for (auto & sp : sim.particles())
    {
       std::shared_ptr<GTrajectories> gsimParticle (new GTrajectories(sp.second)) ;
-      display.Register(gsimParticle,2);
+      display.addToRegister(gsimParticle,2);
       
    }
-   display.Draw();
+   display.draw();
    
    //theApp.Run();
    
@@ -160,10 +167,10 @@ void test_helix()
    TLorentzVector p4 = TLorentzVector();
    p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
    Helix helix(3.8, 1, p4,TVector3(0,0,0));
-   double length = helix.getPathLength(1.0e-9);
-   TVector3 junk = helix.getPointAtTime(1e-9);
+   double length = helix.pathLength(1.0e-9);
+   TVector3 junk = helix.pointAtTime(1e-9);
    std::cout<<"Helix point: " <<junk.X() << " " << junk.Y() << " " << junk.Z()<<" ";
-   std::cout<< "\nlength"<<length<< " " << helix.getDeltaT(length)<<std::endl;
+   std::cout<< "\nlength"<<length<< " " << helix.deltaT(length)<<std::endl;
    
 }
 void test_Structures()
@@ -247,8 +254,8 @@ void test_graphs()
    
    /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.Register(gtrajectories,1);
-   display.Register(gcluster,2);
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
    display.Draw();*/
    
    //Testing graphics
@@ -256,7 +263,7 @@ void test_graphs()
     Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
     std::vector<TVector3> tvec;
     
-    std::cout <<"cluster "<< cluster.getPt()<<"\n";
+    std::cout <<"cluster "<< cluster.pt()<<"\n";
     
     std::vector<TVector3> tvec;
     tvec.push_back(TVector3(0.,0.,0.));
@@ -268,12 +275,12 @@ void test_graphs()
     //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
     
     std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-    display.Register(gdetector, 0);
+    display.addToRegister(gdetector, 0);
     
     std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
     std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-    display.Register(gtrajectories,1);
-    display.Register(gcluster,2);
+    display.addToRegister(gtrajectories,1);
+    display.addToRegister(gcluster,2);
     display.Draw();*/
    
    
@@ -371,6 +378,8 @@ TEST(fastsim, dummy){
    bool success = true;
    EXPECT_EQ(true, success);
 }
+
+
 
 
 void tryMapMoveObject()

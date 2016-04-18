@@ -25,7 +25,7 @@ public:
   enum class EdgeType {
     kUnknown=0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack
   };
-  
+
   Edge() : m_id1(0), m_id2(0),m_isLinked(false), m_distance(0) {};
   /**
    *   @brief  Edge constructor - note that the ordering of id1 and id2 does not matter
@@ -36,6 +36,18 @@ public:
    *   @param[in]  distance: distance between two elements
    */
   Edge(longID id1, longID id2, bool isLinked, double distance);
+  Edge(const Edge&) {
+    std::cout <<"copy Edge";};
+  Edge(Edge&&) = default; // {
+                               //std::cout <<"move Edge";};
+  Edge& operator=(const Edge& other) // copy assignment
+  {
+    std::cout<<"copy EDGE =";
+  }
+  Edge& operator=(Edge&& other) {
+    std::cout <<"move edge =";
+  }
+  
   longID id1() const {return m_id1;};
   longID id2() const {return m_id2;};
   bool isLinked() const {return m_isLinked;}  ///<boolean to mark if this edge links the two elements

@@ -35,7 +35,7 @@ public:
   static long makeBlockID();
   
   
-  
+  static bool isCluster(long id);
   static bool isEcal(long id);
   static bool isHcal(long id);
   static bool isTrack(long id);
@@ -50,13 +50,13 @@ public:
   static void setCounter(int startid);  ///intended for use once at start
   
   //Access stored Idendtifier information
-  static fastsim::enumLayer        getLayer(long id);
-  static fastsim::enumSubtype      getSubtype(long id);
-  static fastsim::enumSource       getSource(long id);
-  static fastsim::enumDataType     getDataType(long id);
+  static fastsim::enumLayer        layer(long id);
+  static fastsim::enumSubtype      subType(long id);
+  static fastsim::enumSource       source(long id);
+  static fastsim::enumDataType     dataType(long id);
   
   static char typeShortCode(long id); ///One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static int getUniqueID(long id);
+  static int uniqueID(long id);
   
   //TODO add a checkValid function
 private:

@@ -18,9 +18,9 @@ public:
    Identifier() {};
    static long makeIdentifier(enumDataType datatype, enumSubType subtype);
    //Access stored Identifier information
-   static enumDataType        getDataType(long id);
-   static enumSubType         getSubType(long id);
-   static int getUniqueID(long id);
+   static enumDataType        dataType(long id);
+   static enumSubType         subType(long id);
+   static int uniqueID(long id);
 private:
    static int s_counter;
 };

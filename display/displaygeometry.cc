@@ -42,7 +42,7 @@ Drawable::Drawable()
 }
 
 GDetector::GDetector(const BaseDetector& detector) :
-   m_gECAL(detector.getECAL()), m_gHCAL(detector.getHCAL())
+   m_gECAL(detector.ECAL()), m_gHCAL(detector.HCAL())
 {
 
 }
@@ -58,13 +58,13 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
 //GDetectorElement::GDetectorElement(const DetectorElement& de) :
    m_detElem(de)
 {
-   //std::list<SurfaceCylinder* > cylinders{m_detElem->getVolume()->Outer(),
-   //   m_detElem->getVolume()->Inner()};
+   //std::list<SurfaceCylinder* > cylinders{m_detElem->volume()->Outer(),
+   //   m_detElem->volume()->Inner()};
 
    //For each inner and outer cyclinder create a cyclinder (circular cross section) for xy , yz, xz projections
    //        create a box (longways cross section) for thetaphi projections
 
-   for (auto const& elem : {m_detElem->getVolumeCylinder().Outer(), m_detElem->getVolumeCylinder().Inner()}) { //AJRTODO should be if inner ......
+   for (auto const& elem : {m_detElem->volumeCylinder().Outer(), m_detElem->volumeCylinder().Inner()}) { //AJRTODO should be if inner ......
       double radius =  elem.getRadius();
       double dz = elem.Z();
 
@@ -73,7 +73,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
    }
 
    //Choose color according to which element it is
-   int color = gCOLORMap[m_detElem->getLayer()];
+   int color = gCOLORMap[m_detElem->layer()];
    for (auto& shape : m_circles) {
       shape->SetFillColor(color);
       shape->SetFillStyle(1001);
@@ -83,7 +83,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
       shape->SetLineStyle(1) ;
       color = 0; //Set color = 0 for inner circle
    }
-   color = gCOLORMap[m_detElem->getLayer()];
+   color = gCOLORMap[m_detElem->layer()];
 
    for (auto& shape : m_boxes) {
       shape->SetFillColor(color);
@@ -148,6 +148,6 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
  gcms = GDetector(cms)
 
  display = Display()
- display.register(gcms, 0)
+ display.addToRegister(gcms, 0)
  display.draw()
  */

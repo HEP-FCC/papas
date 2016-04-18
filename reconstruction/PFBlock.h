@@ -105,7 +105,7 @@ private:;
   int m_blockCount ; //sequential numbering of blocks, not essential but helpful for debugging
   IDs  m_elementIDs; //elements in this block ordered by type and decreasing energy
   Edges m_edges; //all the edges for elements in this block
-  const class Edge& getEdge(longID id1, longID id2) const;
+  const class Edge& edge(longID id1, longID id2) const;
   
   
 } ;

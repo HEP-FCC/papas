@@ -28,16 +28,16 @@ public:
    void addPoint(std::string label, TVector3 vec) { std::cout<<label ; m_points[label] = vec;}
 
    double getTimeAtZ(double z) const ;
-   double getDeltaT(double path_length) const;
-   double getVZ() const ;
-   double getVPerp() const ;
-   double getSpeed() const {return m_speed;};
-   TVector3 getUdir() const {return m_udir ;};
+   double deltaT(double path_length) const;
+   double vZ() const ;
+   double vPerp() const ;
+   double speed() const {return m_speed;};
+   TVector3 udir() const {return m_udir ;};
    TVector3 getOrigin() const {return m_origin ;};
    bool hasNamedPoint(std::string name) const;
-   TVector3 getNamedPoint(std::string name); //const; can't get to compile with const
-   virtual TVector3 getPointAtTime(double time) const;
-   const Points& getPoints() const { return m_points;};
+   TVector3 namedPoint(std::string name); //const; can't get to compile with const
+   virtual TVector3 pointAtTime(double time) const;
+   const Points& points() const { return m_points;};
    
    static Path NullPath; //this allows classes used in stl containers to include a reference to a path
 protected:
@@ -56,17 +56,17 @@ public:
    Helix();
    Helix(double field, double charge, const TLorentzVector& p4,
          const TVector3& origin);
-   std::vector<double> getPolarAtTime(double time) const;
-   double getTimeAtPhi(double phi) const;
-   double getPhi(double x, double y) const;
-   double getRho() const {return m_rho;};
-   double getPathLength(double deltat) const;
-   TVector3 getPointFromPolar(const std::vector<double>& polar) const;
-   TVector3 getPointAtTime(double time) const override;
-   TVector3 getPointAtZ(double z)  const;
-   TVector3 getPointAtPhi(double phi)  const;
-   TVector3 getExtremePointXY() const  {return m_extremePointXY;};
-   TVector3 getCenterXY() const {return m_centerXY;};
+   std::vector<double> polarAtTime(double time) const;
+   double timeAtPhi(double phi) const;
+   double phi(double x, double y) const;
+   double rho() const {return m_rho;};
+   double pathLength(double deltat) const;
+   TVector3 pointFromPolar(const std::vector<double>& polar) const;
+   TVector3 pointAtTime(double time) const override;
+   TVector3 pointAtZ(double z)  const;
+   TVector3 pointAtPhi(double phi)  const;
+   TVector3 extremePointXY() const  {return m_extremePointXY;};
+   TVector3 centerXY() const {return m_centerXY;};
 
 private:
    //double m_charge;

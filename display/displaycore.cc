@@ -37,11 +37,11 @@ Display::Display(std::list<Projection> views)
 
 };
 
-void Display::Register(std::shared_ptr<Drawable>  obj, int layer,
+void Display::addToRegister(std::shared_ptr<Drawable>  obj, int layer,
                        bool clearable)
 {
    for (auto const& view : m_views) {
-      view.second->Register(obj, layer, clearable);
+      view.second->addToRegister(obj, layer, clearable);
    }
 
    /*elems = [obj];
@@ -49,28 +49,28 @@ void Display::Register(std::shared_ptr<Drawable>  obj, int layer,
     elems = obj
     for elem in elems:
     for view in m_views.values():
-    view.register(elem, layer, clearable)*/
+    view.addToRegister(elem, layer, clearable)*/
 };
 
 
-void Display::Clear()
+void Display::clear()
 {
    for (auto const& view  : m_views) {
-      view.second->Clear();
+      view.second->clear();
    }
 }
 
-void Display::Unzoom()
+void Display::unZoom()
 {
    for (auto const& view : m_views) {
-      view.second->UnZoom();
+      view.second->unZoom();
    }
 }
 
-void Display::Draw() const
+void Display::draw() const
 {
    for (auto const& view : m_views) {
-      view.second->Draw();
+      view.second->draw();
    }
 }
 
@@ -98,7 +98,7 @@ ViewPane::ViewPane(Projection p, int nx,
  * \param[in]  layer Which layer to plot at (integer)
  * \param[in]  clearable Whether drawable objects are clearable vs locked. Default to true (clearable)
  */
-void ViewPane::Register(std::shared_ptr<Drawable> obj, int layer,
+void ViewPane::addToRegister(std::shared_ptr<Drawable> obj, int layer,
                         bool clearable)
 {
    //TODO think if shared_ptr is best way
@@ -109,12 +109,12 @@ void ViewPane::Register(std::shared_ptr<Drawable> obj, int layer,
    }
 }
 
-void ViewPane::Clear() // clear everything except locked items
+void ViewPane::clear() // clear everything except locked items
 {
    m_registered = m_locked;
 }
 
-void ViewPane::Draw()
+void ViewPane::draw()
 {
    m_canvas.cd();
 
@@ -138,14 +138,14 @@ void ViewPane::Draw()
 
 }
 
-void ViewPane::Zoom(double xmin, double xmax, double ymin, double  ymax)
+void ViewPane::zoom(double xmin, double xmax, double ymin, double  ymax)
 {
    m_hist.GetXaxis()->SetRangeUser(xmin, xmax);
    m_hist.GetYaxis()->SetRangeUser(ymin, ymax);
    m_canvas.Update();
 }
 
-void ViewPane::UnZoom()
+void ViewPane::unZoom()
 {
    m_hist.GetXaxis()->UnZoom();
    m_hist.GetYaxis()->UnZoom();

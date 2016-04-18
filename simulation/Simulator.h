@@ -12,11 +12,12 @@
 #include "datatypes.h"
 #include "directedacyclicgraph.h"
 
-#include "identifier.h"
+#include "Identifier.h"
 #include "propagator.h"
 
 class Particle;
 
+//TODO home for typedefs
 typedef DAG::Node<long> SimNode;
 typedef std::unordered_map<long, SimNode> Nodes; ///TODO rename to Nodes
 typedef std::unordered_map<long, Cluster> Clusters;
@@ -32,29 +33,28 @@ public:
    void simulatePhoton(SimParticle& ptc);
    void simulateHadron(SimParticle& ptc);
    
-   SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0.,
-                                                                                     0.));
-   const Clusters& getClusters() const {return m_clusters;} ;
-   const Tracks& getTracks() const {return m_tracks;} ;
-   const Particles& getParticles() const {return m_particles;} ;
+   SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
+   const Clusters& clusters() const {return m_clusters;} ;
+   const Tracks& tracks() const {return m_tracks;} ;
+   const Particles& particles() const {return m_particles;} ;
    
-   //const Clusters& getSmearedClusters() const  ;
+   //const Clusters& smearedClusters() const  ;
    
-   void Testing();
-   IDs getLinkedECALSmearedClusterIDs(long nodeid);
-   IDs getLinkedParticleIDs (long nodeid);
-   IDs getParentParticleIDs (long nodeid);
+   void testing();
+   IDs linkedECALSmearedClusterIDs(long nodeid);
+   IDs linkedParticleIDs (long nodeid);
+   IDs parentParticleIDs (long nodeid);
    //Clusterset ExportSimulatedClusters() const;
    //Particleset ExportSimulatedParticles() const;
 
 private:
-   void Propagate(SimParticle& ptc,const SurfaceCylinder &); //more args needed
+   void propagate(SimParticle& ptc,const SurfaceCylinder &); //more args needed
    
    
-   IDs getLinkedRawTrackIDs(long nodeid);
-   IDs getLinkedSmearedTrackIDs(long nodeid);
+   IDs linkedRawTrackIDs(long nodeid);
+   IDs linkedSmearedTrackIDs(long nodeid);
    
-   IDs getLinkedIDs(long nodeid);
+   IDs linkedIDs(long nodeid);
 
    long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype);
    long makeParticleID(fastsim::enumSource source);
@@ -79,7 +79,7 @@ private:
    const Track& makeTrack(long trackid, TVector3 pos, double charge,Path& path);
    
    void addNode(const long newid, const long parentid = 0);
-   std::shared_ptr<const DetectorElement> getElem(fastsim::enumLayer layer);
+   std::shared_ptr<const DetectorElement> elem(fastsim::enumLayer layer);
    
    IDs getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
    IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);

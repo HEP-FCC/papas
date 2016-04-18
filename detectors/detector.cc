@@ -22,7 +22,7 @@ BaseDetector::BaseDetector()
 
 
 //aim to make this a const function and to do sort at initialisation
-const std::list<SurfaceCylinder>& BaseDetector::getSortedCylinders()
+const std::list<SurfaceCylinder>& BaseDetector::sortedCylinders()
 {
    //Return list of surface cylinders sorted by increasing radius.'''
 
@@ -35,8 +35,8 @@ const std::list<SurfaceCylinder>& BaseDetector::getSortedCylinders()
    return m_cylinders;*/
 }
 
-//const DetectorElement& BaseDetector::getElement(fastsim::enumLayer layer) const
-std::shared_ptr<const DetectorElement> BaseDetector::getElement(
+//const DetectorElement& BaseDetector::element(fastsim::enumLayer layer) const
+std::shared_ptr<const DetectorElement> BaseDetector::element(
    fastsim::enumLayer layer) const
 {
 

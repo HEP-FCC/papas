@@ -23,9 +23,9 @@ public:
    static const double m_n ;//= 1.;
    static const double m_p ;//= 1.;
 
-   static double getParticleMass(int pid)  { return getParticleData(pid).first;};
-   static double getParticleCharge(int pid) { return getParticleData(pid).second;};
-   static  std::pair<double, int>& getParticleData(int pid) {return m_datamap[pid];};
+   static double particleMass(int pid)  { return particleData(pid).first;};
+   static double particleCharge(int pid) { return particleData(pid).second;};
+   static  std::pair<double, int>& particleData(int pid) {return m_datamap[pid];};
 
    static std::unordered_map<int, std::pair<double, int>> m_datamap;
 
