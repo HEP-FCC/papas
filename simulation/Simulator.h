@@ -3,7 +3,7 @@
 //
 //
 #ifndef  SIMULATOR_H
-#define SIMULATOR_H
+#define  SIMULATOR_H
 #include <string>
 #include <unordered_map>
 #include <map>
@@ -21,6 +21,10 @@ class Particle;
 typedef DAG::Node<long> SimNode;
 typedef std::unordered_map<long, SimNode> Nodes; ///TODO rename to Nodes
 typedef std::unordered_map<long, Cluster> Clusters;
+typedef std::unordered_map<long, Cluster> SmearedECALClusters;
+typedef std::unordered_map<long, Cluster> SmearedHCALClusters;
+typedef std::unordered_map<long, Cluster> ECALClusters;
+typedef std::unordered_map<long, Cluster> HCALClusters;
 typedef std::unordered_map<long, Track> Tracks;
 typedef std::unordered_map<long, SimParticle> Particles;
 typedef std::vector<long> IDs;
@@ -35,6 +39,16 @@ public:
    
    SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
    const Clusters& clusters() const {return m_clusters;} ;
+   const Cluster& cluster(long clusterID) const ;
+  
+  
+  Clusters ECALClusters() const {return m_ECALClusters;}; ///<Copy of ECAL clusters
+  Clusters HCALClusters() const {return m_HCALClusters;};
+  Clusters smearedECALClusters() const {return m_smearedECALClusters;};
+  Clusters smearedHCALClusters() const {return m_smearedHCALClusters;};
+
+   Tracks   extractTracks() const ;
+   Nodes& historyNodes() { return m_nodes; };
    const Tracks& tracks() const {return m_tracks;} ;
    const Particles& particles() const {return m_particles;} ;
    
@@ -59,22 +73,14 @@ private:
    long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype);
    long makeParticleID(fastsim::enumSource source);
    
-   
-   const Cluster& addECALCluster(SimParticle& ptc,long parentid=0, double fraction = 1.,
-                                 double csize = 0.);
-   const Cluster& addHCALCluster(SimParticle& ptc, long parentid=0,double fraction = 1.,
-                                 double csize = 0.);
-   const Cluster& addSmearedECALCluster(const Cluster& parent);
-   const Cluster& addSmearedHCALCluster(const Cluster& parent);
-   const Cluster& addCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer,
-                            double fraction = 1., double csize = 0.);
-   const Cluster& makeCluster(long clusterid, double energy, TVector3 pos,
-                              double csize = 0.);
-   const Cluster& makeSmearedCluster(const Cluster& parent,double energyresolution );
-   
-   
-   
+   long addECALCluster(SimParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
+   long addHCALCluster(SimParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
+   long addSmearedCluster(long parentClusterID);
 
+   Cluster makeCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer,
+                            double fraction = 1., double csize = 0.);
+   Cluster makeSmearedCluster(long parentClusterID);
+  
    const Track& addTrack(SimParticle& ptc);
    const Track& makeTrack(long trackid, TVector3 pos, double charge,Path& path);
    
@@ -85,7 +91,11 @@ private:
    IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
    
    Clusters m_clusters;    /// all clusters
-   Tracks m_tracks;        /// all tracks
+   Clusters m_ECALClusters;
+   Clusters m_HCALClusters;
+   Clusters m_smearedECALClusters;
+   Clusters m_smearedHCALClusters;
+   Tracks   m_tracks;        /// all tracks
    Particles m_particles;  /// all particles
    
    //this will have a keyed entry for everything that has

@@ -22,12 +22,12 @@ GBlob::GBlob(const Cluster& cluster)
 
    //set the color according to particle type
    int color = 1;
-   /*TODO
-    if (cluster.pdgid() == 22 or cluster.pdgid() == 11)
+  
+   /*if (cluster.pdgid() == 22 or cluster.pdgid() == 11)
       color = 2;
    else if (cluster.pdgid() > 0)
-      color = 4;
-   */
+      color = 4;*/
+  
    //AJRTODO implement the other projections
    //
    //TEllipse m_contourYz = TEllipse(pos.Z(), pos.Y(), radius);
@@ -44,10 +44,10 @@ GBlob::GBlob(const Cluster& cluster)
 
    m_contours["xy"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), radius)};
    m_inners["xy"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), iradius)};
-   m_contours["yz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), radius)};
-   m_inners["yz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), iradius)};
-   m_contours["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), radius)};
-   m_inners["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.X(), pos.Y(), iradius)};
+   m_contours["yz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.Z(), pos.Y(), radius)};
+   m_inners["yz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.Z(), pos.Y(), iradius)};
+   m_contours["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.Z(), pos.X(), radius)};
+   m_inners["xz"] = std::unique_ptr<TEllipse> {new TEllipse(pos.Z(), pos.X(), iradius)};
    m_contours["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), thetaphiradius)};
    m_inners["ECAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), ithetaphiradius)};
    m_contours["HCAL_thetaphi"] = std::unique_ptr<TEllipse> {new TEllipse(M_PI_2 - pos.Theta(), pos.Phi(), thetaphiradius)};
@@ -69,8 +69,8 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
 {
 
    //some things are not sensible so skip these
-   if (m_layer == "HCAL_in" && projection == "HCAL_thetaphi" |
-         m_layer == "ECAL_in" && projection == "ECAL_thetaphi")
+   if (m_layer == "ECAL" && projection == "HCAL_thetaphi" ||
+         m_layer == "HCAL" && projection == "ECAL_thetaphi")
       return;
 
    std::string useopt = opt + "psame";
@@ -166,16 +166,27 @@ GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
    std::vector<double> tY; // for thetaphi graphs
 
    //Extract vectors of x, y and z values
+  int i=0;
       for (auto p : points) {
+        
          X.push_back(p.second.X());
          Y.push_back(p.second.Y());
          Z.push_back(p.second.Z());
+        if (i==1) {
          tX.push_back(M_PI_2 - p.second.Theta());
          tY.push_back(p.second.Phi());
+        }
+        else
+        {
+          TVector3 vec = particle.p4().Vect();
+          tX.push_back(M_PI_2 - vec.Theta());
+          tY.push_back(vec.Phi());
 
+        }
+        i += 1;
       //first point is wrong and should be tppoint = description.p4().Vect()
       
-      //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
+        //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
    }
 
    //pass the vectors to the various projections

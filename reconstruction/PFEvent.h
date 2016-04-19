@@ -37,7 +37,7 @@ public:
   //PFEvent();
   bool compare(longID id1, longID id2) const;
   double energy(longID id1) const;
-  PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks,Nodes&& historyNodes);
+  PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks,Nodes& historyNodes);
   const Track& track(longID id ) const;
   const Cluster& cluster(longID id) const;
   const class Cluster& ECALCluster(longID id) const;

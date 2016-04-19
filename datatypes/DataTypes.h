@@ -31,8 +31,7 @@ public:
   Cluster(double energy, const TVector3& position, double size_m, long id);
   Cluster() = default;
   Cluster(Cluster && c)   = default;
-  Cluster(const Cluster&) = default;/*  {
-                                      std::cout<< "copy" ;} ;*/
+  Cluster(const Cluster&) = default ;;//=default {std::cout<< "copy" ;} ;
   Cluster& operator+=(const Cluster& rhs);
   double angularSize() const {return m_angularSize;};
   double size() const     {return m_size;};
@@ -50,6 +49,8 @@ public:
   void setSize(double value) ;
   std::vector<long> subClusters() const { return m_subClusters;};
   static double s_maxEnergy; //AJR is this in the right place
+  
+  friend std::ostream& operator<<(std::ostream& os, const Cluster& cluster); //TODO move to helper class
   
 protected:
   long m_uniqueID;
@@ -74,7 +75,7 @@ public:
   double eta() const      {return m_p3.Eta();};
   double charge() const   {return m_charge;};
   long   ID() const       {return m_uniqueID;}
-  Path&  path() const      {return m_path;}
+  Path&  path() const     {return m_path;}
   
   //std::pair<bool, double> isInside(const TVector3& point) const;
   void setEnergy(double energy);
@@ -97,7 +98,7 @@ protected:
 
 class SimParticle: public Particle {
 public:
-  bool isCharged() const;
+  bool isElectroMagnetic() const;
   SimParticle() = default;
   SimParticle(long uniqueid, int pdgid, TLorentzVector tlv, double  field=0., TVector3 vertex= TVector3(0., 0.,0.));
   Path& path()   {if (m_isHelix) return m_helix; else return m_path;};

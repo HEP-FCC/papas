@@ -122,7 +122,7 @@ bool Identifier::isEcal(long id)
 
 bool Identifier::isHcal(long id)
 {
-  return (Identifier::layer(id)==fastsim::enumLayer::ECAL);
+  return (Identifier::layer(id)==fastsim::enumLayer::HCAL);
 }
 
 bool Identifier::isTrack(long id)

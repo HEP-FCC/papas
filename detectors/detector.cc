@@ -35,6 +35,17 @@ const std::list<SurfaceCylinder>& BaseDetector::sortedCylinders()
    return m_cylinders;*/
 }
 
+std::shared_ptr<const Calorimeter> BaseDetector::calorimeter(fastsim::enumLayer layer) const{
+  switch (layer) {
+    case fastsim::enumLayer::ECAL:
+      return m_ECAL;
+      break;
+    case fastsim::enumLayer::HCAL:
+      return m_HCAL;
+      break;
+  }
+}
+
 //const DetectorElement& BaseDetector::element(fastsim::enumLayer layer) const
 std::shared_ptr<const DetectorElement> BaseDetector::element(
    fastsim::enumLayer layer) const

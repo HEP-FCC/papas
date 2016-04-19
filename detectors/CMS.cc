@@ -24,7 +24,7 @@
 CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
            const Material&& material, double eta_crack,
            double emin, const std::vector<double>&& eres) :
-   ECAL(layer,   volume,  material), m_eta_crack(eta_crack),
+   Calorimeter(layer,   volume,  material), m_eta_crack(eta_crack),
    m_emin(emin),
    m_eres(eres)
 {}
@@ -76,7 +76,7 @@ CMS::CMS() : BaseDetector()
 {
    //ECAL detector Element
    fastsim::enumLayer layer = fastsim::enumLayer::ECAL;
-   m_ECAL = std::shared_ptr<const class ECAL> {
+   m_ECAL = std::shared_ptr<const class Calorimeter> {
       new CMSECAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
       Material(layer, 8.9e-3, 0.275),
@@ -88,7 +88,7 @@ CMS::CMS() : BaseDetector()
 
    //HCAL detector element
    layer = fastsim::enumLayer::HCAL;
-   m_HCAL = std::shared_ptr<const class HCAL> {
+   m_HCAL = std::shared_ptr<const class Calorimeter> {
       new CMSHCAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6, 1.9, 2.6),
       Material(layer, 0.0, 0.175),
@@ -128,12 +128,12 @@ CMS::CMS() : BaseDetector()
 
 CMSHCAL::CMSHCAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
            const  Material& material , const std::vector<double>& eres) :
-   HCAL(layer,   volume,  material), m_eres(eres)
+   Calorimeter(layer,   volume,  material), m_eres(eres)
 {}
 
 CMSHCAL::CMSHCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
            const Material&& material, const std::vector<double>&& eres) :
-   HCAL(layer,   volume,  material), m_eres(eres)
+   Calorimeter(layer,   volume,  material), m_eres(eres)
 {}
 
 

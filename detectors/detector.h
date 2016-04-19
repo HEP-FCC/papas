@@ -52,7 +52,7 @@ private:
  Holds virtual functions that the user must define when creating their own ECAL class
 */
 // get rid of this
-class ECAL :public DetectorElement {
+class Calorimeter :public DetectorElement {
 public:
    using DetectorElement::DetectorElement;
    virtual double energyResolution(double energy) const = 0;
@@ -118,10 +118,10 @@ public:
    //BaseDetector( DetectorElement&& ECAL,DetectorElement&& HCAL);
    const std::list<SurfaceCylinder>&
    sortedCylinders(); ///AJRTODO make this simply return the list (or a copy) - sort on                                initialisation
-   std::shared_ptr<const DetectorElement> element(fastsim::enumLayer layer)
-   const;
-   std::shared_ptr<const ECAL> ECAL() const {return m_ECAL;};
-   std::shared_ptr<const HCAL> HCAL() const {return m_HCAL;};
+   std::shared_ptr<const DetectorElement> element(fastsim::enumLayer layer) const;
+   std::shared_ptr<const Calorimeter> calorimeter(fastsim::enumLayer layer) const;
+   std::shared_ptr<const Calorimeter> ECAL() const {return m_ECAL;};
+   std::shared_ptr<const Calorimeter> HCAL() const {return m_HCAL;};
    std::shared_ptr<const Tracker> getTracker() const {return m_Tracker;};
    std::shared_ptr<const Field> getField() const {return m_Field;};
    /*const DetectorElement& element( fastsim::enumLayer layer) const;
@@ -140,8 +140,8 @@ protected:
    //DetectorElement& Treacker;
    //CMSECAL cmsthing;
    //ECAL (cmsthings);
-   std::shared_ptr<const class ECAL> m_ECAL;
-   std::shared_ptr<const class HCAL> m_HCAL;
+   std::shared_ptr<const class Calorimeter> m_ECAL;
+   std::shared_ptr<const class Calorimeter> m_HCAL;
    std::shared_ptr<const Tracker> m_Tracker;
    std::shared_ptr<const Field> m_Field;
 

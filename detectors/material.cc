@@ -6,8 +6,12 @@
 #include "material.h"
 
 Material::Material(fastsim::enumLayer layer, double x0, double lambdaI) :
-m_layer(layer), m_x0(x0), m_lambdaI(lambdaI),m_randExp(new fastsim::RandExponential(lambdaI))
-{
+    m_layer(layer),
+    m_x0(x0),
+    m_lambdaI(lambdaI) ,
+    m_randomLambda(lambdaI),
+    m_randomX0(x0) {
+
 }
 
 double Material::pathLength(bool is_em) const
@@ -16,16 +20,20 @@ double Material::pathLength(bool is_em) const
    double freepath;
    if (is_em){
        freepath = m_x0;
+       if (m_x0 == 0.) {
+         return std::numeric_limits<double>::max();
+       }
+     //return m_randomX0(); //TODO reinstante once testing is complete
+     return m_x0*0.8;
    }
    else{
-       freepath= m_lambdaI;
+     if (m_lambdaI == 0.) {
+       return std::numeric_limits<double>::max();
+     }
+     //return m_randomLambda(); //TODO reinstante once testing is complete
+     return m_lambdaI*0.8;
    }
-   
-   if (freepath == 0.) {
-      return std::numeric_limits<double>::max(); //maximum value for a double
-   } else { 
-      return (*m_randExp)();
-   }
+ 
 }
 
 

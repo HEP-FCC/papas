@@ -6,9 +6,50 @@
 //
 //
 
-#ifndef PFBlockBuilder_hpp
-#define PFBlockBuilder_hpp
+#ifndef PFBlockBuilder_h
+#define PFBlockBuilder_h
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include "directedacyclicgraph.h"
+class PFEvent;
+class PFBlock;
 
+
+typedef long longID;
+//typedef std::unordered_map<long long, class Edge> Edges;
+typedef DAG::Node<longID> PFNode;
+typedef std::unordered_map<longID,PFNode> Nodes;
+typedef std::unordered_map<longID, PFBlock> Blocks;
+typedef std::vector<longID> IDs;
+
+class PFBlockBuilder  {
+public:
+  /** Constructor
+   
+   * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
+   * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
+   *            an edge records the distance and links between two ids
+   * @param[inout] historyNodes : optional unordered_map that describes which elements are parents of which blocks
+   *                     if a history_nodes tree is provided then
+   *                     the new history will be added into the exisiting history
+   */
+  PFBlockBuilder(PFEvent& pfevent);
+  //BlockBuilder(); //needed for unordered_map to compile but not actually used
+  //BlockBuilder& operator = (const BlockBuilder&) ;
+  //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
+  Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+  friend std::ostream& operator<<(std::ostream& os, const PFBlockBuilder& blockbuilder); //TODO move to helper class
+  
+private:
+  void makeBlocks(); // does the main work
+  Blocks m_blocks;///< the blocks made by blockbuilder
+  PFEvent& m_pfEvent;
+  Nodes& m_historyNodes; ///<optional, allows history to be updated
+  IDs m_uniqueIDs;
+  //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
+  //void sortIDs(IDs& ids); //sorts elements by type
+};
 #include <stdio.h>
 
 #endif /* PFBlockBuilder_hpp */

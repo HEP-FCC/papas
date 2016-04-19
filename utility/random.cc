@@ -2,8 +2,8 @@
 
 namespace fastsim{
    std::default_random_engine engine;
-   
-   
+   std::exponential_distribution<double> expDist(1.);
+  
    //makeseed is a uniform number generator that may be used to see all the random numbers used in FASTSIM
    // Option One:
    //    set the seed (3rd argument in the makeseed constructor below).
@@ -33,4 +33,6 @@ namespace fastsim{
       auto  rn= RandExponential(lambda);
       return rn();
    }
+  
+ 
 }

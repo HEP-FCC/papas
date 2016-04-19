@@ -220,7 +220,7 @@ T3  0.0287   0.0825      ---        .
       else if (edge(e1,e2).isLinked()==false)
         os << "      xxx";
       else {
-        os<< std::setw(9)<<std::fixed  << edge(e1,e2).distance() ;
+        os<< std::setw(9) << std::fixed  << edge(e1,e2).distance() ;
         
       }
       
@@ -247,7 +247,7 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block ) {
   os<<block.shortName();
   os<<" id="<<block.m_blockCount<<" uid="<<block.m_uniqueID;
   os <<" ecals= "<<block.countEcal()<<" hcals= "<<block.countHcal()<<" tracks= "<<block.countTracks()<< "\n";
-  //descrip += str('{shortName:<12} id={blockid:4.0f} :uid= {uid}: ecals = {count_ecal} hcals = {count_hcal} tracks = {count_tracks}'.format(
+  
   
   os << block.elementsString() << std::endl;
   os << block.edgeMatrixString()<< std::endl;

@@ -25,7 +25,7 @@ public:
    typedef std::unordered_map<std::string, TVector3> Points;
    Path(const TLorentzVector& p4, TVector3 origin);
    Path();
-   void addPoint(std::string label, TVector3 vec) { std::cout<<label ; m_points[label] = vec;}
+   void addPoint(std::string label, TVector3 vec) { m_points[label] = vec;}
 
    double getTimeAtZ(double z) const ;
    double deltaT(double path_length) const;

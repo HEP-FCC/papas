@@ -36,8 +36,8 @@ double PFEvent::energy(longID id1) const //TODO check direction of sort
 }
 
 //check this be a move here
-PFEvent::PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes&& historyNodes) :
-m_ecals(ecals), m_hcals(hcals), m_tracks(tracks), m_historyNodes(historyNodes)
+PFEvent::PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes) :
+m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)), m_historyNodes(historyNodes)
 {
   
 }

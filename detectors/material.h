@@ -25,9 +25,9 @@ private:
    fastsim::enumLayer m_layer;
    double m_x0;
    double m_lambdaI;
-   std::shared_ptr<fastsim::RandExponential> m_randExp; //without this we cannot copy the Materials class
-                                                        //try to find a better solution
-};
+   fastsim::RandExponential m_randomLambda;
+   fastsim::RandExponential m_randomX0;
+  };
 
 
 //Temporary

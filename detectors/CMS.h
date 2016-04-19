@@ -29,7 +29,7 @@ class VolumeCylinder;
  */
 //CMSECAL inherits from ECAL clustersize/acceptance/energy resolution
 //ECAL inherits from DetectorElement
-class CMSECAL: public ECAL {
+class CMSECAL: public Calorimeter {
 public:
    //AJRTODO check whether both cosntructors are needed
    ///constructor - allows the Material and Volume to be created on the fly
@@ -54,7 +54,7 @@ private:
 };
 
 
-class CMSHCAL: public HCAL {
+class CMSHCAL: public Calorimeter {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly

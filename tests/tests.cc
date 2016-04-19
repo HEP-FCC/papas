@@ -40,13 +40,7 @@
 using namespace std;
 
 
-void testCylinder();
-void testClusterPT();
-void testHelix();
-void testCMS();
-void testStraightLine();
-void testRandomNorm();
-void testRandomExp();
+
 
 //std::default_random_engine fastsim::RandNormal::engine(0);z
 int main(int argc, char* argv[]){
@@ -169,7 +163,7 @@ self.assertRaises(ValueError,
 
 }
 
-TEST(fastsim,CMS)
+TEST(fastsim, CMS)
 {
    CMS cms = CMS();
      std::cout<<"TODO Tested CMS" <<std::endl;
@@ -180,7 +174,7 @@ self.assertEqual( zs, sorted(zs))*/
    
 }
 
-TEST(fastsim,ClusterPT){
+TEST(fastsim, ClusterPT){
    
    ///Test that pT is correctly set
    Cluster    cluster = Cluster(10., TVector3(1,0,0), 1, 1);
@@ -193,7 +187,7 @@ TEST(fastsim,ClusterPT){
 
 
 
-TEST(fastsim,Canvas) { //change to concrete object or unique pointer is there is an issue
+TEST(fastsim, Canvas) { //change to concrete object or unique pointer is there is an issue
    TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
    c1->SetFillColor(42);
    c1->SetGrid();
@@ -223,7 +217,7 @@ TEST(fastsim,Canvas) { //change to concrete object or unique pointer is there is
 }
 
 
-TEST(fastsim,StraightLine){
+TEST(fastsim, StraightLine){
    TVector3 origin {0,0,0};
    StraightLinePropagator propStraight;
    auto cyl1 = SurfaceCylinder("cyl1", 1, 2);
@@ -284,14 +278,14 @@ TEST(fastsim,StraightLine){
 
 
 
-TEST(fastsim,RandomNorm)
+TEST(fastsim, RandomNorm)
 {
-   //double v=fastsim::rd();
+  
    //seed it to have known start point
    fastsim::RandNormal rnorm(5.,1.,100);
-   double r1= rnorm();
+   double r1 = rnorm();
    fastsim::RandNormal rnorm3(5.,1.,100);
-   double r2=rnorm3();
+   double r2 = rnorm3();
    //test random normal seeded comes out same
    EXPECT_EQ(r1,r2 );
    
@@ -299,36 +293,38 @@ TEST(fastsim,RandomNorm)
    //fastsim::engine.seed(100);
    //std::cout<<fastsim::makeseed()<<std::endl;
    //std::cout<<fastsim::makeseed()<<std::endl;
-
    //std::cout<<fastsim::makeseed()<<std::endl;
 
-   
-   
-   fastsim::RandNormal rnormA(5.,1.,fastsim::makeseed());
+   fastsim::RandNormal rnormA(5., 1., fastsim::makeseed());
    double r3= rnormA();
-   fastsim::RandNormal rnormB(5.,1.);
-   double r4=rnormB();
-   EXPECT_NE( r3,r4 );
+   fastsim::RandNormal rnormB(5., 1.);
+   double r4 = rnormB();
+   ;
+   EXPECT_NE(r3, r4 );
    
    
 }
 
-TEST(fastsim,RandomExp)
+TEST(fastsim, RandomExp)
 {
-   
    //seed it to have known start point
    fastsim::RandExponential rexp(5.,100);
-   double r1= rexp();
+   double r1 = rexp();
    fastsim::RandExponential rexp3(5.,100);
-   double r2=rexp3();
-   EXPECT_EQ(r1,r2 );
+   double r2 = rexp3();
+   EXPECT_EQ(r1, r2);
    
    //use a random start point so should not give same answers
    fastsim::RandExponential rexpA(5.);
-   double r3= rexpA();
+   double r3 = rexpA();
+  //std::cout << rexpA()<<", "<< rexpA()<<", "<< rexpA()<<", "<< rexpA();
    fastsim::RandExponential rexpB(5.);
-   double r4=rexpB();
-   EXPECT_NE( r3,r4 );
-   
-   
+   double r4 = rexpB();
+  //
+  std::cout << rexpB()<<", "<<rexpB()<<", "<<rexpB()<<", "<<rexpA();
+  
+    
+  
+   EXPECT_NE(r3, r4);
+  
 }

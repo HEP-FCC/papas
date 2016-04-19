@@ -18,7 +18,6 @@
 //gtest test
 #include "gtest/gtest.h"
 
-
 //SSD libs
 #include "fastsim/my_utilities.h"
 #include "detectors/material.h"
@@ -34,6 +33,8 @@
 #include "TVector3.h"
 #include "Edge.h"
 #include "PFBlock.h"
+#include "PFEvent.h"
+#include "PFBlockBuilder.h"
 
 extern int test_edges();
 extern int test_blocks();
@@ -42,31 +43,16 @@ extern int test_BlockBuilder();
 
 extern int test_BlockSplitter();
 extern int test_Distance();
+extern int run_tests(int argc, char* argv[]);
+
 //#include <RInside.h>
 void tryMapMoveObject();
 //void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
-  test_edges();
-  test_blocks();
-  test_BlockBuilder();
   
+  //int test = run_tests(argc, argv);
   
-  
-  //::testing::InitGoogleTest(&argc, argv);
-  //return RUN_ALL_TESTS();
-  
-  
-  tryMapMoveObject();
-  //return 0;
-  
-   //MyClass someFunction();
-   //RInside R(argc, argv);
-   //Gtest  hah
-   //::testing::InitGoogleTest(&argc, argv);
-   //#return RUN_ALL_TESTS();
-   
-   
    // ROOT App to allow graphs to be plotted
    TApplication theApp("App", &argc, argv);
    if (gROOT->IsBatch()) {
@@ -80,73 +66,62 @@ int main(int argc, char* argv[]){
    //Create simulator
    Simulator sim= Simulator{CMSDetector};
    
-  // R test of smearing
-  //IDs smeared_clust_IDs;
-   
-   //Photons
-   for (int i=1; i<10;i++  )
+  
+   //Make Some Photons
+   for (int i=1; i<1;i++  )
    {
       TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
       SimParticle& photon =sim.addParticle(22, tlvphoton);
       sim.simulatePhoton(photon);
-      // R test of smearing
-      //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.ID());
-      //smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
-      
+     
    }
-  //Hadrons
-  for (int i=1; i<20;i++  )
+  //Make Some Hadrons
+  for (int i=0; i<1; i++  )
   {
-    TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
+    int j=i*3;
+    //TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. + 0.005*j, M_PI/2.+0.3, 10.);
+    TLorentzVector tlvhadron=makeParticleLorentzVector(211,   M_PI/2. +0.5*(i+1) , 0, 40.*(i+1));
     SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
     sim.simulateHadron(hadron);
     
   }
   
-   /* Rtest of smearing
-  std::vector<double> w;
-   w.reserve(10000);
-   const Clusters& clusters =sim.clusters();
-   for (auto x :smeared_clust_IDs)
-   {
-      w.push_back( clusters.find(x)->second.energy());
-   }
-   r_density_plot(w, R);*/
-   
-   
-   /*
-   //Check density plot for smeared Photons
-   std::vector<double> w;
-   w.reserve(10000);
-   for (auto x :sim.clusters())
-   { if (Identifier::isSmeared(x.second.ID()))
-      w.push_back( x.second.energy());
-   }
-   r_density_plot(w, R);
-   */
-    
+  //setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
+  // and using  a reference to the history nodes
+  PFEvent pfEvent{sim.smearedECALClusters(),
+                  sim.smearedHCALClusters(),
+                  sim.extractTracks(),
+                  sim.historyNodes()};
   
-   sim.testing(); //Write lists of connected items
-   
-   
+  
+  //PFBlockBuilder
+  PFBlockBuilder bBuilder{pfEvent};
+  
+  
+
+   //sim.testing(); //Write lists of connected items
  
    //TODO try to remove/reduce use of shared_ptrs here.
    //Display display = Display({Projection::xy,Projection::yz});
-   Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+  Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
    display.addToRegister(gdetector, 0);
   
-   
-   //GDetector gdetector{CMSDetector};
-   // display.addToRegister(std::move(gdetector), 0);
-   
    //plot clusters
-   for (auto & cl : sim.clusters())
+   for (auto & cl : sim.smearedECALClusters())
    {
-      std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
+     std::cout << cl.second;
+     std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
       display.addToRegister(gcluster,2);
       
    }
+  for (auto & cl : sim.smearedHCALClusters())
+  {
+    std::cout << cl.second;
+    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
+    display.addToRegister(gcluster,2);
+    
+  }
    for (auto & sp : sim.particles())
    {
       std::shared_ptr<GTrajectories> gsimParticle (new GTrajectories(sp.second)) ;
@@ -379,7 +354,72 @@ TEST(fastsim, dummy){
    EXPECT_EQ(true, success);
 }
 
-
+void tryR(int argc, char* argv[]) {
+  
+  //RInside R(argc, argv);
+  //Gtest  hah
+  //::testing::InitGoogleTest(&argc, argv);
+  //#return RUN_ALL_TESTS();
+  
+  
+  // ROOT App to allow graphs to be plotted
+  TApplication theApp("App", &argc, argv);
+  if (gROOT->IsBatch()) {
+    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
+    return 1;
+  }
+  
+  //Create CMS detector
+  CMS CMSDetector;
+  
+  //Create simulator
+  Simulator sim= Simulator{CMSDetector};
+  
+  // R test of smearing
+  //IDs smeared_clust_IDs;
+  
+  //Photons
+  for (int i=1; i<10;i++  )
+  {
+    TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
+    SimParticle& photon =sim.addParticle(22, tlvphoton);
+    sim.simulatePhoton(photon);
+    // R test of smearing
+    //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.ID());
+    //smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
+    
+  }
+  //Hadrons
+  for (int i=1; i<20;i++  )
+  {
+    TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
+    SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
+    sim.simulateHadron(hadron);
+    
+  }
+  
+  /* Rtest of smearing
+   std::vector<double> w;
+   w.reserve(10000);
+   const Clusters& clusters =sim.clusters();
+   for (auto x :smeared_clust_IDs)
+   {
+   w.push_back( clusters.find(x)->second.energy());
+   }
+   r_density_plot(w, R);*/
+  
+  
+  /*
+   //Check density plot for smeared Photons
+   std::vector<double> w;
+   w.reserve(10000);
+   for (auto x :sim.clusters())
+   { if (Identifier::isSmeared(x.second.ID()))
+   w.push_back( x.second.energy());
+   }
+   r_density_plot(w, R);
+   */
+}
 
 
 void tryMapMoveObject()
@@ -404,5 +444,16 @@ void tryMapMoveObject()
    return;
 
    
+}
+
+int run_tests(int argc, char* argv[]) {
+  test_edges();
+  test_blocks();
+  test_BlockBuilder();
+  tryMapMoveObject();
+  
+  
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
 

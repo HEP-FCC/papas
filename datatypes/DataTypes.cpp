@@ -31,12 +31,18 @@ std::unordered_map<int, std::pair<double, int>> ParticleData::m_datamap =  {
 }  ;
 
 
+/*Cluster::Cluster(const Cluster&) {
+
+std::cout<< "copy" ;
+} ;*/
+
+
 double Cluster::s_maxEnergy = 0;
 
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m,
                  long id) :
-   m_uniqueID(id),  m_position(position), m_subClusters(id)
+   m_uniqueID(id),  m_position(position), m_subClusters()
 {
    setSize(size_m);
    setEnergy(energy);
@@ -123,7 +129,8 @@ return False, dist
 }
 */
   
-
+//TODO need to change this so that he erged cluster has its ownID and the cluster from which it is made is
+//put into subClusters its not rght just yet
 Cluster& Cluster::operator+=(const Cluster& rhs){
 
   if (Identifier::layer(m_uniqueID) != Identifier::layer(rhs.ID())) {
@@ -141,6 +148,10 @@ Cluster& Cluster::operator+=(const Cluster& rhs){
   return *this;
 }
 
+std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move to helper class
+  os << "Cluster:" << Identifier::layer(cluster.m_uniqueID)  << ": "<< std::setw(9) << std::fixed  << cluster.m_energy ;
+  os << cluster.m_position.Phi() << ", " << M_PI/2. - cluster.m_position.Theta()<< std::endl;
+}
 
 
 /*DistanceData Cluster::distance(const Track& track) {
@@ -248,8 +259,7 @@ TVector3 SimParticle::pathPosition(std::string name)
    return path().namedPoint(name);
 }
 
-TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
-      double energy)
+TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double phi, double energy)
 {
    double mass = ParticleData::particleMass(pdgid);
    double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -261,11 +271,11 @@ TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
                      momentum * sintheta * sinphi,
                      momentum * costheta,
                      energy);
-   /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
+   std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
              p4.Et() << " ";
    std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
              " " << cosphi <<
-             " " << sintheta << " ";*/
+             " " << sintheta << " ";
    return p4;
 }
 
@@ -279,7 +289,7 @@ Particle(pdgid, charge, tlv), m_vertex(vertex) {
      self.track_smeared = None
 }*/
 
-bool SimParticle::isCharged() const
+bool SimParticle::isElectroMagnetic() const
 { //TODO ask Colin if this is really OK
    unsigned int kind = abs(pdgid());
    if (kind == 11 || kind == 22) {

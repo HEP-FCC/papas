@@ -29,10 +29,10 @@ void  Simulator::simulatePhoton(SimParticle& ptc)
    propagate(ptc, ecal_sp->volumeCylinder().Inner());
    
    //make a cluster
-   const Cluster& ecalclust = addECALCluster(ptc); //add the position into this
+   long ecalID = addECALCluster(ptc); //add the position into this
    
    //smear the cluster
-   addSmearedECALCluster(ecalclust);
+   addSmearedCluster(ecalID);
 }
 
 void  Simulator::simulateHadron(SimParticle& ptc)
@@ -48,7 +48,7 @@ void  Simulator::simulateHadron(SimParticle& ptc)
    
    //propagate to the inner ECAL cyclinder
    propagate(ptc, ecal_sp->volumeCylinder().Inner());
-   double path_length=ecal_sp->getMaterial().pathLength(ptc.isCharged());
+   double path_length=ecal_sp->getMaterial().pathLength(ptc.isElectroMagnetic());
    
    //TO MATCH PYTHON$
    //path_length=0.273579537605;
@@ -66,12 +66,12 @@ void  Simulator::simulateHadron(SimParticle& ptc)
       path.addPoint("ecal_decay", point_decay);
       if (ecal_sp->volumeCylinder().Contains(point_decay))
          {
-         double frac_ecal = fastsim::randomUniform(0., 0.7); // could also have a static member number generator
-                                                             //frac_ecal=0.35
-         const Cluster& ecalclust = addECALCluster(ptc,track.ID(),frac_ecal);
+           //TODO reinstate after testingdouble frac_ecal = fastsim::randomUniform(0., 0.7); // could also have a static member number generator
+           frac_ecal=0.35;
+         long ecalID = addECALCluster(ptc, track.ID(), frac_ecal);
             //For now, using the hcal resolution and acceptance for hadronic cluster
             //in the ECAL. That's not a bug!
-         addSmearedHCALCluster(ecalclust); // TODO to be revised by COlin
+         addSmearedCluster(ecalID); // TODO to be revised by COlin
                                            //name of call needs to be improved
       }
    }
@@ -79,8 +79,8 @@ void  Simulator::simulateHadron(SimParticle& ptc)
    //now move into HCAL
    propagate(ptc, hcal_sp->volumeCylinder().Inner());
    //TODO ask colin if the parent is the track or the ecalclust
-   const Cluster& hcalclust = addHCALCluster(ptc,track.ID(), 1-frac_ecal);
-   addSmearedHCALCluster(hcalclust);
+   long hcalID = addHCALCluster(ptc, track.ID(), 1-frac_ecal);
+   addSmearedCluster(hcalID);
    
    
 }
@@ -96,6 +96,17 @@ void  Simulator::propagate(SimParticle& ptc, const SurfaceCylinder & sc)
 }
 
 
+const Cluster& Simulator::cluster(long clusterID) const{
+  
+  auto layer=Identifier::layer(clusterID);
+  if (layer==fastsim::enumLayer::ECAL)
+    return m_ECALClusters.at(clusterID);
+  else
+    return m_HCALClusters.at(clusterID);
+
+}
+
+
 SimParticle& Simulator::addParticle( int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
    double field=m_detector.getField()->getMagnitude();
@@ -106,98 +117,83 @@ SimParticle& Simulator::addParticle( int pdgid, TLorentzVector tlv, TVector3 ver
 }
 
 
-const Cluster& Simulator::addECALCluster(SimParticle& ptc, long parentid, double fraction,
-                                         double csize)
+
+long Simulator::addECALCluster(SimParticle& ptc,long parentid,double fraction, double csize)
 {
-   if(!parentid)
-      parentid=ptc.ID();
-   if (csize == 0) { //or could make the defalt value -1?? check Colin
-      csize = m_detector.ECAL()->clusterSize(ptc);
-   }
-   return addCluster(ptc,  parentid, fastsim::enumLayer::ECAL, fraction, csize);
+  Cluster cluster = makeCluster(ptc, parentid, fastsim::enumLayer::ECAL, fraction, csize);
+  m_ECALClusters.emplace(cluster.ID(), std::move(cluster));
+  return cluster.ID();
 }
 
-const Cluster& Simulator::addHCALCluster(SimParticle& ptc,long parentid,double fraction,
-                                         double csize)
+long Simulator::addHCALCluster(SimParticle& ptc,long parentid,double fraction, double csize)
 {
-   if(!parentid)
-      parentid=ptc.ID();
-   if (csize == 0) { //or could make the defalt value -1?? check Colin
-      csize = m_detector.HCAL()->clusterSize(ptc);
-   }
-   return addCluster(ptc, parentid, fastsim::enumLayer::HCAL, fraction, csize);
+  Cluster cluster = makeCluster(ptc, parentid, fastsim::enumLayer::HCAL, fraction, csize);
+  m_HCALClusters.emplace(cluster.ID(), std::move(cluster));
+  return cluster.ID();
 }
 
 
-const Cluster& Simulator::addCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer,
-                                     double fraction, double csize)
+Cluster Simulator::makeCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer, double fraction, double csize)
 {
-   //TODO change string to ENUM
-   std::string cylname = m_detector.element(layer)->volumeCylinder().InnerName();
-   long clusterid = Identifier::makeClusterID(layer, fastsim::enumSubtype::RAW);
-   double energy = ptc.p4().E() * fraction;
-   TVector3 pos = ptc.pathPosition(cylname); //assume path already set in particle
-   
-   const Cluster& cluster = makeCluster(clusterid, energy, pos, csize);
-   addNode(cluster.ID(), parentid); //a track may be the parent of a cluster
-   return cluster; //check this defaults OK
-}
+  if (!parentid) {
+     parentid=ptc.ID();
+  }
+  long clusterid = Identifier::makeClusterID(layer, fastsim::enumSubtype::RAW);
+  double energy = ptc.p4().E() * fraction;
+  
+  //TODO change string to ENUM
+  std::string cylname = m_detector.calorimeter(layer)->volumeCylinder().InnerName();
+  TVector3 pos = ptc.pathPosition(cylname); //assume path already set in particle
+  
+  if (csize == 0) { //or could make the defalt value -1?? check Colin
+    csize = m_detector.calorimeter(layer)->clusterSize(ptc);
+  }
 
-
-const Cluster& Simulator::makeCluster(long clusterid, double energy,
-                                      TVector3 pos, double csize)
-{
-   ///create cluster and add into the map of clusters
-   m_clusters.emplace(clusterid, Cluster{energy, pos, csize, clusterid});
-   return m_clusters[clusterid];
+  const Cluster& cluster{energy, pos, csize, clusterid};
+  addNode(clusterid, parentid); //a track may be the parent of a cluster
+  return cluster; //check this defaults OK
 }
 
 
 
-const Cluster& Simulator::addSmearedECALCluster(const Cluster& parent)
+
+long Simulator::addSmearedCluster(long parentClusterID)
 {
-   auto ECAL=m_detector.ECAL();
-   double eres=ECAL->energyResolution(parent.energy());
-   
-   const Cluster& smeared=makeSmearedCluster(parent,eres);
-   if (ECAL->acceptance(smeared)) {
-      addNode(smeared.ID(), parent.ID());
-      return smeared;
-   }
-   else {
+  
+  Cluster smeared=makeSmearedCluster(parentClusterID);
+  
+  auto layer = Identifier::layer(parentClusterID);
+  if (m_detector.calorimeter(layer)->acceptance(smeared)) {
+    addNode(smeared.ID(), parentClusterID);
+    if(layer ==fastsim::enumLayer::ECAL) {
+      m_smearedECALClusters.emplace(smeared.ID(), std::move(smeared));
+    }
+    else
+      m_smearedHCALClusters.emplace(smeared.ID(), std::move(smeared));
+    return smeared.ID();
+  }
+  else {
       m_clusters.erase(smeared.ID());
-      return parent;
-   }
-}
-
-const Cluster& Simulator::addSmearedHCALCluster(const Cluster& parent)
-{
-   auto HCAL=m_detector.HCAL();
-   double eres=HCAL->energyResolution(parent.energy());
-   
-   const Cluster& smeared=makeSmearedCluster(parent,eres);
-   if (HCAL->acceptance(smeared)) {
-      addNode(smeared.ID(), parent.ID());
-      return smeared;
-   }
-   else {
-      m_clusters.erase(smeared.ID());
-      return parent;
-   }
+      return parentClusterID;
+  }
 }
 
 
-const Cluster& Simulator::makeSmearedCluster(const Cluster& parent,double energyresolution )
+Cluster Simulator::makeSmearedCluster( long parentClusterID) //, double energyresolution )
 {
-   //create a new id
-   auto layer=Identifier::layer(parent.ID());
-   long newclusterid = Identifier::makeClusterID(layer,
-                                                 fastsim::enumSubtype::SMEARED);
-   double energy = parent.energy() * fastsim::randomGaussian(1, energyresolution);
-   //TODO temp remove
-   //energy=7.353;
-   const Cluster& cluster = makeCluster(newclusterid, energy, parent.position(), parent.size());
-   return cluster;
+  
+  //create a new id
+  auto layer=Identifier::layer(parentClusterID);
+  long newclusterid = Identifier::makeClusterID(layer, fastsim::enumSubtype::SMEARED);
+  const Cluster& parent = cluster(parentClusterID);
+
+  std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
+  double energyresolution = sp_calorimeter->energyResolution(parent.energy());
+  //TODO double energy = parent.energy() * fastsim::randomGaussian(1, energyresolution);
+  double energy = parent.energy() * 0.95;
+  
+  Cluster cluster = Cluster{ energy, parent.position(), parent.size(), newclusterid};
+  return cluster;
 }
 
 const Track& Simulator::addTrack(SimParticle& ptc)
@@ -331,6 +327,13 @@ IDs Simulator::getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype,
       }
    }
    return foundids;
+}
+
+
+
+Tracks   Simulator::extractTracks() const
+{//TODO check this
+  return m_tracks; //aiming to copy
 }
 
 
