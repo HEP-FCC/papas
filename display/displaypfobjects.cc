@@ -69,8 +69,8 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
 {
 
    //some things are not sensible so skip these
-   if (m_layer == "ECAL" && projection == "HCAL_thetaphi" ||
-         m_layer == "HCAL" && projection == "ECAL_thetaphi")
+   if ( (m_layer == "ECAL" && projection == "HCAL_thetaphi") ||
+         (m_layer == "HCAL" && projection == "ECAL_thetaphi"))
       return;
 
    std::string useopt = opt + "psame";
@@ -210,6 +210,65 @@ GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
    }
 }
 
+GTrajectory::GTrajectory(const  Track& track, int linestyle,
+                         int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
+{
+  
+  //TODO implement a helix curve here somewhere
+  const std::unordered_map<std::string, TVector3>& points=track.path().points();
+  int npoints = points.size();
+  std::vector<double> X;
+  std::vector<double> Y;
+  std::vector<double> Z;
+  std::vector<double> tX; // for thetaphi graphs
+  std::vector<double> tY; // for thetaphi graphs
+  
+  //Extract vectors of x, y and z values
+  int i=0;
+  for (auto p : points) {
+    
+    X.push_back(p.second.X());
+    Y.push_back(p.second.Y());
+    Z.push_back(p.second.Z());
+    if (i==1) {
+      tX.push_back(M_PI_2 - p.second.Theta());
+      tY.push_back(p.second.Phi());
+    }
+    else
+    {
+      TVector3 vec = track.p3();
+      tX.push_back(M_PI_2 - vec.Theta());
+      tY.push_back(vec.Phi());
+      
+    }
+    i += 1;
+    //first point is wrong and should be tppoint = description.p4().Vect()
+    
+    //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
+  }
+  
+  //pass the vectors to the various projections
+  m_graphs["xy"] = std::unique_ptr<TGraph> {new TGraph(npoints, &X[0], &Y[0])};
+  m_graphs["yz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &Y[0])};
+  m_graphs["xz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &X[0])};
+  
+  m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
+  m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
+  
+  
+  
+  //AJRTODO add in other projections
+  
+  //set graph styles
+  for (auto const& graph : m_graphs) {
+    graph.second->SetMarkerStyle(2);
+    graph.second->SetMarkerSize(0.7);
+    graph.second->SetLineStyle(linestyle);
+    graph.second->SetLineColor(linecolor);
+  }
+}
+
+
 
 void GTrajectory::setColor(int color)
 {
@@ -247,6 +306,16 @@ GTrajectories::GTrajectories(const  SimParticle& particle)
    //std::vector<TVector3>& points= track.get
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
    m_gTrajectories.push_back(GTrajectory(particle));
+}
+
+GTrajectories::GTrajectories(const  Track& track)
+//AJRTODO const std::list<Particle>& particles)
+{
+  //Path& path= sp.path();
+  
+  //std::vector<TVector3>& points= track.get
+  //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
+  m_gTrajectories.push_back(GTrajectory(track));
 }
 
 ///Constructor for showing clusters

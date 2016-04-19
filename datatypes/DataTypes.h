@@ -70,22 +70,17 @@ public:
   Track() : m_uniqueID(0), m_path(Path::NullPath) {};
   Track(const Track& T) =default;
   
-  double pt() const       {return m_p3.Perp();};
-  double energy() const   {return m_p3.Mag();};
-  double eta() const      {return m_p3.Eta();};
-  double charge() const   {return m_charge;};
+  double pt() const       {return m_p3.Perp();}
+  double energy() const   {return m_p3.Mag();}
+  double eta() const      {return m_p3.Eta();}
+  double charge() const   {return m_charge;}
   long   ID() const       {return m_uniqueID;}
+  TVector3 p3() const     {return m_p3;}
   Path&  path() const     {return m_path;}
-  
-  //std::pair<bool, double> isInside(const TVector3& point) const;
   void setEnergy(double energy);
   void setSize(double value) ;
   static double s_maxenergy; //AJR is this in the right place
-  
-  //DistanceData distance(const Cluster& clust) ; //const; can't get to compile with const due to path issue
-  //DistanceData distance(const Track& track) const;
-  
-  
+
 protected:
   long m_uniqueID;
   double m_pt;

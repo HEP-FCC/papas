@@ -106,7 +106,9 @@ CMS::CMS() : BaseDetector()
    layer = fastsim::enumLayer::FIELD;
    m_Field = std::shared_ptr<const Field> {
       new CMSField(layer,
-                   VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6),3.8)
+                   VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6),
+                   20)
+     //3.8)
    };
 
    //TODO is a concrete object approach needed?
@@ -201,11 +203,11 @@ double CMSTracker::ptResolution(const Track& track) const
 
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0),magnitude)
+Field(layer,   volume,  Material(layer,0,0), magnitude)
 {}
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder&& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0),magnitude)
+Field(layer,   volume,  Material(layer,0,0), magnitude)
 {}
 
 

@@ -78,7 +78,7 @@ int main(int argc, char* argv[]){
   //Make Some Hadrons
   for (int i=0; i<1; i++  )
   {
-    int j=i*3;
+    //int j=i*3;
     //TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. + 0.005*j, M_PI/2.+0.3, 10.);
     TLorentzVector tlvhadron=makeParticleLorentzVector(211,   M_PI/2. +0.5*(i+1) , 0, 40.*(i+1));
     SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
   // and using  a reference to the history nodes
   PFEvent pfEvent{sim.smearedECALClusters(),
                   sim.smearedHCALClusters(),
-                  sim.extractTracks(),
+                  sim.smearedTracks(),
                   sim.historyNodes()};
   
   
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]){
    {
      std::cout << cl.second;
      std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
-      display.addToRegister(gcluster,2);
+     display.addToRegister(gcluster,2);
       
    }
   for (auto & cl : sim.smearedHCALClusters())
@@ -122,12 +122,18 @@ int main(int argc, char* argv[]){
     display.addToRegister(gcluster,2);
     
   }
-   for (auto & sp : sim.particles())
+  for (auto & tr : sim.smearedTracks())
+  {
+    std::shared_ptr<GTrajectories> gtrack (new GTrajectories(tr.second)) ;
+    display.addToRegister(gtrack,2);
+    
+  }
+   /*for (auto & sp : sim.particles())
    {
       std::shared_ptr<GTrajectories> gsimParticle (new GTrajectories(sp.second)) ;
       display.addToRegister(gsimParticle,2);
       
-   }
+   }*/
    display.draw();
    
    //theApp.Run();

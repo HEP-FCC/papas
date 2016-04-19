@@ -45,6 +45,7 @@ public:
                int linecolor = 1);
    GTrajectory(const SimParticle& particle, int linestyle = 1,
                int linecolor = 1);
+   GTrajectory(const Track& track, int linestyle = 1, int linecolor = 1);
    void setColor(int color);
    void Draw(const std::string& projection, const std::string& opt = "") const ;
 private:

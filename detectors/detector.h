@@ -122,8 +122,8 @@ public:
    std::shared_ptr<const Calorimeter> calorimeter(fastsim::enumLayer layer) const;
    std::shared_ptr<const Calorimeter> ECAL() const {return m_ECAL;};
    std::shared_ptr<const Calorimeter> HCAL() const {return m_HCAL;};
-   std::shared_ptr<const Tracker> getTracker() const {return m_Tracker;};
-   std::shared_ptr<const Field> getField() const {return m_Field;};
+   std::shared_ptr<const Tracker> tracker() const {return m_Tracker;};
+   std::shared_ptr<const Field> field() const {return m_Field;};
    /*const DetectorElement& element( fastsim::enumLayer layer) const;
    const DetectorElement& eCAL() const;
    const DetectorElement& getHCAL() const;*/
