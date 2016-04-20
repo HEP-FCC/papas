@@ -47,13 +47,14 @@ public:
   const Clusters& ECALClusters() const { return m_ecals;}
   const Clusters& HCALClusters() const { return m_hcals;}
   Tracks& tracks() { return m_tracks;} //TODO why can't it be const
-
+  Blocks& blocks() { return m_blocks;};
 
 private:
   Clusters m_ecals; //should these be references instead of owned?
   Clusters m_hcals;
   Tracks m_tracks;
   Nodes& m_historyNodes;
+  Blocks m_blocks;
 };
 
 

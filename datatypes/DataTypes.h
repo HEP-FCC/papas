@@ -100,8 +100,9 @@ public:
   const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;};
   Helix& helix() {return m_helix;}
   TVector3 pathPosition(std::string name);
-  
+  long uniqueID() const { return m_uniqueid;}
 private:
+  long m_uniqueID;
   TVector3 m_vertex;
   class Path m_path;
   class Helix m_helix;
