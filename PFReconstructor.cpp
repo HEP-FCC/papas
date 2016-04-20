@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <vector>
+#include <math.h>
 
 
 #include "TVector3.h"
@@ -44,8 +45,10 @@ private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructHcal(const PFBlock& block, longID hcalID);
   void insertParticle(const PFBlock& block, SimParticle&& particle);
-  SimParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer);
+  SimParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1, TVector3 vertex= TVector3());
   SimParticle reconstructTrack(const Track& track);
+  double neutralHadronEnergyResolution(const Cluster& hcal) const;
+  double nsigmaHcal(const Cluster& cluster) ;
   
   
   PFEvent & m_pfEvent;
@@ -252,171 +255,207 @@ void  PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newpar
 
 double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const {
   /*WARNING CMS SPECIFIC!
+   //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
+   */
+  double energy = fmax(hcal.energy(), 1.);
+  double stoch = 1.02;
+  double kconst = 0.065;
+  if ( fabs(hcal.position().Eta())>1.48 ) {
+    stoch = 1.2 ;
+    kconst = 0.028;
+  }
+  double resol = sqrt(pow(stoch, 2)/energy + pow(kconst, 2));
+  return resol;
+}
 
-http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
+double PFReconstructor::nsigmaHcal(const Cluster& cluster) {
+  /*'WARNING CMS SPECIFIC!
+   
+   //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
+   '''*/
+  return 1. + exp(-cluster.energy()/100.);
+  
+}
+
+void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
+  /*
+   block: element ids and edges
+   hcalid: id of the hcal being processed her
+   
+   has hcal and has a track
+   -> add up all connected tracks, turn each track into a charged hadron
+   -> add up all ecal energies
+   -> if track energies is greater than hcal energy then turn the missing energies into an ecal (photon)
+   NB this links the photon to the hcal rather than the ecals
+   -> if track energies are less than hcal then make a neutral hadron with rest of hcal energy and turn all ecals into photons
+   has hcal but no track (nb by design there will be no attached ecals because hcal ecal links have been removed)
+   -> make a neutral hadron
+   has hcals
+   -> each hcal is treated using rules above
+   */
+  
+  
+  // hcal used to make ecal_in has a couple of possible issues
+  //m_pfEvent.HCALCluster(hcalID);
+  
+  //TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
+  //TODO sorting IDs trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
+  
+  IDs ecalIDs ;
+  IDs trackIDs = block.linkedIDs(hcalID, Edge::EdgeType::kHcalTrack );
+  for (auto trackID : trackIDs ) {
+    for (auto ecalID  : block.linkedIDs(trackID, Edge::EdgeType::kEcalTrack ) ){
+      /*the ecals get all grouped together for all tracks in the block
+       # Maybe we want to link ecals to their closest track etc?
+       # this might help with history work
+       # ask colin.*/
+      if ( !m_locked[ecalID] ) {
+        ecalIDs.push_back(ecalID);
+        m_locked[ecalID]  = true;
+      }
+    }
+  }
+  /*# hcal should be the only remaining linked hcal cluster (closest one)
+   #thcals = [th for th in elem.linked if th.layer=='hcal_in']
+   #assert(thcals[0]==hcal)
+   self.log.info( hcal )
+   self.log.info( '\tT {tracks}'.format(tracks=tracks) )
+   self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
+  const Cluster&  hcal = m_pfEvent.HCALClusters().at(hcalID); // avoid copy
+  double  hcalEnergy = hcal.energy();
+  double  ecalEnergy = 0.;
+  double trackEnergy = 0.;
+  
+  for (auto id : trackIDs) {
+    const Track&  track = m_pfEvent.tracks().at(id);
+    insertParticle(block, reconstructTrack( track));
+    trackEnergy += track.energy();
+    for (auto id : ecalIDs) {
+      ecalEnergy += m_pfEvent.ECALCluster(id).energy();
+    }
+  }
+  
+  double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
+  double caloERes = neutralHadronEnergyResolution(hcal);
+  /*self.log.info( 'dE/p, res = {derel}, {res} '.format(
+   derel = delta_e_rel,
+   res = calo_eres ))*/
+  if (deltaERel > nsigmaHcal(hcal) * caloERes) { //# approx means hcal energy + ecal energies > track energies
+    
+    double excess = deltaERel * trackEnergy; // energy in excess of track energies
+                                             //print( 'excess = {excess:5.2f}, ecal_E = {ecal_e:5.2f}, diff = {diff:5.2f}'.format(
+                                             //   excess=excess, ecal_e = ecal_energy, diff=excess-ecal_energy))
+    if (excess <= ecalEnergy ) { /* # approx means hcal energy > track energies
+                                  # Make a photon from the ecal energy
+                                  # We make only one photon using only the combined ecal energies*/
+      insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::ECAL, excess));
+    }
+    
+    else { // approx means that hcal energy>track energies so we must have a neutral hadron
+           //excess-ecal_energy is approximately hcal energy  - track energies
+      insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::HCAL, excess-ecalEnergy));
+      if (ecalEnergy) {
+        //make a photon from the remaining ecal energies
+        //again history is confusingbecause hcal is used to provide direction
+        //be better to make several smaller photons one per ecal?
+        insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::ECAL, ecalEnergy));
+      }
+    }
+    
+  }
+  else { // # case whether there are no tracks make a neutral hadron for each hcal
+         //# note that hcal-ecal links have been removed so hcal should only be linked to
+         //# other hcals
+    
+    insertParticle(block,  reconstructCluster(hcal, fastsim::enumLayer::HCAL));
+  }
+  m_locked[hcalID] = true;
+  
+}
+
+SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
+                                                fastsim::enumLayer layer,
+                                                double energy,
+                                                TVector3 vertex) {
+  //construct a photon if it is an ecal
+  //construct a neutral hadron if it is an hcal
+  int pdgId = -1;
+  if (energy>0)
+    energy = cluster.energy();
+  
+  if (layer == fastsim::enumLayer::ECAL) {
+    pdgId = 22; //photon
+  }
+  else if (layer == fastsim::enumLayer::HCAL) {
+    pdgId = 130; //K0
+  }
+  else {
+    //TODO raise ValueError('layer must be equal to ecal_in or hcal_in')
+  }
+  //assert(pdg_id)
+  double mass = ParticleData::particleMass(pdgId);
+  double charge = ParticleData::particleCharge(pdgId);
+  if (energy < mass) //null particle
+    return SimParticle();
+  
+  double momentum;
+  if (mass ==0) {
+    momentum= energy;
+  }//#avoid sqrt for zero mass
+  else {
+    momentum = sqrt( pow(energy, 2) - pow(mass, 2) );
+  }
+  TVector3 p3 = cluster.position().Unit() * momentum;
+  TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
+  
+  longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
+  //TODO check field and charge match?????
+  SimParticle particle{newid, pdgId, p4, charge, vertex};
+  
+  //TODO figure out if this is needed
+  //Path path{p4, vertex}; //default is strightline path
+  
+  //TODO make addpoint use layer also
+  particle.path().addPoint("ecal_in", cluster.position()); //alice: Colin this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
+                                                           // nb this only is problem if the cluster and the assigned layer are different
+                                                           //particle.setPath(path);
+                                                           //particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
+  m_locked[cluster.ID()] = true; //alice : just OK but not nice if hcal used to make ecal.
+                                 //if self.debugprint:
+  std::cout << "made particle from cluster " <<pdgId<< " : " <<  cluster ;//TODO << particle;
+  return particle;
+}
+
+SimParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters = None): # cluster argument does not ever seem to be used at present
+  /*construct a charged hadron from the track
+   */
+  TVector3 vertex = track.path().namedPoint("vertex");
+  int pdgId = 211 * track.charge();
+  double mass = ParticleData::particleMass(pdgId);
+  double charge = ParticleData::particleCharge(pdgId);
+  TLorentzVector p4 = TLorentzVector();
+  p4.SetVectM(track.p3(), mass);
+  longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
+  //TODO check field and charge match?????
+  SimParticle particle{newid, pdgId, p4, charge, vertex};
+  
+  //TODO set the particle path to the track path???
+  //particle.set_path(track.path)
+  //particle.clusters = clusters
+  m_locked[track.ID()] = true;
+  
+  std::cout << "made particle from track " <<pdgId<< " : " ;//<<  track ;//TODO << particle;
+  return particle;
+}
+
+    /*
+    def __str__(self):
+    theStr = ['New Rec Particles:']
+    theStr.extend( map(str, self.particles))
+    theStr.append('Unused:')
+    if len(self.unused)==0:
+      theStr.append('None')
+      else:
+        theStr.extend( map(str, self.unused))
+        return '\n'.join( theStr )
 */
-energy = max(hcal.energy, 1.)
-stoch, const = 1.02, 0.065
-if abs(hcal.position.Eta())>1.48:
-stoch, const = 1.2, 0.028
-resol = math.sqrt(stoch**2/energy + const**2)
-return resol
-
-def nsigma_hcal(self, cluster):
-'''WARNING CMS SPECIFIC!
-
-http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
-'''
-
-return 1. + math.exp(-cluster.energy/100.)
-
-
-
-def reconstruct_hcal(self, block, hcalid):
-'''
-block: element ids and edges
-hcalid: id of the hcal being processed her
-
-has hcal and has a track
--> add up all connected tracks, turn each track into a charged hadron
--> add up all ecal energies
--> if track energies is greater than hcal energy then turn the missing energies into an ecal (photon)
-NB this links the photon to the hcal rather than the ecals
--> if track energies are less than hcal then make a neutral hadron with rest of hcal energy and turn all ecals into photons
-has hcal but no track (nb by design there will be no attached ecals because hcal ecal links have been removed)
--> make a neutral hadron
-has hcals
--> each hcal is treated using rules above
-'''
-
-
-# hcal used to make ecal_in has a couple of possible issues
-tracks = []
-ecals = []
-hcal =block.pfevent.hcal_clusters[hcalid]
-
-assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
-trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
-for trackid in  trackids:
-tracks.append(block.pfevent.tracks[trackid])
-for ecalid in block.linked_ids(trackid, "ecal_track"):
-# the ecals get all grouped together for all tracks in the block
-# Maybe we want to link ecals to their closest track etc?
-# this might help with history work
-# ask colin.
-if not self.locked[ecalid]:
-ecals.append(block.pfevent.ecal_clusters[ecalid])
-self.locked[ecalid]  = True
-# hcal should be the only remaining linked hcal cluster (closest one)
-#thcals = [th for th in elem.linked if th.layer=='hcal_in']
-#assert(thcals[0]==hcal)
-self.log.info( hcal )
-self.log.info( '\tT {tracks}'.format(tracks=tracks) )
-self.log.info( '\tE {ecals}'.format(ecals=ecals) )
-hcal_energy = hcal.energy
-if len(tracks):
-ecal_energy = sum(ecal.energy for ecal in ecals)
-track_energy = sum(track.energy for track in tracks)
-for track in tracks:
-#make a charged hadron
-self.insert_particle(block, self.reconstruct_track( track))
-
-delta_e_rel = (hcal_energy + ecal_energy) / track_energy - 1.
-# WARNING
-# calo_eres = self.detector.elements['hcal'].energy_resolution(track_energy)
-calo_eres = self.neutral_hadron_energy_resolution(hcal)
-self.log.info( 'dE/p, res = {derel}, {res} '.format(
-                                                    derel = delta_e_rel,
-                                                    res = calo_eres ))
-if delta_e_rel > self.nsigma_hcal(hcal) * calo_eres: # approx means hcal energy + ecal energies > track energies
-
-excess = delta_e_rel * track_energy # energy in excess of track energies
-#print( 'excess = {excess:5.2f}, ecal_E = {ecal_e:5.2f}, diff = {diff:5.2f}'.format(
-#    excess=excess, ecal_e = ecal_energy, diff=excess-ecal_energy))
-if excess <= ecal_energy: # approx means hcal energy > track energies
-# Make a photon from the ecal energy
-# We make only one photon using only the combined ecal energies
-self.insert_particle(block, self.reconstruct_cluster(hcal, 'ecal_in',excess))
-
-else: # approx means that hcal energy>track energies so we must have a neutral hadron
-#excess-ecal_energy is approximately hcal energy  - track energies
-self.insert_particle(block, self.reconstruct_cluster(hcal, 'hcal_in',
-                                                     excess-ecal_energy))
-if ecal_energy:
-#make a photon from the remaining ecal energies
-#again history is confusingbecause hcal is used to provide direction
-#be better to make several smaller photons one per ecal?
-self.insert_particle(block, self.reconstruct_cluster(hcal, 'ecal_in',
-                                                     ecal_energy))
-
-else: # case whether there are no tracks make a neutral hadron for each hcal
-# note that hcal-ecal links have been removed so hcal should only be linked to
-# other hcals
-
-self.insert_particle(block,  self.reconstruct_cluster(hcal, 'hcal_in'))
-
-self.locked[hcalid] = True
-
-
-def reconstruct_cluster(self, cluster, layer, energy = None, vertex = None):
-'''construct a photon if it is an ecal
-construct a neutral hadron if it is an hcal
-'''
-if vertex is None:
-vertex = TVector3()
-pdg_id = None
-if layer=='ecal_in':
-pdg_id = 22 #photon
-elif layer=='hcal_in':
-pdg_id = 130 #K0
-else:
-raise ValueError('layer must be equal to ecal_in or hcal_in')
-assert(pdg_id)
-mass, charge = particle_data[pdg_id]
-if energy is None:
-energy = cluster.energy
-if energy < mass:
-return None
-if (mass==0):
-momentum= energy #avoid sqrt for zero mass
-else:
-momentum = math.sqrt(energy**2 - mass**2)
-p3 = cluster.position.Unit() * momentum
-p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) #mass is not accurate here
-particle = Reconstructed_Particle(p4, vertex, charge, pdg_id)
-path = StraightLine(p4, vertex)
-path.points[layer] = cluster.position #alice: this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
-# nb this only is problem if the cluster and the assigned layer are different
-particle.set_path(path)
-particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
-self.locked[cluster.uniqueid] = True #just OK but not nice if hcal used to make ecal.
-if self.debugprint:
-print "made particle from cluster ",pdg_id,  cluster, particle
-return particle
-
-def reconstruct_track(self, track, clusters = None): # cluster argument does not ever seem to be used at present
-'''construct a charged hadron from the track
-'''
-vertex = track.path.points['vertex']
-pdg_id = 211 * track.charge
-mass, charge = particle_data[pdg_id]
-p4 = TLorentzVector()
-p4.SetVectM(track.p3, mass)
-particle = Reconstructed_Particle(p4, vertex, charge, pdg_id)
-particle.set_path(track.path)
-particle.clusters = clusters
-self.locked[track.uniqueid] = True
-if self.debugprint:
-print "made particle from track ", pdg_id, track, particle
-return particle
-
-
-def __str__(self):
-theStr = ['New Rec Particles:']
-theStr.extend( map(str, self.particles))
-theStr.append('Unused:')
-if len(self.unused)==0:
-theStr.append('None')
-else:
-theStr.extend( map(str, self.unused))
-return '\n'.join( theStr )
