@@ -79,7 +79,7 @@ CMS::CMS() : BaseDetector()
    m_ECAL = std::shared_ptr<const class Calorimeter> {
       new CMSECAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
-      Material(layer, 8.9e-3, 0.275),
+      Material( 8.9e-3, 0.275),
       0.15, // eta_crack
       0.4, //emin
       std::vector<double> {.073, .1, .005}
@@ -91,7 +91,7 @@ CMS::CMS() : BaseDetector()
    m_HCAL = std::shared_ptr<const class Calorimeter> {
       new CMSHCAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6, 1.9, 2.6),
-      Material(layer, 0.0, 0.175),
+      Material( 0.0, 0.175),
       std::vector<double> {1.1, 0., 0.})
    };
    
@@ -177,11 +177,11 @@ double CMSHCAL::energyResolution(double energy) const
 
 
 CMSTracker::CMSTracker(fastsim::enumLayer layer, const VolumeCylinder& volume) :
-Tracker(layer,   volume,  Material(layer,0,0))
+Tracker(layer,   volume,  Material(0, 0))
 {}
 
 CMSTracker::CMSTracker(fastsim::enumLayer layer, const VolumeCylinder&& volume) :
-Tracker(layer,   volume,  Material(layer,0,0)){}
+Tracker(layer,   volume,  Material(0, 0)){}
 
 bool CMSTracker::acceptance(const Track& track) const
 {
@@ -196,18 +196,18 @@ bool CMSTracker::acceptance(const Track& track) const
 
 double CMSTracker::ptResolution(const Track& track) const
 {
-   double pt = track.pt();
+  //double pt = track.pt();
    //TODO
    return 5e-3;
 }
 
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0), magnitude)
+Field(layer,   volume,  Material(0, 0), magnitude)
 {}
 
 CMSField::CMSField(fastsim::enumLayer layer, const VolumeCylinder&& volume,double magnitude) :
-Field(layer,   volume,  Material(layer,0,0), magnitude)
+Field(layer,   volume,  Material(0, 0), magnitude)
 {}
 
 

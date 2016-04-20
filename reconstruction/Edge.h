@@ -36,20 +36,14 @@ public:
    *   @param[in]  distance: distance between two elements
    */
   Edge(longID id1, longID id2, bool isLinked, double distance);
-  Edge(const Edge&) {
-    std::cout <<"copy Edge";};
-  Edge(Edge&&) = default; // {
-                               //std::cout <<"move Edge";};
-  Edge& operator=(const Edge& other) // copy assignment
-  {
-    std::cout<<"copy EDGE =";
-  }
-  Edge& operator=(Edge&& other) {
-    std::cout <<"move edge =";
-  }
+  Edge(const Edge&) = default ;/* {std::cout <<"copy Edge";};*/
+  Edge(Edge&&) = default; // {std::cout <<"move Edge";};
+  Edge& operator=(const Edge& other) = default;// copy assignment
+                                               //{  std::cout<<"copy EDGE =";}
+  Edge& operator=(Edge&& other) = default; //{ std::cout <<"move edge =";}
   
-  longID id1() const {return m_id1;};
-  longID id2() const {return m_id2;};
+  longID id1() const {return m_id1;}
+  longID id2() const {return m_id2;}
   bool isLinked() const {return m_isLinked;}  ///<boolean to mark if this edge links the two elements
   void setLinked(bool link) { m_isLinked=link;};
   double distance() const {return m_distance;} ///<distance between the two elements

@@ -34,7 +34,6 @@ double PFEvent::energy(longID id1) const //TODO check direction of sort
   return 12.5; //TODO
   
 }
-
 //check this be a move here
 PFEvent::PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes) :
 m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)), m_historyNodes(historyNodes)
@@ -56,6 +55,7 @@ const Cluster&  PFEvent::ECALCluster(longID id) const {
   if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
+  //TODO throw error or return null
 }
 
 IDs PFEvent::elementIDs() const {

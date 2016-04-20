@@ -211,7 +211,7 @@ const Track& Simulator::addTrack(SimParticle& ptc)
 const Track& Simulator::makeTrack(long trackid, TVector3 pos, double charge, Path& path)
 {
   m_tracks.emplace(trackid, Track{ pos, charge, path, trackid});
-  return m_tracks[trackid];
+  return m_tracks.at(trackid);
 }
 
 

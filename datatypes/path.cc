@@ -68,10 +68,10 @@ bool Path::hasNamedPoint(std::string name) const//TODO change to enum
    return (m_points.find(name) != m_points.end());
 }
 
-TVector3 Path::namedPoint(std::string name) //const //TODO change to enum
+TVector3 Path::namedPoint(std::string name) const //const //TODO change to enum
 {
    if (hasNamedPoint(name)) {
-      return m_points[name]; //TODO consider why does not work if function is const
+      return m_points.at(name); //TODO consider why does not work if function is const
    }
    else return TVector3(0,0,0); //todo consider if this is sufficient for issing value case
 }

@@ -22,15 +22,13 @@
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
                                          double energy);
 
-//TODO remove this and the distance functions
-class Track;
 
 
 class Cluster  {
 public:
   Cluster(double energy, const TVector3& position, double size_m, long id);
   Cluster() = default;
-  Cluster(Cluster && c)   = default;
+  Cluster(Cluster&& c)   = default;
   Cluster(const Cluster&) = default ;;//=default {std::cout<< "copy" ;} ;
   Cluster& operator+=(const Cluster& rhs);
   double angularSize() const {return m_angularSize;};
@@ -40,11 +38,6 @@ public:
   double eta() const      {return m_position.Eta();};
   long ID() const         {return m_uniqueID;}
   TVector3 position() const {return m_position;};
-  //DistanceData distance(const Cluster& clust) const;
-  //DistanceData distance(const Track& track) ;//const;
-  //DistanceData clusterdistanceData(const TVector3& point) const;
-  //DistanceData setDistanceToCluster(const Cluster& clust) const;
-  // DistanceData setDistanceToPoint(const TVector3& point) const;
   void setEnergy(double energy);
   void setSize(double value) ;
   std::vector<long> subClusters() const { return m_subClusters;};
@@ -66,9 +59,16 @@ protected:
 
 class Track{
 public:
-  Track(TVector3 p3, double charge, Path& path, long id);
+  Track(TVector3 p3, double charge, const Path& path, long id);
   Track() : m_uniqueID(0), m_path(Path::NullPath) {};
-  Track(const Track& T) =default;
+  //Track(Track& T);
+  //Track(const Track& T);
+  //Track(Track&& c);
+  //Track(const Track&& c);
+  //Track& operator=(const Track& T);
+  //Track& operator=(Track& T);
+  //Track& operator=(Track&&);
+  //~Track();
   
   double pt() const       {return m_p3.Perp();}
   double energy() const   {return m_p3.Mag();}
@@ -76,7 +76,7 @@ public:
   double charge() const   {return m_charge;}
   long   ID() const       {return m_uniqueID;}
   TVector3 p3() const     {return m_p3;}
-  Path&  path() const     {return m_path;}
+  const Path& path() const     {return m_path;} //const
   void setEnergy(double energy);
   void setSize(double value) ;
   static double s_maxenergy; //AJR is this in the right place
@@ -86,7 +86,7 @@ protected:
   double m_pt;
   TVector3 m_p3;
   double m_charge;
-  Path& m_path; //not owned by track but useful to know where it is
+  const Path& m_path; //TODO wanted this to be const not owned by track but useful to know where it is
   
 };
 

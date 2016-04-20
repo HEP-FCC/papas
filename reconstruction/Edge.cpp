@@ -74,10 +74,11 @@ int test_edges() {
   
   Edge edge=Edge(id1,id2,false,0.0);
   Edge edge1=Edge(id1,id3,true,0.0);
-  Edge edge2=Edge(id2,id3,true,0.0);
+  //Edge edge2=Edge(id2,id3,true,0.0);
   
   std::cout<<edge1<<std::endl;
+  std::cout<<edge<<std::endl;
   
-  
+  return 0;
 }
 

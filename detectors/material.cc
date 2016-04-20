@@ -5,8 +5,8 @@
 
 #include "material.h"
 
-Material::Material(fastsim::enumLayer layer, double x0, double lambdaI) :
-    m_layer(layer),
+Material::Material(/*fastsim::enumLayer layer,*/ double x0, double lambdaI) :
+//m_layer(layer),
     m_x0(x0),
     m_lambdaI(lambdaI) ,
     m_randomLambda(lambdaI),
@@ -37,8 +37,7 @@ double Material::pathLength(bool is_em) const
 }
 
 
-TestMaterial::TestMaterial(fastsim::enumLayer layer, double x0,
-                           double lambdaI): Material(layer, x0, lambdaI)
+TestMaterial::TestMaterial(double x0, double lambdaI): Material( x0, lambdaI)
 {
 }
 

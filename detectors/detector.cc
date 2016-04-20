@@ -43,6 +43,9 @@ std::shared_ptr<const Calorimeter> BaseDetector::calorimeter(fastsim::enumLayer 
     case fastsim::enumLayer::HCAL:
       return m_HCAL;
       break;
+    default:
+      //throw error
+      return m_ECAL;
   }
 }
 
@@ -58,10 +61,8 @@ std::shared_ptr<const DetectorElement> BaseDetector::element(
       case fastsim::enumLayer::HCAL:
          return m_HCAL;
          break;
-      case fastsim::enumLayer::NONE:
-      case fastsim::enumLayer::TRACKER:
-      case fastsim::enumLayer::__COUNT: //hmmm yucky side effect of clever enums
-         return m_ECAL; //TODO
+     default:
+         return m_ECAL; //TODO throw error
          break;
          //TODO add track and field
    }

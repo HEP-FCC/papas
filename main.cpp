@@ -108,21 +108,21 @@ int main(int argc, char* argv[]){
    display.addToRegister(gdetector, 0);
   
    //plot clusters
-   for (auto & cl : sim.smearedECALClusters())
+   for (auto & cl : pfEvent.ECALClusters())
    {
      std::cout << cl.second;
      std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
      display.addToRegister(gcluster,2);
       
    }
-  for (auto & cl : sim.smearedHCALClusters())
+  for (auto & cl :  pfEvent.HCALClusters())
   {
     std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
     display.addToRegister(gcluster,2);
     
   }
-  for (auto & tr : sim.smearedTracks())
+  for (auto & tr :  pfEvent.tracks())
   {
     std::shared_ptr<GTrajectories> gtrack (new GTrajectories(tr.second)) ;
     display.addToRegister(gtrack,2);
@@ -158,7 +158,7 @@ void test_Structures()
 {
    //testing cylinders etc
    std::cout << "Try base classes\n";
-   Material M(fastsim::enumLayer::ECAL,1,1);
+   Material M(1, 1);
    SurfaceCylinder S("empty");
    VolumeCylinder V("new", 4, 6, 3, 6);
 }
@@ -372,7 +372,7 @@ void tryR(int argc, char* argv[]) {
   TApplication theApp("App", &argc, argv);
   if (gROOT->IsBatch()) {
     fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-    return 1;
+    return;
   }
   
   //Create CMS detector

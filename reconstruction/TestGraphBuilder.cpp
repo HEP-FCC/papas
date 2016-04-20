@@ -32,14 +32,14 @@ TEST(GraphBuilder, one) {
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
   
-  ASSERT_EQ(edges.size() , 6);
+  ASSERT_EQ(edges.size() , 6UL);
   
   
   
   auto graphbuilder = GraphBuilder(ids, edges);
   
-  ASSERT_EQ(graphbuilder.subGraphs().size() , 2);
-  ASSERT_EQ(graphbuilder.subGraphs()[0].size(),3);
+  ASSERT_EQ(graphbuilder.subGraphs().size() , 2UL);
+  ASSERT_EQ(graphbuilder.subGraphs()[0].size(),3UL);
   
   //std::cout<<graphbuilder;
 

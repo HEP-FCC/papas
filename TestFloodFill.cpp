@@ -23,12 +23,12 @@ TEST(floodfill, one) {
   myNodes.emplace(id2, PFNode(id2));
   myNodes[id1].addChild(myNodes[id2]);
   
-  ASSERT_EQ(myNodes.at(id1).parents().size(),0);
-  ASSERT_EQ(myNodes.at(id1).children().size(),1);
+  ASSERT_EQ(myNodes.at(id1).parents().size(),  0UL); //avoid compiler warning declare as unsigned long
+  ASSERT_EQ(myNodes.at(id1).children().size(), 1UL);
   //ASSERT_EQ(myNodes.at(id1).children()[0],id2);
   
   for (const auto & nodevector : FFill.traverse(myNodes)) {
-        ASSERT_EQ(nodevector.size(),2);
+        ASSERT_EQ(nodevector.size(), 2UL);
     
   }
   

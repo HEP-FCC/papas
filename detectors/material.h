@@ -19,10 +19,11 @@ const double c_exp_lambda = 3.5; //AJR where does this come from
 */
 class Material {
 public:
-   Material(fastsim::enumLayer layer, double x0, double lambda);
+   Material(/*fastsim::enumLayer layer,*/ double x0, double lambda);
    virtual double pathLength(bool is_em) const;
+  
 private:
-   fastsim::enumLayer m_layer;
+  //fastsim::enumLayer m_layer;
    double m_x0;
    double m_lambdaI;
    fastsim::RandExponential m_randomLambda;
@@ -33,7 +34,7 @@ private:
 //Temporary
 class TestMaterial: public Material {
 public:
-   TestMaterial(fastsim::enumLayer layer, double x0, double lambda);
+   TestMaterial( double x0, double lambda);
    double PathLength(/*Particle &*/);
 private:
    //fastsim::enumLayer m_layer;

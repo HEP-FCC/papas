@@ -35,7 +35,7 @@ public:
    TVector3 udir() const {return m_udir ;};
    TVector3 getOrigin() const {return m_origin ;};
    bool hasNamedPoint(std::string name) const;
-   TVector3 namedPoint(std::string name); //const; can't get to compile with const
+   TVector3 namedPoint(std::string name) const; //const; can't get to compile with const
    virtual TVector3 pointAtTime(double time) const;
    const Points& points() const { return m_points;};
    
