@@ -133,29 +133,57 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move
 
 
 
-Track::Track(const TVector3 p3, double charge,const Path& path, long id) :
+/*Track::Track(const TVector3 p3, double charge,const Path& path, long id) :
     m_uniqueID(id),
     m_p3(p3),
     m_charge(charge),
     m_path(path)
 {
+}*/
+
+
+Track::Track(const TVector3 p3, double charge, sptrPath path, long id) :
+m_uniqueID(id),
+m_p3(p3),
+m_charge(charge),
+m_path(path)
+{
+}
+
+SimParticle::SimParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
+m_vertex(vertex),
+m_isHelix(fabs(charge())>0.5)
+{
+  if (m_isHelix)
+    m_path = std::make_shared<Helix>(tlv, vertex, field, charge());
+  else
+    m_path = std::make_shared<Path>(tlv, vertex, field);
+
+  
 }
 
 
+SimParticle::SimParticle(long uniqueid,const Track& track) :
+SimParticle(uniqueid,
+            211 * track.charge(),
+            TLorentzVector(track.p3(), track.energy()),
+            track.path()->namedPoint("vertex"),
+            track.path()->field()) {
+}
+/*
+void SimParticle::setHelix(const Path& path) {
+  m_helix = path; //copy??
+  }
+
+void SimParticle::setPath(const Path& path) {
+  m_path = path;
+}*/
 
 
-SimParticle::SimParticle(long uniqueid,int pdgid, TLorentzVector tlv, double  field,TVector3 vertex) :
-Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
-m_vertex(vertex),
-m_path(tlv,vertex),
-m_helix(field,charge(),tlv,vertex),
-m_isHelix(fabs(charge())>0.5)
+TVector3 SimParticle::pathPosition(std::string name) const
 {
-};
-
-TVector3 SimParticle::pathPosition(std::string name)
-{
-  return path().namedPoint(name);
+  return m_path->namedPoint(name);
 }
 
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double phi, double energy)
@@ -189,8 +217,8 @@ TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double phi, do
  }*/
 
 bool SimParticle::isElectroMagnetic() const
-{ //TODO ask Colin if this is really OK
-  unsigned int kind = abs(pdgid());
+{
+  unsigned int kind = abs(pdgId());
   if (kind == 11 || kind == 22) {
     return true;
   } else

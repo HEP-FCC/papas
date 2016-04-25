@@ -47,6 +47,7 @@ typedef std::unordered_map<longID, PFBlock> Blocks;
 typedef std::vector<longID> IDs;
 
 //Allow optional parameters where construction arguments are references
+//TODO make these internal static members
 extern Nodes emptyNodes;
 extern const Nodes emptyconstNodes;
 
@@ -64,10 +65,8 @@ public:
   BlockBuilder(IDs ids,
                Edges& edges,
                Nodes& historynodes = emptyNodes );
-  //BlockBuilder(); //needed for unordered_map to compile but not actually used
-  //BlockBuilder& operator = (const BlockBuilder&) ;
-  //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
   Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
+                                       //TODO should this be move
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class
   
 private:

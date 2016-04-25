@@ -11,16 +11,13 @@
 
 
 #include <algorithm>
-#include <unordered_map>
+
 #include <vector>
 #include <math.h>
 
 
-#include "TVector3.h"
 #include "TLorentzVector.h"
 
-#include "Identifier.h"
-#include "directedacyclicgraph.h"
 #include "BlockSplitter.h"
 #include "DataTypes.h"
 #include "Path.h"
@@ -28,56 +25,24 @@
 #include "PFBlock.h"
 #include "Edge.h"
 
-class PFevent;
-class PFBlock;
+PFReconstructor::PFReconstructor (PFEvent& pfEvent) :
+    m_pfEvent(pfEvent),
+    m_blocks(pfEvent.blocks()),
+    m_historyNodes(pfEvent.historyNodes()),
+    m_hasHistory (pfEvent.historyNodes().size() == 0)
+{
+}
 
-//TODO simparticles is not right
-typedef std::unordered_map<longID, SimParticle> Particles;
-class PFReconstructor {
-  
-public:
-  PFReconstructor();// TODO  detector, logger):
-  void reconstruct(PFEvent& pfEvent);
-  
-  
-private:
-  void reconstructBlock(PFBlock& block);
-  Blocks simplifyBlock(PFBlock& block);
-  void reconstructHcal(const PFBlock& block, longID hcalID);
-  void insertParticle(const PFBlock& block, SimParticle&& particle);
-  SimParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1, TVector3 vertex= TVector3());
-  SimParticle reconstructTrack(const Track& track);
-  double neutralHadronEnergyResolution(const Cluster& hcal) const;
-  double nsigmaHcal(const Cluster& cluster) ;
-  
-  
-  PFEvent & m_pfEvent;
-  Blocks m_blocks;
-  Nodes m_historyNodes;
-  Particles m_particles;
-  bool m_hasHistory;
-  IDs m_unused;
-  //IDs m_locked; // or vector of bools?
-  std::unordered_map<longID , bool> m_locked;
-  
-};
 
-void PFReconstructor::reconstruct(PFEvent& pfEvent) {
-  m_blocks = pfEvent.blocks();
-  
-  //history nodes will be used to connect reconstructed particles into the history
-  //its optional at the moment
-  m_historyNodes = pfEvent.historyNodes();
-  m_hasHistory = pfEvent.historyNodes().size() == 0;
-  
-  
+void PFReconstructor::reconstruct() {
   //TODO sort m_blocks
   
   
-  // simplify the blocks by editing the links so that each track will end up linked to at most one hcal
-  // then recalculate the blocks
+  // simplify the blocks by editing the links
+  // each track will end up linked to at most one hcal
+  
   for (auto& block : m_blocks) {
-    //std::cout "block: "<< block.second.short_name();
+    std::cout << "block: " << block.second.shortName();
     Blocks newBlocks = simplifyBlock(block.second);
     if (newBlocks.size() >0) {
       m_blocks.insert(newBlocks.begin(), newBlocks.end());
@@ -87,17 +52,10 @@ void PFReconstructor::reconstruct(PFEvent& pfEvent) {
   for (auto& block : m_blocks) {
     if (block.second.isActive()) { //when blocks are split the original gets deactivated
       reconstructBlock(block.second);
-      
-      //TODO move this bit to reconstructBlock
-      for (auto& id : block.second.elementIDs()) {
-        //if (std::find(m_locked.begin(), m_locked.end(), id) != m_locked.end()) { //TODO check for more efficient approach
-        if (m_locked.find(id) != m_locked.end()) {
-          m_unused.push_back(id);
-        }
-      }
     }
   }
   if (m_unused.size() > 0) {
+    std::cout << "unused elements";
     //TODO ouput warning message
   }
 }
@@ -172,7 +130,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
   return splitBlocks;
 }
 
-void PFReconstructor::reconstructBlock(PFBlock& block) {
+void PFReconstructor::reconstructBlock(const PFBlock& block) {
   /// see class description for summary of reconstruction approach
   
   IDs ids = block.elementIDs();
@@ -204,19 +162,25 @@ void PFReconstructor::reconstructBlock(PFBlock& block) {
       if (Identifier::isHcal(id)) {
         reconstructHcal(block, id);
       }
-      for (auto id : ids ) {
-        if (Identifier::isTrack(id) && ! m_locked[id]) {
-          /* unused tracks, so not linked to HCAL
-           # reconstructing charged hadrons.
-           # ELECTRONS TO BE DEALT WITH.*/
-          insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
-          for (auto idlink : block.linkedIDs(id,Edge::EdgeType::kEcalTrack) ) {
-            //TODO ask colin what happened to possible photons here:
-            //TODO add in extra photonsbut decide where they should go?
-            m_locked[idlink] = true;
-          }
+    }
+    for (auto id : ids ) {
+      if (Identifier::isTrack(id) && !m_locked[id]) {
+        /* unused tracks, so not linked to HCAL
+         # reconstructing charged hadrons.
+         # ELECTRONS TO BE DEALT WITH.*/
+        insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
+        for (auto idlink : block.linkedIDs(id,Edge::EdgeType::kEcalTrack) ) {
+          //TODO ask colin what happened to possible photons here:
+          //TODO add in extra photons but decide where they should go?
+          m_locked[idlink] = true;
         }
       }
+      
+    }
+  }
+  for (auto& id : ids) {
+    if (!m_locked[id]) {
+      m_unused.push_back(id);
     }
   }
 }
@@ -268,7 +232,7 @@ double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const
   return resol;
 }
 
-double PFReconstructor::nsigmaHcal(const Cluster& cluster) {
+double PFReconstructor::nsigmaHcal(const Cluster& cluster)  const{
   /*'WARNING CMS SPECIFIC!
    
    //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
@@ -380,9 +344,9 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   //construct a photon if it is an ecal
   //construct a neutral hadron if it is an hcal
   int pdgId = -1;
-  if (energy>0)
+  if (energy<0) {
     energy = cluster.energy();
-  
+  }
   if (layer == fastsim::enumLayer::ECAL) {
     pdgId = 22; //photon
   }
@@ -410,13 +374,13 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   
   longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
-  SimParticle particle{newid, pdgId, p4, charge, vertex};
+  SimParticle particle{newid, pdgId, p4, vertex};
   
   //TODO figure out if this is needed
   //Path path{p4, vertex}; //default is strightline path
   
-  //TODO make addpoint use layer also
-  particle.path().addPoint("ecal_in", cluster.position()); //alice: Colin this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
+  //TODO make addpoint use layer also??
+  particle.path()->addPoint("ecal_in", cluster.position()); //alice: Colin this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
                                                            // nb this only is problem if the cluster and the assigned layer are different
                                                            //particle.setPath(path);
                                                            //particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
@@ -429,33 +393,31 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
 SimParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters = None): # cluster argument does not ever seem to be used at present
   /*construct a charged hadron from the track
    */
-  TVector3 vertex = track.path().namedPoint("vertex");
+  /*TVector3 vertex = track.path()->namedPoint("vertex");
   int pdgId = 211 * track.charge();
   double mass = ParticleData::particleMass(pdgId);
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
-  p4.SetVectM(track.p3(), mass);
+  p4.SetVectM(track.p3(), mass);*/
   longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
-  SimParticle particle{newid, pdgId, p4, charge, vertex};
-  
-  //TODO set the particle path to the track path???
-  //particle.set_path(track.path)
+  SimParticle particle{newid, track};
+  //particle.setPath(track.path());
   //particle.clusters = clusters
   m_locked[track.ID()] = true;
   
-  std::cout << "made particle from track " <<pdgId<< " : " ;//<<  track ;//TODO << particle;
+  std::cout << "made particle from track " <<particle.pdgId()<< " : " ;//<<  track ;//TODO << particle;
   return particle;
 }
 
-    /*
-    def __str__(self):
-    theStr = ['New Rec Particles:']
-    theStr.extend( map(str, self.particles))
-    theStr.append('Unused:')
-    if len(self.unused)==0:
-      theStr.append('None')
-      else:
-        theStr.extend( map(str, self.unused))
-        return '\n'.join( theStr )
-*/
+/*
+ def __str__(self):
+ theStr = ['New Rec Particles:']
+ theStr.extend( map(str, self.particles))
+ theStr.append('Unused:')
+ if len(self.unused)==0:
+ theStr.append('None')
+ else:
+ theStr.extend( map(str, self.unused))
+ return '\n'.join( theStr )
+ */

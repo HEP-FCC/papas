@@ -22,7 +22,7 @@ std::string BaseParticle::StringDescription() const
    std::ostringstream oss;
 
    oss << (std::string)typeid(this).name();
-   oss << " : pdgid = " << m_particleid; //AJRTODO  make length 5
+   oss << " : pdgid = " << m_particleId; //AJRTODO  make length 5
    oss << " status = " << m_status; //AJRTODO  make length 3
    oss << " q = " << m_charge; //AJRTODO  make length 3
    oss << " status = " << m_status; //AJRTODO  make length 3
@@ -31,7 +31,7 @@ std::string BaseParticle::StringDescription() const
 }
 
 /*BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector&& tlv, double status):
-   m_tlv(tlv), m_particleid(pdgid), m_charge(charge), m_status(status)
+   m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 {
     std::cout<<tlv.X() <<" " <<tlv.Y() <<" "<<tlv.Z() <<" "<<tlv.Et() <<" ";
 std::cout<<m_tlv.X() <<" " <<m_tlv.Y() <<" "<<m_tlv.Z() <<" "<<m_tlv.Et() <<" ";
@@ -41,7 +41,7 @@ std::cout<<m_tlv.X() <<" " <<m_tlv.Y() <<" "<<m_tlv.Z() <<" "<<m_tlv.Et() <<" ";
 BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector tlv,
                            double status) :
    m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
-   m_tlv(tlv), m_particleid(pdgid), m_charge(charge), m_status(status)
+   m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 {
 
@@ -54,7 +54,7 @@ BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector tlv,
 
 BaseParticle::BaseParticle(int pdgid, double charge) :
    m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
-   m_particleid(pdgid), m_charge(charge), m_status(0)
+   m_particleId(pdgid), m_charge(charge), m_status(0)
 {
    m_tlv = TLorentzVector{0., 0., 0., 0.};
    ;
@@ -62,13 +62,13 @@ BaseParticle::BaseParticle(int pdgid, double charge) :
 //TODO tidy tlv
 BaseParticle::BaseParticle() :
    m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
-   m_particleid(0), m_charge(0), m_status(0)
+   m_particleId(0), m_charge(0), m_status(0)
 {
 
 }
 
 BaseParticle::BaseParticle(long id, int pdgid, double charge) :
-   m_uniqueid(id), m_particleid(pdgid), m_charge(charge), m_status(0)
+   m_uniqueid(id), m_particleId(pdgid), m_charge(charge), m_status(0)
 {
    m_tlv = TLorentzVector{0., 0., 0., 0.};
 
@@ -78,7 +78,7 @@ BaseParticle::BaseParticle(long id, int pdgid, double charge) :
 BaseParticle::BaseParticle(long id, int pdgid, double charge,
                            TLorentzVector tlv,
                            double status) :
-   m_uniqueid(id), m_tlv(tlv), m_particleid(pdgid), m_charge(charge),
+   m_uniqueid(id), m_tlv(tlv), m_particleId(pdgid), m_charge(charge),
    m_status(status)
 {
 

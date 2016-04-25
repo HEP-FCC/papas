@@ -22,38 +22,38 @@ class Track;
 class Cluster;
 class PFBlock;
 
-//TODO
+//TODO home for typedefs
 typedef long longID;
 typedef std::vector<longID> IDs;
-typedef std::unordered_map<longID, Cluster> Clusters;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID, PFNode> Nodes;
-typedef std::unordered_map<longID, PFBlock> Blocks;
 typedef std::unordered_map<longID, Track> Tracks;
+typedef std::unordered_map<longID, PFBlock> Blocks;
+typedef std::unordered_map<longID, Cluster> Clusters;
+extern Nodes emptyNodes;
 
 class PFEvent {
 public:
-  typedef long longID;
-  //PFEvent();
+  PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
   bool compare(longID id1, longID id2) const;
   double energy(longID id1) const;
-  PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
   const Track& track(longID id ) const;
   const Cluster& cluster(longID id) const;
   const class Cluster& ECALCluster(longID id) const;
   const class Cluster& HCALCluster(longID id) const;
   IDs elementIDs() const;
-  Nodes& historyNodes() { return m_historyNodes;}
+  Nodes& historyNodes() { return m_historyNodes;} //allow these to be changed
   const Clusters& ECALClusters() const { return m_ecals;}
   const Clusters& HCALClusters() const { return m_hcals;}
-  Tracks& tracks() { return m_tracks;} //TODO why can't it be const
-  Blocks& blocks() { return m_blocks;};
+  const Tracks& tracks() const { return m_tracks;}
+  const Blocks& blocks() const { return m_blocks;}
+  void setBlocks(Blocks&& blocks) {m_blocks=blocks;}
 
 private:
   Clusters m_ecals; //should these be references instead of owned?
   Clusters m_hcals;
   Tracks m_tracks;
-  Nodes& m_historyNodes;
+  Nodes& m_historyNodes; //should this be owned?
   Blocks m_blocks;
 };
 

@@ -45,6 +45,7 @@ typedef std::unordered_map<longID, PFBlock> Blocks;
 typedef std::vector<longID> IDs;
 
 //Allow optional parameters where construction arguments are references
+//TODO make sattic class member
 extern Nodes emptyNodes;
 extern const Nodes emptyconstNodes;
 
@@ -55,31 +56,19 @@ public:
    * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
-   * @param[inout] historyNodes : optional unordered_map that describes which elements are parents of which blocks
-   *                     if a history_nodes tree is provided then
-   *                     the new history will be added into the exisiting history
    */
-  GraphBuilder(IDs ids,
-               Edges& edges);
-  GraphBuilder();
-  //GraphBuilder& operator = (const GraphBuilder&) ;
+  GraphBuilder(IDs ids, Edges& edges);
+  //GraphBuilder();
   GraphBuilder& operator = (const GraphBuilder&) ;
   const std::vector<IDs>  subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
   std::vector<IDs>  m_subGraphs;///< vector of subgraphs made by graphbuilder
   
 protected:
-   void sortIDs(IDs& ids);
-   Edges& m_edges;
+  void sortIDs(IDs& ids);
+  Edges& m_edges;
 private:
-  //void makeGraphs(); // does the main work
-   //sorts elements by type
-  
-  //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
-  
   IDs m_elementIDs; ///<uniqueids to be grouped into subgraphs
-   ///< all the edges corresponding to the ids
   Nodes m_localNodes; ///<local nodes used in building subgraphs
-  
 };
 
 

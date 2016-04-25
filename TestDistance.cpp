@@ -23,11 +23,11 @@ TEST(Distance, distance) {
   TVector3 p3 = c1.position().Unit()*100.;
   TLorentzVector p4{};
   p4.SetVectM(p3, 1.);
-  Path path{p4, TVector3(0,0,0)};
+  std::shared_ptr<Path> path =std::make_shared<Path>(p4, TVector3(0,0,0),20.);
   double charge = 1.;
   Track tr{p3, charge, path, 0};
-  path.addPoint("_ECALin", c1.position());
-  path.addPoint("_HCALin", c2.position());
+  path->addPoint("_ECALin", c1.position());
+  path->addPoint("_HCALin", c2.position());
   
   Distance distc1t(c1, tr);
   EXPECT_EQ(distc1t.distance(),0.);

@@ -83,7 +83,7 @@ private:
   Cluster makeSmearedCluster(long parentClusterID);
   
   const Track& addTrack(SimParticle& ptc);
-  const Track& makeTrack(long trackid, TVector3 pos, double charge,Path& path);
+  const Track& makeTrack(long trackid, TVector3 pos, double charge, std::shared_ptr<Path> path);
   
   Track makeSmearedTrack(long smearedTrackID, const Track& track) ;
   long addSmearedTrack( const Track& track, bool accept = false);

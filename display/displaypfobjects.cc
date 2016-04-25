@@ -157,7 +157,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
 GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
-   const std::unordered_map<std::string, TVector3>& points=particle.constPath().points();
+   const std::unordered_map<std::string, TVector3>& points = particle.path()->points();
    int npoints = points.size();
    std::vector<double> X;
    std::vector<double> Y;
@@ -215,7 +215,7 @@ GTrajectory::GTrajectory(const  Track& track, int linestyle,
 {
   
   //TODO implement a helix curve here somewhere
-  const std::unordered_map<std::string, TVector3>& points=track.path().points();
+  const std::unordered_map<std::string, TVector3>& points=track.path()->points();
   int npoints = points.size();
   std::vector<double> X;
   std::vector<double> Y;

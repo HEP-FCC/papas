@@ -56,8 +56,8 @@ Distance::Distance(const Cluster& cluster,const Track& track)
   if(Identifier::layer(cluster.ID())==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
     lname="_HCALin";
   
-  if (track.path().hasNamedPoint(lname)) { //check exists {
-    TVector3 pos = track.path().namedPoint(lname);
+  if (track.path()->hasNamedPoint(lname)) { //check exists {
+    TVector3 pos = track.path()->namedPoint(lname);
     setDistanceToPoint(pos,cluster);
   }
   //TODO throw error

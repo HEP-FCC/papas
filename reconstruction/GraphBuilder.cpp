@@ -45,12 +45,12 @@ m_elementIDs(ids)
 }
 
 
-GraphBuilder::GraphBuilder() :
+/*GraphBuilder::GraphBuilder() :
 m_edges(emptyEdges),
 m_localNodes(emptyNodes)
 {
   
-}
+}*/
 
 
 GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)

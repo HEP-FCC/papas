@@ -58,16 +58,16 @@ void  Simulator::simulateHadron(SimParticle& ptc)
   //path_length=0.273579537605;
   
   
-  if ( path_length<std::numeric_limits<double>::max()) {
+  if (path_length < std::numeric_limits<double>::max()) {
     
     /// ecal path length can be infinite in case the ecal
     /// has lambda_I = 0 (fully transparent to hadrons)
-    Path& path =ptc.path();
-    double time_ecal_inner = path.getTimeAtZ(path.namedPoint("_ECALin").Z());
-    double deltat = path.deltaT(path_length);
+    std::shared_ptr<Path> path = ptc.path();
+    double time_ecal_inner = path->timeAtZ(path->namedPoint("_ECALin").Z());
+    double deltat = path->deltaT(path_length);
     double time_decay = time_ecal_inner + deltat;
-    TVector3 point_decay = path.pointAtTime(time_decay);
-    path.addPoint("ecal_decay", point_decay);
+    TVector3 point_decay = path->pointAtTime(time_decay);
+    path->addPoint("ecal_decay", point_decay);
     if (ecal_sp->volumeCylinder().Contains(point_decay))
     {
       //TODO reinstate after testingdouble frac_ecal = fastsim::randomUniform(0., 0.7); // could also have a static member number generator
@@ -113,9 +113,9 @@ const Cluster& Simulator::cluster(long clusterID) const{
 
 SimParticle& Simulator::addParticle( int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
-  double field=m_detector.field()->getMagnitude();
-  long uniqueid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
-  m_particles.emplace(uniqueid,SimParticle{uniqueid,pdgid,tlv,field,vertex});
+  double field = m_detector.field()->getMagnitude();
+  long uniqueid = Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
+  m_particles.emplace(uniqueid,SimParticle{uniqueid, pdgid, tlv, vertex, field});
   addNode(uniqueid); //add node to graph
   return m_particles[uniqueid];
 }
@@ -208,7 +208,7 @@ const Track& Simulator::addTrack(SimParticle& ptc)
   return track; //check this defaults OK
 }
 
-const Track& Simulator::makeTrack(long trackid, TVector3 pos, double charge, Path& path)
+const Track& Simulator::makeTrack(long trackid, TVector3 pos, double charge, std::shared_ptr<Path> path)
 {
   m_tracks.emplace(trackid, Track{ pos, charge, path, trackid});
   return m_tracks.at(trackid);

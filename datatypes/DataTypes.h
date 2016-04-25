@@ -17,27 +17,29 @@
 #include "../pfalgo/distance.h"
 #include <iostream>
 
+//TODO location
+typedef std::shared_ptr<Path> sptrPath;
+
 
 /// Function to create a new TLorentzVector
+//TODO rethink.
 TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
                                          double energy);
-
-
 
 class Cluster  {
 public:
   Cluster(double energy, const TVector3& position, double size_m, long id);
   Cluster() = default;
-  Cluster(Cluster&& c)   = default;
-  Cluster(const Cluster&) = default ;;//=default {std::cout<< "copy" ;} ;
+  Cluster(Cluster&& c)    = default;
+  Cluster(const Cluster&) = default; //=default {std::cout<< "copy" ;} ;
   Cluster& operator+=(const Cluster& rhs);
-  double angularSize() const {return m_angularSize;};
-  double size() const     {return m_size;};
-  double pt() const       {return m_pt;};
-  double energy() const   {return m_energy;};
-  double eta() const      {return m_position.Eta();};
+  double angularSize() const {return m_angularSize;}
+  double size() const     {return m_size;}
+  double pt() const       {return m_pt;}
+  double energy() const   {return m_energy;}
+  double eta() const      {return m_position.Eta();}
   long ID() const         {return m_uniqueID;}
-  TVector3 position() const {return m_position;};
+  TVector3 position() const {return m_position;}
   void setEnergy(double energy);
   void setSize(double value) ;
   std::vector<long> subClusters() const { return m_subClusters;};
@@ -59,8 +61,9 @@ protected:
 
 class Track{
 public:
-  Track(TVector3 p3, double charge, const Path& path, long id);
-  Track() : m_uniqueID(0), m_path(Path::NullPath) {};
+  //Track(TVector3 p3, double charge, const Path& path, long id);
+  Track(TVector3 p3, double charge, sptrPath path, long id);
+  Track() : m_uniqueID(0), m_path(std::make_shared<Path>()) {};
   //Track(Track& T);
   //Track(const Track& T);
   //Track(Track&& c);
@@ -76,7 +79,9 @@ public:
   double charge() const   {return m_charge;}
   long   ID() const       {return m_uniqueID;}
   TVector3 p3() const     {return m_p3;}
-  const Path& path() const     {return m_path;} //const
+  //const Path& path() const     {return m_path;} //const
+  sptrPath path() const { return m_path;}
+  void setPath(sptrPath path) { m_path = path;}
   void setEnergy(double energy);
   void setSize(double value) ;
   static double s_maxenergy; //AJR is this in the right place
@@ -86,8 +91,8 @@ protected:
   double m_pt;
   TVector3 m_p3;
   double m_charge;
-  const Path& m_path; //TODO wanted this to be const not owned by track but useful to know where it is
-  
+  //const Path& m_path; //TODO this needs to work with a helix too //not owned by track but useful to know where it is
+  sptrPath m_path;
 };
 
 
@@ -95,17 +100,24 @@ class SimParticle: public Particle {
 public:
   bool isElectroMagnetic() const;
   SimParticle() = default;
-  SimParticle(long uniqueid, int pdgid, TLorentzVector tlv, double  field=0., TVector3 vertex= TVector3(0., 0.,0.));
-  Path& path()   {if (m_isHelix) return m_helix; else return m_path;};
-  const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;};
-  Helix& helix() {return m_helix;}
-  TVector3 pathPosition(std::string name);
+  SimParticle(long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0.,0.), double  field = 0.);
+  SimParticle(long uniqueid,const Track& track);
+  sptrPath path() const { return m_path;}
+  //Path& path()  {if (m_isHelix) return m_helix; else return m_path;}
+  //const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;}
+  // Helix& helix() {return std::dynamic_cast<Helix>(m_path);}
+  TVector3 pathPosition(std::string name) const;
   long uniqueID() const { return m_uniqueid;}
+  //void setHelix(const Path& path);
+  //void setPath(const Path& path);
+  void setPath(sptrPath path) {m_path = path;}
+  bool isHelix() const { return m_isHelix;}
 private:
   long m_uniqueID;
   TVector3 m_vertex;
-  class Path m_path;
-  class Helix m_helix;
+  sptrPath m_path;
+  //class Path m_path; // will use either the Path (Straightline) or helix not both
+  //class Helix m_helix;
   bool m_isHelix;
 };
 

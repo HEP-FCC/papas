@@ -39,7 +39,7 @@ CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
 double CMSECAL::clusterSize(const Particle& ptc) const
 {
    
-   int pdgid =  abs(ptc.pdgid()) ;
+   int pdgid =  abs(ptc.pdgId()) ;
    if (pdgid == 22 | pdgid == 11)
       return 0.04;
    else

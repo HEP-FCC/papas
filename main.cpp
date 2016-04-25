@@ -35,6 +35,7 @@
 #include "PFBlock.h"
 #include "PFEvent.h"
 #include "PFBlockBuilder.h"
+#include "PFReconstructor.h"
 
 extern int test_edges();
 extern int test_blocks();
@@ -96,7 +97,10 @@ int main(int argc, char* argv[]){
   
   //PFBlockBuilder
   PFBlockBuilder bBuilder{pfEvent};
+  pfEvent.setBlocks(std::move(bBuilder.blocks()));
   
+  PFReconstructor pfReconstructor{pfEvent};
+  pfReconstructor.reconstruct();
   
 
    //sim.testing(); //Write lists of connected items
@@ -147,7 +151,7 @@ void test_helix()
 {//Helix path test
    TLorentzVector p4 = TLorentzVector();
    p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-   Helix helix(3.8, 1, p4,TVector3(0,0,0));
+   Helix helix(p4,TVector3(0,0,0),3.8, 1);
    double length = helix.pathLength(1.0e-9);
    TVector3 junk = helix.pointAtTime(1e-9);
    std::cout<<"Helix point: " <<junk.X() << " " << junk.Y() << " " << junk.Z()<<" ";
