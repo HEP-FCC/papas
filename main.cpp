@@ -18,9 +18,8 @@
 //gtest test
 #include "gtest/gtest.h"
 
-//SSD libs
-//#include "fastsim/my_utilities.h"
-#include "detectors/detectors/material.h"
+
+#include "material.h"
 #include "geometry.h"
 #include "CMS.h"
 #include "particle.h"
@@ -37,52 +36,34 @@
 #include "PFBlockBuilder.h"
 #include "PFReconstructor.h"
 
-extern int test_edges();
-extern int test_blocks();
-extern int test_BlockBuilder();
 
-
-extern int test_BlockSplitter();
-extern int test_Distance();
 extern int run_tests(int argc, char* argv[]);
 
-//#include <RInside.h>
-void tryMapMoveObject();
-//void r_density_plot(const std::vector<double>& v, RInside &);
 
 int main(int argc, char* argv[]){
   
   //int test = run_tests(argc, argv);
   
-   // ROOT App to allow graphs to be plotted
-   TApplication theApp("App", &argc, argv);
-   if (gROOT->IsBatch()) {
-      fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-      return 1;
-   }
-   
-   //Create CMS detector
-   CMS CMSDetector;
-   
-   //Create simulator
-   Simulator sim= Simulator{CMSDetector};
-   
+  // ROOT App to allow graphs to be plotted
+  TApplication theApp("App", &argc, argv);
+  if (gROOT->IsBatch()) {
+    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
+    return 1;
+  }
   
-   //Make Some Photons
-   for (int i=1; i<1;i++  )
-   {
-      TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
-      SimParticle& photon =sim.addParticle(22, tlvphoton);
-      sim.simulatePhoton(photon);
-     
-   }
+  //Create CMS detector and simulator
+  CMS CMSDetector;
+  Simulator sim = Simulator{CMSDetector};
+  
+  //Make Some Photons
+  for (int i = 1; i<1; i++) {
+    SimParticle& photon = sim.addParticle(22, M_PI/2. + 0.025*i, M_PI/2. + 0.3*i, 100 );
+    sim.simulatePhoton(photon);
+  }
+  
   //Make Some Hadrons
-  for (int i=0; i<1; i++  )
-  {
-    //int j=i*3;
-    //TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. + 0.005*j, M_PI/2.+0.3, 10.);
-    TLorentzVector tlvhadron=makeParticleLorentzVector(211,   M_PI/2. +0.5*(i+1) , 0, 40.*(i+1));
-    SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
+  for (int i = 0; i<1; i++) {
+    SimParticle& hadron = sim.addParticle(211, M_PI/2. + 0.5*(i + 1) , 0, 40.*(i + 1));
     sim.simulateHadron(hadron);
     
   }
@@ -90,381 +71,54 @@ int main(int argc, char* argv[]){
   //setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
   // and using  a reference to the history nodes
   PFEvent pfEvent{sim.smearedECALClusters(),
-                  sim.smearedHCALClusters(),
-                  sim.smearedTracks(),
-                  sim.historyNodes()};
+    sim.smearedHCALClusters(),
+    sim.smearedTracks(),
+    sim.historyNodes()};
   
   
-  //PFBlockBuilder
+  //Reconstruct
   PFBlockBuilder bBuilder{pfEvent};
   pfEvent.setBlocks(std::move(bBuilder.blocks()));
-  
   PFReconstructor pfReconstructor{pfEvent};
   pfReconstructor.reconstruct();
   
-
-   //sim.testing(); //Write lists of connected items
- 
-   //TODO try to remove/reduce use of shared_ptrs here.
-   //Display display = Display({Projection::xy,Projection::yz});
-  Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-   display.addToRegister(gdetector, 0);
+  //TODO try to remove/reduce use of shared_ptrs here.
+  Display display = Display({Projection::xy,Projection::yz});
+  // All displays
+  //Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+  std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));
+  display.addToRegister(gdetector, 0);
   
-   //plot clusters
-   for (auto & cl : pfEvent.ECALClusters())
-   {
-     std::cout << cl.second;
-     std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
-     display.addToRegister(gcluster,2);
-      
-   }
-  for (auto & cl :  pfEvent.HCALClusters())
-  {
+  //plot clusters
+  for (auto& cl : pfEvent.ECALClusters()) {
     std::cout << cl.second;
-    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cl.second)) ;
+    std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     display.addToRegister(gcluster,2);
-    
   }
-  for (auto & tr :  pfEvent.tracks())
-  {
-    std::shared_ptr<GTrajectories> gtrack (new GTrajectories(tr.second)) ;
+  for (auto& cl :  pfEvent.HCALClusters()) {
+    std::cout << cl.second;
+    std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
+    display.addToRegister(gcluster,2);
+  }
+  for (auto& tr :  pfEvent.tracks()) {
+    std::shared_ptr<GTrajectories> gtrack(new GTrajectories(tr.second));
     display.addToRegister(gtrack,2);
-    
   }
-   /*for (auto & sp : sim.particles())
-   {
-      std::shared_ptr<GTrajectories> gsimParticle (new GTrajectories(sp.second)) ;
-      display.addToRegister(gsimParticle,2);
-      
-   }*/
-   display.draw();
-   
-   theApp.Run();
-   
-   return EXIT_SUCCESS;
-}
-
-
-
-void test_helix()
-{//Helix path test
-   TLorentzVector p4 = TLorentzVector();
-   p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-   Helix helix(p4,TVector3(0,0,0),3.8, 1);
-   double length = helix.pathLength(1.0e-9);
-   TVector3 junk = helix.pointAtTime(1e-9);
-   std::cout<<"Helix point: " <<junk.X() << " " << junk.Y() << " " << junk.Z()<<" ";
-   std::cout<< "\nlength"<<length<< " " << helix.deltaT(length)<<std::endl;
-   
-}
-void test_Structures()
-{
-   //testing cylinders etc
-   std::cout << "Try base classes\n";
-   Material M(1, 1);
-   SurfaceCylinder S("empty");
-   VolumeCylinder V("new", 4, 6, 3, 6);
-}
-
-
-struct A
-{
-   virtual void foo() const = 0;
-   void bar();
-};
-
-struct B : A
-{
-   //void foo()  override; // Error: B::foo does not override A::foo
-   // (signature mismatch)
-   void foo() const override; // OK: B::foo overrides A::foo
-                              //void bar() override; // Error: A::bar is not virtual
-};
-
-void B::foo() const
-{
-   std::cout <<"foo";
-}
-
-
-/*using boost::any_cast;
-typedef std::list<boost::any> many;
-
-
-void append_int(many & values, int value)
-{
-   boost::any to_append = value;
-   values.push_back(to_append);
-}*/
-
-
-int old_main_stuff(int argc, char* argv[])
-{
-   
-   B b;
-   b.foo();
-   
-   
-   std::unordered_map<long,TVector3> rootvec;
-   TVector3 tv1{0,0,0};
-   TVector3 tv2{0,0,0};
-   rootvec[0]=std::move(tv1);
-   rootvec[2]=std::move(tv2);
-   rootvec.emplace(3,TVector3{0,0,0});
-   
-   // all new
-   TApplication theApp("App", &argc, argv);
-   if (gROOT->IsBatch()) {
-      fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-      return 1;
-   }
-   //testing();
-   //theApp.Run();
-   return 0;
-}
-
-void test_graphs()
-{//Testing graphics
-   Display display = Display({Projection::xy,Projection::yz});
-   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-   
-   TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
-   std::vector<TVector3> tvec;
-   tvec.push_back(TVector3(0.,0.,0.));
-   tvec.push_back(TVector3(1.,1.,1.));
-   tvec.push_back(TVector3(2.,2.,2.));
-   
-   
-   /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.addToRegister(gtrajectories,1);
-   display.addToRegister(gcluster,2);
-   display.Draw();*/
-   
-   //Testing graphics
-   /* TVector3 vpos(1.,.5,.3);
-    Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
-    std::vector<TVector3> tvec;
-    
-    std::cout <<"cluster "<< cluster.pt()<<"\n";
-    
-    std::vector<TVector3> tvec;
-    tvec.push_back(TVector3(0.,0.,0.));
-    tvec.push_back(TVector3(1.,1.,1.));
-    tvec.push_back(TVector3(2.,2.,2.));
-    
-    
-    Display display = Display({enumProjection::xy,enumProjection::yz});
-    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-    
-    std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-    display.addToRegister(gdetector, 0);
-    
-    std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-    display.addToRegister(gtrajectories,1);
-    display.addToRegister(gcluster,2);
-    display.Draw();*/
-   
-   
-}
-
-
-void mytesting() { //change to concrete object or unique pointer is there is an issue
-   TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
-   c1->SetFillColor(42);
-   c1->SetGrid();
-   
-   const int n = 20;
-   double x[n], y[n];
-   for (int i=0;i<n;i++) {
-      x[i] = i;
-      y[i] = 2*i;
-      std::cout<<x[i]<<"\t"<<y[i]<<std::endl;
-   }
-   
-   TGraph *gr = new TGraph(n,x,y);
-   gr->SetLineColor(2);
-   gr->SetLineWidth(4);
-   gr->SetMarkerColor(4);
-   gr->SetMarkerStyle(21);
-   gr->SetTitle("a simple graph");
-   gr->GetXaxis()->SetTitle("X title");
-   gr->GetYaxis()->SetTitle("Y title");
-   gr->Draw("ACP");
-   
-   c1->Update();
-   c1->Modified();
-   c1->Connect("Closed()", "TApplication", gApplication, "Terminate()"); //new
-}
-
-/*void r_density_plot(const std::vector<double>& v, RInside& R)
-{
-   
-   R["y"] = v;            // assign weights
-   std::string txt = "tmpf <- tempfile('curve'); "
-   "pdf(tmpf); "
-   "plot(density(y)); "
-   "dev.off(); "
-   " tmpf "
-   ;
-   std::string newtmpfile = R.parseEval(txt);        // evaluate assignment
-   system(("open " + newtmpfile ).c_str());
-   //unlink(newtmpfile.c_str());
-}*/
-
-
-class MyClass{
-public:
-   MyClass(std::string);
-   MyClass(MyClass &other);
-   MyClass(const MyClass &other);
-   MyClass(const MyClass &&other);
-   MyClass(MyClass &&other);
-   MyClass someFunction();
-
-   std::string m_str;
-};
-
-MyClass::MyClass(std::string str)
-:m_str(str)
-{
-   
-}
-
-MyClass::MyClass(const MyClass &other)
-{
-   std::cout << "Copy constructor was called" << m_str << std::endl;
-  m_str=other.m_str;
-}
-
-
-MyClass::MyClass(MyClass &&other)
-{
-   m_str=std::move(other.m_str);
-   std::cout << "Move constructor was called" << m_str << std::endl;
-}
-MyClass::MyClass(const MyClass &&other)
-{
-   m_str=std::move(other.m_str);
-
-   std::cout << "const Move constructor was called" << m_str << std::endl;
-}
-
-MyClass someFunction()
-{
-   MyClass dummy("dummy");
-   return dummy;
-}
-
-
-TEST(fastsim, dummy){
-   bool success = true;
-   EXPECT_EQ(true, success);
-}
-
-void tryR(int argc, char* argv[]) {
-  
-  //RInside R(argc, argv);
-  //Gtest  hah
-  //::testing::InitGoogleTest(&argc, argv);
-  //#return RUN_ALL_TESTS();
+  display.draw();
+  //TODO uncomment for commandline
+  //run theApp.Run();
   
   
-  // ROOT App to allow graphs to be plotted
-  TApplication theApp("App", &argc, argv);
-  if (gROOT->IsBatch()) {
-    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-    return;
-  }
+  //sim.testing(); //Write lists of connected items
   
-  //Create CMS detector
-  CMS CMSDetector;
-  
-  //Create simulator
-  Simulator sim= Simulator{CMSDetector};
-  
-  // R test of smearing
-  //IDs smeared_clust_IDs;
-  
-  //Photons
-  for (int i=1; i<10;i++  )
-  {
-    TLorentzVector tlvphoton=makeParticleLorentzVector(22,  M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
-    SimParticle& photon =sim.addParticle(22, tlvphoton);
-    sim.simulatePhoton(photon);
-    // R test of smearing
-    //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.id());
-    //smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
-    
-  }
-  //Hadrons
-  for (int i=1; i<20;i++  )
-  {
-    TLorentzVector tlvhadron=makeParticleLorentzVector(211,  M_PI/2. +0.5*i , 0, 40.*(i));
-    SimParticle& hadron =  sim.addParticle(211, tlvhadron) ;
-    sim.simulateHadron(hadron);
-    
-  }
-  
-  /* Rtest of smearing
-   std::vector<double> w;
-   w.reserve(10000);
-   const Clusters& clusters =sim.clusters();
-   for (auto x :smeared_clust_IDs)
-   {
-   w.push_back( clusters.find(x)->second.energy());
-   }
-   r_density_plot(w, R);*/
-  
-  
-  /*
-   //Check density plot for smeared Photons
-   std::vector<double> w;
-   w.reserve(10000);
-   for (auto x :sim.clusters())
-   { if (Identifier::isSmeared(x.second.id()))
-   w.push_back( x.second.energy());
-   }
-   r_density_plot(w, R);
-   */
+
+  return EXIT_SUCCESS;
 }
 
 
-void tryMapMoveObject()
-{//illustrates moving items from one map to another
-   std::unordered_map<int,const MyClass> map;
-   map.reserve(10);
-   map.emplace(1,MyClass("one"));
-   map.emplace(2,MyClass("two"));
-   map.emplace(3,MyClass("three"));
-   std::unordered_map<int,const MyClass> map2;
-   std::unordered_map<int,const MyClass> map1;
-   
-   for ( auto & m : map)
-   {
-     if (m.first==1 || m.first==3)
-         map2.emplace(m.first, std::move(m.second));
-      else
-         map1.emplace(m.first, std::move(m.second));
-        }
-   std::cout << map.size()<<map2.size()<<map1.size();
-   
-   return;
 
-   
-}
 
-int run_tests(int argc, char* argv[]) {
-  test_edges();
-  test_blocks();
-  test_BlockBuilder();
-  tryMapMoveObject();
-  
-  
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+
+
+
 

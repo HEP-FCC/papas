@@ -186,7 +186,7 @@ TVector3 SimParticle::pathPosition(std::string name) const
   return m_path->namedPoint(name);
 }
 
-TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double phi, double energy)
+TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy)
 {
   double mass = ParticleData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -198,11 +198,11 @@ TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double phi, do
                     momentum * sintheta * sinphi,
                     momentum * costheta,
                     energy);
-  std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
+  /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
   p4.Et() << " ";
   std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
   " " << cosphi <<
-  " " << sintheta << " ";
+  " " << sintheta << " ";*/
   return p4;
 }
 

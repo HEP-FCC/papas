@@ -66,21 +66,21 @@ endif()
 #make this automated
 set (MAINDIR /Users/alice/fcc/cpp/papas/papas/)
 file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.c ${MAINDIR}/datatypes/datatypes/*.h ${MAINDIR}/datatypes/src/*.cpp
-${MAINDIR}/graphtools/src/*.c* ${MAINDIR}/graphtools/graphtools/*.h
-${MAINDIR}/fastsim/src/*.c* ${MAINDIR}/fastsim/fastsim/*.h
-${MAINDIR}/utility/src/*.c* ${MAINDIR}/utility/utility/*.h
-${MAINDIR}/display/src/*.c* ${MAINDIR}/display/display/*.h
-${MAINDIR}/detectors/src/*.c* ${MAINDIR}/detectors/detectors/*.h
-${MAINDIR}/simulation/src/*.c* ${MAINDIR}/simulation/simulation/*.h
+${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/datatypes/*.h
+${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/graphtools/*.h
+${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/fastsim/*.h
+${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/utility/*.h
+${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/display/*.h
+${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/detectors/*.h
+${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/simulation/*.h
 ${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/reconstruction/*.h
-${MAINDIR}/datatypes/tests/*.c* 
-${MAINDIR}/graphtools/tests/*.c*
-${MAINDIR}/fastsim/tests/*.c* 
-${MAINDIR}/utility/test/*.c* 
-${MAINDIR}/display/test/*.c* 
-${MAINDIR}/detectors/test/*.c* 
-${MAINDIR}/simulation/test/*.c* 
+${MAINDIR}/datatypes/tests/*.cpp 
+${MAINDIR}/graphtools/tests/*.cpp
+${MAINDIR}/fastsim/tests/*.cpp 
+${MAINDIR}/utility/test/*.cpp 
+${MAINDIR}/display/test/*.cpp 
+${MAINDIR}/detectors/test/*.cpp 
+${MAINDIR}/simulation/test/*.cpp 
 ${MAINDIR}/reconstruction/test/*.cpp
 )
 
@@ -112,25 +112,22 @@ include(${ROOT_USE_FILE}  )
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-
 find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-message(${sources})
-
+#message(${sources})
 
 #get_cmake_property(_variableNames VARIABLES)
 #foreach (_variableName ${_variableNames})
 #message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
-#ROOT_GENERATE_DICTIONARY(fastsim_Dict) # my_utilities.h  LINKDEF my_utilities_LinkDef.h)
 add_library(fastsim SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
 ${MAINDIR}/utility/utility/random.h 
 )
-target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES} )
+target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES})
 
 
 

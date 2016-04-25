@@ -12,9 +12,9 @@
 class Particle: public BaseParticle {
 public:
    using BaseParticle::BaseParticle;
-   long ID() const
+   long id() const
    {
-      return m_uniqueid;
+      return m_uniqueId;
    }
    //Particle(int pdgid, double charge, TLorentzVector&& tlv, double status = 1.0);
    //Particle(int pdgid, double charge, TLorentzVector& tlv, double status = 1.0);

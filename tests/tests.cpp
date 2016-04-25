@@ -8,6 +8,7 @@
 //C++
 #include <iostream>
 #include <cstdlib>
+#include <unordered_map>
 
 //ROOT
 #include "TROOT.h"
@@ -38,32 +39,29 @@
 
 
 using namespace std;
-
+extern int test_edges();
+extern int test_blocks();
+extern int test_BlockBuilder();
+extern int test_BlockSplitter();
+extern int test_Distance();
+//extern void tryMapMoveObject();
 
 
 
 //std::default_random_engine fastsim::RandNormal::engine(0);z
 int main(int argc, char* argv[]){
-   //testRandom();
-   //Gtest  hah
-   ::testing::InitGoogleTest(&argc, argv);
-   return RUN_ALL_TESTS();
-   
- 
-   
-   // ROOT App to allow graphs to be plotted
-   TApplication theApp("App", &argc, argv);
-   if (gROOT->IsBatch()) {
-      fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-      return 1;
-   }
-   
-   
-
-   //theApp.Run();
-   return EXIT_SUCCESS;
+  
+  //TODO convert to Gtest
+    test_edges();
+    test_blocks();
+    test_BlockBuilder();
+  //tryMapMoveObject();
+    
+    
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
-
+  
 
 
 TEST(fastsim, Helix)
@@ -328,3 +326,238 @@ TEST(fastsim, RandomExp)
    EXPECT_NE(r3, r4);
   
 }
+
+TEST(fastsim, dummy){
+  bool success = true;
+  EXPECT_EQ(true, success);
+}
+
+
+
+
+void test_helix()
+{//Helix path test
+  TLorentzVector p4 = TLorentzVector();
+  p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
+  Helix helix(p4,TVector3(0,0,0),3.8, 1);
+  double length = helix.pathLength(1.0e-9);
+  TVector3 junk = helix.pointAtTime(1e-9);
+  std::cout<<"Helix point: " <<junk.X() << " " << junk.Y() << " " << junk.Z()<<" ";
+  std::cout<< "\nlength"<<length<< " " << helix.deltaT(length)<<std::endl;
+  
+}
+void test_Structures()
+{
+  //testing cylinders etc
+  std::cout << "Try base classes\n";
+  Material M(1, 1);
+  SurfaceCylinder S("empty");
+  VolumeCylinder V("new", 4, 6, 3, 6);
+}
+
+
+struct A
+{
+  virtual void foo() const = 0;
+  void bar();
+};
+
+struct B : A
+{
+  //void foo()  override; // Error: B::foo does not override A::foo
+  // (signature mismatch)
+  void foo() const override; // OK: B::foo overrides A::foo
+                             //void bar() override; // Error: A::bar is not virtual
+};
+
+void B::foo() const
+{
+  std::cout <<"foo";
+}
+
+
+/*using boost::any_cast;
+ typedef std::list<boost::any> many;
+ 
+ 
+ void append_int(many & values, int value)
+ {
+ boost::any to_append = value;
+ values.push_back(to_append);
+ }*/
+
+
+int old_main_stuff(int argc, char* argv[])
+{
+  
+  B b;
+  b.foo();
+  
+  
+  std::unordered_map<long,TVector3> rootvec;
+  TVector3 tv1{0,0,0};
+  TVector3 tv2{0,0,0};
+  rootvec[0]=std::move(tv1);
+  rootvec[2]=std::move(tv2);
+  rootvec.emplace(3,TVector3{0,0,0});
+  
+  // all new
+  TApplication theApp("App", &argc, argv);
+  if (gROOT->IsBatch()) {
+    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
+    return 1;
+  }
+  //testing();
+  //theApp.Run();
+  return 0;
+}
+
+void test_graphs()
+{//Testing graphics
+  Display display = Display({Projection::xy,Projection::yz});
+  //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+  
+  TVector3 vpos(1.,.5,.3);
+  Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+  std::vector<TVector3> tvec;
+  tvec.push_back(TVector3(0.,0.,0.));
+  tvec.push_back(TVector3(1.,1.,1.));
+  tvec.push_back(TVector3(2.,2.,2.));
+  
+  
+  /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
+   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
+   display.Draw();*/
+  
+  //Testing graphics
+  /* TVector3 vpos(1.,.5,.3);
+   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+   std::vector<TVector3> tvec;
+   
+   std::cout <<"cluster "<< cluster.pt()<<"\n";
+   
+   std::vector<TVector3> tvec;
+   tvec.push_back(TVector3(0.,0.,0.));
+   tvec.push_back(TVector3(1.,1.,1.));
+   tvec.push_back(TVector3(2.,2.,2.));
+   
+   
+   Display display = Display({enumProjection::xy,enumProjection::yz});
+   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+   
+   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
+   display.addToRegister(gdetector, 0);
+   
+   std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
+   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
+   display.Draw();*/
+  
+  
+}
+
+
+void mytesting() { //change to concrete object or unique pointer is there is an issue
+  TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
+  c1->SetFillColor(42);
+  c1->SetGrid();
+  
+  const int n = 20;
+  double x[n], y[n];
+  for (int i=0;i<n;i++) {
+    x[i] = i;
+    y[i] = 2*i;
+    std::cout<<x[i]<<"\t"<<y[i]<<std::endl;
+  }
+  
+  TGraph *gr = new TGraph(n,x,y);
+  gr->SetLineColor(2);
+  gr->SetLineWidth(4);
+  gr->SetMarkerColor(4);
+  gr->SetMarkerStyle(21);
+  gr->SetTitle("a simple graph");
+  gr->GetXaxis()->SetTitle("X title");
+  gr->GetYaxis()->SetTitle("Y title");
+  gr->Draw("ACP");
+  
+  c1->Update();
+  c1->Modified();
+  c1->Connect("Closed()", "TApplication", gApplication, "Terminate()"); //new
+}
+
+
+
+
+class MyClass{
+public:
+  MyClass(std::string);
+  MyClass(MyClass &other);
+  MyClass(const MyClass &other);
+  MyClass(const MyClass &&other);
+  MyClass(MyClass &&other);
+  MyClass someFunction();
+  
+  std::string m_str;
+};
+
+MyClass::MyClass(std::string str)
+:m_str(str)
+{
+  
+}
+
+MyClass::MyClass(const MyClass &other)
+{
+  std::cout << "Copy constructor was called" << m_str << std::endl;
+  m_str=other.m_str;
+}
+
+
+MyClass::MyClass(MyClass &&other)
+{
+  m_str=std::move(other.m_str);
+  std::cout << "Move constructor was called" << m_str << std::endl;
+}
+MyClass::MyClass(const MyClass &&other)
+{
+  m_str=std::move(other.m_str);
+  
+  std::cout << "const Move constructor was called" << m_str << std::endl;
+}
+
+MyClass someFunction()
+{
+  MyClass dummy("dummy");
+  return dummy;
+}
+
+
+
+//Different sort of test
+/*void tryMapMoveObject()
+{//illustrates moving items from one map to another
+  std::unordered_map<int,const TClass> map;
+  map.reserve(10);
+  map.emplace(1,MyClass("one"));
+  map.emplace(2,MyClass("two"));
+  map.emplace(3,MyClass("three"));
+  std::unordered_map<int,const MyClass> map2;
+  std::unordered_map<int,const MyClass> map1;
+  
+  for ( auto & m : map)
+  {
+    if (m.first==1 || m.first==3)
+      map2.emplace(m.first, std::move(m.second));
+    else
+      map1.emplace(m.first, std::move(m.second));
+  }
+  std::cout << map.size()<<map2.size()<<map1.size();
+  
+  return;
+  
+  
+}*/
+

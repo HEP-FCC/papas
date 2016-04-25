@@ -23,7 +23,7 @@ typedef std::shared_ptr<Path> sptrPath;
 
 /// Function to create a new TLorentzVector
 //TODO rethink.
-TLorentzVector makeParticleLorentzVector(int pdgid, double theta, double  phi,
+TLorentzVector makeTLorentzVector(int pdgid, double theta, double  phi,
                                          double energy);
 
 class Cluster  {
@@ -107,13 +107,13 @@ public:
   //const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;}
   // Helix& helix() {return std::dynamic_cast<Helix>(m_path);}
   TVector3 pathPosition(std::string name) const;
-  long id() const { return m_uniqueId;}
+  //long id() const { return m_uniqueId;}
   //void setHelix(const Path& path);
   //void setPath(const Path& path);
   void setPath(sptrPath path) {m_path = path;}
   bool isHelix() const { return m_isHelix;}
 private:
-  long m_uniqueId;
+  //long m_uniqueId;
   TVector3 m_vertex;
   sptrPath m_path;
   //class Path m_path; // will use either the Path (Straightline) or helix not both

@@ -39,7 +39,7 @@ public:
    TVector3 start_vertex() const {return m_start_vertex ;}///<start vertex (3d point)
    TVector3 end_vertex() const {return m_end_vertex;} ///<end vertex (3d point)
 protected:
-   long m_uniqueid; //to be used by virtual classes
+   long m_uniqueId; //to be used by virtual classes
 private:
    TLorentzVector m_tlv;
    int m_particleId;

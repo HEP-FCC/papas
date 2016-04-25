@@ -40,7 +40,7 @@ std::cout<<m_tlv.X() <<" " <<m_tlv.Y() <<" "<<m_tlv.Z() <<" "<<m_tlv.Et() <<" ";
 
 BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector tlv,
                            double status) :
-   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+   m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
    m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 {
@@ -53,7 +53,7 @@ BaseParticle::BaseParticle(int pdgid, double charge, TLorentzVector tlv,
 
 
 BaseParticle::BaseParticle(int pdgid, double charge) :
-   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+   m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
    m_particleId(pdgid), m_charge(charge), m_status(0)
 {
    m_tlv = TLorentzVector{0., 0., 0., 0.};
@@ -61,14 +61,14 @@ BaseParticle::BaseParticle(int pdgid, double charge) :
 }
 //TODO tidy tlv
 BaseParticle::BaseParticle() :
-   m_uniqueid(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+   m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
    m_particleId(0), m_charge(0), m_status(0)
 {
 
 }
 
 BaseParticle::BaseParticle(long id, int pdgid, double charge) :
-   m_uniqueid(id), m_particleId(pdgid), m_charge(charge), m_status(0)
+   m_uniqueId(id), m_particleId(pdgid), m_charge(charge), m_status(0)
 {
    m_tlv = TLorentzVector{0., 0., 0., 0.};
 
@@ -78,7 +78,7 @@ BaseParticle::BaseParticle(long id, int pdgid, double charge) :
 BaseParticle::BaseParticle(long id, int pdgid, double charge,
                            TLorentzVector tlv,
                            double status) :
-   m_uniqueid(id), m_tlv(tlv), m_particleId(pdgid), m_charge(charge),
+   m_uniqueId(id), m_tlv(tlv), m_particleId(pdgid), m_charge(charge),
    m_status(status)
 {
 

@@ -18,8 +18,8 @@
 class Particle;
 
 //TODO home for typedefs
-typedef DAG::Node<long> SimNode;
-typedef std::unordered_map<long, SimNode> Nodes; ///TODO rename to Nodes
+typedef DAG::Node<long> Node;
+typedef std::unordered_map<long, Node> Nodes;
 typedef std::unordered_map<long, Cluster> Clusters;
 typedef std::unordered_map<long, Cluster> SmearedECALClusters;
 typedef std::unordered_map<long, Cluster> SmearedHCALClusters;
@@ -32,69 +32,60 @@ typedef std::vector<long> IDs;
 class Simulator {
   
 public:
-  Simulator(const BaseDetector&);  //AJRTODO add logger
+  Simulator(const BaseDetector&);  //AJR TODO add logger
   void simulate();
   void simulatePhoton(SimParticle& ptc);
   void simulateHadron(SimParticle& ptc);
   
-  SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
-  //const Clusters& clusters() const {return m_clusters;} ;
+  
+  SimParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
+
   const Cluster& cluster(long clusterID) const;
-  
-  
   Clusters ECALClusters() const {return m_ECALClusters;} ///<Copy of ECAL clusters
   Clusters HCALClusters() const {return m_HCALClusters;}
   Clusters smearedECALClusters() const {return m_smearedECALClusters;}
   Clusters smearedHCALClusters() const {return m_smearedHCALClusters;}
-  
   Tracks   tracks() const {return m_tracks;}
   Tracks   smearedTracks() const {return m_smearedTracks;}
-  Nodes& historyNodes() { return m_nodes; }
-  //const Tracks& tracks() const {return m_tracks;}
+  Nodes&   historyNodes() {return m_nodes;}
   const Particles& particles() const {return m_particles;}
-  
   //const Clusters& smearedClusters() const  ;
   
   void testing();
   IDs linkedECALSmearedClusterIDs(long nodeid);
   IDs linkedParticleIDs (long nodeid);
   IDs parentParticleIDs (long nodeid);
-  //Clusterset ExportSimulatedClusters() const;
-  //Particleset ExportSimulatedParticles() const;
   
 private:
+  SimParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
   void propagate(SimParticle& ptc,const SurfaceCylinder &); //more args needed
-  
   
   IDs linkedRawTrackIDs(long nodeid);
   IDs linkedSmearedTrackIDs(long nodeid);
-  
   IDs linkedIDs(long nodeid);
-  
-  long makeClusterID(fastsim::enumLayer layer  , fastsim::enumSubtype subtype);
+  long makeClusterID(fastsim::enumLayer layer, fastsim::enumSubtype subtype);
   long makeParticleID(fastsim::enumSource source);
-  
   long addECALCluster(SimParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addHCALCluster(SimParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addSmearedCluster(long parentClusterID);
   
-  Cluster makeCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer,
-                      double fraction = 1., double csize = 0.);
+  Cluster makeCluster(SimParticle& ptc, long parentid,fastsim::enumLayer layer, double fraction = 1., double csize =0.);
   Cluster makeSmearedCluster(long parentClusterID);
   
   const Track& addTrack(SimParticle& ptc);
   const Track& makeTrack(long trackid, TVector3 pos, double charge, std::shared_ptr<Path> path);
   
-  Track makeSmearedTrack(long smearedTrackID, const Track& track) ;
+  Track makeSmearedTrack(long smearedTrackID, const Track& track);
   long addSmearedTrack( const Track& track, bool accept = false);
   
   void addNode(const long newid, const long parentid = 0);
   std::shared_ptr<const DetectorElement> elem(fastsim::enumLayer layer);
   
-  IDs getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
-  IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source);
+  IDs getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+                     fastsim::enumSubtype type, fastsim::enumSource source);
+  IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+                           fastsim::enumSubtype type, fastsim::enumSource source);
   
-  //Clusters m_clusters;    /// all clusters
   Clusters m_ECALClusters;
   Clusters m_HCALClusters;
   Clusters m_smearedECALClusters;
@@ -106,7 +97,6 @@ private:
   //this will have a keyed entry for everything that has
   //been simulated and so acts as a lookup table
   Nodes m_nodes;
-  
   const BaseDetector& m_detector;
   StraightLinePropagator m_propStraight;
   HelixPropagator m_propHelix;

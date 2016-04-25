@@ -42,10 +42,26 @@ include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
 
 #message(${ROOT_LIBRARIES})
 
-add_executable(othertests tests.cpp)
-target_link_libraries(othertests  fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
+
+set (RCPP_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/library/Rcpp/include)
+set (RI_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/include)
+set (R_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/include)
+set (RLIB_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/lib)
+set (RINSIDE_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib)
+include_directories(  ${RI_ROOT}  )
+include_directories(  ${RCPP_ROOT}  )
+include_directories(  ${R_ROOT}  )
+set (DYLD_LIBRARY_PATH  $RLIB_ROOT $RINSIDE_ROOT)
 
 
+
+
+
+
+add_executable(rtest  r_test.cpp)
+target_link_libraries(rtest  fastsim ${ROOT_LIBRARIES} /Library/Frameworks/R.framework/Versions/3.2/Resources/lib/libR.dylib  /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib/libRInside.dylib ${GTEST_LIBRARIES})
+add_library(RInside SHARED IMPORTED)
+add_library(R SHARED IMPORTED)
 
 
 

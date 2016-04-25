@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
-project(fastsim)
+project(papas)
+
+set(CMAKE_MACOSX_RPATH 1)
 
 ### where to find the libraries
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
@@ -28,8 +30,8 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 ### add CERN ROOT
 find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF GRAF3D  RIO Hist Tree Net   )
-message(${ROOT_INCLUDE_DIRS})
-message("hellow from alice")
+#message(${ROOT_INCLUDE_DIRS})
+#message("hellow from alice")
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
 
@@ -47,8 +49,14 @@ ${CMAKE_SOURCE_DIR}/graphtools/graphtools
 )
 
 add_subdirectory(fastsim)
-add_subdirectory(main)
+
 add_subdirectory(graphtools)
+add_subdirectory(main)
+#
+#this test only if R/Rcpp/Rinside are installed version 3.2+
+#note there are a lot of R related warnings (originating from R)
+add_subdirectory(tests/rtest)
+
 add_subdirectory(tests)
 
 

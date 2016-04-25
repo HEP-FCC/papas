@@ -120,6 +120,12 @@ SimParticle& Simulator::addParticle( int pdgid, TLorentzVector tlv, TVector3 ver
   return m_particles[uniqueid];
 }
 
+SimParticle& Simulator::addParticle( int pdgid, double theta, double phi, double energy, TVector3 vertex)
+{
+  TLorentzVector tlv = makeTLorentzVector(pdgid, theta, phi, energy);
+  return addParticle( pdgid, tlv, vertex);
+}
+
 
 
 long Simulator::addECALCluster(SimParticle& ptc,long parentid,double fraction, double csize)
@@ -246,8 +252,8 @@ void Simulator::addNode(long newid, const long parentid)
   m_nodes[newid] = {newid};
   
   if (parentid) {
-    SimNode& parent = m_nodes[parentid];
-    SimNode& child = m_nodes[newid];
+    Node& parent = m_nodes[parentid];
+  Node& child = m_nodes[newid];
     parent.addChild(child);
   }
 }
@@ -261,7 +267,7 @@ std::shared_ptr<const DetectorElement> Simulator::elem(
 void Simulator::testing()
 {
   
-  DAG::BFSVisitor<SimNode> bfs;
+  DAG::BFSVisitor<Node> bfs;
   for ( auto p  : m_particles)
   {
     std::cout<< "Connected to "<<p.first<< std::endl;
@@ -314,7 +320,7 @@ IDs  Simulator::parentParticleIDs(long nodeid) {
 
 
 IDs  Simulator::linkedIDs(long nodeid) {
-  DAG::BFSVisitor<SimNode> bfs;
+  DAG::BFSVisitor<Node> bfs;
   IDs foundids;
   foundids.reserve(1000); //TODO how
   auto res =bfs.traverseUndirected(m_nodes[nodeid]);
@@ -327,7 +333,7 @@ IDs  Simulator::linkedIDs(long nodeid) {
 
 IDs Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source)
 {
-  DAG::BFSVisitor<SimNode> bfs;
+  DAG::BFSVisitor<Node> bfs;
   IDs foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseUndirected(m_nodes[nodeid]);
@@ -343,7 +349,7 @@ IDs Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fasts
 
 IDs Simulator::getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source)
 {
-  DAG::BFSVisitor<SimNode> bfs;
+  DAG::BFSVisitor<Node> bfs;
   IDs foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseParents(m_nodes[nodeid]);
