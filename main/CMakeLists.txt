@@ -19,13 +19,24 @@ endif()
 #set(BOOST_ROOT /usr/local/boost_1_59_0)
 find_package(Boost 1.59.0 REQUIRED)
 if (Boost_FOUND)
-include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/DAGtool )
+include_directories(
+${Boost_INCLUDE_DIRS}
+${CMAKE_SOURCE_DIR}/graphtools)
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
-${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/reconstruction  )
+include_directories(
+${CMAKE_SOURCE_DIR}/fastsim/fastsim
+${CMAKE_SOURCE_DIR}/utility/utility
+${CMAKE_SOURCE_DIR}/detectors/detectors
+${CMAKE_SOURCE_DIR}/display/display
+${CMAKE_SOURCE_DIR}/datatypes/datatypes/
+${CMAKE_SOURCE_DIR}/simulation/simulation
+${CMAKE_SOURCE_DIR}/reconstruction/reconstruction
+${CMAKE_SOURCE_DIR}/graphtools/graphtools
+)
 
-set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/src/)
+set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/papas/)
+
 #R support
 if (0)
 set (RCPP_ROOT /Library/Frameworks/R.framework/Versions/3.2/Resources/library/Rcpp/include)
@@ -43,6 +54,7 @@ add_library(R SHARED IMPORTED)
 add_executable(mainexe ../main.cpp)
 target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} /Library/Frameworks/R.framework/Versions/3.2/Resources/lib/libR.dylib  /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib/libRInside.dylib)
 else()
+
 set (DYLD_LIBRARY_PATH /Users/alice/local/lib/root )
 
 
@@ -65,12 +77,9 @@ add_definitions(${ROOT_CXX_FLAGS})
 find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
 
-
-
 add_executable(mainexe ../main.cpp)
 target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
 endif()
-
 
 
 #add_subdirectory(../tests)

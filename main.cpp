@@ -19,13 +19,13 @@
 #include "gtest/gtest.h"
 
 //SSD libs
-#include "fastsim/my_utilities.h"
-#include "detectors/material.h"
-#include "detectors/geometry.h"
-#include "detectors/CMS.h"
+//#include "fastsim/my_utilities.h"
+#include "detectors/detectors/material.h"
+#include "geometry.h"
+#include "CMS.h"
 #include "particle.h"
 #include "datatypes.h"
-#include "simulation/Simulator.h"
+#include "Simulator.h"
 #include "path.h"
 #include "displaygeometry.h"
 #include "displaycore.h"

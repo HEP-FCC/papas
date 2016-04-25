@@ -25,11 +25,12 @@ endif()
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/examples
+        ${CMAKE_CURRENT_SOURCE_DIR}/graphtools
 )
 
 file(GLOB headers examples/*.h directedacyclicgraph.h)
 add_executable(DAG_id examples/DAG_example_longidnode.cc   examples/simpleidentifier.cc )
-add_executable(DAG_poly examples/DAG_example_polymorphic.cc  directedacyclicgraph.h )
+add_executable(DAG_poly examples/DAG_example_polymorphic.cc  graphtools/directedacyclicgraph.h )
 add_executable(DAG_id2 examples/DAG_example_longidnode.cc   examples/simpleidentifier.cc )
 
 target_link_libraries(DAG_id )

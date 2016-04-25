@@ -23,12 +23,8 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 #Set compiler flags
 include(CheckCXXCompilerFlag)
-#CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-#if(COMPILER_SUPPORTS_CXX14)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-#else
 if(COMPILER_SUPPORTS_CXX11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif(COMPILER_SUPPORTS_CXX0X)
@@ -38,7 +34,6 @@ message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please 
 endif()
 
 MESSAGE( STATUS "Doxygen engaging " )
-
 FIND_PACKAGE( Doxygen )
 IF( DOXYGEN_FOUND )
 
@@ -67,30 +62,38 @@ find_package(Boost 1.59.0 REQUIRED)
 if (BOOST_found)
 include_directories( ${Boost_INCLUDE_DIRS})
 endif()
+
 #make this automated
-set (MAINDIR /Users/alice/fcc/cpp/papas/src/)
+set (MAINDIR /Users/alice/fcc/cpp/papas/papas/)
 file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/*.cc ${MAINDIR}/datatypes/*.h
-${MAINDIR}/fastsim/*.cc ${MAINDIR}/fastsim/*.h
-${MAINDIR}/utility/*.cc ${MAINDIR}/utility/*.h
-${MAINDIR}/display/*.cc ${MAINDIR}/display/*.h
-${MAINDIR}/detectors/*.cc ${MAINDIR}/detectors/*.h
-${MAINDIR}/simulation/*.cc ${MAINDIR}/simulation/*.h
-${MAINDIR}/pfalgo/*.cc ${MAINDIR}/pfalgo/*.h
-${MAINDIR}/reconstruction/*.cpp ${MAINDIR}/reconstruction/*.h)
+${MAINDIR}/datatypes/src/*.c ${MAINDIR}/datatypes/datatypes/*.h ${MAINDIR}/datatypes/src/*.cpp
+${MAINDIR}/graphtools/src/*.c* ${MAINDIR}/graphtools/graphtools/*.h
+${MAINDIR}/fastsim/src/*.c* ${MAINDIR}/fastsim/fastsim/*.h
+${MAINDIR}/utility/src/*.c* ${MAINDIR}/utility/utility/*.h
+${MAINDIR}/display/src/*.c* ${MAINDIR}/display/display/*.h
+${MAINDIR}/detectors/src/*.c* ${MAINDIR}/detectors/detectors/*.h
+${MAINDIR}/simulation/src/*.c* ${MAINDIR}/simulation/simulation/*.h
+${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/datatypes/tests/*.c* 
+${MAINDIR}/graphtools/tests/*.c*
+${MAINDIR}/fastsim/tests/*.c* 
+${MAINDIR}/utility/test/*.c* 
+${MAINDIR}/display/test/*.c* 
+${MAINDIR}/detectors/test/*.c* 
+${MAINDIR}/simulation/test/*.c* 
+${MAINDIR}/reconstruction/test/*.cpp
+)
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}
-${MAINDIR}/datatypes/
+${MAINDIR}/datatypes/datatypes/
 ${MAINDIR}/fastsim/
-${MAINDIR}/display/
-${MAINDIR}/detectors/
-${MAINDIR}/simulation/
-${MAINDIR}/utility
-${MAINDIR}/utility/
-${MAINDIR}/DAGtool/
-${MAINDIR}/pfalgo/
-${MAINDIR}/reconstruction/
+${MAINDIR}/display/display/
+${MAINDIR}/detectors/detectors/
+${MAINDIR}/simulation/simulation/
+${MAINDIR}/graphtools/graphtools/
+${MAINDIR}/utility/utility/
+${MAINDIR}/reconstruction/reconstruction/
 )
 
 project(event)
@@ -121,9 +124,12 @@ message(${sources})
 #message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
-ROOT_GENERATE_DICTIONARY(fastsim_Dict my_utilities.h  LINKDEF my_utilities_LinkDef.h)
-add_library(fastsim SHARED ${sources} ${MAINDIR}/DAGtool/directedacyclicgraph.h
-${MAINDIR}/utility/random.cc ${MAINDIR}/utility/random.h fastsim_Dict.cxx)
+#ROOT_GENERATE_DICTIONARY(fastsim_Dict) # my_utilities.h  LINKDEF my_utilities_LinkDef.h)
+add_library(fastsim SHARED ${sources} 
+${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
+${MAINDIR}/utility/src/random.cc 
+${MAINDIR}/utility/utility/random.h 
+)
 target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES} )
 
 

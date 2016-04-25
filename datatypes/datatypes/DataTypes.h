@@ -14,7 +14,7 @@
 #include "particledata.h"
 #include "TVector3.h"
 #include "path.h"
-#include "../pfalgo/distance.h"
+#include "distance.h"
 #include <iostream>
 
 //TODO location

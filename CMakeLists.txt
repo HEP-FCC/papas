@@ -36,12 +36,19 @@ include(${ROOT_USE_FILE})
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-include_directories(${CMAKE_SOURCE_DIR}/fastsim ${CMAKE_SOURCE_DIR}/utility ${CMAKE_SOURCE_DIR}/detectors ${CMAKE_SOURCE_DIR}/display
-${CMAKE_SOURCE_DIR}/datatypes ${CMAKE_SOURCE_DIR}/simulation ${CMAKE_SOURCE_DIR}/DAGtool )
+include_directories(
+${CMAKE_SOURCE_DIR}/fastsim/fastsim 
+${CMAKE_SOURCE_DIR}/utility/utility
+${CMAKE_SOURCE_DIR}/detectors/detectors
+${CMAKE_SOURCE_DIR}/display/display
+${CMAKE_SOURCE_DIR}/datatypes/datatypes
+${CMAKE_SOURCE_DIR}/simulation/simulation
+${CMAKE_SOURCE_DIR}/graphtools/graphtools
+)
 
 add_subdirectory(fastsim)
 add_subdirectory(main)
-add_subdirectory(DAGtool)
+add_subdirectory(graphtools)
 add_subdirectory(tests)
 
 
