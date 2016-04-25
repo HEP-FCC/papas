@@ -38,7 +38,7 @@ public:
   double pt() const       {return m_pt;}
   double energy() const   {return m_energy;}
   double eta() const      {return m_position.Eta();}
-  long ID() const         {return m_uniqueID;}
+  long id() const         {return m_uniqueID;}
   TVector3 position() const {return m_position;}
   void setEnergy(double energy);
   void setSize(double value) ;
@@ -63,7 +63,7 @@ class Track{
 public:
   //Track(TVector3 p3, double charge, const Path& path, long id);
   Track(TVector3 p3, double charge, sptrPath path, long id);
-  Track() : m_uniqueID(0), m_path(std::make_shared<Path>()) {};
+  Track() : m_uniqueId(0), m_path(std::make_shared<Path>()) {};
   //Track(Track& T);
   //Track(const Track& T);
   //Track(Track&& c);
@@ -77,7 +77,7 @@ public:
   double energy() const   {return m_p3.Mag();}
   double eta() const      {return m_p3.Eta();}
   double charge() const   {return m_charge;}
-  long   ID() const       {return m_uniqueID;}
+  long   id() const       {return m_uniqueId;}
   TVector3 p3() const     {return m_p3;}
   //const Path& path() const     {return m_path;} //const
   sptrPath path() const { return m_path;}
@@ -87,7 +87,7 @@ public:
   static double s_maxenergy; //AJR is this in the right place
 
 protected:
-  long m_uniqueID;
+  long m_uniqueId;
   double m_pt;
   TVector3 m_p3;
   double m_charge;
@@ -107,13 +107,13 @@ public:
   //const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;}
   // Helix& helix() {return std::dynamic_cast<Helix>(m_path);}
   TVector3 pathPosition(std::string name) const;
-  long uniqueID() const { return m_uniqueid;}
+  long id() const { return m_uniqueId;}
   //void setHelix(const Path& path);
   //void setPath(const Path& path);
   void setPath(sptrPath path) {m_path = path;}
   bool isHelix() const { return m_isHelix;}
 private:
-  long m_uniqueID;
+  long m_uniqueId;
   TVector3 m_vertex;
   sptrPath m_path;
   //class Path m_path; // will use either the Path (Straightline) or helix not both

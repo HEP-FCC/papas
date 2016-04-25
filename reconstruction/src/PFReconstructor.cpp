@@ -27,8 +27,8 @@
 
 PFReconstructor::PFReconstructor (PFEvent& pfEvent) :
     m_pfEvent(pfEvent),
-    m_blocks(pfEvent.blocks()),
     m_historyNodes(pfEvent.historyNodes()),
+    m_blocks(pfEvent.blocks()),
     m_hasHistory (pfEvent.historyNodes().size() == 0)
 {
 }
@@ -194,7 +194,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newpar
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   //if (newparticle) :
-  longID newid = newparticle.uniqueID();
+  longID newid = newparticle.id();
   m_particles[newid] = newparticle;
   
   //check if history nodes exists
@@ -358,7 +358,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   }
   //assert(pdg_id)
   double mass = ParticleData::particleMass(pdgId);
-  double charge = ParticleData::particleCharge(pdgId);
+  //double charge = ParticleData::particleCharge(pdgId);
   if (energy < mass) //null particle
     return SimParticle();
   
@@ -384,7 +384,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
                                                            // nb this only is problem if the cluster and the assigned layer are different
                                                            //particle.setPath(path);
                                                            //particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
-  m_locked[cluster.ID()] = true; //alice : just OK but not nice if hcal used to make ecal.
+  m_locked[cluster.id()] = true; //alice : just OK but not nice if hcal used to make ecal.
                                  //if self.debugprint:
   std::cout << "made particle from cluster " <<pdgId<< " : " <<  cluster ;//TODO << particle;
   return particle;
@@ -404,7 +404,7 @@ SimParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters 
   SimParticle particle{newid, track};
   //particle.setPath(track.path());
   //particle.clusters = clusters
-  m_locked[track.ID()] = true;
+  m_locked[track.id()] = true;
   
   std::cout << "made particle from track " <<particle.pdgId()<< " : " ;//<<  track ;//TODO << particle;
   return particle;

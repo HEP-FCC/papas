@@ -127,7 +127,7 @@ message(${sources})
 #ROOT_GENERATE_DICTIONARY(fastsim_Dict) # my_utilities.h  LINKDEF my_utilities_LinkDef.h)
 add_library(fastsim SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
-${MAINDIR}/utility/src/random.cc 
+${MAINDIR}/utility/src/random.cpp
 ${MAINDIR}/utility/utility/random.h 
 )
 target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES} )

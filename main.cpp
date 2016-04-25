@@ -140,7 +140,7 @@ int main(int argc, char* argv[]){
    }*/
    display.draw();
    
-   //theApp.Run();
+   theApp.Run();
    
    return EXIT_SUCCESS;
 }
@@ -337,6 +337,7 @@ MyClass::MyClass(std::string str)
 MyClass::MyClass(const MyClass &other)
 {
    std::cout << "Copy constructor was called" << m_str << std::endl;
+  m_str=other.m_str;
 }
 
 
@@ -395,7 +396,7 @@ void tryR(int argc, char* argv[]) {
     SimParticle& photon =sim.addParticle(22, tlvphoton);
     sim.simulatePhoton(photon);
     // R test of smearing
-    //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.ID());
+    //IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.id());
     //smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
     
   }
@@ -424,7 +425,7 @@ void tryR(int argc, char* argv[]) {
    std::vector<double> w;
    w.reserve(10000);
    for (auto x :sim.clusters())
-   { if (Identifier::isSmeared(x.second.ID()))
+   { if (Identifier::isSmeared(x.second.id()))
    w.push_back( x.second.energy());
    }
    r_density_plot(w, R);

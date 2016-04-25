@@ -306,7 +306,7 @@ int test_blocks() {
  /*
  
  def __str__(self):
- /** Block description which includes list of elements and a matrix of distances
+Block description which includes list of elements and a matrix of distances
  Example:
  block: E1H1T1       id=  39 :uid= 6601693505424: ecals = 1 hcals = 1 tracks = 1
  elements: {

@@ -35,7 +35,7 @@ Distance Ruler::distance(longID id1 ,longID id2) {
   else if (Identifier::isTrack(id1) && Identifier::isTrack(id2) )
     return Distance();
   //TODO error
-  //else
+  return Distance();
 }
 
 

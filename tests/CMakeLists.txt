@@ -35,7 +35,7 @@ find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
 message(${ROOT_LIBRARIES})
 
-add_executable(tests tests.cc)
+add_executable(tests tests.cpp)
 target_link_libraries(tests fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
 
 

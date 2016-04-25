@@ -70,7 +70,7 @@ TEST(fastsim, Helix)
 {  ///Helix path test
    TLorentzVector p4 = TLorentzVector();
    p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-   Helix helix(3.8, 1, p4,TVector3(0,0,0));
+   Helix helix( p4,TVector3(0,0,0),3.8, 1);
    double length = helix.pathLength(1.0e-9);
    TVector3 junk = helix.pointAtTime(1e-9);
    
@@ -84,7 +84,7 @@ TEST(fastsim, Helix)
 TEST(fastsim,Structures){
    //testing cylinders etc
    // Try base classes ;
-   Material M(fastsim::enumLayer::ECAL,1,1);
+   Material M(1, 1);
    SurfaceCylinder S("empty");
    VolumeCylinder V("new", 4, 6, 3, 6);
    return SUCCEED();
@@ -228,10 +228,10 @@ TEST(fastsim, StraightLine){
    SimParticle photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
-   auto points=photon.path().points();
+   auto points=photon.path()->points();
    
    // test extrapolation to barrel
-   EXPECT_EQ(points.size(),3);
+   EXPECT_EQ(points.size(),3UL); 
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
    EXPECT_NEAR(points["cyl1"].Z(), 1. ,1e-6);
    // test extrapolation to endcap
@@ -243,8 +243,8 @@ TEST(fastsim, StraightLine){
    photon = SimParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
-   points=photon.path().points();
-   EXPECT_EQ(points.size(),3);
+   points=photon.path()->points();
+   EXPECT_EQ(points.size(),3UL);
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
    EXPECT_NEAR(points["cyl1"].Z(), -1. ,1e-6);
    // test extrapolation to endcap
@@ -253,23 +253,23 @@ TEST(fastsim, StraightLine){
    
    // extrapolating from a vertex close to +endcap
    tlv=TLorentzVector(1, 0, 1, 2.);
-   photon = SimParticle(uid,22,tlv ,0., {0,0,1.5});
+   photon = SimParticle(uid,22,tlv , {0,0,1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
-   points=photon.path().points();
+   points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
 
    // extrapolating from a vertex close to -endcap
    tlv=TLorentzVector(1, 0, -1, 2.);
-   photon = SimParticle(uid,22,tlv , 0.,{0,0,-1.5});
+   photon = SimParticle(uid,22,tlv, {0,0,-1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
-   points=photon.path().points();
+   points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
    
    // extrapolating from a non-zero radius
    tlv=TLorentzVector(0, 0.5, 1, 2.);
-   photon = SimParticle(uid,22,tlv , 0.,{0.,0.5,0,});
+   photon = SimParticle(uid,22,tlv, {0.,0.5,0,}, 0.);
    propStraight.propagateOne(photon, cyl1);
-   points=photon.path().points();
+   points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
    EXPECT_NEAR(points["cyl1"].Z(), 1.,1e-6 );
    

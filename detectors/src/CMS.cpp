@@ -147,7 +147,6 @@ CMSHCAL::CMSHCAL(fastsim::enumLayer layer, const VolumeCylinder&& volume,
  */
 double CMSHCAL::clusterSize(const Particle& ptc) const
 {
-   //TODO
    return 0.2;
 }
 
@@ -196,8 +195,7 @@ bool CMSTracker::acceptance(const Track& track) const
 
 double CMSTracker::ptResolution(const Track& track) const
 {
-  //double pt = track.pt();
-   //TODO
+   double pt = track.pt(); //TODO inherited from Colin: depends on the field
    return 5e-3;
 }
 

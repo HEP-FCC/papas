@@ -18,7 +18,7 @@ GBlob::GBlob(const Cluster& cluster)
    double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
    //set the layer
-   m_layer = to_str(Identifier::layer(cluster.ID()));
+   m_layer = to_str(Identifier::layer(cluster.id()));
 
    //set the color according to particle type
    int color = 1;
@@ -277,8 +277,8 @@ void GTrajectory::setColor(int color)
    }
 }
 
-void GTrajectory::Draw(const std::string&   projection ,
-                       const std::string&  opt) const
+void GTrajectory::Draw(const std::string&   projection /*,
+                       const std::string&  opt*/) const
 {
    std::string usedopt = "lpsame"; //AJRTODO
 

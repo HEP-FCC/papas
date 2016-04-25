@@ -71,7 +71,7 @@ void Cluster::setEnergy(double energy)
 //put into subClusters its not rght just yet
 Cluster& Cluster::operator+=(const Cluster& rhs){
   
-  if (Identifier::layer(m_uniqueID) != Identifier::layer(rhs.ID())) {
+  if (Identifier::layer(m_uniqueID) != Identifier::layer(rhs.id())) {
     std::cout << "can only add a cluster from the same layer";
   }
   m_position = m_position * m_energy + rhs.position() * rhs.energy();
@@ -143,7 +143,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move
 
 
 Track::Track(const TVector3 p3, double charge, sptrPath path, long id) :
-m_uniqueID(id),
+m_uniqueId(id),
 m_p3(p3),
 m_charge(charge),
 m_path(path)
