@@ -7,38 +7,23 @@
 //
 //C++
 #include <iostream>
-#include <cstdlib>
 
-//ROOT
 #include "TROOT.h"
-#include "TVector3.h"
-#include "TLorentzVector.h"
 #include "TApplication.h"
-
-//gtest test
 #include "gtest/gtest.h"
 
-
-#include "material.h"
-#include "geometry.h"
 #include "CMS.h"
-#include "particle.h"
-#include "datatypes.h"
 #include "Simulator.h"
-#include "path.h"
 #include "displaygeometry.h"
 #include "displaycore.h"
 #include "displaypfobjects.h"
-#include "TVector3.h"
-#include "Edge.h"
-#include "PFBlock.h"
 #include "PFEvent.h"
+#include "PFBlock.h"
 #include "PFBlockBuilder.h"
 #include "PFReconstructor.h"
 
 
 extern int run_tests(int argc, char* argv[]);
-
 
 int main(int argc, char* argv[]){
   
@@ -89,7 +74,8 @@ int main(int argc, char* argv[]){
   std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));
   display.addToRegister(gdetector, 0);
   
-  //plot clusters
+  //TODO make this a separate function
+  //plot clusters, tracks etc
   for (auto& cl : pfEvent.ECALClusters()) {
     std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
@@ -105,9 +91,9 @@ int main(int argc, char* argv[]){
     display.addToRegister(gtrack,2);
   }
   display.draw();
+  
   //TODO uncomment for commandline
   //run theApp.Run();
-  
   
   //sim.testing(); //Write lists of connected items
   

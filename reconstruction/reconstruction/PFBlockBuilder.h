@@ -21,7 +21,7 @@ typedef long longID;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID,PFNode> Nodes;
 typedef std::unordered_map<longID, PFBlock> Blocks;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 
 class PFBlockBuilder  {
 public:
@@ -37,7 +37,7 @@ public:
   PFBlockBuilder(PFEvent& pfevent);
   //BlockBuilder(); //needed for unordered_map to compile but not actually used
   //BlockBuilder& operator = (const BlockBuilder&) ;
-  //const IDs elementIDs() const { return m_elementIDs;};///< return the blockbuilders element ids
+  //const Ids elementIds() const { return m_elementIds;};///< return the blockbuilders element ids
   Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
   friend std::ostream& operator<<(std::ostream& os, const PFBlockBuilder& blockbuilder); //TODO move to helper class
   
@@ -46,9 +46,9 @@ private:
   Blocks m_blocks;///< the blocks made by blockbuilder
   PFEvent& m_pfEvent;
   Nodes& m_historyNodes; ///<optional, allows history to be updated
-  IDs m_uniqueIDs;
+  Ids m_uniqueIds;
   //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
-  //void sortIDs(IDs& ids); //sorts elements by type
+  //void sortIds(Ids& ids); //sorts elements by type
 };
 #include <stdio.h>
 

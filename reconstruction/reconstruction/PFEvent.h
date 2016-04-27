@@ -24,7 +24,7 @@ class PFBlock;
 
 //TODO home for typedefs
 typedef long longID;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID, PFNode> Nodes;
 typedef std::unordered_map<longID, Track> Tracks;
@@ -41,7 +41,7 @@ public:
   const Cluster& cluster(longID id) const;
   const class Cluster& ECALCluster(longID id) const;
   const class Cluster& HCALCluster(longID id) const;
-  IDs elementIDs() const;
+  Ids elementIds() const;
   Nodes& historyNodes() { return m_historyNodes;} //allow these to be changed
   const Clusters& ECALClusters() const { return m_ecals;}
   const Clusters& HCALClusters() const { return m_hcals;}

@@ -11,10 +11,10 @@
 
 Edges emptyEdges;
 
-GraphBuilder::GraphBuilder(IDs ids,
+GraphBuilder::GraphBuilder(Ids ids,
                            Edges& edges) :
 m_edges(edges),
-m_elementIDs(ids)
+m_elementIds(ids)
 {
   
   //create local nodes ready to use to make the blocks
@@ -35,7 +35,7 @@ m_elementIDs(ids)
     
     //each of the nodevectors is about to become a separate block
     //we need the vector of ids and the map of edges in order to make the block
-    IDs subgraph;
+    Ids subgraph;
     for (auto& node : group) {
       subgraph.push_back(node->value());
     }
@@ -55,13 +55,13 @@ m_localNodes(emptyNodes)
 
 GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)
 {
-  m_elementIDs=b.m_elementIDs;
+  m_elementIds=b.m_elementIds;
   m_edges = b.m_edges;
   m_subGraphs = b.m_subGraphs;
   return *this;
 }
 
-void GraphBuilder::sortIDs(std::vector<longID>& ids)
+void GraphBuilder::sortIds(std::vector<longID>& ids)
 {
   std::sort(ids.begin(), ids.end(), [](longID a, longID b) -> bool
             { return Identifier::typeShortCode(a) < Identifier::typeShortCode(b); } );
@@ -76,7 +76,7 @@ void GraphBuilder::sortIDs(std::vector<longID>& ids)
   return os;
 }*/
 
-/*void GraphBuilder::sortIDs(std::vector<longID>& ids) // sorts by type and energy
+/*void GraphBuilder::sortIds(std::vector<longID>& ids) // sorts by type and energy
  {//TODO move to helper
  std::sort( ids.begin(), ids.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
  }*/

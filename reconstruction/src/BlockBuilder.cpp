@@ -8,22 +8,19 @@
 
 #include "BlockBuilder.h"
 #include "PFEvent.h"
-#include "Edge.h"
 #include "PFBlock.h"
 #include "directedacyclicgraph.h"
 #include "FloodFill.h"
 
 //Allow optional parameters where construction arguments are references
 Nodes emptyNodes;
-//const Nodes emptyconstNodes;
 extern Edges emptyEdges;
 
-BlockBuilder::BlockBuilder(IDs ids, Edges& edges, Nodes& historynodes) :
+BlockBuilder::BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes) :
   GraphBuilder(ids, edges),
   m_historyNodes(historynodes),
   m_blocks()
 {
-  //build the blocks of connected nodes using FloodFill
   makeBlocks();
 }
 /*
@@ -37,7 +34,7 @@ m_blocks()
 
 /*BlockBuilder& BlockBuilder::operator=(const BlockBuilder& b)
 {
-  m_elementIDs=b.m_elementIDs;
+  m_elementIds=b.m_elementIds;
   m_historyNodes=b.m_historyNodes;
   m_edges = b.m_edges;
   m_blocks =b.m_blocks;
@@ -51,11 +48,11 @@ void BlockBuilder::makeBlocks()
    Each set of connected elements will be used to make a new PFBlock
    */
 
-  for (auto& elementIDs : m_subGraphs) {
+  for (auto& elementIds : m_subGraphs) {
 
     //make the block
-    sortIDs(elementIDs);//TODO allow sorting my energy using a helper class
-    PFBlock block {elementIDs, m_edges};
+    sortIds(elementIds);//TODO allow sorting my energy using a helper class
+    PFBlock block {elementIds, m_edges};
 
     //put the block in the unordered map of blocks using move
     m_blocks.emplace(block.uniqueID(), std::move(block));
@@ -66,7 +63,7 @@ void BlockBuilder::makeBlocks()
       PFNode blocknode{block.uniqueID()};
       m_historyNodes.emplace(block.uniqueID(), std::move(blocknode)); // move
       //add in the links between the block elements and the block
-      for (auto elemid : block.elementIDs()) {
+      for (auto elemid : block.elementIds()) {
         m_historyNodes[elemid].addChild(blocknode);
       }
     }
@@ -83,7 +80,7 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder)
   return os;
 }
 
-/*void BlockBuilder::sortIDs(std::vector<longID>& ids) // sorts by type and energy
+/*void BlockBuilder::sortIds(std::vector<longID>& ids) // sorts by type and energy
 {//TODO move to helper
   std::sort( ids.begin(), ids.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
 }*/

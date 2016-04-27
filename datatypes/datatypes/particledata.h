@@ -26,7 +26,6 @@ public:
    static double particleMass(int pid)  { return particleData(pid).first;};
    static double particleCharge(int pid) { return particleData(pid).second;};
    static  std::pair<double, int>& particleData(int pid) {return m_datamap[pid];};
-
    static std::unordered_map<int, std::pair<double, int>> m_datamap;
 
 };

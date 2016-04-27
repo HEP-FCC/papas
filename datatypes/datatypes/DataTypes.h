@@ -7,15 +7,14 @@
 /**
  file datatypes.h
  */
-#include <string>
-#include <list>
-#include <utility>
-#include "particle.h"
-#include "particledata.h"
+
 #include "TVector3.h"
+#include "particle.h"
 #include "path.h"
-#include "distance.h"
-#include <iostream>
+
+class Path;
+class TLorentzVector;
+
 
 //TODO location
 typedef std::shared_ptr<Path> sptrPath;
@@ -28,7 +27,7 @@ TLorentzVector makeTLorentzVector(int pdgid, double theta, double  phi,
 
 class Cluster  {
 public:
-  Cluster(double energy, const TVector3& position, double size_m, long id);
+  Cluster(double energy, TVector3 position, double size_m, long id);
   Cluster() = default;
   Cluster(Cluster&& c)    = default;
   Cluster(const Cluster&) = default; //=default {std::cout<< "copy" ;} ;

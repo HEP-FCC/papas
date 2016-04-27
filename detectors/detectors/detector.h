@@ -22,13 +22,12 @@ class Material;
 class VolumeCylinder;
 class Cluster;
 class Track;
-///DetectorElement
+
 /**
  Class base for ECAL, HCAL, Track and field
 */
 
 
-//TODO rename this t DEtector Ekenebt
 class DetectorElement {
 public:
    DetectorElement(fastsim::enumLayer layer, const VolumeCylinder&& volume,
@@ -51,29 +50,14 @@ private:
 /**
  Holds virtual functions that the user must define when creating their own ECAL class
 */
-// get rid of this
 class Calorimeter :public DetectorElement {
 public:
    using DetectorElement::DetectorElement;
    virtual double energyResolution(double energy) const = 0;
    virtual double clusterSize(const Particle& ptc) const = 0 ;
    virtual bool   acceptance(const Cluster& ptc) const = 0;
-   //virtual bool   acceptance(const Track& track) const= 0;
-   //virtual double space_resolution(Particle* ptc)=0;
-private:
+   private:
 
-};
-
-class HCAL :public DetectorElement {
-public:
-   using DetectorElement::DetectorElement;
-   virtual double energyResolution(double energy) const = 0;
-   virtual double clusterSize(const Particle& ptc) const = 0 ;
-   virtual bool   acceptance(const Cluster& ptc) const = 0;
-   //virtual bool   acceptance(const Track& track) const= 0;
-   //virtual double space_resolution(Particle* ptc)=0;
-private:
-   
 };
 
 class Field: public DetectorElement {
@@ -86,10 +70,7 @@ public:
                    const Material&
                    material, double magnitude);
    double getMagnitude() const { return m_magnitude;};
-   //virtual double ptResolution(const Track&) const = 0;
-   //virtual bool   acceptance(const Track&) const = 0;
-   //virtual bool   acceptance(const Track& track) const= 0;
-   //virtual double space_resolution(Particle* ptc)=0;
+  
 protected:
    double m_magnitude;
 };

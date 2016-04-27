@@ -42,7 +42,7 @@ typedef std::unordered_map<long long, class Edge> Edges;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID, PFNode> Nodes;
 typedef std::unordered_map<longID, PFBlock> Blocks;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 
 //Allow optional parameters where construction arguments are references
 //TODO make sattic class member
@@ -57,17 +57,17 @@ public:
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
    */
-  GraphBuilder(IDs ids, Edges& edges);
+  GraphBuilder(Ids ids, Edges& edges);
   //GraphBuilder();
   GraphBuilder& operator = (const GraphBuilder&) ;
-  const std::vector<IDs>  subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
-  std::vector<IDs>  m_subGraphs;///< vector of subgraphs made by graphbuilder
+  const std::vector<Ids>  subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
+  std::vector<Ids>  m_subGraphs;///< vector of subgraphs made by graphbuilder
   
 protected:
-  void sortIDs(IDs& ids);
+  void sortIds(Ids& ids);
   Edges& m_edges;
 private:
-  IDs m_elementIDs; ///<uniqueids to be grouped into subgraphs
+  Ids m_elementIds; ///<uniqueids to be grouped into subgraphs
   Nodes m_localNodes; ///<local nodes used in building subgraphs
 };
 

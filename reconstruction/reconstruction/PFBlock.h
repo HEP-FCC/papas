@@ -49,7 +49,7 @@ class PFBlock {
 public:
   typedef long longID;
   typedef long long edgeKey;
-  typedef std::vector<longID>  IDs;
+  typedef std::vector<longID>  Ids;
   typedef std::unordered_map<long long, class Edge> Edges;
 
   /** Constructor
@@ -60,9 +60,9 @@ public:
    @param[in] pfevent: allows access to the underlying elements given a uniqueid
    must provide a get_object function
    */
-  PFBlock(const IDs&  elementIDs, Edges& edges);
+  PFBlock(const Ids&  elementIds, Edges& edges);
   PFBlock();
-  const IDs elementIDs() const { return m_elementIDs;}
+  const Ids elementIds() const { return m_elementIds;}
   Edge Edge(long long key) { return m_edges.find(key)->second;}
   const class Edge& Edge(long long key) const { return m_edges.find(key)->second;}
   
@@ -79,9 +79,9 @@ public:
   Returns list of all linked ids of a given edge type that are connected to a given id 
    @param[in] uniqueid : is the id of item of interest
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
-   @return vector of longIDs that are linked to the uniqueid
+   @return vector of longIds that are linked to the uniqueid
   */
-   IDs linkedIDs(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+   Ids linkedIds(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
   
 
   std::string shortName() const; ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
@@ -103,7 +103,7 @@ private:;
   bool m_isActive; // if a block is subsequently split it will be deactivated
   static int tempBlockCount; //sequential numbering of blocks, not essential but helpful for debugging
   int m_blockCount ; //sequential numbering of blocks, not essential but helpful for debugging
-  IDs  m_elementIDs; //elements in this block ordered by type and decreasing energy
+  Ids  m_elementIds; //elements in this block ordered by type and decreasing energy
   Edges m_edges; //all the edges for elements in this block
   const class Edge& edge(longID id1, longID id2) const;
   

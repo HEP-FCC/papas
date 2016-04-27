@@ -24,6 +24,7 @@
 #include "PFEvent.h"
 #include "PFBlock.h"
 #include "Edge.h"
+#include "ParticleData.h"
 
 PFReconstructor::PFReconstructor (PFEvent& pfEvent) :
     m_pfEvent(pfEvent),
@@ -80,7 +81,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
    have the tracks and cluster elements as parents, and also the original block as a parent
    */
   Blocks splitBlocks;
-  IDs ids=block.elementIDs();
+  Ids ids=block.elementIds();
   
   if (ids.size()<=1 ) {    //no links to remove
     return  splitBlocks;
@@ -133,7 +134,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   /// see class description for summary of reconstruction approach
   
-  IDs ids = block.elementIDs();
+  Ids ids = block.elementIds();
   for (auto id : ids) {
     m_locked[id] = false;
   }
@@ -169,7 +170,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
          # reconstructing charged hadrons.
          # ELECTRONS TO BE DEALT WITH.*/
         insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
-        for (auto idlink : block.linkedIDs(id,Edge::EdgeType::kEcalTrack) ) {
+        for (auto idlink : block.linkedIds(id,Edge::EdgeType::kEcalTrack) ) {
           //TODO ask colin what happened to possible photons here:
           //TODO add in extra photons but decide where they should go?
           m_locked[idlink] = true;
@@ -212,7 +213,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newpart
   //link particle to the block
   blockNode.addChild( particleNode);
   //link particle to block elements
-  for (auto element_id : block.elementIDs()) {
+  for (auto element_id : block.elementIds()) {
     m_historyNodes[element_id].addChild(particleNode);
   }
 }
@@ -263,18 +264,18 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
   //m_pfEvent.HCALCluster(hcalID);
   
   //TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
-  //TODO sorting IDs trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
+  //TODO sorting Ids trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
   
-  IDs ecalIDs ;
-  IDs trackIDs = block.linkedIDs(hcalID, Edge::EdgeType::kHcalTrack );
-  for (auto trackID : trackIDs ) {
-    for (auto ecalID  : block.linkedIDs(trackID, Edge::EdgeType::kEcalTrack ) ){
+  Ids ecalIds ;
+  Ids trackIds = block.linkedIds(hcalID, Edge::EdgeType::kHcalTrack );
+  for (auto trackID : trackIds ) {
+    for (auto ecalID  : block.linkedIds(trackID, Edge::EdgeType::kEcalTrack ) ){
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work
        # ask colin.*/
       if ( !m_locked[ecalID] ) {
-        ecalIDs.push_back(ecalID);
+        ecalIds.push_back(ecalID);
         m_locked[ecalID]  = true;
       }
     }
@@ -290,11 +291,11 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
   double  ecalEnergy = 0.;
   double trackEnergy = 0.;
   
-  for (auto id : trackIDs) {
+  for (auto id : trackIds) {
     const Track&  track = m_pfEvent.tracks().at(id);
     insertParticle(block, reconstructTrack( track));
     trackEnergy += track.energy();
-    for (auto id : ecalIDs) {
+    for (auto id : ecalIds) {
       ecalEnergy += m_pfEvent.ECALCluster(id).energy();
     }
   }

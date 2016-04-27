@@ -10,6 +10,8 @@
 #include "Identifier.h"
 #include "deltar.h"
 #include "distance.h"
+#include "particle.h"
+#include "particledata.h"
 
 
 const double ParticleData::m_e = 0.000511;
@@ -40,7 +42,7 @@ std::unordered_map<int, std::pair<double, int>> ParticleData::m_datamap =  {
 double Cluster::s_maxEnergy = 0;
 
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, long id) :
+Cluster::Cluster(double energy, TVector3 position, double size_m, long id) :
 m_uniqueID(id),  m_position(position), m_subClusters()
 {
   setSize(size_m);

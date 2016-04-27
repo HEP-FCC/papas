@@ -259,8 +259,8 @@ void Simulator::testing()
   }
 }
 
-IDs Simulator::linkedECALSmearedClusterIDs(long nodeid) const {
-  return getMatchingIDs(nodeid,
+Ids Simulator::linkedECALSmearedClusterIds(long nodeid) const {
+  return getMatchingIds(nodeid,
                         fastsim::enumDataType::CLUSTER,
                         fastsim::enumLayer::ECAL,
                         fastsim::enumSubtype::SMEARED,
@@ -268,41 +268,41 @@ IDs Simulator::linkedECALSmearedClusterIDs(long nodeid) const {
   //return ids;
 }
 
-IDs  Simulator::linkedRawTrackIDs(long nodeid) const {
-  return getMatchingIDs(nodeid,
+Ids  Simulator::linkedRawTrackIds(long nodeid) const {
+  return getMatchingIds(nodeid,
                         fastsim::enumDataType::TRACK,
                         fastsim::enumLayer::NONE,
                         fastsim::enumSubtype::RAW,
                         fastsim::enumSource::SIMULATION);
 }
 
-IDs  Simulator::linkedSmearedTrackIDs(long nodeid) const {
-  return getMatchingIDs(nodeid,
+Ids  Simulator::linkedSmearedTrackIds(long nodeid) const {
+  return getMatchingIds(nodeid,
                         fastsim::enumDataType::TRACK,
                         fastsim::enumLayer::NONE,
                         fastsim::enumSubtype::SMEARED,
                         fastsim::enumSource::SIMULATION);
 }
 
-IDs  Simulator::linkedParticleIDs(long nodeid) const {
-  return getMatchingIDs(nodeid,
+Ids  Simulator::linkedParticleIds(long nodeid) const {
+  return getMatchingIds(nodeid,
                         fastsim::enumDataType::PARTICLE,
                         fastsim::enumLayer::NONE,
                         fastsim::enumSubtype::RAW,
                         fastsim::enumSource::SIMULATION);
 }
 
-IDs  Simulator::parentParticleIDs(long nodeid) const {
-  return getMatchingParentIDs(nodeid,
+Ids  Simulator::parentParticleIds(long nodeid) const {
+  return getMatchingParentIds(nodeid,
                               fastsim::enumDataType::PARTICLE,
                               fastsim::enumLayer::NONE,
                               fastsim::enumSubtype::RAW,
                               fastsim::enumSource::SIMULATION);
 }
 
-IDs  Simulator::linkedIDs(long nodeid) const {
+Ids  Simulator::linkedIds(long nodeid) const {
   DAG::BFSVisitor<Node> bfs;
-  IDs foundids;
+  Ids foundids;
   foundids.reserve(1000); //TODO how
   auto res = bfs.traverseUndirected(m_nodes.at(nodeid));
   for (auto r : res)
@@ -312,10 +312,10 @@ IDs  Simulator::linkedIDs(long nodeid) const {
   return foundids;
 }
 
-IDs Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source) const
+Ids Simulator::getMatchingIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type, fastsim::enumSource source) const
 {
   DAG::BFSVisitor<Node> bfs;
-  IDs foundids;
+  Ids foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseUndirected(m_nodes.at(nodeid));
   for (auto r : res)
@@ -328,10 +328,10 @@ IDs Simulator::getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fasts
   return foundids;
 }
 
-IDs Simulator::getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source) const
+Ids Simulator::getMatchingParentIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer, fastsim::enumSubtype type,fastsim::enumSource source) const
 {
   DAG::BFSVisitor<Node> bfs;
-  IDs foundids;
+  Ids foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseParents(m_nodes.at(nodeid));
   for (auto r : res)

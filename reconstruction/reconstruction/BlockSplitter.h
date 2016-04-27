@@ -58,7 +58,7 @@ typedef std::unordered_map<long long, class Edge> Edges;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID,PFNode> Nodes;
 typedef std::unordered_map<longID, PFBlock> Blocks;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 
 //Allow optional parameters where construction arguments are references
 extern Nodes emptyNodes;

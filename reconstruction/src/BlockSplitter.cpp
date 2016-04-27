@@ -29,7 +29,7 @@ m_blocks()
     modifiedEdges.emplace(e.key(), std::move(e));
   }
   
-  BlockBuilder bbuilder{block.elementIDs(), modifiedEdges, historynodes};
+  BlockBuilder bbuilder{block.elementIds(), modifiedEdges, historynodes};
   m_blocks = bbuilder.blocks();
   block.setActive(false);
   

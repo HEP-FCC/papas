@@ -25,7 +25,7 @@ class TVector3;
 //TODO store typedefs centrally
 typedef long longID;
 typedef std::unordered_map<longID, PFParticle> Particles;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 //typedef std::unordered_map<longID, Cluster> Clusters;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID, PFNode> Nodes;
@@ -54,7 +54,7 @@ private:
   Blocks m_blocks; //TODO should this be a reference - nb blocks will get changed (disactivated during splitting)
   Particles m_particles; //owns the particles it makes
   bool m_hasHistory;
-  IDs m_unused;
+  Ids m_unused;
   std::unordered_map<longID, bool> m_locked;
   
 };

@@ -53,7 +53,7 @@ void tryR(int argc, char* argv[]) {
   Simulator sim= Simulator{CMSDetector};
   
   // R test of smearing
-  IDs smeared_clust_IDs;
+  Ids smeared_clust_Ids;
   
   //Photons
   for (int i=1; i<10;i++  )
@@ -61,8 +61,8 @@ void tryR(int argc, char* argv[]) {
    PFParticle& photon =sim.addParticle(22, M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
     sim.simulatePhoton(photon);
     // R test of smearing
-    IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.id());
-    smeared_clust_IDs.insert(std::end(smeared_clust_IDs),std::begin(c_IDs) ,std::end(c_IDs));
+    Ids c_Ids=sim.linkedECALSmearedClusterIds(photon.id());
+    smeared_clust_Ids.insert(std::end(smeared_clust_Ids),std::begin(c_Ids) ,std::end(c_Ids));
     
   }
   //Hadrons
@@ -77,7 +77,7 @@ void tryR(int argc, char* argv[]) {
    std::vector<double> w;
    w.reserve(10000);
    const Clusters& clusters =sim.smearedECALClusters();
-   for (auto x :smeared_clust_IDs)
+   for (auto x :smeared_clust_Ids)
    {
    w.push_back( clusters.find(x)->second.energy());
    }

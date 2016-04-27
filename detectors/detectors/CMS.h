@@ -44,8 +44,8 @@ public:
         const std::vector<double>& eres);*/
 
    double clusterSize(const Particle& ptc) const override;
-   bool acceptance(const Cluster& cluster)  const override;
-   double energyResolution(double energy)  const override;
+   bool acceptance(const Cluster& cluster) const override;
+   double energyResolution(double energy) const override;
    //TODOAJR space_resolution(self, ptc):
 private:
    double m_eta_crack;

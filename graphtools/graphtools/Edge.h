@@ -52,7 +52,7 @@ public:
   longID otherID(longID id) const; /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
 /**
-  *   @brief  Static function that creates a unique key given two longIDs
+  *   @brief  Static function that creates a unique key given two longIds
   *
   *   @description
   *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids

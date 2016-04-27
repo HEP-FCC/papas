@@ -21,13 +21,13 @@
 PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
   m_pfEvent(pfevent),
   m_historyNodes(pfevent.historyNodes()),
-  m_uniqueIDs(pfevent.elementIDs())
+  m_uniqueIds(pfevent.elementIds())
 {
   
 
   if (m_historyNodes.size()==0) {
     //create local nodes ready to use to make the blocks
-    for (auto id : m_uniqueIDs)
+    for (auto id : m_uniqueIds)
       m_historyNodes.emplace(id, PFNode(id));
   }
   
@@ -35,8 +35,8 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
   //compute edges between each pair of nodes
   Edges edges;
   Ruler ruler(pfevent);
-  for (auto id1 : m_uniqueIDs) {
-    for (auto id2 : m_uniqueIDs) {
+  for (auto id1 : m_uniqueIds) {
+    for (auto id2 : m_uniqueIds) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1,id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
@@ -45,7 +45,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
       }
     }
   }
-  m_blocks = std::move(BlockBuilder(m_uniqueIDs, edges, m_historyNodes).blocks());
+  m_blocks = std::move(BlockBuilder(m_uniqueIds, edges, m_historyNodes).blocks());
   for (auto & b : m_blocks) {
     std::cout << b.second;
   }

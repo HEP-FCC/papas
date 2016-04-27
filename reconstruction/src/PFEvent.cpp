@@ -58,8 +58,8 @@ const Cluster&  PFEvent::ECALCluster(longID id) const {
   return m_ecals.at(id); //supress warning for now
 }
 
-IDs PFEvent::elementIDs() const {
-  IDs ids;
+Ids PFEvent::elementIds() const {
+  Ids ids;
   ids.reserve(m_ecals.size() + m_hcals.size() + m_tracks.size());
   for(auto it = m_ecals.begin(); it != m_ecals.end(); ++it) {
     ids.push_back(it->first);

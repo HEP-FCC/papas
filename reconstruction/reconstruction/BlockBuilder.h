@@ -44,7 +44,7 @@ typedef std::unordered_map<long long, class Edge> Edges;
 typedef DAG::Node<longID> PFNode;
 typedef std::unordered_map<longID,PFNode> Nodes;
 typedef std::unordered_map<longID, PFBlock> Blocks;
-typedef std::vector<longID> IDs;
+typedef std::vector<longID> Ids;
 
 //Allow optional parameters where construction arguments are references
 //TODO make these internal static members
@@ -62,7 +62,7 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  BlockBuilder(IDs ids,
+  BlockBuilder(Ids ids,
                Edges& edges,
                Nodes& historynodes = emptyNodes );
   Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
@@ -75,7 +75,7 @@ private:
   Blocks m_blocks;///< the blocks made by blockbuilder
   
   //bool compareEdges( long long key1, long long key2, longID uniqueid) const; //todo move to helper class
-  //void sortIDs(IDs& ids); //sorts elements by type
+  //void sortIds(Ids& ids); //sorts elements by type
   
 };
 

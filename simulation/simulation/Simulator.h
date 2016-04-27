@@ -7,14 +7,19 @@
 #include <string>
 #include <unordered_map>
 #include <map>
+#include "TVector3.h"
+
 #include "enums.h"
-#include "detector.h"
-#include "datatypes.h"
 #include "directedacyclicgraph.h"
-#include "Identifier.h"
 #include "propagator.h"
 
-class Particle;
+class PFParticle;
+class Cluster;
+class Track;
+class BaseDetector;
+class DetectorElement;
+class SurfaceCylinder;
+
 
 //TODO home for typedefs
 typedef DAG::Node<long> Node;
@@ -26,7 +31,7 @@ typedef std::unordered_map<long, Cluster> ECALClusters;
 typedef std::unordered_map<long, Cluster> HCALClusters;
 typedef std::unordered_map<long, Track> Tracks;
 typedef std::unordered_map<long, PFParticle> Particles;
-typedef std::vector<long> IDs;
+typedef std::vector<long> Ids;
 
 class Simulator {
 
@@ -50,9 +55,9 @@ public:
   const Particles& particles() const {return m_particles;} ///<Copy of particles
 
   void testing();
-  IDs linkedECALSmearedClusterIDs(long nodeid) const; //TODO move to helper/history class
-  IDs linkedParticleIDs(long nodeid) const ; //TODO move to helper/history class
-  IDs parentParticleIDs(long nodeid) const ; //TODO move to helper/history class
+  Ids linkedECALSmearedClusterIds(long nodeid) const; //TODO move to helper/history class
+  Ids linkedParticleIds(long nodeid) const ; //TODO move to helper/history class
+  Ids parentParticleIds(long nodeid) const ; //TODO move to helper/history class
 
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
@@ -69,25 +74,23 @@ private:
   void addNode(const long newid, const long parentid = 0);
   std::shared_ptr<const DetectorElement> elem(fastsim::enumLayer layer) const;
   
-  IDs linkedRawTrackIDs(long nodeid) const; //TODO move to helper/history class
-  IDs linkedSmearedTrackIDs(long nodeid) const; //TODO move to helper/history class
-  IDs linkedIDs(long nodeid) const; //TODO move to helper/history class
-  IDs getMatchingIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
+  Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
+  Ids linkedIds(long nodeid) const; //TODO move to helper/history class
+  Ids getMatchingIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                      fastsim::enumSubtype type, fastsim::enumSource source) const; //TODO move to helper/history class
-  IDs getMatchingParentIDs(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  Ids getMatchingParentIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                            fastsim::enumSubtype type, fastsim::enumSource source) const ;  //TODO move to helper/history class
 
   Clusters m_ECALClusters;
   Clusters m_HCALClusters;
   Clusters m_smearedECALClusters;
   Clusters m_smearedHCALClusters;
-  Tracks   m_tracks;        /// pre smeared tracks
-  Tracks   m_smearedTracks; /// smeared tracks
-  Particles m_particles;    /// all particles
+  Tracks   m_tracks;        ///< pre smeared tracks
+  Tracks   m_smearedTracks; ///< smeared tracks
+  Particles m_particles;    ///< all particles
 
-  //this will have a keyed entry for everything that has
-  //been simulated and so acts as a lookup table
-  Nodes m_nodes;
+  Nodes m_nodes; ///< Records relationships of everything that is simulated
   const BaseDetector& m_detector;
   StraightLinePropagator m_propStraight;
   HelixPropagator m_propHelix;
