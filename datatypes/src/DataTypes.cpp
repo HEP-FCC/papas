@@ -150,7 +150,7 @@ m_path(path)
 {
 }
 
-SimParticle::SimParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+PFParticle::PFParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
 Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
 m_vertex(vertex),
 m_isHelix(fabs(charge())>0.5)
@@ -164,24 +164,24 @@ m_isHelix(fabs(charge())>0.5)
 }
 
 
-SimParticle::SimParticle(long uniqueid,const Track& track) :
-SimParticle(uniqueid,
+PFParticle::PFParticle(long uniqueid,const Track& track) :
+PFParticle(uniqueid,
             211 * track.charge(),
             TLorentzVector(track.p3(), track.energy()),
             track.path()->namedPoint("vertex"),
             track.path()->field()) {
 }
 /*
-void SimParticle::setHelix(const Path& path) {
+void PFParticle::setHelix(const Path& path) {
   m_helix = path; //copy??
   }
 
-void SimParticle::setPath(const Path& path) {
+void PFParticle::setPath(const Path& path) {
   m_path = path;
 }*/
 
 
-TVector3 SimParticle::pathPosition(std::string name) const
+TVector3 PFParticle::pathPosition(std::string name) const
 {
   return m_path->namedPoint(name);
 }
@@ -207,7 +207,7 @@ TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double en
 }
 
 
-/*SimParticle::SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
+/*PFParticle::PFParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
  Particle(pdgid, charge, tlv), m_vertex(vertex) {
  self.path = None
  self.clusters = dict()
@@ -216,7 +216,7 @@ TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double en
  self.track_smeared = None
  }*/
 
-bool SimParticle::isElectroMagnetic() const
+bool PFParticle::isElectroMagnetic() const
 {
   unsigned int kind = abs(pdgId());
   if (kind == 11 || kind == 22) {

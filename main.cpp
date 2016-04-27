@@ -57,13 +57,13 @@ int main(int argc, char* argv[]){
   
   //Make Some Photons
   for (int i = 1; i<1; i++) {
-    SimParticle& photon = sim.addParticle(22, M_PI/2. + 0.025*i, M_PI/2. + 0.3*i, 100 );
+    PFParticle& photon = sim.addParticle(22, M_PI/2. + 0.025*i, M_PI/2. + 0.3*i, 100 );
     sim.simulatePhoton(photon);
   }
   
   //Make Some Hadrons
   for (int i = 0; i<1; i++) {
-    SimParticle& hadron = sim.addParticle(211, M_PI/2. + 0.5*(i + 1) , 0, 40.*(i + 1));
+    PFParticle& hadron = sim.addParticle(211, M_PI/2. + 0.5*(i + 1) , 0, 40.*(i + 1));
     sim.simulateHadron(hadron);
     
   }

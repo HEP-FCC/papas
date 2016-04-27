@@ -124,8 +124,8 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 add_library(fastsim SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
-${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h 
+${MAINDIR}/utility/src/rand.cpp
+${MAINDIR}/utility/utility/rand.h
 )
 target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES})
 

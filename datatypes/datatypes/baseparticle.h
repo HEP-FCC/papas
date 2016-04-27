@@ -24,7 +24,6 @@ public:
                 double status = 0);
    BaseParticle(long id, int pdgid, double charge);
    std::string StringDescription() const;                ///< String to describe the particle
-
    const TLorentzVector p4() const {return m_tlv;}    ///< 4-momentum, px, py, pz, E
    const TVector3 p3() const {return m_tlv.Vect();}   ///< 3-momentum px, py, pz
    double e() const {return m_tlv.E();}               ///<Energy

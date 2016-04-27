@@ -58,7 +58,7 @@ set (DYLD_LIBRARY_PATH  $RLIB_ROOT $RINSIDE_ROOT)
 
 
 
-add_executable(rtest  r_test.cpp)
+add_executable(rtest  r_test.cpp )
 target_link_libraries(rtest  fastsim ${ROOT_LIBRARIES} /Library/Frameworks/R.framework/Versions/3.2/Resources/lib/libR.dylib  /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib/libRInside.dylib ${GTEST_LIBRARIES})
 add_library(RInside SHARED IMPORTED)
 add_library(R SHARED IMPORTED)

@@ -16,7 +16,7 @@
 
 class PFEvent;
 class PFBlock;
-class SimParticle;
+class PFParticle;
 class Cluster;
 class Track;
 class TVector3;
@@ -24,7 +24,7 @@ class TVector3;
 //TODO simparticles is not right
 //TODO store typedefs centrally
 typedef long longID;
-typedef std::unordered_map<longID, SimParticle> Particles;
+typedef std::unordered_map<longID, PFParticle> Particles;
 typedef std::vector<longID> IDs;
 //typedef std::unordered_map<longID, Cluster> Clusters;
 typedef DAG::Node<longID> PFNode;
@@ -42,10 +42,10 @@ private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);
   void reconstructHcal(const PFBlock& block, longID hcalID);
-  SimParticle reconstructTrack(const Track& track);
-  SimParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1,
+  PFParticle reconstructTrack(const Track& track);
+  PFParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1,
                                  TVector3 vertex= TVector3());
-  void insertParticle(const PFBlock& block, SimParticle&& particle);
+  void insertParticle(const PFBlock& block, PFParticle&& particle);
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
   

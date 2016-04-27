@@ -185,7 +185,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
 }
 
-void  PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newparticle) {
+void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
    It will have as its parents the block and all the elements of the block.
@@ -337,7 +337,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
   
 }
 
-SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
+PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
                                                 fastsim::enumLayer layer,
                                                 double energy,
                                                 TVector3 vertex) {
@@ -360,7 +360,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   double mass = ParticleData::particleMass(pdgId);
   //double charge = ParticleData::particleCharge(pdgId);
   if (energy < mass) //null particle
-    return SimParticle();
+    return PFParticle();
   
   double momentum;
   if (mass ==0) {
@@ -374,7 +374,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   
   longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
-  SimParticle particle{newid, pdgId, p4, vertex};
+  PFParticle particle{newid, pdgId, p4, vertex};
   
   //TODO figure out if this is needed
   //Path path{p4, vertex}; //default is strightline path
@@ -390,7 +390,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   return particle;
 }
 
-SimParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters = None): # cluster argument does not ever seem to be used at present
+PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters = None): # cluster argument does not ever seem to be used at present
   /*construct a charged hadron from the track
    */
   /*TVector3 vertex = track.path()->namedPoint("vertex");
@@ -401,7 +401,7 @@ SimParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters 
   p4.SetVectM(track.p3(), mass);*/
   longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
-  SimParticle particle{newid, track};
+  PFParticle particle{newid, track};
   //particle.setPath(track.path());
   //particle.clusters = clusters
   m_locked[track.id()] = true;

@@ -17,7 +17,7 @@ StraightLinePropagator::StraightLinePropagator()
 {
 }
 
-void StraightLinePropagator::propagateOne(SimParticle& ptc,
+void StraightLinePropagator::propagateOne(PFParticle& ptc,
                                           std::string cylindername,
                                           double cylinderz,
                                           double cylinderradius)
@@ -63,7 +63,7 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
 }
 
 
-void StraightLinePropagator::propagateOne(SimParticle& ptc,
+void StraightLinePropagator::propagateOne(PFParticle& ptc,
                                           const SurfaceCylinder & cyl)
 {
    propagateOne(ptc, cyl.getName(), cyl.Z(), cyl.getRadius());
@@ -77,7 +77,7 @@ HelixPropagator::HelixPropagator(double field) :
 }
 
 
-void HelixPropagator::propagateOne(SimParticle& ptc,
+void HelixPropagator::propagateOne(PFParticle& ptc,
                                    const SurfaceCylinder & cyl)
 {
    auto helix = std::static_pointer_cast<Helix>(ptc.path());

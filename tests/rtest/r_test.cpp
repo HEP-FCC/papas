@@ -58,7 +58,7 @@ void tryR(int argc, char* argv[]) {
   //Photons
   for (int i=1; i<10;i++  )
   {
-   SimParticle& photon =sim.addParticle(22, M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
+   PFParticle& photon =sim.addParticle(22, M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
     sim.simulatePhoton(photon);
     // R test of smearing
     IDs c_IDs=sim.linkedECALSmearedClusterIDs(photon.id());
@@ -68,7 +68,7 @@ void tryR(int argc, char* argv[]) {
   //Hadrons
   for (int i=1; i<20;i++  )
   {
-    SimParticle& hadron =  sim.addParticle(211,  M_PI/2. +0.5*i , 0, 40.*(i));
+    PFParticle& hadron =  sim.addParticle(211,  M_PI/2. +0.5*i , 0, 40.*(i));
     sim.simulateHadron(hadron);
     
   }

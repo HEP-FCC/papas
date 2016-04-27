@@ -8,7 +8,7 @@
 #include <string>
 #include <limits>
 #include "enums.h"
-#include "random.h"
+#include "rand.h"
 
 const int c_vecsize = 10000;
 const double c_exp_lambda = 3.5; //AJR where does this come from
@@ -26,8 +26,8 @@ private:
   //fastsim::enumLayer m_layer;
    double m_x0;
    double m_lambdaI;
-   fastsim::RandExponential m_randomLambda;
-   fastsim::RandExponential m_randomX0;
+   randomgen::RandExponential m_randomLambda;
+   randomgen::RandExponential m_randomX0;
   };
 
 

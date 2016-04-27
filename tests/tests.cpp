@@ -31,10 +31,12 @@
 #include "displaypfobjects.h"
 #include "TVector3.h"
 
-#include "random.h"
+//include "random.h"
+#include "rand.h"
 
 //gtest test
 #include "gtest/gtest.h"
+//#include <boost/python.hpp>
 
 
 
@@ -44,12 +46,15 @@ extern int test_blocks();
 extern int test_BlockBuilder();
 extern int test_BlockSplitter();
 extern int test_Distance();
+
 //extern void tryMapMoveObject();
 
 
 
-//std::default_random_engine fastsim::RandNormal::engine(0);z
+
 int main(int argc, char* argv[]){
+  
+  //test_RandomNew();
   
   //TODO convert to Gtest
     test_edges();
@@ -223,7 +228,7 @@ TEST(fastsim, StraightLine){
    
    TLorentzVector tlv{1, 0, 1, 2.};
    long uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
-   SimParticle photon = SimParticle(uid,22,tlv ) ;
+   PFParticle photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
    auto points=photon.path()->points();
@@ -238,7 +243,7 @@ TEST(fastsim, StraightLine){
    //testing extrapolation to -z
    tlv=TLorentzVector(1, 0, -1, 2.);
    uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
-   photon = SimParticle(uid,22,tlv ) ;
+   photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
    points=photon.path()->points();
@@ -251,21 +256,21 @@ TEST(fastsim, StraightLine){
    
    // extrapolating from a vertex close to +endcap
    tlv=TLorentzVector(1, 0, 1, 2.);
-   photon = SimParticle(uid,22,tlv , {0,0,1.5}, 0.);
+   photon = PFParticle(uid,22,tlv , {0,0,1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
 
    // extrapolating from a vertex close to -endcap
    tlv=TLorentzVector(1, 0, -1, 2.);
-   photon = SimParticle(uid,22,tlv, {0,0,-1.5}, 0.);
+   photon = PFParticle(uid,22,tlv, {0,0,-1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
    
    // extrapolating from a non-zero radius
    tlv=TLorentzVector(0, 0.5, 1, 2.);
-   photon = SimParticle(uid,22,tlv, {0.,0.5,0,}, 0.);
+   photon = PFParticle(uid,22,tlv, {0.,0.5,0,}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
    EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
@@ -276,52 +281,27 @@ TEST(fastsim, StraightLine){
 
 
 
-TEST(fastsim, RandomNorm)
-{
-  
-   //seed it to have known start point
-   fastsim::RandNormal rnorm(5.,1.,100);
-   double r1 = rnorm();
-   fastsim::RandNormal rnorm3(5.,1.,100);
-   double r2 = rnorm3();
-   //test random normal seeded comes out same
-   EXPECT_EQ(r1,r2 );
-   
-   //use a rnadom start point so should not give same answers
-   //fastsim::engine.seed(100);
-   //std::cout<<fastsim::makeseed()<<std::endl;
-   //std::cout<<fastsim::makeseed()<<std::endl;
-   //std::cout<<fastsim::makeseed()<<std::endl;
 
-   fastsim::RandNormal rnormA(5., 1., fastsim::makeseed());
-   double r3= rnormA();
-   fastsim::RandNormal rnormB(5., 1.);
-   double r4 = rnormB();
-   ;
-   EXPECT_NE(r3, r4 );
-   
-   
-}
 
-TEST(fastsim, RandomExp)
+TEST(utility, RandomExp)
 {
    //seed it to have known start point
-   fastsim::RandExponential rexp(5.,100);
-   double r1 = rexp();
-   fastsim::RandExponential rexp3(5.,100);
-   double r2 = rexp3();
+  randomgen::setSeed(100);
+   randomgen::RandExponential rexp(5.);
+   double r1 = rexp.next();
+    randomgen::setSeed(100);
+   randomgen::RandExponential rexp3(5.);
+   double r2 = rexp3.next();
    EXPECT_EQ(r1, r2);
    
    //use a random start point so should not give same answers
-   fastsim::RandExponential rexpA(5.);
-   double r3 = rexpA();
+    randomgen::setSeed();
+   randomgen::RandExponential rexpA(5.);
+   double r3 = rexpA.next();
   //std::cout << rexpA()<<", "<< rexpA()<<", "<< rexpA()<<", "<< rexpA();
-   fastsim::RandExponential rexpB(5.);
-   double r4 = rexpB();
-  //
-  std::cout << rexpB()<<", "<<rexpB()<<", "<<rexpB()<<", "<<rexpA();
+   randomgen::RandExponential rexpB(5.);
+   double r4 = rexpB.next();
   
-    
   
    EXPECT_NE(r3, r4);
   
@@ -535,6 +515,57 @@ MyClass someFunction()
 }
 
 
+void test_RandomNew()
+{
+  
+  auto rgen = randomgen::RandUniform(1,2);
+  for (auto i =1 ; i <20; i++) {
+  std::cout<<rgen.next()<<",";
+  }
+  std::cout<<std::endl <<std::endl;
+  auto rgen1 = randomgen::RandUniform(1,2);
+  for (auto i =1 ; i <20; i++) {
+    std::cout<<rgen1.next()<<",";
+  }
+  std::cout<<std::endl <<std::endl;
+  auto rgen2 = randomgen::RandUniform(1,2);
+  for (auto i =1 ; i <20; i++) {
+    std::cout<<rgen2.next()<<",";
+  }
+  randomgen::setSeed();
+  std::cout<<std::endl<<std::endl <<std::endl;
+  std::cout<<std::endl <<std::endl;
+  auto rgen3 = randomgen::RandUniform(1,2);
+  for (auto i =1 ; i <20; i++) {
+    std::cout<<rgen3.next()<<",";
+  }
+  std::cout<<std::endl<<std::endl <<std::endl;
+}
+
+TEST(utility, randomgen)
+{
+  //seed it to have known start point
+  randomgen::setSeed(100);
+  randomgen::RandNormal rnorm(5., 1.);
+  double r1 = rnorm.next();
+
+  //reseed at same point
+  randomgen::setSeed(100);
+  randomgen::RandNormal rnorm3(5., 1.);
+  double r2 = rnorm3.next();
+  //test random normal seeded comes out same
+  EXPECT_EQ(r1, r2);
+
+  //seed randomly
+  randomgen::setSeed();
+  randomgen::RandNormal rnormA(5., 1.);
+  double r3 = rnormA.next();
+  double r5 = rnormA.next();
+  randomgen::RandNormal rnormB(5., 1.);
+  double r4 = rnormB.next();
+
+  EXPECT_NE(r3, r4);
+}
 
 //Different sort of test
 /*void tryMapMoveObject()

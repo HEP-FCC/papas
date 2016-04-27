@@ -154,7 +154,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
 }
 
 
-GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
+GTrajectory::GTrajectory(const  PFParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
    const std::unordered_map<std::string, TVector3>& points = particle.path()->points();
@@ -298,7 +298,7 @@ GTrajectories::GTrajectories(const  std::vector<TVector3>& points)
    m_gTrajectories.push_back(GTrajectory(points));
 }
 
-GTrajectories::GTrajectories(const  SimParticle& particle)
+GTrajectories::GTrajectories(const  PFParticle& particle)
 //AJRTODO const std::list<Particle>& particles)
 {
    //Path& path= sp.path();

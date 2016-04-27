@@ -96,12 +96,12 @@ protected:
 };
 
 
-class SimParticle: public Particle {
+class PFParticle: public Particle {
 public:
   bool isElectroMagnetic() const;
-  SimParticle() = default;
-  SimParticle(long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0.,0.), double  field = 0.);
-  SimParticle(long uniqueid,const Track& track);
+  PFParticle() = default;
+  PFParticle(long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0.,0.), double  field = 0.);
+  PFParticle(long uniqueid,const Track& track);
   sptrPath path() const { return m_path;}
   //Path& path()  {if (m_isHelix) return m_helix; else return m_path;}
   //const class Path& constPath() const   {if (m_isHelix) return m_helix; else return m_path;}

@@ -74,17 +74,17 @@ namespace DAG {
    template <typename N> //N is the templated Node
    class Visitor {
    public:
-      typedef std::unordered_set<N*> Nodeset; ///<allows find and just one of each node - used for traversals
-      typedef std::vector<N*> Nodevector; ///<used to return results
+      typedef std::unordered_set<const N*> Nodeset; ///<allows find and just one of each node - used for traversals
+      typedef std::vector<const N*> Nodevector; ///<used to return results
       Visitor(); ///<Constructor
       /// Key function for visitor pattern
-      virtual void visit(N* node) = 0;
+      virtual void visit(const N* node) = 0;
       /// returns vector of all child nodes (including the start node and all children of children)
-      virtual const Nodevector&  traverseChildren(N& startnode) = 0;
+      virtual const Nodevector&  traverseChildren(const N& startnode) = 0;
       /// returns vector of all parent nodes (including the start node and all parents of parents)
-      virtual const Nodevector&  traverseParents(N& startnode) = 0;
+      virtual const Nodevector&  traverseParents(const N& startnode) = 0;
       /// returns everything linked to the start node
-      virtual const Nodevector&  traverseUndirected(N& startnode) = 0;
+      virtual const Nodevector&  traverseUndirected(const N& startnode) = 0;
    protected:
    };
 
@@ -100,8 +100,8 @@ namespace DAG {
       /// Needed for putting a Node inside a unordered_map
       Node();
       // ideally no copying because it means nodes are no longer unique
-      TNode& operator=(TNode&)=delete;
-      TNode& operator=(const TNode&)=delete;
+      TNode& operator=(TNode&) = delete;
+      TNode& operator=(const TNode&) = delete;
       //However, unordered_map requires these to be available
       //TODO make this more formal
       Node(TNode&) {std::cout << "Unexpected Node copy";};
@@ -111,7 +111,7 @@ namespace DAG {
       Node(TNode&& other)=default;
      
       ///Key function for visitor pattern
-      void accept(Visitor<TNode>& visitor);
+      void accept(Visitor<TNode>& visitor) const;
       ///Add in a link (this will set the reverse parent link in the other node)
       void addChild(Node& node);
       /// return the node item
@@ -134,16 +134,16 @@ namespace DAG {
    public:
       
       ///used for traversals
-      typedef std::unordered_set<N*> Nodeset; //internal use of pointer (supports the Nodes being concrete objects)
+      typedef std::unordered_set<const N*> Nodeset; //internal use of pointer (supports the Nodes being concrete objects)
       ///used for returning results
-      typedef std::vector<N*> Nodevector ;
+      typedef std::vector<const N*> Nodevector ;
 
       BFSVisitor();
-      void visit(N* node) override; ///< key to visitor pattern
+      void visit(const N* node) override; ///< key to visitor pattern
 
-      const  Nodevector& traverseChildren(N& node)   override;
-      const  Nodevector& traverseParents(N& node)    override;
-      const  Nodevector& traverseUndirected(N& node) override;
+      const  Nodevector& traverseChildren( const N& node) override;
+      const  Nodevector& traverseParents( const  N& node) override;
+      const  Nodevector& traverseUndirected( const  N& node) override;
       bool alreadyVisited(N* node) const;
 
    protected:
@@ -209,7 +209,7 @@ namespace DAG {
     @return void
     */
    template<typename T>
-   void Node<T>::accept(Visitor<TNode>& visitor)
+   void Node<T>::accept(Visitor<TNode>& visitor) const
    {
       visitor.visit(this);
    } ;
@@ -233,7 +233,7 @@ namespace DAG {
     @return void
     */
    template<typename N>
-   void BFSVisitor<N>::visit(N* node)
+   void BFSVisitor<N>::visit(const N* node)
    {
       m_result.push_back(node); //add to result
       m_visited.insert(node);   //mark it as visited
@@ -261,10 +261,10 @@ namespace DAG {
       typedef typename BFSVisitor<N>::enumVisitType pt;
 
       // Create a queue for the Breadth First Search
-      std::queue<N*> nodeQueue;
+      std::queue<const N*> nodeQueue;
 
       // Mark the current node as visited and enqueue it
-      for (auto & node : nodes) {
+      for (auto const & node : nodes) {
          if (m_visited.find(node) ==
                m_visited.end()) { //if node is not listed as already being visited
             node->accept(*this); //mark as visited and add to results
@@ -357,7 +357,7 @@ namespace DAG {
     @return const std::vector<N*>&  results vector of Nodes
     */
    template<typename N>
-   const std::vector<N*>& BFSVisitor<N>::traverseChildren(N& startnode)
+   const std::vector<const N*>& BFSVisitor<N>::traverseChildren(const N& startnode)
    {
       m_result = {}; //reset the list of results:
       Nodeset root{&startnode}; //create an initial nodeset containing the root node
@@ -372,7 +372,7 @@ namespace DAG {
     @return const std::vector<N*>&  results vector of Nodes
     */
    template<typename N>
-   const std::vector<N*>& BFSVisitor<N>::traverseParents(N& startnode)
+   const std::vector<const N*>& BFSVisitor<N>::traverseParents(const N& startnode)
    {
       m_result = {}; //reset the list of results
       Nodeset root{&startnode}; //create an initial nodeset containing the root node
@@ -387,7 +387,7 @@ namespace DAG {
     @return const std::vector<N*>&  results vector of Nodes
     */
    template<typename N>
-   const std::vector<N*>& BFSVisitor<N>::traverseUndirected(N& startnode)
+   const std::vector<const N*>& BFSVisitor<N>::traverseUndirected( const N& startnode)
    {
       m_result = {}; //reset the list of results
       Nodeset root{&startnode}; //create an initial nodeset containing the root node

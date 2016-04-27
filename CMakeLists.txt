@@ -30,8 +30,7 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 ### add CERN ROOT
 find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF GRAF3D  RIO Hist Tree Net   )
-#message(${ROOT_INCLUDE_DIRS})
-#message("hellow from alice")
+
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
 
@@ -49,7 +48,6 @@ ${CMAKE_SOURCE_DIR}/graphtools/graphtools
 )
 
 add_subdirectory(fastsim)
-
 add_subdirectory(graphtools)
 add_subdirectory(main)
 #
@@ -58,9 +56,6 @@ add_subdirectory(main)
 add_subdirectory(tests/rtest)
 
 add_subdirectory(tests)
-
-
-
 
 
 

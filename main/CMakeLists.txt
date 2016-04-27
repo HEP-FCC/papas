@@ -40,7 +40,6 @@ set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/papas/)
 
 #---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
-#message(${ROOT_USE_FILE})
 
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})

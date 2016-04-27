@@ -40,7 +40,7 @@ class PFEvent;
 typedef long longID;
 typedef std::unordered_map<long long, class Edge> Edges;
 typedef DAG::Node<longID> PFNode;
-typedef std::unordered_map<longID,PFNode> Nodes;
+typedef std::unordered_map<longID, PFNode> Nodes;
 typedef std::unordered_map<longID, PFBlock> Blocks;
 typedef std::vector<longID> IDs;
 

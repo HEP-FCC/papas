@@ -44,8 +44,8 @@ namespace DAG {
     
     typedef Node<T> TNode;
     typedef std::unordered_map<T, TNode> Nodemap;
-    typedef std::unordered_set<TNode*> Nodeset;
-    typedef std::vector<TNode*> Nodevector;
+    typedef std::unordered_set<const TNode*> Nodeset;
+    typedef std::vector<const TNode*> Nodevector;
   public:
     FloodFill();
     //each element in the return vector is a group of connected nodes
@@ -77,7 +77,7 @@ namespace DAG {
       
       //do a BFS search on any node that has not yet been visited
       Nodevector result=bfs.traverseUndirected(elem.second);
-      for (TNode* n : result )
+      for (const TNode* n : result )
         m_visited.insert(n); //mark these as visited
       
       resultsVector.push_back(result);

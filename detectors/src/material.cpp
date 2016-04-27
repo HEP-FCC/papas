@@ -30,7 +30,7 @@ double Material::pathLength(bool is_em) const
      if (m_lambdaI == 0.) {
        return std::numeric_limits<double>::max();
      }
-     //return m_randomLambda(); //TODO reinstante once testing is complete
+     //return m_randomLambda.next(); //TODO reinstante once testing is complete
      return m_lambdaI*0.8;
    }
  
