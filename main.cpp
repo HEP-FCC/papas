@@ -15,8 +15,8 @@
 #include "CMS.h"
 #include "Simulator.h"
 #include "displaygeometry.h"
-#include "displaycore.h"
-#include "displaypfobjects.h"
+#include "PFEventDisplay.h"
+//#include "displaypfobjects.h"
 #include "PFEvent.h"
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
@@ -71,29 +71,14 @@ int main(int argc, char* argv[]){
     return 1;
   }
   
-  //TODO try to remove/reduce use of shared_ptrs here.
-  Display display = Display({Projection::xy,Projection::yz});
+  
   // All displays
   //Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-  std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));
+  auto display = PFEventDisplay({Projection::xy, Projection::yz});
+  std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector)); //TODO remove shared_ptr?
   display.addToRegister(gdetector, 0);
+  display.drawPFEvent(pfEvent);
   
-  //plot clusters, tracks etc //TODO make this a separate function
-  for (auto& cl : pfEvent.ECALClusters()) {
-    std::cout << cl.second;
-    std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
-    display.addToRegister(gcluster,2);
-  }
-  for (auto& cl :  pfEvent.HCALClusters()) {
-    std::cout << cl.second;
-    std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
-    display.addToRegister(gcluster,2);
-  }
-  for (auto& tr :  pfEvent.tracks()) {
-    std::shared_ptr<GTrajectories> gtrack(new GTrajectories(tr.second));
-    display.addToRegister(gtrack,2);
-  }
-  display.draw();
   
   //TODO uncomment for commandline
   //run theApp.Run();

@@ -20,7 +20,7 @@
 
 class Track;
 class Cluster;
-class PFBlock;
+#include "PFBlock.h";
 
 //TODO home for typedefs
 typedef long longId;
@@ -43,8 +43,8 @@ public:
   const class Cluster& HCALCluster(longId id) const;
   Ids elementIds() const;
   Nodes& historyNodes() { return m_historyNodes;} //allow these to be changed
-  const Clusters& ECALClusters() const { return m_ecals;}
-  const Clusters& HCALClusters() const { return m_hcals;}
+  const Clusters& ecalClusters() const { return m_ecals;}
+  const Clusters& hcalClusters() const { return m_hcals;}
   const Tracks& tracks() const { return m_tracks;}
   const Blocks& blocks() const { return m_blocks;}
   void setBlocks(Blocks&& blocks) {m_blocks=blocks;}

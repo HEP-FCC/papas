@@ -2,10 +2,8 @@
 //  Created by Alice Robson on 29/11/15.
 //
 //
-#ifndef  DISPLAY_DISPLAYPFOBJECTS_H
+#ifndef DISPLAY_DISPLAYPFOBJECTS_H
 #define DISPLAY_DISPLAYPFOBJECTS_H
-
-
 
 #include <unordered_map>
 #include <string>
@@ -29,8 +27,8 @@ public:
    GBlob(const Cluster& cluster);
    void Draw(const std::string& projection, const std::string& opt = "") const ;
 private:
-   ///which layer to plot at
-   std::string m_layer;
+  
+   std::string m_layer;  ///<which layer to plot at
    //outside circle of cluster
    std::unordered_map< std::string, std::unique_ptr<TEllipse>> m_contours;
    //inside circle of cluster
@@ -38,14 +36,11 @@ private:
 };
 
 
-
 ///Used to display a track on output graphs ///AJRTODO implement helix
 class GTrajectory {
 public:
-   GTrajectory(const std::vector<TVector3>& points, int linestyle = 1,
-               int linecolor = 1);
-   GTrajectory(const PFParticle& particle, int linestyle = 1,
-               int linecolor = 1);
+   GTrajectory(const std::vector<TVector3>& points, int linestyle = 1, int linecolor = 1);
+   GTrajectory(const PFParticle& particle, int linestyle = 1, int linecolor = 1);
    GTrajectory(const Track& track, int linestyle = 1, int linecolor = 1);
    void setColor(int color);
    void Draw(const std::string& projection /*, const std::string& opt = ""*/) const ;

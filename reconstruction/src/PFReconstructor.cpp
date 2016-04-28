@@ -288,7 +288,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longId hcalId) {
    self.log.info( hcal )
    self.log.info( '\tT {tracks}'.format(tracks=tracks) )
    self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
-  const Cluster&  hcal = m_pfEvent.HCALClusters().at(hcalId); // avoid copy
+  const Cluster&  hcal = m_pfEvent.hcalClusters().at(hcalId); // avoid copy
   double  hcalEnergy = hcal.energy();
   double  ecalEnergy = 0.;
   double trackEnergy = 0.;

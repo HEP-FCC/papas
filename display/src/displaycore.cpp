@@ -2,14 +2,14 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include <iostream> //temp
 #include "displaycore.h"
+#include <iostream> //temp
+#include <cmath>
 #include "displaygeometry.h"
 #include "displaypfobjects.h"
-#include <cmath>
 
-
-
+//Static counter
+int ViewPane::nviews = 0;
 
 Display::Display(std::list<Projection> views)
 {

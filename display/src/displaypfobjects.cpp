@@ -2,8 +2,9 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include <iostream>
+
 #include "displaypfobjects.h"
+#include <iostream>
 #include "Identifier.h"
 #include "Cluster.h"
 #include "Track.h"
@@ -292,14 +293,14 @@ void GTrajectory::Draw(const std::string&   projection /*,
 
 
 ///Constructor for showing tracks
-GTrajectories::GTrajectories(const  std::vector<TVector3>& points)
+GTrajectories::GTrajectories(const std::vector<TVector3>& points)
 //AJRTODO const std::list<Particle>& particles)
 {
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
    m_gTrajectories.push_back(GTrajectory(points));
 }
 
-GTrajectories::GTrajectories(const  PFParticle& particle)
+GTrajectories::GTrajectories(const PFParticle& particle)
 //AJRTODO const std::list<Particle>& particles)
 {
    //Path& path= sp.path();
@@ -309,7 +310,7 @@ GTrajectories::GTrajectories(const  PFParticle& particle)
    m_gTrajectories.push_back(GTrajectory(particle));
 }
 
-GTrajectories::GTrajectories(const  Track& track)
+GTrajectories::GTrajectories(const Track& track)
 //AJRTODO const std::list<Particle>& particles)
 {
   //Path& path= sp.path();
@@ -320,7 +321,7 @@ GTrajectories::GTrajectories(const  Track& track)
 }
 
 ///Constructor for showing clusters
-GTrajectories::GTrajectories(const  Cluster& cluster)
+GTrajectories::GTrajectories(const Cluster& cluster)
 {
    m_gBlobs.push_back(GBlob(cluster));
 }

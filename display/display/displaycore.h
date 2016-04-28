@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <list>
 #include <string>
-
+#include <vector>
 
 #include "TCanvas.h"
 #include "TH1.h"
@@ -17,6 +17,7 @@
 
 class ViewPane;
 class Drawable;
+
 
 ///Display Class
 /** Class to manage the  different display projections
@@ -44,6 +45,8 @@ private:
    ///Map containing the views //TODO make enum
    std::unordered_map<std::string, std::unique_ptr<ViewPane>> m_views;
 };
+
+
 
 
 ///ViewPane Class
@@ -86,8 +89,6 @@ private:
 
 }  ;
 
-//Static counter
-int ViewPane::nviews = 0;
 
 #endif
 /*
