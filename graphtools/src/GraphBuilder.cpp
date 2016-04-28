@@ -28,7 +28,7 @@ m_elementIds(ids)
       m_localNodes[e.id1()].addChild(m_localNodes[e.id2()]);
   }
   
-  DAG::FloodFill<longID> FFill;
+  DAG::FloodFill<longId> FFill;
   
   //traverse does the work and returns a vector of connected node groups
   for (auto & group : FFill.traverse(m_localNodes)) {
@@ -61,9 +61,9 @@ GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)
   return *this;
 }
 
-void GraphBuilder::sortIds(std::vector<longID>& ids)
+void GraphBuilder::sortIds(std::vector<longId>& ids)
 {
-  std::sort(ids.begin(), ids.end(), [](longID a, longID b) -> bool
+  std::sort(ids.begin(), ids.end(), [](longId a, longId b) -> bool
             { return Identifier::typeShortCode(a) < Identifier::typeShortCode(b); } );
 }
 
@@ -76,14 +76,14 @@ void GraphBuilder::sortIds(std::vector<longID>& ids)
   return os;
 }*/
 
-/*void GraphBuilder::sortIds(std::vector<longID>& ids) // sorts by type and energy
+/*void GraphBuilder::sortIds(std::vector<longId>& ids) // sorts by type and energy
  {//TODO move to helper
- std::sort( ids.begin(), ids.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
+ std::sort( ids.begin(), ids.end(), [this] (longId a, longId b) { return this->m_pfEvent.compare(a,b);});
  }*/
 
 
 
-/*bool GraphBuilder::compareEdges(long long key1, long long key2, longID uniqueid) const//TODO check direction of sort
+/*bool GraphBuilder::compareEdges(long long key1, long long key2, longId uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy
@@ -95,9 +95,9 @@ void GraphBuilder::sortIds(std::vector<longID>& ids)
  return false;
  // the distance for edge1 and edge 2 is same
  // so return based on edgetype and end energy comparison for the items
- // at the other end from uniqueID
- double energy1 = m_pfEvent.energy(e1.otherID(uniqueid));
- double energy2 = m_pfEvent.energy(e2.otherID(uniqueid));
+ // at the other end from uniqueId
+ double energy1 = m_pfEvent.energy(e1.otherid(uniqueid));
+ double energy2 = m_pfEvent.energy(e2.otherid(uniqueid));
  
  return (energy1 > energy2) ;
  }*/

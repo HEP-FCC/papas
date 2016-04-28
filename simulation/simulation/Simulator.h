@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <map>
 #include "TVector3.h"
+#include "TLorentzVector.h"
 
 #include "enums.h"
 #include "directedacyclicgraph.h"
@@ -16,7 +17,7 @@
 class PFParticle;
 class Cluster;
 class Track;
-class BaseDetector;
+class Detector;
 class DetectorElement;
 class SurfaceCylinder;
 
@@ -25,10 +26,10 @@ class SurfaceCylinder;
 typedef DAG::Node<long> Node;
 typedef std::unordered_map<long, Node> Nodes;
 typedef std::unordered_map<long, Cluster> Clusters;
-typedef std::unordered_map<long, Cluster> SmearedECALClusters;
-typedef std::unordered_map<long, Cluster> SmearedHCALClusters;
-typedef std::unordered_map<long, Cluster> ECALClusters;
-typedef std::unordered_map<long, Cluster> HCALClusters;
+typedef std::unordered_map<long, Cluster> SmearedEcalClusters;
+typedef std::unordered_map<long, Cluster> SmearedHcalClusters;
+typedef std::unordered_map<long, Cluster> EcalClusters;
+typedef std::unordered_map<long, Cluster> HcalClusters;
 typedef std::unordered_map<long, Track> Tracks;
 typedef std::unordered_map<long, PFParticle> Particles;
 typedef std::vector<long> Ids;
@@ -36,18 +37,18 @@ typedef std::vector<long> Ids;
 class Simulator {
 
 public:
-  Simulator(const BaseDetector&);  //AJR TODO add logger
+  Simulator(const Detector&);  //AJR TODO add logger
   void simulate();
   void simulatePhoton(PFParticle& ptc);
   void simulateHadron(PFParticle& ptc);
 
   PFParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
 
-  const Cluster& cluster(long clusterID) const;
-  Clusters ECALClusters() const {return m_ECALClusters;} ///<Copy of ECAL clusters
-  Clusters HCALClusters() const {return m_HCALClusters;} ///<Copy of HCAL clusters
-  Clusters smearedECALClusters() const {return m_smearedECALClusters;} ///<Copy of smeared ECAL clusters
-  Clusters smearedHCALClusters() const {return m_smearedHCALClusters;} ///<Copy of smeared HCAL clusters
+  const Cluster& cluster(long clusterId) const;
+  Clusters ecalClusters() const {return m_ecalClusters;} ///<Copy of Ecal clusters
+  Clusters hcalClusters() const {return m_hcalClusters;} ///<Copy of Hcal clusters
+  Clusters smearedEcalClusters() const {return m_smearedEcalClusters;} ///<Copy of smeared Ecal clusters
+  Clusters smearedHcalClusters() const {return m_smearedHcalClusters;} ///<Copy of smeared Hcal clusters
 
   Tracks   tracks() const {return m_tracks;} ///<Copy of tracks
   Tracks   smearedTracks() const {return m_smearedTracks;}  ///<Copy of smeared tracks
@@ -55,20 +56,20 @@ public:
   const Particles& particles() const {return m_particles;} ///<Copy of particles
 
   void testing();
-  Ids linkedECALSmearedClusterIds(long nodeid) const; //TODO move to helper/history class
+  Ids linkedEcalSmearedClusterIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedParticleIds(long nodeid) const ; //TODO move to helper/history class
   Ids parentParticleIds(long nodeid) const ; //TODO move to helper/history class
 
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  long makeClusterID(fastsim::enumLayer layer, fastsim::enumSubtype subtype) const;
-  long makeParticleID(fastsim::enumSource source) const;
-  long addECALCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
-  long addHCALCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
-  long addSmearedCluster(long parentClusterID);
+  long makeClusterId(fastsim::enumLayer layer, fastsim::enumSubtype subtype) const;
+  long makeParticleid(fastsim::enumSource source) const;
+  long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
+  long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
+  long addSmearedCluster(long parentClusterId);
   Cluster makeCluster(PFParticle& ptc, long parentid, fastsim::enumLayer layer, double fraction = 1., double csize = 0.);
-  Cluster makeSmearedCluster(long parentClusterID);
+  Cluster makeSmearedCluster(long parentClusterId);
   const Track& addTrack(PFParticle& ptc);
   long addSmearedTrack(const Track& track, bool accept = false);
   void addNode(const long newid, const long parentid = 0);
@@ -82,16 +83,16 @@ private:
   Ids getMatchingParentIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                            fastsim::enumSubtype type, fastsim::enumSource source) const ;  //TODO move to helper/history class
 
-  Clusters m_ECALClusters;
-  Clusters m_HCALClusters;
-  Clusters m_smearedECALClusters;
-  Clusters m_smearedHCALClusters;
+  Clusters m_ecalClusters;
+  Clusters m_hcalClusters;
+  Clusters m_smearedEcalClusters;
+  Clusters m_smearedHcalClusters;
   Tracks   m_tracks;        ///< pre smeared tracks
   Tracks   m_smearedTracks; ///< smeared tracks
   Particles m_particles;    ///< all particles
 
   Nodes m_nodes; ///< Records relationships of everything that is simulated
-  const BaseDetector& m_detector;
+  const Detector& m_detector;
   StraightLinePropagator m_propStraight;
   HelixPropagator m_propHelix;
 };

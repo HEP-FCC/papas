@@ -7,8 +7,8 @@
 
 
 std::map<std::string, int> goldCOLORMap {
-   {"ECAL" , kRed - 10},
-   {"HCAL" , kBlue - 10}
+   {"Ecal" , kRed - 10},
+   {"Hcal" , kBlue - 10}
 };
 
 std::map<fastsim::enumLayer, int> gCOLORMap {
@@ -16,42 +16,36 @@ std::map<fastsim::enumLayer, int> gCOLORMap {
    {fastsim::enumLayer::HCAL , kBlue - 10}
 };
 
-void GDetectorElement::Draw(const std::string& projection)
-const //AJRTODO change to an enum?
+void GDetectorElement::Draw(const std::string& projection) const 
 {
    if (projection == "xy") {
-
-      for (auto const& circle : m_circles) {
+      for (auto const& circle : m_circles)
          circle->Draw("same");
-      }
-   } else if (projection == "yz" |  projection == "xz") {
-
+   }
+   else if (projection == "yz" |  projection == "xz") {
       for (auto const& box : m_boxes) {
          box->Draw("samel");
       }
-   } else if (projection.find("thetaphi") != projection.npos) {
+   }
+   else if (projection.find("thetaphi") != projection.npos) {
    }
    //else
    //AJRTODO throw error
 };
 
-
 Drawable::Drawable()
 {
-   ;
 }
 
-GDetector::GDetector(const BaseDetector& detector) :
-   m_gECAL(detector.ECAL()), m_gHCAL(detector.HCAL())
+GDetector::GDetector(const Detector& detector) :
+   m_gEcal(detector.ecal()),
+   m_gHcal(detector.hcal())
 {
-
 }
 
-void GDetector::Draw(const std::string& projection) const
-{
-
-   m_gHCAL.Draw(projection);
-   m_gECAL.Draw(projection);
+void GDetector::Draw(const std::string& projection) const {
+   m_gHcal.Draw(projection);
+   m_gEcal.Draw(projection);
 }
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
@@ -64,7 +58,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
    //For each inner and outer cyclinder create a cyclinder (circular cross section) for xy , yz, xz projections
    //        create a box (longways cross section) for thetaphi projections
 
-   for (auto const& elem : {m_detElem->volumeCylinder().Outer(), m_detElem->volumeCylinder().Inner()}) { //AJRTODO should be if inner ......
+   for (auto const& elem : {m_detElem->volumeCylinder().outer(), m_detElem->volumeCylinder().inner()}) { //AJRTODO should be if inner ......
       double radius =  elem.getRadius();
       double dz = elem.Z();
 

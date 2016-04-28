@@ -11,7 +11,8 @@
 #include "CMS.h"
 #include "material.h"
 #include "geometry.h"
-#include "datatypes.h"
+#include "Cluster.h"
+#include "Track.h"
 
 /*
  CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder& volume,
@@ -72,11 +73,11 @@ double CMSECAL::energyResolution(double energy) const
 }
 
 
-CMS::CMS() : BaseDetector()
+CMS::CMS() : Detector()
 {
    //ECAL detector Element
    fastsim::enumLayer layer = fastsim::enumLayer::ECAL;
-   m_ECAL = std::shared_ptr<const class Calorimeter> {
+   m_ecal = std::shared_ptr<const class Calorimeter> {
       new CMSECAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 1.55, 2.1, 1.30, 2),
       Material( 8.9e-3, 0.275),
@@ -88,7 +89,7 @@ CMS::CMS() : BaseDetector()
 
    //HCAL detector element
    layer = fastsim::enumLayer::HCAL;
-   m_HCAL = std::shared_ptr<const class Calorimeter> {
+   m_hcal = std::shared_ptr<const class Calorimeter> {
       new CMSHCAL(layer,
       VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6, 1.9, 2.6),
       Material( 0.0, 0.175),
@@ -97,14 +98,14 @@ CMS::CMS() : BaseDetector()
    
    //Tracker detector element
    layer = fastsim::enumLayer::TRACKER;
-   m_Tracker = std::shared_ptr<const Tracker> {
+   m_tracker = std::shared_ptr<const Tracker> {
    new CMSTracker(layer,
                   VolumeCylinder(fastsim::to_str(layer), 1.29, 1.99))
    };
    
    //Field detector element
    layer = fastsim::enumLayer::FIELD;
-   m_Field = std::shared_ptr<const Field> {
+   m_field = std::shared_ptr<const Field> {
       new CMSField(layer,
                    VolumeCylinder(fastsim::to_str(layer), 2.9, 3.6),
                    20)

@@ -21,21 +21,15 @@
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
 #include "PFReconstructor.h"
-
+#include "PFParticle.h"
+#include "Track.h"
+#include "Cluster.h"
 
 extern int run_tests(int argc, char* argv[]);
 
 int main(int argc, char* argv[]){
   
-  //int test = run_tests(argc, argv);
-  
-  // ROOT App to allow graphs to be plotted
-  TApplication theApp("App", &argc, argv);
-  if (gROOT->IsBatch()) {
-    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-    return 1;
-  }
-  
+
   //Create CMS detector and simulator
   CMS CMSDetector;
   Simulator sim = Simulator{CMSDetector};
@@ -50,13 +44,12 @@ int main(int argc, char* argv[]){
   for (int i = 0; i<1; i++) {
     PFParticle& hadron = sim.addParticle(211, M_PI/2. + 0.5*(i + 1) , 0, 40.*(i + 1));
     sim.simulateHadron(hadron);
-    
   }
   
   //setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
   // and using  a reference to the history nodes
-  PFEvent pfEvent{sim.smearedECALClusters(),
-    sim.smearedHCALClusters(),
+  PFEvent pfEvent{sim.smearedEcalClusters(),
+    sim.smearedHcalClusters(),
     sim.smearedTracks(),
     sim.historyNodes()};
   
@@ -67,6 +60,17 @@ int main(int argc, char* argv[]){
   PFReconstructor pfReconstructor{pfEvent};
   pfReconstructor.reconstruct();
   
+  
+  
+  //Now move on to Displaying results
+  
+  // ROOT App to allow graphs to be plotted
+  TApplication theApp("App", &argc, argv);
+  if (gROOT->IsBatch()) {
+    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
+    return 1;
+  }
+  
   //TODO try to remove/reduce use of shared_ptrs here.
   Display display = Display({Projection::xy,Projection::yz});
   // All displays
@@ -74,8 +78,7 @@ int main(int argc, char* argv[]){
   std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));
   display.addToRegister(gdetector, 0);
   
-  //TODO make this a separate function
-  //plot clusters, tracks etc
+  //plot clusters, tracks etc //TODO make this a separate function
   for (auto& cl : pfEvent.ECALClusters()) {
     std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
@@ -96,7 +99,8 @@ int main(int argc, char* argv[]){
   //run theApp.Run();
   
   //sim.testing(); //Write lists of connected items
-  
+  //int test = run_tests(argc, argv);
+
 
   return EXIT_SUCCESS;
 }

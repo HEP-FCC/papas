@@ -23,13 +23,16 @@
 #include "geometry.h"
 #include "CMS.h"
 #include "particle.h"
-#include "datatypes.h"
 #include "Simulator.h"
 #include "path.h"
 #include "displaygeometry.h"
 #include "displaycore.h"
 #include "displaypfobjects.h"
 #include "TVector3.h"
+#include "Cluster.h"
+#include "Track.h"
+#include "PFParticle.h"
+#include "Identifier.h"
 
 //include "random.h"
 #include "rand.h"
@@ -99,7 +102,7 @@ void testGraphs()
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    
    TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+   Cluster cluster =  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
    std::vector<TVector3> tvec;
    tvec.push_back(TVector3(0.,0.,0.));
    tvec.push_back(TVector3(1.,1.,1.));
@@ -115,7 +118,7 @@ void testGraphs()
    //Testing graphics
    /*
     TVector3 vpos(1.,.5,.3);
-    Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+    Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
     std::vector<TVector3> tvec;
     
     std::cout <<"cluster "<< cluster.pt()<<"\n";
@@ -148,10 +151,10 @@ TEST(fastsim,Cylinder){
    auto cyl2 = SurfaceCylinder("cyl2", 0.7, 1.5);
    auto subcyl = VolumeCylinder("subcyl", 1 ,2, 0.7, 1.5 );
    
-   EXPECT_EQ(subcyl.Inner().getRadius(),0.7 );
-   EXPECT_EQ(subcyl.Inner().Z(),1.5);
-   EXPECT_EQ(subcyl.Outer().getRadius(),1. );
-   EXPECT_EQ(subcyl.Outer().Z(),2.);
+   EXPECT_EQ(subcyl.inner().getRadius(),0.7 );
+   EXPECT_EQ(subcyl.inner().Z(),1.5);
+   EXPECT_EQ(subcyl.outer().getRadius(),1. );
+   EXPECT_EQ(subcyl.outer().Z(),2.);
    
  /* TODO
 # inner cylinder larger than the outer one
@@ -227,7 +230,7 @@ TEST(fastsim, StraightLine){
    auto cyl2 = SurfaceCylinder("cyl2", 2, 1);
    
    TLorentzVector tlv{1, 0, 1, 2.};
-   long uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
+   long uid=Identifier::makeParticleid(fastsim::enumSource::SIMULATION);
    PFParticle photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -242,7 +245,7 @@ TEST(fastsim, StraightLine){
    
    //testing extrapolation to -z
    tlv=TLorentzVector(1, 0, -1, 2.);
-   uid=Identifier::makeParticleID(fastsim::enumSource::SIMULATION);
+   uid=Identifier::makeParticleid(fastsim::enumSource::SIMULATION);
    photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -398,7 +401,7 @@ void test_graphs()
   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
   
   TVector3 vpos(1.,.5,.3);
-  Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+  Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0.,0.,0.));
   tvec.push_back(TVector3(1.,1.,1.));
@@ -413,7 +416,7 @@ void test_graphs()
   
   //Testing graphics
   /* TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterID() );
+   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
    std::vector<TVector3> tvec;
    
    std::cout <<"cluster "<< cluster.pt()<<"\n";

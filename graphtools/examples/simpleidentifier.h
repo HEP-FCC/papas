@@ -20,7 +20,7 @@ public:
    //Access stored Identifier information
    static enumDataType        dataType(long id);
    static enumSubType         subType(long id);
-   static int uniqueID(long id);
+   static int uniqueId(long id);
 private:
    static int s_counter;
 };

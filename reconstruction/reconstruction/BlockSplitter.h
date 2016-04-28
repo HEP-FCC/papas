@@ -53,12 +53,12 @@ class Edge;
 class PFEvent;
 
 //TODO figure out best place to keep the typedefs
-typedef long longID;
+typedef long longId;
 typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<longID> PFNode;
-typedef std::unordered_map<longID,PFNode> Nodes;
-typedef std::unordered_map<longID, PFBlock> Blocks;
-typedef std::vector<longID> Ids;
+typedef DAG::Node<longId> PFNode;
+typedef std::unordered_map<longId,PFNode> Nodes;
+typedef std::unordered_map<longId, PFBlock> Blocks;
+typedef std::vector<longId> Ids;
 
 //Allow optional parameters where construction arguments are references
 extern Nodes emptyNodes;

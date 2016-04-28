@@ -8,7 +8,8 @@
 
 #include "Distance.h"
 #include "Identifier.h"
-#include "DataTypes.h"
+#include "Cluster.h"
+#include "Track.h"
 #include "deltar.h"
 
 

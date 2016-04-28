@@ -19,12 +19,14 @@
 #include "TLorentzVector.h"
 
 #include "BlockSplitter.h"
-#include "DataTypes.h"
+#include "PFParticle.h"
 #include "Path.h"
 #include "PFEvent.h"
 #include "PFBlock.h"
 #include "Edge.h"
 #include "ParticleData.h"
+#include "Cluster.h"
+#include "Track.h"
 
 PFReconstructor::PFReconstructor (PFEvent& pfEvent) :
     m_pfEvent(pfEvent),
@@ -144,7 +146,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   
   
   if (ids.size() == 1 ) { //#TODO WARNING!!! LOTS OF MISSING CASES
-    longID id = ids[0];
+    longId id = ids[0];
     if (Identifier::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),fastsim::enumLayer::ECAL));
     }
@@ -195,7 +197,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newpart
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   //if (newparticle) :
-  longID newid = newparticle.id();
+  longId newid = newparticle.id();
   m_particles[newid] = newparticle;
   
   //check if history nodes exists
@@ -203,7 +205,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newpart
     return;
   
   //find the node for the block
-  PFNode blockNode = m_historyNodes[block.uniqueID()];
+  PFNode blockNode = m_historyNodes[block.uniqueId()];
   
   //find or make a node for the particle
   if (m_historyNodes.find(newid) == m_historyNodes.end()) {
@@ -242,7 +244,7 @@ double PFReconstructor::nsigmaHcal(const Cluster& cluster)  const{
   
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, longId hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -261,22 +263,22 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
   
   
   // hcal used to make ecal_in has a couple of possible issues
-  //m_pfEvent.HCALCluster(hcalID);
+  //m_pfEvent.HCALCluster(hcalId);
   
   //TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
   //TODO sorting Ids trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
   
   Ids ecalIds ;
-  Ids trackIds = block.linkedIds(hcalID, Edge::EdgeType::kHcalTrack );
-  for (auto trackID : trackIds ) {
-    for (auto ecalID  : block.linkedIds(trackID, Edge::EdgeType::kEcalTrack ) ){
+  Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack );
+  for (auto trackId : trackIds ) {
+    for (auto ecalId  : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack ) ){
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work
        # ask colin.*/
-      if ( !m_locked[ecalID] ) {
-        ecalIds.push_back(ecalID);
-        m_locked[ecalID]  = true;
+      if ( !m_locked[ecalId] ) {
+        ecalIds.push_back(ecalId);
+        m_locked[ecalId]  = true;
       }
     }
   }
@@ -286,7 +288,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
    self.log.info( hcal )
    self.log.info( '\tT {tracks}'.format(tracks=tracks) )
    self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
-  const Cluster&  hcal = m_pfEvent.HCALClusters().at(hcalID); // avoid copy
+  const Cluster&  hcal = m_pfEvent.HCALClusters().at(hcalId); // avoid copy
   double  hcalEnergy = hcal.energy();
   double  ecalEnergy = 0.;
   double trackEnergy = 0.;
@@ -334,7 +336,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, longID hcalID) {
     
     insertParticle(block,  reconstructCluster(hcal, fastsim::enumLayer::HCAL));
   }
-  m_locked[hcalID] = true;
+  m_locked[hcalId] = true;
   
 }
 
@@ -373,7 +375,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
   
-  longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
+  longId newid = Identifier::makeParticleid(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
   
@@ -400,7 +402,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
-  longID newid = Identifier::makeParticleID(fastsim::enumSource::RECONSTRUCTION);
+  longId newid = Identifier::makeParticleid(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, track};
   //particle.setPath(track.path());

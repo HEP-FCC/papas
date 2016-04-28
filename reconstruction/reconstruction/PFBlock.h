@@ -47,9 +47,9 @@ class PFBlock {
 
   
 public:
-  typedef long longID;
+  typedef long longId;
   typedef long long edgeKey;
-  typedef std::vector<longID>  Ids;
+  typedef std::vector<longId>  Ids;
   typedef std::unordered_map<long long, class Edge> Edges;
 
   /** Constructor
@@ -73,7 +73,7 @@ public:
   @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
   @return vector of long long keys to linked edges
  */
-  std::vector<long long> linkedEdgeKeys(longID uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::vector<long long> linkedEdgeKeys(longId uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
   
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id 
@@ -81,7 +81,7 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of longIds that are linked to the uniqueid
   */
-   Ids linkedIds(longID uniqueID, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+   Ids linkedIds(longId uniqueId, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
   
 
   std::string shortName() const; ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
@@ -89,7 +89,7 @@ public:
   int  countHcal() const ; ///< Counts how many hcal cluster ids are in the block
   int  countTracks() const; ///< Counts how many tracks are in the block
   int  size() const ; ///< length of the element_unqiueids
-  longID uniqueID() const {return m_uniqueID;}; ///<Unique ID of the block
+  longId uniqueId() const {return m_uniqueId;}; ///<Unique ID of the block
   bool isActive() const {return m_isActive;}; ///Blocks that have been split will be deactivated
   void setActive(bool active) {m_isActive=active;}; ///active/ deactivate block
   Edges& edges() {return m_edges;}
@@ -99,13 +99,13 @@ private:;
   std::string elementsString() const;
   std::string edgeMatrixString() const;
   
-  longID m_uniqueID; //  make a uniqueid for this block
+  longId m_uniqueId; //  make a uniqueid for this block
   bool m_isActive; // if a block is subsequently split it will be deactivated
   static int tempBlockCount; //sequential numbering of blocks, not essential but helpful for debugging
   int m_blockCount ; //sequential numbering of blocks, not essential but helpful for debugging
   Ids  m_elementIds; //elements in this block ordered by type and decreasing energy
   Edges m_edges; //all the edges for elements in this block
-  const class Edge& edge(longID id1, longID id2) const;
+  const class Edge& edge(longId id1, longId id2) const;
   
   
 } ;

@@ -5,8 +5,9 @@
 #include <iostream>
 #include "displaypfobjects.h"
 #include "Identifier.h"
-
-
+#include "Cluster.h"
+#include "Track.h"
+#include "PFParticle.h"
 
 GBlob::GBlob(const Cluster& cluster)
 {

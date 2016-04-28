@@ -2,7 +2,8 @@
 #ifndef propogator_h
 #define propogator_h
 #include "detector.h"
-#include "datatypes.h"
+
+class PFParticle;
 
 
 class Propagator {

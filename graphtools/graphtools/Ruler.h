@@ -16,17 +16,17 @@ class Distance;
 class PFEvent;
 
 //TODO
-typedef long longID;
+typedef long longId;
 
 //TODO template on Distance class
 class Ruler {
   
 public:
   Ruler (const PFEvent& pfevent);
-  Distance distance(longID id1 ,longID id2);
+  Distance distance(longId id1 ,longId id2);
 private:
-  Distance clusterClusterDistance(longID id1 ,longID id2);
-  Distance clusterTrackDistance(longID id1 ,longID id2);
+  Distance clusterClusterDistance(longId id1 ,longId id2);
+  Distance clusterTrackDistance(longId id1 ,longId id2);
   Distance distance();
   
   const PFEvent& m_pfEvent;

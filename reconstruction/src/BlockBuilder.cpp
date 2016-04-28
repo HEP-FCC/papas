@@ -55,13 +55,13 @@ void BlockBuilder::makeBlocks()
     PFBlock block {elementIds, m_edges};
 
     //put the block in the unordered map of blocks using move
-    m_blocks.emplace(block.uniqueID(), std::move(block));
+    m_blocks.emplace(block.uniqueId(), std::move(block));
 
     //update the history nodes (if they exist)
     if (m_historyNodes.size() > 0) {
       //make a new history node for the block and add into the history Nodes
-      PFNode blocknode{block.uniqueID()};
-      m_historyNodes.emplace(block.uniqueID(), std::move(blocknode)); // move
+      PFNode blocknode{block.uniqueId()};
+      m_historyNodes.emplace(block.uniqueId(), std::move(blocknode)); // move
       //add in the links between the block elements and the block
       for (auto elemid : block.elementIds()) {
         m_historyNodes[elemid].addChild(blocknode);
@@ -80,14 +80,14 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder)
   return os;
 }
 
-/*void BlockBuilder::sortIds(std::vector<longID>& ids) // sorts by type and energy
+/*void BlockBuilder::sortIds(std::vector<longId>& ids) // sorts by type and energy
 {//TODO move to helper
-  std::sort( ids.begin(), ids.end(), [this] (longID a, longID b) { return this->m_pfEvent.compare(a,b);});
+  std::sort( ids.begin(), ids.end(), [this] (longId a, longId b) { return this->m_pfEvent.compare(a,b);});
 }*/
 
 
 
-/*bool BlockBuilder::compareEdges(long long key1, long long key2, longID uniqueid) const//TODO check direction of sort
+/*bool BlockBuilder::compareEdges(long long key1, long long key2, longId uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy
@@ -99,9 +99,9 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder)
  return false;
  // the distance for edge1 and edge 2 is same
  // so return based on edgetype and end energy comparison for the items
- // at the other end from uniqueID
- double energy1 = m_pfEvent.energy(e1.otherID(uniqueid));
- double energy2 = m_pfEvent.energy(e2.otherID(uniqueid));
+ // at the other end from uniqueId
+ double energy1 = m_pfEvent.energy(e1.otherid(uniqueid));
+ double energy2 = m_pfEvent.energy(e2.otherid(uniqueid));
 
  return (energy1 > energy2) ;
  }*/
@@ -112,15 +112,15 @@ int test_BlockBuilder()
 {
 
 
-  PFBlock::longID id1 = Identifier::makeECALClusterID();
-  PFBlock::longID id2 = Identifier::makeHCALClusterID();
-  PFBlock::longID id3 = Identifier::makeTrackID();
+  PFBlock::longId id1 = Identifier::makeECALClusterId();
+  PFBlock::longId id2 = Identifier::makeHCALClusterId();
+  PFBlock::longId id3 = Identifier::makeTrackid();
 
-  PFBlock::longID id4 = Identifier::makeECALClusterID();
-  PFBlock::longID id5 = Identifier::makeHCALClusterID();
-  PFBlock::longID id6 = Identifier::makeTrackID();
+  PFBlock::longId id4 = Identifier::makeECALClusterId();
+  PFBlock::longId id5 = Identifier::makeHCALClusterId();
+  PFBlock::longId id6 = Identifier::makeTrackid();
 
-  std::vector<PFBlock::longID> ids {id1, id2, id3, id4, id5, id6};
+  std::vector<PFBlock::longId> ids {id1, id2, id3, id4, id5, id6};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);

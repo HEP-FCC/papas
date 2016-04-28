@@ -61,15 +61,15 @@ std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
  
  #set the original block to be inactive*/
 int test_BlockSplitter() {
-  PFBlock::longID id1 = Identifier::makeECALClusterID();
-  PFBlock::longID id2 = Identifier::makeHCALClusterID();
-  PFBlock::longID id3 = Identifier::makeTrackID();
+  PFBlock::longId id1 = Identifier::makeECALClusterId();
+  PFBlock::longId id2 = Identifier::makeHCALClusterId();
+  PFBlock::longId id3 = Identifier::makeTrackid();
   
-  PFBlock::longID id4 = Identifier::makeECALClusterID();
-  PFBlock::longID id5 = Identifier::makeHCALClusterID();
-  PFBlock::longID id6 = Identifier::makeTrackID();
+  PFBlock::longId id4 = Identifier::makeECALClusterId();
+  PFBlock::longId id5 = Identifier::makeHCALClusterId();
+  PFBlock::longId id6 = Identifier::makeTrackid();
   
-  std::vector<PFBlock::longID> ids {id1,id2,id3, id4,id5,id6};
+  std::vector<PFBlock::longId> ids {id1,id2,id3, id4,id5,id6};
   
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);

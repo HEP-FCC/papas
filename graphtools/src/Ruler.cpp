@@ -11,8 +11,8 @@
 #include "Distance.h"
 #include "PFEvent.h"
 #include "Identifier.h"
-#include "DataTypes.h"
 #include "PFBlock.h"
+#include "Cluster.h"
 
 
 Ruler::Ruler(const PFEvent& pfevent) :
@@ -20,7 +20,7 @@ m_pfEvent(pfevent)
 {
 }
 
-Distance Ruler::distance(longID id1, longID id2)
+Distance Ruler::distance(longId id1, longId id2)
 {
   if (Identifier::isCluster(id1) && Identifier::isCluster(id2))
     if (Identifier::layer(id1) == Identifier::layer(id2))
@@ -38,7 +38,7 @@ Distance Ruler::distance(longID id1, longID id2)
 }
 
 
-Distance Ruler::clusterClusterDistance(longID id1 , longID id2)
+Distance Ruler::clusterClusterDistance(longId id1 , longId id2)
 {
   const Cluster& cluster1 = m_pfEvent.cluster(id1);
   const Cluster& cluster2 = m_pfEvent.cluster(id2);
@@ -69,10 +69,10 @@ Distance Ruler::clusterClusterDistance(longID id1 , longID id2)
 }
 
 
-Distance Ruler::clusterTrackDistance(longID clustID , longID trackID)
+Distance Ruler::clusterTrackDistance(longId clustId , longId trackId)
 {
-  const Cluster& cluster = m_pfEvent.cluster(clustID);
-  const Track& track = m_pfEvent.track(trackID);
+  const Cluster& cluster = m_pfEvent.cluster(clustId);
+  const Track& track = m_pfEvent.track(trackId);
   
   if (cluster.subClusters().size() > 1) {
     std::vector<double> distances;

@@ -9,20 +9,18 @@
 #include "geometry.h"
 
 
-
-DetectorElement::DetectorElement(fastsim::enumLayer layer,
-      const  VolumeCylinder& volume , const Material& material) :
+DetectorElement::DetectorElement(fastsim::enumLayer layer, const  VolumeCylinder& volume , const Material& material) :
    m_volume(volume), m_material(material), m_layer(layer)
 {}
 
-BaseDetector::BaseDetector()
+Detector::Detector()
 {
 
 }
 
 
 //aim to make this a const function and to do sort at initialisation
-const std::list<SurfaceCylinder>& BaseDetector::sortedCylinders()
+const std::list<SurfaceCylinder>& Detector::sortedCylinders()
 {
    //Return list of surface cylinders sorted by increasing radius.'''
 
@@ -35,34 +33,34 @@ const std::list<SurfaceCylinder>& BaseDetector::sortedCylinders()
    return m_cylinders;*/
 }
 
-std::shared_ptr<const Calorimeter> BaseDetector::calorimeter(fastsim::enumLayer layer) const{
+std::shared_ptr<const Calorimeter> Detector::calorimeter(fastsim::enumLayer layer) const{
   switch (layer) {
     case fastsim::enumLayer::ECAL:
-      return m_ECAL;
+      return m_ecal;
       break;
     case fastsim::enumLayer::HCAL:
-      return m_HCAL;
+      return m_hcal;
       break;
     default:
       //throw error
-      return m_ECAL;
+      return m_ecal;
   }
 }
 
-//const DetectorElement& BaseDetector::element(fastsim::enumLayer layer) const
-std::shared_ptr<const DetectorElement> BaseDetector::element(
+//const DetectorElement& Detector::element(fastsim::enumLayer layer) const
+std::shared_ptr<const DetectorElement> Detector::element(
    fastsim::enumLayer layer) const
 {
 
    switch (layer) {
       case fastsim::enumLayer::ECAL:
-         return m_ECAL;
+         return m_ecal;
          break;
       case fastsim::enumLayer::HCAL:
-         return m_HCAL;
+         return m_hcal;
          break;
      default:
-         return m_ECAL; //TODO throw error
+         return m_ecal; //TODO throw error
          break;
          //TODO add track and field
    }
@@ -72,21 +70,20 @@ std::shared_ptr<const DetectorElement> BaseDetector::element(
    return nullptr;
 }
 
-Field::Field(fastsim::enumLayer layer,
-                                 const  VolumeCylinder& volume , const Material& material, double magnitude) :
+Field::Field(fastsim::enumLayer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
 DetectorElement(layer,volume,material), m_magnitude(magnitude)
 {}
 
 /*
  Experiments
 
- BaseDetector::BaseDetector(const DetectorElement & ecal) : m_ECAL(&ecal),  m_cylinders()
+ Detector::Detector(const DetectorElement & ecal) : m_ECAL(&ecal),  m_cylinders()
  {
  }
- BaseDetector::BaseDetector(std::shared_ptr<const DetectorElement> ecal,std::shared_ptr<const DetectorElement> hcal) : m_ECAL(ecal),m_HCAL(hcal)
+ Detector::Detector(std::shared_ptr<const DetectorElement> ecal,std::shared_ptr<const DetectorElement> hcal) : m_ECAL(ecal),m_Hcal(hcal)
  {
  }*/
-/*BaseDetector::BaseDetector(DetectorElement && ecal,DetectorElement && hcal) : m_ECAL(std::move(ecal)),m_HCAL(std::move(hcal))
+/*Detector::Detector(DetectorElement && ecal,DetectorElement && hcal) : m_ECAL(std::move(ecal)),m_Hcal(std::move(hcal))
  {
  }
 

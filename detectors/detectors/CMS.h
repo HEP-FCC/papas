@@ -104,7 +104,7 @@ private:
 };
 
 
-class CMS: public BaseDetector {
+class CMS: public Detector {
 public:
    CMS();
 private:

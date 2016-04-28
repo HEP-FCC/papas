@@ -11,13 +11,13 @@
 #include "directedacyclicgraph.h"
 
 
-long makeMergedClusterID()
+long makeMergedClusterId()
 {
    return Identifier::makeIdentifier(enumDataType::CLUSTER,
                                      enumSubType::MERGED);
 }
 
-long makeTrackID()
+long makeTrackid()
 {
    return Identifier::makeIdentifier(enumDataType::TRACK,
                                      enumSubType::RAW);
@@ -65,15 +65,15 @@ int main()
    // create a set of nodes
    // the nodes will be kept track of in the Node children and parent collections so
    // shared_ptr is used.
-   INode n0(makeTrackID());
-   INode n1(makeTrackID());
-   INode n2(makeTrackID());
-   INode n3(makeMergedClusterID());
-   INode n4(makeMergedClusterID());
-   INode n5(makeMergedClusterID());
-   INode n6(makeTrackID());
-   INode n7(makeTrackID());
-   INode n8(makeTrackID());
+   INode n0(makeTrackid());
+   INode n1(makeTrackid());
+   INode n2(makeTrackid());
+   INode n3(makeMergedClusterId());
+   INode n4(makeMergedClusterId());
+   INode n5(makeMergedClusterId());
+   INode n6(makeTrackid());
+   INode n7(makeTrackid());
+   INode n8(makeTrackid());
 
 
    // and now define the polytree
@@ -99,7 +99,7 @@ int main()
    std::cout << "Node : Nodetype" << std::endl;
    DAG::BFSVisitor<INode> bfs;
    for (auto n : bfs.traverseChildren(n0)) {
-      long id = Identifier::uniqueID(n->value());
+      long id = Identifier::uniqueId(n->value());
       if (Identifier::dataType(n->value()) ==  enumDataType::CLUSTER)
          std::cout << id - 1  << " :CLUSTER"  <<
                    std::endl; //subtract 1 to match the node number
@@ -114,7 +114,7 @@ int main()
    std::cout << std::endl << "TRAVERSE UNDIRECTED (start Node 0)  " << std::endl;
    std::cout << "Node : LEAF/ROOT" << std::endl;
    for (auto n : bfs.traverseUndirected(n0)) {
-      std::cout << Identifier::uniqueID(n->value()) - 1
+      std::cout << Identifier::uniqueId(n->value()) - 1
                 ; //subtract 1 to match the node number
       if (n->children().size() == 0)
          std::cout <<  " LEAF"   ;
@@ -131,7 +131,7 @@ int main()
    DAG::BFSRecurseVisitor<INode> bfsrecursive;
    for (auto n : bfs.traverseUndirected(n0)) {
       if (n->children().size() == 0)//isLeaf
-         std::cout <<  Identifier::uniqueID(n->value()) - 1  << std::endl;
+         std::cout <<  Identifier::uniqueId(n->value()) - 1  << std::endl;
    }
    return 0;
 }

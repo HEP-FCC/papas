@@ -72,12 +72,12 @@ fastsim::enumDataType Identifier::dataType(long id)
    return static_cast<fastsim::enumDataType>(type);
 }
 
-int Identifier::uniqueID(long id)
+int Identifier::uniqueId(long id)
 {
    return (id >> 16);
 }
 
-long Identifier::makeClusterID(fastsim::enumLayer layer,
+long Identifier::makeClusterId(fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)
 {
    return        Identifier::makeIdentifier(fastsim::enumDataType::CLUSTER,
@@ -86,7 +86,7 @@ long Identifier::makeClusterID(fastsim::enumLayer layer,
                  fastsim::enumSource::SIMULATION);
 }
 
-long Identifier::makeTrackID( fastsim::enumSubtype subtype)
+long Identifier::makeTrackid( fastsim::enumSubtype subtype)
 {
    return        Identifier::makeIdentifier(fastsim::enumDataType::TRACK,
                                             fastsim::enumLayer::TRACKER,
@@ -94,7 +94,7 @@ long Identifier::makeTrackID( fastsim::enumSubtype subtype)
                                             fastsim::enumSource::SIMULATION);
 }
 
-long Identifier::makeBlockID( )
+long Identifier::makeBlockid( )
 {
   return        Identifier::makeIdentifier(fastsim::enumDataType::BLOCK,
                                            fastsim::enumLayer::NONE,
@@ -102,7 +102,7 @@ long Identifier::makeBlockID( )
                                            fastsim::enumSource::RECONSTRUCTION);
 }
 
-long Identifier::makeParticleID(eSource source)
+long Identifier::makeParticleid(eSource source)
 {
    return Identifier::makeIdentifier(fastsim::enumDataType::PARTICLE,
                                      fastsim::enumLayer::NONE,
@@ -135,13 +135,13 @@ bool Identifier::isBlock(long id)
   return (Identifier::dataType(id)==fastsim::enumDataType::BLOCK);
 }
 
-bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+bool Identifier::isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)
 {
    return (Identifier::layer(id)==layer && Identifier::subType(id)==subtype && Identifier::dataType(id)==datatype);
 }
 
-bool Identifier::isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+bool Identifier::isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                                  fastsim::enumSubtype subtype,fastsim::enumSource source)
 {
    return (Identifier::layer(id)==layer && Identifier::subType(id)==subtype && Identifier::dataType(id)==datatype

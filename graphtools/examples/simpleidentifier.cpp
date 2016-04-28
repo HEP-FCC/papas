@@ -37,7 +37,7 @@ enumDataType Identifier::dataType(long id)
    return static_cast<enumDataType>(datatype);
 }
 
-int Identifier::uniqueID(long id)
+int Identifier::uniqueId(long id)
 {
    return (id >> 5);
 }

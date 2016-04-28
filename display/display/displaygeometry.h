@@ -44,14 +44,14 @@ private:
 ///Graphical representation of the detector - holds all the GDetectorElements together
 class GDetector: public Drawable {
 public:
-   GDetector(const BaseDetector& detector);
+   GDetector(const Detector& detector);
    void Draw(const std::string& projection) const override;
 private:
    ///ECAL graphical detector element
-   GDetectorElement m_gECAL;
+   GDetectorElement m_gEcal;
 
    ///HCAL graphical detector element
-   GDetectorElement m_gHCAL;
+   GDetectorElement m_gHcal;
    /// will contain shared_ptrs to GDetectorElements and GTrajectories to be plotted
 
    std::list<std::shared_ptr<Drawable>> m_drawElems;

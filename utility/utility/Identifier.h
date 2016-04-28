@@ -25,14 +25,14 @@ public:
                              eSource source,
                              int uniqueid = Identifier::s_counter);
   static long makeAnotherIdentifier(long
-                                    existingid);///uses same enums as existing id  but sets a new uniqueID.
+                                    existingid);///uses same enums as existing id  but sets a new uniqueId.
   
-  static long makeClusterID(eLayer layer, eSubtype subtype = eSubtype::RAW);
-  static long makeECALClusterID(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterID(eLayer::ECAL, subtype); };
-  static long makeHCALClusterID(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterID(eLayer::HCAL, subtype); };
-  static long makeParticleID(eSource source);
-  static long makeTrackID( fastsim::enumSubtype subtype= eSubtype::RAW);
-  static long makeBlockID();
+  static long makeClusterId(eLayer layer, eSubtype subtype = eSubtype::RAW);
+  static long makeECALClusterId(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterId(eLayer::ECAL, subtype); };
+  static long makeHCALClusterId(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterId(eLayer::HCAL, subtype); };
+  static long makeParticleid(eSource source);
+  static long makeTrackid( fastsim::enumSubtype subtype= eSubtype::RAW);
+  static long makeBlockid();
   
   
   static bool isCluster(long id);
@@ -41,9 +41,9 @@ public:
   static bool isTrack(long id);
   static bool isBlock(long id);
   
-  static bool isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  static bool isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                               fastsim::enumSubtype subtype,fastsim::enumSource source);
-  static bool isUniqueIDMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  static bool isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
                               fastsim::enumSubtype subtype);
   static bool isSmeared(long id);
   
@@ -56,7 +56,7 @@ public:
   static fastsim::enumDataType     dataType(long id);
   
   static char typeShortCode(long id); ///One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static int uniqueID(long id);
+  static int uniqueId(long id);
   
   //TODO add a checkValid function
 private:

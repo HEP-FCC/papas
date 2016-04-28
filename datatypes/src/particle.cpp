@@ -37,7 +37,7 @@ std::string Particle::StringDescription() const
 
 Particle::Particle(int pdgid, double charge, TLorentzVector tlv,
                            double status) :
-m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+m_uniqueId(Identifier::makeParticleid(fastsim::enumSource::NONE)),
 m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 {
@@ -50,7 +50,7 @@ m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 
 Particle::Particle(int pdgid, double charge) :
-  m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+  m_uniqueId(Identifier::makeParticleid(fastsim::enumSource::NONE)),
   m_particleId(pdgid),
   m_charge(charge),
   m_status(0)
@@ -61,7 +61,7 @@ Particle::Particle(int pdgid, double charge) :
 
 
 Particle::Particle() :
-  m_uniqueId(Identifier::makeParticleID(fastsim::enumSource::NONE)),
+  m_uniqueId(Identifier::makeParticleid(fastsim::enumSource::NONE)),
   m_particleId(0), m_charge(0), m_status(0)
 {
 

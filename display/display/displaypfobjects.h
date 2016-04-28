@@ -17,9 +17,10 @@
 #include "TColor.h"
 #include "TVector3.h"
 #include "displaygeometry.h"
-#include "datatypes.h"
+
 
 class Cluster;
+class PFParticle;
 
 
 ///Used to display Clusters on output graphs
@@ -30,9 +31,9 @@ public:
 private:
    ///which layer to plot at
    std::string m_layer;
-   //circles to show outside of cluster
+   //outside circle of cluster
    std::unordered_map< std::string, std::unique_ptr<TEllipse>> m_contours;
-   //circles to show inside of cluster
+   //inside circle of cluster
    std::unordered_map< std::string, std::unique_ptr<TEllipse>> m_inners;
 };
 
