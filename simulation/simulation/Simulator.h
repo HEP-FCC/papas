@@ -41,6 +41,7 @@ public:
   void simulate();
   void simulatePhoton(PFParticle& ptc);
   void simulateHadron(PFParticle& ptc);
+  void simulateNeutrino(PFParticle& ptc);
 
   PFParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
 
@@ -63,8 +64,8 @@ public:
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  long makeClusterId(fastsim::enumLayer layer, fastsim::enumSubtype subtype) const;
-  long makeParticleid(fastsim::enumSource source) const;
+  //long makeClusterId(fastsim::enumLayer layer, fastsim::enumSubtype subtype) const;
+  //long makeParticleId(fastsim::enumSource source) const;
   long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addSmearedCluster(long parentClusterId);
@@ -74,7 +75,7 @@ private:
   long addSmearedTrack(const Track& track, bool accept = false);
   void addNode(const long newid, const long parentid = 0);
   std::shared_ptr<const DetectorElement> elem(fastsim::enumLayer layer) const;
-  
+  static TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy);
   Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedIds(long nodeid) const; //TODO move to helper/history class

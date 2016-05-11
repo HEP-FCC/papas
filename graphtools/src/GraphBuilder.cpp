@@ -2,7 +2,7 @@
 
 
 #include "GraphBuilder.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "Edge.h"
 #include "directedacyclicgraph.h"
 #include "FloodFill.h"
@@ -64,7 +64,7 @@ GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)
 void GraphBuilder::sortIds(std::vector<longId>& ids)
 {
   std::sort(ids.begin(), ids.end(), [](longId a, longId b) -> bool
-            { return Identifier::typeShortCode(a) < Identifier::typeShortCode(b); } );
+            { return Id::typeShortCode(a) < Id::typeShortCode(b); } );
 }
 
 

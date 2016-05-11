@@ -30,8 +30,8 @@ public:
   /**
    *   @brief  Edge constructor - note that the ordering of id1 and id2 does not matter
    *
-   *   @param[in]  id1 : element uniqueid enerated from Identifier class for one end
-   *   @param[in]  id2 : element2 uniqueid generated from Identifier class for other end
+   *   @param[in]  id1 : element uniqueid enerated from Id class for one end
+   *   @param[in]  id2 : element2 uniqueid generated from Id class for other end
    *   @param[in]  isLinked : boolean T/F
    *   @param[in]  distance: distance between two elements
    */
@@ -58,8 +58,8 @@ public:
   *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids
   *     note that the order of id1 and id2 is not important
   *
-  *   @param  id1 : element uniqueid enerated from Identifier class for one end
-  *   @param  id2 : element2 uniqueid generated from Identifier class for other end
+  *   @param  id1 : element uniqueid enerated from Id class for one end
+  *   @param  id2 : element2 uniqueid generated from Id class for other end
   */
   static long long makeKey(longId id1, longId id2);  ///<static function to create a unique key
   

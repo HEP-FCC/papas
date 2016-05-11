@@ -10,15 +10,16 @@
 #include "PFBlock.h"
 #include "Cluster.h"
 #include "Track.h"
-#include "Identifier.h"
+#include "Id.h"
+#include "path.h"
 
 /*
 bool PFEvent::compare(longId id1, longId id2) const //TODO check direction of sort
 {
   //sort by the type eg ecal hcal
   // and then in order of decreasing energy
-  char c1 = Identifier::typeShortCode(id1);
-  char c2 = Identifier::typeShortCode(id2);
+  char c1 = Id::typeShortCode(id1);
+  char c2 = Id::typeShortCode(id2);
   if ( c1 < c2)
     return true;
   else if (c2 > c1)

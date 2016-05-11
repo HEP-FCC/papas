@@ -1,17 +1,17 @@
 #include "gtest/gtest.h"
 #include "GraphBuilder.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "Edge.h"
 
 TEST(GraphBuilder, one) {
   
-  longId id1 = Identifier::makeECALClusterId();
-  longId id2 = Identifier::makeHCALClusterId();
-  longId id3 = Identifier::makeTrackid();
+  longId id1 = Id::makeECALClusterId();
+  longId id2 = Id::makeHCALClusterId();
+  longId id3 = Id::makeTrackId();
   
-  longId id4 = Identifier::makeECALClusterId();
-  longId id5 = Identifier::makeHCALClusterId();
-  longId id6 = Identifier::makeTrackid();
+  longId id4 = Id::makeECALClusterId();
+  longId id5 = Id::makeHCALClusterId();
+  longId id6 = Id::makeTrackId();
   
   std::vector<longId> ids {id1,id2,id3, id4,id5,id6};
   

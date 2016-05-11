@@ -15,12 +15,12 @@
  *  @date    2016-04-06
  */
 #include <unordered_map>
-#include "Identifier.h"
+#include "Id.h"
 #include "directedacyclicgraph.h"
 
 class Track;
 class Cluster;
-#include "PFBlock.h";
+#include "PFBlock.h"
 
 //TODO home for typedefs
 typedef long longId;

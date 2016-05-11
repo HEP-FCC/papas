@@ -5,7 +5,7 @@
 
 #include "displaypfobjects.h"
 #include <iostream>
-#include "Identifier.h"
+#include "Id.h"
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
@@ -20,7 +20,7 @@ GBlob::GBlob(const Cluster& cluster)
    double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
    //set the layer
-   m_layer = to_str(Identifier::layer(cluster.id()));
+   m_layer = to_str(Id::layer(cluster.id()));
 
    //set the color according to particle type
    int color = 1;

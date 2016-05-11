@@ -39,7 +39,7 @@
 
 namespace DAG {
   
-  template <typename T> ///T is what goes inside of a Node eg a long Identifier
+  template <typename T> ///T is what goes inside of a Node eg a long Id
   class FloodFill {
     
     typedef Node<T> TNode;

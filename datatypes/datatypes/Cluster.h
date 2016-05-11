@@ -1,5 +1,5 @@
 //
-//  Cluster.hpp
+//  Cluster.h
 //  papas
 //
 //  Created by Alice Robson on 28/04/16.
@@ -9,21 +9,10 @@
 #ifndef Cluster_h
 #define Cluster_h
 
-
+#include <stdio.h>
 #include "TVector3.h"
-#include "particle.h"
-#include "path.h"
 
-
-class TLorentzVector;
-typedef std::shared_ptr<Path> sptrPath; ///shared pointer to allow for striaghtline or helix
-
-
-/// Function to create a new TLorentzVector
-TLorentzVector makeTLorentzVector(int pdgid, double theta, double  phi,
-                                  double energy);
-
-class Cluster  {
+class Cluster{
 public:
   Cluster(double energy, TVector3 position, double size_m, long id);
   Cluster() = default;
@@ -52,10 +41,9 @@ protected:
   TVector3 m_position;
   double m_energy;
   std::vector<long> m_subClusters;
-  
 };
 
 
-#include <stdio.h>
+
 
 #endif /* Cluster_h */

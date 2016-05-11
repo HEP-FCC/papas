@@ -99,7 +99,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
   
   
   for (auto id : ids) {
-    if (Identifier::isTrack(id)) {
+    if (Id::isTrack(id)) {
       linkedEdgeKeys = block.linkedEdgeKeys(id,Edge::EdgeType::kHcalTrack ) ;//TODO ensurealready sorted from small to large distance
       if (linkedEdgeKeys.size()>0) {
         firstHCAL = true;
@@ -114,7 +114,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
         }
       }
     }
-    else if (Identifier::isEcal(id)) {
+    else if (Id::isEcal(id)) {
       // this is now handled  elsewhere in  Ruler::distance and so could be removed
       // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
       linkedEdgeKeys = block.linkedEdgeKeys(id,Edge::EdgeType::kEcalHcal ) ;//"ecal_hcal")
@@ -147,13 +147,13 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   
   if (ids.size() == 1 ) { //#TODO WARNING!!! LOTS OF MISSING CASES
     longId id = ids[0];
-    if (Identifier::isEcal(id)) {
+    if (Id::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),fastsim::enumLayer::ECAL));
     }
-    else if(Identifier::isHcal(id)) {
+    else if(Id::isHcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id),fastsim::enumLayer::HCAL));
     }
-    else if(Identifier::isTrack(id)) {
+    else if(Id::isTrack(id)) {
       insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
     }
     else {// ask Colin about energy balance - what happened to the associated clusters that one would expect?
@@ -162,12 +162,12 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
   else {
     for (auto id : ids ) {
-      if (Identifier::isHcal(id)) {
+      if (Id::isHcal(id)) {
         reconstructHcal(block, id);
       }
     }
     for (auto id : ids ) {
-      if (Identifier::isTrack(id) && !m_locked[id]) {
+      if (Id::isTrack(id) && !m_locked[id]) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons.
          # ELECTRONS TO BE DEALT WITH.*/
@@ -375,7 +375,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
   
-  longId newid = Identifier::makeParticleid(fastsim::enumSource::RECONSTRUCTION);
+  longId newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
   
@@ -402,7 +402,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
-  longId newid = Identifier::makeParticleid(fastsim::enumSource::RECONSTRUCTION);
+  longId newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, track};
   //particle.setPath(track.path());

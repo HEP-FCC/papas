@@ -10,7 +10,7 @@
 
 #include "Cluster.h"
 #include "Track.h"
-#include "Identifier.h"
+#include "Id.h"
 //#include "deltar.h"
 //#include "distance.h"
 #include "particle.h"
@@ -62,25 +62,6 @@ TVector3 PFParticle::pathPosition(std::string name) const
   return m_path->namedPoint(name);
 }
 
-TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy)
-{
-  double mass = ParticleData::particleMass(pdgid);
-  double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
-  double costheta = cos(theta);
-  double sintheta = sin(theta);
-  double cosphi = cos(phi);
-  double sinphi = sin(phi);
-  TLorentzVector p4(momentum * sintheta * cosphi,
-                    momentum * sintheta * sinphi,
-                    momentum * costheta,
-                    energy);
-  /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
-  p4.Et() << " ";
-  std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
-  " " << cosphi <<
-  " " << sintheta << " ";*/
-  return p4;
-}
 
 
 /*PFParticle::PFParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):

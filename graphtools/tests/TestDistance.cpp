@@ -8,7 +8,7 @@
 
 #include "gtest/gtest.h"
 #include "Distance.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "Cluster.h"
 #include "Track.h"
 #include "TVector3.h"
@@ -17,8 +17,8 @@
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Identifier::makeClusterId(fastsim::enumLayer::ECAL, fastsim::enumSubtype::RAW)};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Identifier::makeClusterId(fastsim::enumLayer::HCAL, fastsim::enumSubtype::RAW)};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(fastsim::enumLayer::ECAL, fastsim::enumSubtype::RAW)};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(fastsim::enumLayer::HCAL, fastsim::enumSubtype::RAW)};
   
   
   TVector3 p3 = c1.position().Unit()*100.;

@@ -9,12 +9,12 @@
 //#include <stdio.h>
 
 #include "PFEventDisplay.h"
-
 #include "PFEvent.h"
 #include "displaypfobjects.h"
 //#include "displaygeometry.h"
 #include "Track.h"
 #include "Cluster.h"
+#include "path.h" // remove?
 
 PFEventDisplay::PFEventDisplay(std::list<Projection> views)
 :Display(views){

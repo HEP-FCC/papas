@@ -13,6 +13,7 @@
 #include "geometry.h"
 #include "Cluster.h"
 #include "Track.h"
+#include "path.h"
 
 /*
  CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder& volume,

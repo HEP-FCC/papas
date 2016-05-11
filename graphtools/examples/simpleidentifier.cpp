@@ -13,11 +13,11 @@
 
 
 
-int Identifier::s_counter =
+int Id::s_counter =
    0; /// static which will be used to create a unique long
 
 
-long Identifier::makeIdentifier(enumDataType datatype,   // 2 bits
+long Id::makeIdentifier(enumDataType datatype,   // 2 bits
                                 enumSubType subtype)    // 3 bits
 {
    s_counter++; //default is to start at 1 for first id so that id=0 means unset
@@ -25,19 +25,19 @@ long Identifier::makeIdentifier(enumDataType datatype,   // 2 bits
    return id;
 }
 
-enumSubType Identifier::subType(long id)
+enumSubType Id::subType(long id)
 {
    int subtype = (id >> 2) & 0b111 ;//(3 bits)
    return static_cast<enumSubType>(subtype);
 }
 
-enumDataType Identifier::dataType(long id)
+enumDataType Id::dataType(long id)
 {
    int datatype = (id) & 0b11 ;//(2 bits)
    return static_cast<enumDataType>(datatype);
 }
 
-int Identifier::uniqueId(long id)
+int Id::uniqueId(long id)
 {
    return (id >> 5);
 }

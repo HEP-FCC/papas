@@ -9,33 +9,31 @@
 #include "PFBlock.h"
 
 //#include <boost/format.hpp>
-#include <iostream>
+#include "Edge.h"
+#include "Id.h"
+#include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <unordered_set>
 #include <vector>
-#include <algorithm>
-#include "Identifier.h"
-#include "Edge.h"
 #
 //#include "PFEvent.h"
 
 int PFBlock::tempBlockCount = 0;
 
-PFBlock::PFBlock(const PFBlock::Ids&  element_ids, PFBlock::Edges& edges) :
-  m_uniqueId(Identifier::makeBlockid()),
-  m_isActive(true),
-  m_blockCount(PFBlock::tempBlockCount),
-  m_elementIds(element_ids)
-{
+PFBlock::PFBlock(const PFBlock::Ids& element_ids, PFBlock::Edges& edges)
+    : m_uniqueId(Id::makeBlockId()),
+      m_isActive(true),
+      m_blockCount(PFBlock::tempBlockCount),
+      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
 
-  //extract the relevant parts of the complete set of edges and store this within the block
-  //note the edges will be removed from the edges unordered_map
+  // extract the relevant parts of the complete set of edges and store this within the block
+  // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {
     for (auto id2 : m_elementIds) {
-      if (id1 >= id2)
-        continue;
-      //move the edge from one unordered map to the other
+      if (id1 >= id2) continue;
+      // move the edge from one unordered map to the other
       auto e = edges.find(Edge::makeKey(id1, id2));
       m_edges.emplace(e->second.key(), std::move(e->second));
       edges.erase(e);
@@ -43,62 +41,38 @@ PFBlock::PFBlock(const PFBlock::Ids&  element_ids, PFBlock::Edges& edges) :
   }
 }
 
-PFBlock::PFBlock():
-  m_uniqueId(-1),
-  m_isActive(false),
-  m_blockCount(-1),
-  m_elementIds()
-{
+PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_blockCount(-1), m_elementIds() {}
 
-}
-
-int PFBlock::countEcal() const
-{
+int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(),
-  [](longId elem) {return Identifier::isEcal(elem) ;});
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isEcal(elem); });
 }
 
-int PFBlock::countHcal() const
-{
+int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(),
-  [](longId elem) {return Identifier::isHcal(elem) ;});
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isHcal(elem); });
 }
 
-
-int PFBlock::countTracks() const
-{
+int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(),
-  [](longId elem) {return Identifier::isTrack(elem) ;});
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isTrack(elem); });
 }
 
-
-
-std::string PFBlock::shortName() const
-{
+std::string PFBlock::shortName() const {
   // constructs a short summary name for blocks allowing sorting based on contents
-  //eg 'E1H1T2' for a block with 1 ecal, 1 hcal, 2 tracks
+  // eg 'E1H1T2' for a block with 1 ecal, 1 hcal, 2 tracks
   //
-  std:: string shortName = "";
-  if (countEcal())
-    shortName = shortName + "E" + std::to_string(countEcal());
-  if (countHcal())
-    shortName = shortName + "H" + std::to_string(countHcal());
-  if (countTracks())
-    shortName = shortName + "T" + std::to_string(countTracks());
+  std::string shortName = "";
+  if (countEcal()) shortName = shortName + "E" + std::to_string(countEcal());
+  if (countHcal()) shortName = shortName + "H" + std::to_string(countHcal());
+  if (countTracks()) shortName = shortName + "T" + std::to_string(countTracks());
 
   return shortName;
 }
 
-int  PFBlock::size()  const
-{
-  return m_elementIds.size();
-}
+int PFBlock::size() const { return m_elementIds.size(); }
 
-std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType matchtype) const
-{
+std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    The list is sorted in order of increasing distance
@@ -109,10 +83,10 @@ std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType m
    */
   std::vector<long long> linkedEdgeKeys;
   for (auto edge : m_edges) {
-    //if this is an edge that includes uniqueid
+    // if this is an edge that includes uniqueid
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
-      //include in list if either no matchtype is specified or if the edge is of the same matchtype
-      if ((matchtype == Edge::EdgeType::kUnknown)  || matchtype == edge.second.edgeType())
+      // include in list if either no matchtype is specified or if the edge is of the same matchtype
+      if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
         linkedEdgeKeys.push_back(edge.first);
     }
   }
@@ -125,10 +99,9 @@ std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType m
  linked_edges.sort( key = lambda x: (x.distance is None, x.distance))
  return linked_edges*/
 
-std::vector<long> PFBlock::linkedIds(longId uniqueid, Edge::EdgeType edgetype) const
-{
+std::vector<long> PFBlock::linkedIds(longId uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
-  ///sorted in order of increasing distance
+  /// sorted in order of increasing distance
   /** returns a list of the otherids sorted by distance to uniqueid and by decreasing energies
 
    eg if uniqueid is an hcal
@@ -141,16 +114,12 @@ std::vector<long> PFBlock::linkedIds(longId uniqueid, Edge::EdgeType edgetype) c
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     linkedIds.push_back(m_edges.find(key)->second.otherid(uniqueid));
   }
-  //std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](longId a, longId b) -> bool
+  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](longId a, longId b) -> bool
   //                  { return this->compareEdges(a, b, uniqueid); } );
   return linkedIds;
 }
 
-
-
-
-std::string PFBlock::elementsString() const
-{
+std::string PFBlock::elementsString() const {
   /** Construct a string descrip of each of the elements in a block:-
    The elements are given a short name E/H/T according to ecal/hcal/track
    and then sequential numbering starting from 0, this naming is also used to index the
@@ -164,9 +133,10 @@ std::string PFBlock::elementsString() const
    */
   int count = 0;
   std::string offset = "      ";
-  std::string s = offset + "elements: \n" ;
+  std::string s = offset + "elements: \n";
   for (auto id : m_elementIds) {
-    s += offset + "          " + Identifier::typeShortCode(id) + std::to_string(count) + ": " + std::to_string(id) + "\n";
+    s += offset + "          " + Id::typeShortCode(id) + std::to_string(count) + ": " + std::to_string(id) +
+        "\n";
     count = count + 1;
   }
   /*elemdetails = "\n      elements: {\n"
@@ -180,8 +150,7 @@ std::string PFBlock::elementsString() const
   return s;
 }
 
-std::string PFBlock::edgeMatrixString() const
-{
+std::string PFBlock::edgeMatrixString() const {
   /* produces a string containing the the lower part of the matrix of distances between elements
    elements are ordered as ECAL(E), HCAL(H), Track(T)
   for example:-
@@ -199,29 +168,29 @@ std::string PFBlock::edgeMatrixString() const
   std::ostringstream os;
   os.precision(2);
   std::string offset = "      ";
-  //os<< offset + "distances:\n     " + offset;
-  os << offset + "distances:  " ;
+  // os<< offset + "distances:\n     " + offset;
+  os << offset + "distances:  ";
 
   std::string shortid;
   for (auto e1 : m_elementIds) {
     // will produce short id of form E2 H3, T4 etc in tidy format
-    shortid = Identifier::typeShortCode(e1) + std::to_string(count);
-    os << std::setw(9)  << shortid;
+    shortid = Id::typeShortCode(e1) + std::to_string(count);
+    os << std::setw(9) << shortid;
     count += 1;
   }
   os << std::endl;
 
-  //for each element find distances to all other items that are in the lower part of the matrix
+  // for each element find distances to all other items that are in the lower part of the matrix
   int countrow = 0;
   std::string rowstr = "";
   std::string rowname = "";
   std::string colname = "";
-  for (auto e1 : m_elementIds) { // this will be the rows
+  for (auto e1 : m_elementIds) {  // this will be the rows
     rowstr = "";
-    //make short name for the row element eg E3, H5 etc
-    os << std::setw(18) << Identifier::typeShortCode(e1) + std::to_string(countrow);
+    // make short name for the row element eg E3, H5 etc
+    os << std::setw(18) << Id::typeShortCode(e1) + std::to_string(countrow);
     countrow += 1;
-    for (auto e2 : m_elementIds) { //these will be the columns
+    for (auto e2 : m_elementIds) {  // these will be the columns
       if (e1 == e2) {
         os << "        .";
         break;
@@ -230,27 +199,23 @@ std::string PFBlock::edgeMatrixString() const
       else if (edge(e1, e2).isLinked() == false)
         os << "      xxx";
       else {
-        os << std::setw(9) << std::fixed  << edge(e1, e2).distance() ;
-
+        os << std::setw(9) << std::fixed << edge(e1, e2).distance();
       }
-
     }
     os << " \n";
   }
   return os.str();
 }
 
-
-const Edge& PFBlock::edge(longId id1, longId id2) const
-{
-/// Find the edge corresponding to e1 e2
-///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either order gives same result)
-///                        '''
+const Edge& PFBlock::edge(longId id1, longId id2) const {
+  /// Find the edge corresponding to e1 e2
+  ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
+  ///                      order gives same result)
+  ///                        '''
   return m_edges.find(Edge::makeKey(id1, id2))->second;
 }
 
-std::ostream& operator<<(std::ostream& os, const PFBlock& block)
-{
+std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
 
   if (block.m_isActive)
     os << "block: ";
@@ -258,31 +223,27 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block)
     os << "deactivated block: ";
   os << block.shortName();
   os << " id=" << block.m_blockCount << " uid=" << block.m_uniqueId;
-  os << " ecals= " << block.countEcal() << " hcals= " << block.countHcal() << " tracks= " << block.countTracks() << "\n";
-
+  os << " ecals= " << block.countEcal() << " hcals= " << block.countHcal() << " tracks= " << block.countTracks()
+     << "\n";
 
   os << block.elementsString() << std::endl;
   os << block.edgeMatrixString() << std::endl;
 
   //    return descrip
   return os;
-
 }
 
+int test_blocks() {
+  PFBlock::longId id1 = Id::makeECALClusterId();
+  PFBlock::longId id2 = Id::makeHCALClusterId();
+  PFBlock::longId id3 = Id::makeTrackId();
 
+  PFBlock::longId id4 = Id::makeECALClusterId();
+  PFBlock::longId id5 = Id::makeHCALClusterId();
+  PFBlock::longId id6 = Id::makeTrackId();
 
-int test_blocks()
-{
-  PFBlock::longId id1 = Identifier::makeECALClusterId();
-  PFBlock::longId id2 = Identifier::makeHCALClusterId();
-  PFBlock::longId id3 = Identifier::makeTrackid();
-
-  PFBlock::longId id4 = Identifier::makeECALClusterId();
-  PFBlock::longId id5 = Identifier::makeHCALClusterId();
-  PFBlock::longId id6 = Identifier::makeTrackid();
-
-  PFBlock::Ids ids {id1, id2, id3};
-  PFBlock::Ids ids2 {id4, id5, id6};
+  PFBlock::Ids ids{id1, id2, id3};
+  PFBlock::Ids ids2{id4, id5, id6};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
@@ -295,14 +256,13 @@ int test_blocks()
   PFBlock::Edges edges;
   edges.reserve(100);
 
-  //edges.emplace(10000.0,  std::move(edge));
-  edges.emplace(edge.key(),  std::move(edge));
+  // edges.emplace(10000.0,  std::move(edge));
+  edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
   edges.emplace(edge2.key(), std::move(edge2));
   edges.emplace(edge4.key(), std::move(edge4));
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
-
 
   PFBlock block(ids, edges);
   PFBlock block2(ids2, edges);
@@ -312,9 +272,6 @@ int test_blocks()
   std::cout << edges.size();
   return 0;
 }
-
-
-
 
 /*
 
@@ -340,7 +297,8 @@ T2  0.0210   0.0000        .
  else:
  descrip= "\ndeactivated block:"
 
- descrip += str('{shortName:<12} id={blockid:4.0f} :uid= {uid}: ecals = {count_ecal} hcals = {count_hcal} tracks = {count_tracks}'.format(
+ descrip += str('{shortName:<12} id={blockid:4.0f} :uid= {uid}: ecals = {count_ecal} hcals = {count_hcal} tracks =
+ {count_tracks}'.format(
  shortName    = self.short_name(),
  blockid      = self.block_count,
  uid          = self.uniqueid,

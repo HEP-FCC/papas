@@ -112,13 +112,13 @@ int test_BlockBuilder()
 {
 
 
-  PFBlock::longId id1 = Identifier::makeECALClusterId();
-  PFBlock::longId id2 = Identifier::makeHCALClusterId();
-  PFBlock::longId id3 = Identifier::makeTrackid();
+  PFBlock::longId id1 = Id::makeECALClusterId();
+  PFBlock::longId id2 = Id::makeHCALClusterId();
+  PFBlock::longId id3 = Id::makeTrackId();
 
-  PFBlock::longId id4 = Identifier::makeECALClusterId();
-  PFBlock::longId id5 = Identifier::makeHCALClusterId();
-  PFBlock::longId id6 = Identifier::makeTrackid();
+  PFBlock::longId id4 = Id::makeECALClusterId();
+  PFBlock::longId id5 = Id::makeHCALClusterId();
+  PFBlock::longId id6 = Id::makeTrackId();
 
   std::vector<PFBlock::longId> ids {id1, id2, id3, id4, id5, id6};
 

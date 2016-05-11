@@ -19,7 +19,7 @@ class Edge;
  * Each element will end up in one (and only one) block
  * Blocks retain information of the elements and the distances between elements
  * The blocks can be used for future particle reconstruction
- * The ids must be unique and are expected to come from the Identifier class
+ * The ids must be unique and are expected to come from the Id class
  
  
  Usage example:
@@ -60,11 +60,11 @@ public:
   GraphBuilder(Ids ids, Edges& edges);
   //GraphBuilder();
   GraphBuilder& operator = (const GraphBuilder&) ;
-  const std::vector<Ids>  subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
-  std::vector<Ids>  m_subGraphs;///< vector of subgraphs made by graphbuilder
+  const std::vector<Ids> subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
+  std::vector<Ids> m_subGraphs;///< vector of subgraphs made by graphbuilder
   
 protected:
-  void sortIds(Ids& ids);
+  void sortIds(Ids& ids); ///<sorted by energy
   Edges& m_edges;
 private:
   Ids m_elementIds; ///<uniqueids to be grouped into subgraphs

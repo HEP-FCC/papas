@@ -5,11 +5,12 @@
 #include <iostream> //TODOAJR remove
 #include "Simulator.h"
 #include "CMS.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "enums.h"
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
+#include "particledata.h"
 
 using fastsim::enumLayer;
 
@@ -82,6 +83,10 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   addSmearedCluster(hcalId);
 }
 
+void Simulator::simulateNeutrino(PFParticle& ptc) {
+  
+}
+
 void  Simulator::propagate(PFParticle& ptc, const SurfaceCylinder& cylinder) {
   bool isNeutral = fabs(ptc.charge())<0.5; //TODO ask colin why not zero
   if (isNeutral)
@@ -91,7 +96,7 @@ void  Simulator::propagate(PFParticle& ptc, const SurfaceCylinder& cylinder) {
 }
 
 const Cluster& Simulator::cluster(long clusterId) const {
-  auto layer=Identifier::layer(clusterId);
+  auto layer=Id::layer(clusterId);
   if (layer==fastsim::enumLayer::ECAL)
     return m_ecalClusters.at(clusterId);
   else
@@ -101,7 +106,7 @@ const Cluster& Simulator::cluster(long clusterId) const {
 PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
   double field = m_detector.field()->getMagnitude();
-  long uniqueid = Identifier::makeParticleid(fastsim::enumSource::SIMULATION);
+  long uniqueid = Id::makeParticleId(fastsim::enumSource::SIMULATION);
   m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, tlv, vertex, field});
   addNode(uniqueid); //add node to history graph
   return m_particles[uniqueid];
@@ -110,8 +115,29 @@ PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 verte
 PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex)
 {
   TLorentzVector tlv = makeTLorentzVector(pdgid, theta, phi, energy);
-  return addParticle( pdgid, tlv, vertex);
+  return addParticle(pdgid, tlv, vertex);
 }
+
+
+TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi, double energy)
+{
+  double mass = ParticleData::particleMass(pdgid);
+  double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
+  double costheta = cos(theta);
+  double sintheta = sin(theta);
+  double cosphi = cos(phi);
+  double sinphi = sin(phi);
+  TLorentzVector p4(momentum * sintheta * cosphi,
+                    momentum * sintheta * sinphi,
+                    momentum * costheta,
+                    energy);
+  /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
+   p4.Et() << " ";
+   std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
+   " " << cosphi <<
+   " " << sintheta << " ";*/
+  return p4;
+}                              
 
 
 long Simulator::addEcalCluster(PFParticle& ptc,long parentid,double fraction, double csize)
@@ -134,7 +160,7 @@ Cluster Simulator::makeCluster(PFParticle& ptc, long parentid,fastsim::enumLayer
   if (!parentid) {
     parentid = ptc.id();
   }
-  long clusterid = Identifier::makeClusterId(layer, fastsim::enumSubtype::RAW);
+  long clusterid = Id::makeClusterId(layer, fastsim::enumSubtype::RAW);
   double energy = ptc.p4().E() * fraction;
   
   //TODO change string to ENUM
@@ -154,7 +180,7 @@ Cluster Simulator::makeCluster(PFParticle& ptc, long parentid,fastsim::enumLayer
 long Simulator::addSmearedCluster(long parentClusterId)
 {
   Cluster smeared=makeSmearedCluster(parentClusterId);
-  auto layer = Identifier::layer(parentClusterId);
+  auto layer = Id::layer(parentClusterId);
   
   if (m_detector.calorimeter(layer)->acceptance(smeared)) {
     addNode(smeared.id(), parentClusterId);
@@ -175,13 +201,12 @@ long Simulator::addSmearedCluster(long parentClusterId)
 Cluster Simulator::makeSmearedCluster(long parentClusterId) //, double energyresolution )
 {
   //create a new id
-  auto layer = Identifier::layer(parentClusterId);
-  long newclusterid = Identifier::makeClusterId(layer, fastsim::enumSubtype::SMEARED);
+  auto layer = Id::layer(parentClusterId);
+  long newclusterid = Id::makeClusterId(layer, fastsim::enumSubtype::SMEARED);
   const Cluster& parent = cluster(parentClusterId);
   
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
   //double energyresolution = sp_calorimeter->energyResolution(parent.energy());
-  //TODO double energy = parent.energy() * fastsim::randomGaussian(1, energyresolution).next();
   //double energy = parent.energy() * randomgen::RandNormal(1, energyresolution).next();
   double energy = parent.energy() * 0.95;
   
@@ -191,7 +216,7 @@ Cluster Simulator::makeSmearedCluster(long parentClusterId) //, double energyres
 
 const Track& Simulator::addTrack(PFParticle& ptc)
 {
-  long trackid = Identifier::makeTrackid();
+  long trackid = Id::makeTrackId();
   m_tracks.emplace(trackid, Track{ ptc.p3(), ptc.charge(), ptc.path(), trackid});
   addNode(trackid, ptc.id());
   return m_tracks.at(trackid); //check this defaults OK
@@ -199,7 +224,7 @@ const Track& Simulator::addTrack(PFParticle& ptc)
 
 
 long Simulator::addSmearedTrack( const Track& track, bool accept) {
-  long smearedTrackId = Identifier::makeTrackid(fastsim::enumSubtype::SMEARED);
+  long smearedTrackId = Id::makeTrackId(fastsim::enumSubtype::SMEARED);
   //double ptResolution = m_detector.tracker()->ptResolution(track);
   //TODO after testing double scale_factor = randomgen::RandNormal(1, ptResolution).next()
   double scale_factor = 1.1;
@@ -234,7 +259,7 @@ void Simulator::testing()
     std::cout<< "Connected to "<<p.first<< std::endl;
     auto res =bfs.traverseUndirected(m_nodes[p.first]);
     for (auto r : res)
-      std::cout<< "  "<<r->value()<<": "<<Identifier::dataType(r->value()) <<": " <<Identifier::subType(r->value())<<std::endl;
+      std::cout<< "  "<<r->value()<<": "<<Id::dataType(r->value()) <<": " <<Id::subType(r->value())<<std::endl;
   }
 }
 
@@ -299,7 +324,7 @@ Ids Simulator::getMatchingIds(long nodeid, fastsim::enumDataType datatype, fasts
   for (auto r : res)
   {
     long id=r->value();
-    if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
+    if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
       foundids.push_back(id);
     }
   }
@@ -315,7 +340,7 @@ Ids Simulator::getMatchingParentIds(long nodeid, fastsim::enumDataType datatype,
   for (auto r : res)
   {
     long id=r->value();
-    if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
+    if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
       foundids.push_back(id);
     }
   }

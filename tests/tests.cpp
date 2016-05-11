@@ -32,7 +32,7 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
-#include "Identifier.h"
+#include "Id.h"
 
 //include "random.h"
 #include "rand.h"
@@ -102,7 +102,7 @@ void testGraphs()
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    
    TVector3 vpos(1.,.5,.3);
-   Cluster cluster =  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
+   Cluster cluster =  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
    std::vector<TVector3> tvec;
    tvec.push_back(TVector3(0.,0.,0.));
    tvec.push_back(TVector3(1.,1.,1.));
@@ -118,7 +118,7 @@ void testGraphs()
    //Testing graphics
    /*
     TVector3 vpos(1.,.5,.3);
-    Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
+    Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
     std::vector<TVector3> tvec;
     
     std::cout <<"cluster "<< cluster.pt()<<"\n";
@@ -230,7 +230,7 @@ TEST(fastsim, StraightLine){
    auto cyl2 = SurfaceCylinder("cyl2", 2, 1);
    
    TLorentzVector tlv{1, 0, 1, 2.};
-   long uid=Identifier::makeParticleid(fastsim::enumSource::SIMULATION);
+   long uid=Id::makeParticleId(fastsim::enumSource::SIMULATION);
    PFParticle photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -245,7 +245,7 @@ TEST(fastsim, StraightLine){
    
    //testing extrapolation to -z
    tlv=TLorentzVector(1, 0, -1, 2.);
-   uid=Identifier::makeParticleid(fastsim::enumSource::SIMULATION);
+   uid=Id::makeParticleId(fastsim::enumSource::SIMULATION);
    photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -401,7 +401,7 @@ void test_graphs()
   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
   
   TVector3 vpos(1.,.5,.3);
-  Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
+  Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0.,0.,0.));
   tvec.push_back(TVector3(1.,1.,1.));
@@ -416,7 +416,7 @@ void test_graphs()
   
   //Testing graphics
   /* TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Identifier::makeECALClusterId() );
+   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
    std::vector<TVector3> tvec;
    
    std::cout <<"cluster "<< cluster.pt()<<"\n";

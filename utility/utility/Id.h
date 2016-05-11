@@ -11,28 +11,28 @@
 #include <iostream>
 #include "enums.h"
 
-class Identifier {
+class Id {
 public:
-  Identifier() {};
+  Id() {};
   typedef fastsim::enumLayer   eLayer;
   typedef fastsim::enumSubtype  eSubtype;
   typedef fastsim::enumSource  eSource;
   typedef fastsim::enumDataType eDataType;
   
-  static long makeIdentifier(eDataType type, //check name with Colin
+  static long makeId(eDataType type, //check name with Colin
                              eLayer layer,
                              eSubtype subtype,
                              eSource source,
-                             int uniqueid = Identifier::s_counter);
-  static long makeAnotherIdentifier(long
+                             int uniqueid = Id::s_counter);
+  static long makeAnotherId(long
                                     existingid);///uses same enums as existing id  but sets a new uniqueId.
   
   static long makeClusterId(eLayer layer, eSubtype subtype = eSubtype::RAW);
-  static long makeECALClusterId(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterId(eLayer::ECAL, subtype); };
-  static long makeHCALClusterId(eSubtype subtype = eSubtype::RAW) { return Identifier::makeClusterId(eLayer::HCAL, subtype); };
-  static long makeParticleid(eSource source);
-  static long makeTrackid( fastsim::enumSubtype subtype= eSubtype::RAW);
-  static long makeBlockid();
+  static long makeECALClusterId(eSubtype subtype = eSubtype::RAW) { return Id::makeClusterId(eLayer::ECAL, subtype); };
+  static long makeHCALClusterId(eSubtype subtype = eSubtype::RAW) { return Id::makeClusterId(eLayer::HCAL, subtype); };
+  static long makeParticleId(eSource source);
+  static long makeTrackId( fastsim::enumSubtype subtype= eSubtype::RAW);
+  static long makeBlockId();
   
   
   static bool isCluster(long id);

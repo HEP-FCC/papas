@@ -33,7 +33,11 @@ ${CMAKE_SOURCE_DIR}/datatypes/datatypes/
 ${CMAKE_SOURCE_DIR}/simulation/simulation
 ${CMAKE_SOURCE_DIR}/reconstruction/reconstruction
 ${CMAKE_SOURCE_DIR}/graphtools/graphtools
+${CMAKE_SOURCE_DIR}/pythia8
 )
+
+include_directories(/users/alice/local/lib /users/alice/fcc/fcc-physics/install/lib)
+
 
 set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/papas/)
 
@@ -51,7 +55,8 @@ find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
 
 add_executable(mainexe ../main.cpp)
-target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
+target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES} )
+#/users/alice/fcc/fcc-physics/install/lib/libfccphysics-myanalysis.dylib)
 
 
 

@@ -10,7 +10,7 @@
 //#include <unordered_map>
 #include "Distance.h"
 #include "PFEvent.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "PFBlock.h"
 #include "Cluster.h"
 
@@ -22,16 +22,16 @@ m_pfEvent(pfevent)
 
 Distance Ruler::distance(longId id1, longId id2)
 {
-  if (Identifier::isCluster(id1) && Identifier::isCluster(id2))
-    if (Identifier::layer(id1) == Identifier::layer(id2))
+  if (Id::isCluster(id1) && Id::isCluster(id2))
+    if (Id::layer(id1) == Id::layer(id2))
       return clusterClusterDistance(id1, id2);
     else //hcal ecal not linked
       return Distance();
-    else if (Identifier::isTrack(id2) && Identifier::isCluster(id1))
+    else if (Id::isTrack(id2) && Id::isCluster(id1))
       return clusterTrackDistance(id1, id2);
-    else if (Identifier::isTrack(id1) && Identifier::isCluster(id2))
+    else if (Id::isTrack(id1) && Id::isCluster(id2))
       return clusterTrackDistance(id2, id1);
-    else if (Identifier::isTrack(id1) && Identifier::isTrack(id2))
+    else if (Id::isTrack(id1) && Id::isTrack(id2))
       return Distance();
   //TODO error
   return Distance();

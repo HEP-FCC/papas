@@ -7,10 +7,11 @@
 //
 
 #include "Distance.h"
-#include "Identifier.h"
+#include "Id.h"
 #include "Cluster.h"
 #include "Track.h"
 #include "deltar.h"
+#include "path.h"
 
 
 Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) :
@@ -54,7 +55,7 @@ Distance::Distance(const Cluster& cluster,const Track& track)
 : m_distance(-1), m_isLinked(false)
 {
   std::string lname="_ECALin";
-  if(Identifier::layer(cluster.id())==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
+  if(Id::layer(cluster.id())==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
     lname="_HCALin";
   
   if (track.path()->hasNamedPoint(lname)) { //check exists {

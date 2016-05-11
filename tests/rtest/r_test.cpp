@@ -89,7 +89,7 @@ void tryR(int argc, char* argv[]) {
    std::vector<double> w2;
    w2.reserve(10000);
    for (auto x :sim.smearedECALClusters())
-   { if (Identifier::isSmeared(x.second.id()))
+   { if (Id::isSmeared(x.second.id()))
    w2.push_back( x.second.energy());
    }
    r_density_plot(w2, R);

@@ -1,5 +1,5 @@
 #include "edge.h"
-#include "Identifier.h"
+#include "Id.h"
 
 Edge::Edge(longId id1, longId id2, bool isLinked, double distance) :
 m_id1(id1),
@@ -39,8 +39,8 @@ Edge::EdgeType Edge::makeEdgeType() const {
   // eg for one track and one ecal the type will always be kEcalTrack (and never be a kTrackEcal)
  
   //get one letter abbreviation of type eg 't' for a track
-  auto shortid1 = Identifier::typeShortCode(m_id1);
-  auto shortid2 = Identifier::typeShortCode(m_id2);
+  auto shortid1 = Id::typeShortCode(m_id1);
+  auto shortid2 = Id::typeShortCode(m_id2);
   
   if (shortid1==shortid2) {
     if (shortid1== 'h')
@@ -68,9 +68,9 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 }
 
 int test_edges() {
-  Edge::longId id1=Identifier::makeECALClusterId();
-  Edge::longId id2=Identifier::makeHCALClusterId();
-  Edge::longId id3=Identifier::makeTrackid();
+  Edge::longId id1=Id::makeECALClusterId();
+  Edge::longId id2=Id::makeHCALClusterId();
+  Edge::longId id3=Id::makeTrackId();
   
   Edge edge=Edge(id1,id2,false,0.0);
   Edge edge1=Edge(id1,id3,true,0.0);

@@ -8,7 +8,7 @@
 #include <string>
 #include <limits>
 #include "enums.h"
-#include "rand.h"
+#include "random.h"
 
 const int c_vecsize = 10000;
 const double c_exp_lambda = 3.5; //AJR where does this come from

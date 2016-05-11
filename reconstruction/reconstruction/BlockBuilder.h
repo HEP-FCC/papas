@@ -16,12 +16,12 @@ class GraphBuilder;
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *
- * BlockBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link info
+ * BlockBuilder takes a vector of Ids and an unordered map of associated edges which have distance and link info
  * It uses the distances/links between elements to construct a set of connected blocks
  * Each element will end up in one (and only one) block
  * Blocks retain information of the elements and the distances between elements
  * The blocks can be used for future particle reconstruction
- * The ids must be unique and are expected to come from the Identifier class
+ * The ids must be unique and are expected to come from the Id class
  
  
  Usage example:
