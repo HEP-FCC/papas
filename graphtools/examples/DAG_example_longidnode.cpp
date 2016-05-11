@@ -13,7 +13,7 @@
 
 long makeMergedClusterId()
 {
-   return Id::makeId(enumDataType::CLUSTER,
+   return Id::makeId(kCluster,
                                      enumSubType::MERGED);
 }
 

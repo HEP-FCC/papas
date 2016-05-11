@@ -11,7 +11,7 @@
 #include "enummanager.h"
 
 namespace fastsim {
-   ENUM_WITH_STRINGS(enumDataType , PARTICLE, CLUSTER, TRACK, BLOCK)
+   
    ENUM_WITH_STRINGS(enumLayer , NONE, HCAL, ECAL, TRACKER, FIELD)
    ENUM_WITH_STRINGS(enumSubtype , NONE, RAW, MERGED, SMEARED)
    ENUM_WITH_STRINGS(enumSource , NONE, SIMULATION, RECONSTRUCTION, OBSERVED)

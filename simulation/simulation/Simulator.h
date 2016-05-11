@@ -13,6 +13,7 @@
 #include "enums.h"
 #include "directedacyclicgraph.h"
 #include "propagator.h"
+#include "Id.h"
 
 class PFParticle;
 class Cluster;
@@ -79,9 +80,9 @@ private:
   Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedIds(long nodeid) const; //TODO move to helper/history class
-  Ids getMatchingIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  Ids getMatchingIds(long nodeid, Id::DataType datatype, fastsim::enumLayer layer,
                      fastsim::enumSubtype type, fastsim::enumSource source) const; //TODO move to helper/history class
-  Ids getMatchingParentIds(long nodeid, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, fastsim::enumLayer layer,
                            fastsim::enumSubtype type, fastsim::enumSource source) const ;  //TODO move to helper/history class
 
   Clusters m_ecalClusters;

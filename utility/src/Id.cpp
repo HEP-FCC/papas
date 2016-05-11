@@ -25,7 +25,7 @@ void Id::setCounter(int startid) /// allows user to start counter at another poi
 }
 
 //TODO rename as OBJECTTYpe not PFObjectType
-long Id::makeId(fastsim::enumDataType type,     // 6 bits  (to be refined later )
+long Id::makeId(DataType type,     // 6 bits  (to be refined later )
                                 fastsim::enumLayer layer,       // 4 bits
                                 fastsim::enumSubtype subtype,   // 3 bits
                                 fastsim::enumSource source,     // 3 bits
@@ -66,10 +66,10 @@ fastsim::enumSource Id::source(long id)
    return static_cast<fastsim::enumSource>(source);
 }
 
-fastsim::enumDataType Id::dataType(long id)
+Id::DataType Id::dataType(long id)
 {
    int type = id & 0b111111 ;//(preserve the 6 rightmost bits)
-   return static_cast<fastsim::enumDataType>(type);
+   return static_cast<DataType>(type);
 }
 
 int Id::uniqueId(long id)
@@ -78,16 +78,16 @@ int Id::uniqueId(long id)
 }
 
 long Id::makeClusterId(fastsim::enumLayer layer, fastsim::enumSubtype subtype) {
-  return Id::makeId(fastsim::enumDataType::CLUSTER, layer, subtype, fastsim::enumSource::SIMULATION);
+  return Id::makeId(DataType::kCluster, layer, subtype, fastsim::enumSource::SIMULATION);
 }
 
 long Id::makeTrackId(fastsim::enumSubtype subtype) {
   return Id::makeId(
-      fastsim::enumDataType::TRACK, fastsim::enumLayer::TRACKER, subtype, fastsim::enumSource::SIMULATION);
+      DataType::kTrack, fastsim::enumLayer::TRACKER, subtype, fastsim::enumSource::SIMULATION);
 }
 
 long Id::makeBlockId() {
-  return Id::makeId(fastsim::enumDataType::BLOCK,
+  return Id::makeId(DataType::kBlock,
                     fastsim::enumLayer::NONE,
                     fastsim::enumSubtype::NONE,
                     fastsim::enumSource::RECONSTRUCTION);
@@ -95,7 +95,7 @@ long Id::makeBlockId() {
 
 long Id::makeParticleId(eSource source)
 {
-   return Id::makeId(fastsim::enumDataType::PARTICLE,
+   return Id::makeId(DataType::kParticle,
                                      fastsim::enumLayer::NONE,
                                      fastsim::enumSubtype::RAW,
                                      source);
@@ -118,21 +118,21 @@ bool Id::isHcal(long id)
 
 bool Id::isTrack(long id)
 {
-  return (Id::dataType(id)==fastsim::enumDataType::TRACK);
+  return (Id::dataType(id)==DataType::kTrack);
 }
 
 bool Id::isBlock(long id)
 {
-  return (Id::dataType(id)==fastsim::enumDataType::BLOCK);
+  return (Id::dataType(id)==DataType::kBlock);
 }
 
-bool Id::isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+bool Id::isUniqueIdMatch(long id, DataType datatype, fastsim::enumLayer layer,
                                fastsim::enumSubtype subtype)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype);
 }
 
-bool Id::isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+bool Id::isUniqueIdMatch(long id, DataType datatype, fastsim::enumLayer layer,
                                  fastsim::enumSubtype subtype,fastsim::enumSource source)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype
@@ -148,13 +148,13 @@ char Id::typeShortCode(long id)
 {
   auto layer = Id::layer(id);
   auto dataType = Id::dataType(id);
-  if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::ECAL)
+  if (dataType==DataType::kCluster &&  layer==fastsim::enumLayer::ECAL)
     return 'e';
-  else if (dataType==fastsim::enumDataType::CLUSTER &&  layer==fastsim::enumLayer::HCAL)
+  else if (dataType==DataType::kCluster &&  layer==fastsim::enumLayer::HCAL)
     return 'h';
-  else if (dataType==fastsim::enumDataType::TRACK)
+  else if(dataType==DataType::kTrack)
     return 't';
-  else if (dataType==fastsim::enumDataType::PARTICLE)
+  else if (dataType==DataType::kParticle)
     return 'p';
   else
     return 'x';

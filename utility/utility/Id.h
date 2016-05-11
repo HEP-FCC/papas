@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <iostream>
 #include "enums.h"
+#include "enummanager.h"
 
 class Id {
 public:
@@ -18,9 +19,9 @@ public:
   typedef fastsim::enumLayer   eLayer;
   typedef fastsim::enumSubtype  eSubtype;
   typedef fastsim::enumSource  eSource;
-  typedef fastsim::enumDataType eDataType;
-  
-  static long makeId(eDataType type, //check name with Colin
+  //typedef Id::DataType eDataType;
+  enum DataType{kParticle, kCluster, kTrack, kBlock};
+  static long makeId(DataType type, //check name with Colin
                              eLayer layer,
                              eSubtype subtype,
                              eSource source,
@@ -42,9 +43,9 @@ public:
   static bool isTrack(long id);
   static bool isBlock(long id);
   
-  static bool isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  static bool isUniqueIdMatch(long id, DataType datatype, fastsim::enumLayer layer,
                               fastsim::enumSubtype subtype,fastsim::enumSource source);
-  static bool isUniqueIdMatch(long id, fastsim::enumDataType datatype, fastsim::enumLayer layer,
+  static bool isUniqueIdMatch(long id, DataType datatype, fastsim::enumLayer layer,
                               fastsim::enumSubtype subtype);
   static bool isSmeared(long id);
   
@@ -54,7 +55,7 @@ public:
   static fastsim::enumLayer        layer(long id);
   static fastsim::enumSubtype      subType(long id);
   static fastsim::enumSource       source(long id);
-  static fastsim::enumDataType     dataType(long id);
+  static DataType dataType(long id);
   
   static char typeShortCode(long id); ///One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
   static int uniqueId(long id);
