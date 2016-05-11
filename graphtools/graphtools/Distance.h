@@ -9,17 +9,6 @@
 #ifndef distance_h
 #define distance_h
 
-#include <stdio.h>
-#include "enums.h"
-
-struct DistanceData {   //fastsim::enumLayer m_layer1;
-                        //fastsim::enumLayer m_layer2;
-   bool isOK;
-   double distance;
-};
-
-
-#include "deltar.h"
 class Track;
 class Cluster;
 class TVector3;

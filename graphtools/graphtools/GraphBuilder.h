@@ -2,15 +2,14 @@
 #define RECONSTRUCTION_GRAPHBUILDER_H
 
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "directedacyclicgraph.h"
 
 class PFEvent;
 class PFBlock;
 class Edge;
-
 
 /** @class   rec::GraphBuilder Reconstruction/Reconstruction/GraphBuilder.h GraphBuilder.h
  *
@@ -20,10 +19,10 @@ class Edge;
  * Blocks retain information of the elements and the distances between elements
  * The blocks can be used for future particle reconstruction
  * The ids must be unique and are expected to come from the Id class
- 
- 
+
+
  Usage example:
- 
+
  GraphBuilder builder {ids, edges, history_nodes, pfevent};
  for (b in builder.blocks()) {
  ...
@@ -33,10 +32,10 @@ class Edge;
  *  @date    2016-04-06
  */
 
-//TODO namespace
+// TODO namespace
 class PFEvent;
 
-//TODO figure out best place to keep the typedefs
+// TODO figure out best place to keep the typedefs
 typedef long longId;
 typedef std::unordered_map<long long, class Edge> Edges;
 typedef DAG::Node<longId> PFNode;
@@ -44,32 +43,34 @@ typedef std::unordered_map<longId, PFNode> Nodes;
 typedef std::unordered_map<longId, PFBlock> Blocks;
 typedef std::vector<longId> Ids;
 
-//Allow optional parameters where construction arguments are references
-//TODO make sattic class member
+// Allow optional parameters where construction arguments are references
+// TODO make sattic class member
 extern Nodes emptyNodes;
 extern const Nodes emptyconstNodes;
 
 class GraphBuilder {
 public:
   /** Constructor
-   
+
    * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
    */
   GraphBuilder(Ids ids, Edges& edges);
-  //GraphBuilder();
-  GraphBuilder& operator = (const GraphBuilder&) ;
-  const std::vector<Ids> subGraphs() const {return m_subGraphs;}; ///<return the unordered map of the resulting subgraphs;
-  std::vector<Ids> m_subGraphs;///< vector of subgraphs made by graphbuilder
-  
-protected:
-  void sortIds(Ids& ids); ///<sorted by energy
-  Edges& m_edges;
-private:
-  Ids m_elementIds; ///<uniqueids to be grouped into subgraphs
-  Nodes m_localNodes; ///<local nodes used in building subgraphs
-};
+  // GraphBuilder();
+  GraphBuilder& operator=(const GraphBuilder&);
+  const std::vector<Ids> subGraphs() const {
+    return m_subGraphs;
+  };                             ///<return the unordered map of the resulting subgraphs;
+  std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
 
+protected:
+  void sortIds(Ids& ids);  ///<sorted by energy
+  Edges& m_edges;
+
+private:
+  Ids m_elementIds;    ///<uniqueids to be grouped into subgraphs
+  Nodes m_localNodes;  ///<local nodes used in building subgraphs
+};
 
 #endif /* GraphBuilder_h */
