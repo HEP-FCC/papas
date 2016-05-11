@@ -39,12 +39,12 @@ class GraphBuilder;
 class PFEvent;
 
 //TODO figure out best place to keep the typedefs
-typedef long longId;
+//typedef long Id::type;
 typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<longId> PFNode;
-typedef std::unordered_map<longId,PFNode> Nodes;
-typedef std::unordered_map<longId, PFBlock> Blocks;
-typedef std::vector<longId> Ids;
+typedef DAG::Node<Id::type> PFNode;
+typedef std::unordered_map<Id::type,PFNode> Nodes;
+typedef std::unordered_map<Id::type, PFBlock> Blocks;
+typedef std::vector<Id::type> Ids;
 
 //Allow optional parameters where construction arguments are references
 //TODO make these internal static members
@@ -74,7 +74,7 @@ private:
   Nodes& m_historyNodes; ///<optional, allows history to be updated
   Blocks m_blocks;///< the blocks made by blockbuilder
   
-  //bool compareEdges( long long key1, long long key2, longId uniqueid) const; //todo move to helper class
+  //bool compareEdges( long long key1, long long key2, Id::type uniqueid) const; //todo move to helper class
   //void sortIds(Ids& ids); //sorts elements by type
   
 };

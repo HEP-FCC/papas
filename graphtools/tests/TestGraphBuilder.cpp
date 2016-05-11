@@ -5,15 +5,15 @@
 
 TEST(GraphBuilder, one) {
   
-  longId id1 = Id::makeECALClusterId();
-  longId id2 = Id::makeHCALClusterId();
-  longId id3 = Id::makeTrackId();
+  Id::type id1 = Id::makeECALClusterId();
+  Id::type id2 = Id::makeHCALClusterId();
+  Id::type id3 = Id::makeTrackId();
   
-  longId id4 = Id::makeECALClusterId();
-  longId id5 = Id::makeHCALClusterId();
-  longId id6 = Id::makeTrackId();
+  Id::type id4 = Id::makeECALClusterId();
+  Id::type id5 = Id::makeHCALClusterId();
+  Id::type id6 = Id::makeTrackId();
   
-  std::vector<longId> ids {id1,id2,id3, id4,id5,id6};
+  std::vector<Id::type> ids {id1,id2,id3, id4,id5,id6};
   
   Edge edge =  Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);

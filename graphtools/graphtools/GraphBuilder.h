@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "directedacyclicgraph.h"
+#include "Id.h"
 
 class PFEvent;
 class PFBlock;
@@ -36,12 +37,11 @@ class Edge;
 class PFEvent;
 
 // TODO figure out best place to keep the typedefs
-typedef long longId;
 typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<longId> PFNode;
-typedef std::unordered_map<longId, PFNode> Nodes;
-typedef std::unordered_map<longId, PFBlock> Blocks;
-typedef std::vector<longId> Ids;
+typedef DAG::Node<Id::type> PFNode;
+typedef std::unordered_map<Id::type, PFNode> Nodes;
+typedef std::unordered_map<Id::type, PFBlock> Blocks;
+typedef std::vector<Id::type> Ids;
 
 // Allow optional parameters where construction arguments are references
 // TODO make sattic class member

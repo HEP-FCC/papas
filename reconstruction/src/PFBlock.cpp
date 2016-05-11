@@ -21,7 +21,7 @@
 
 int PFBlock::tempBlockCount = 0;
 
-PFBlock::PFBlock(const PFBlock::Ids& element_ids, PFBlock::Edges& edges)
+PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
     : m_uniqueId(Id::makeBlockId()),
       m_isActive(true),
       m_blockCount(PFBlock::tempBlockCount),
@@ -45,17 +45,17 @@ PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_blockCount(-1), m_elem
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::type elem) { return Id::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::type elem) { return Id::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](longId elem) { return Id::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::type elem) { return Id::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -72,7 +72,7 @@ std::string PFBlock::shortName() const {
 
 int PFBlock::size() const { return m_elementIds.size(); }
 
-std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType matchtype) const {
+std::vector<long long> PFBlock::linkedEdgeKeys(Id::type uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    The list is sorted in order of increasing distance
@@ -99,7 +99,7 @@ std::vector<long long> PFBlock::linkedEdgeKeys(longId uniqueid, Edge::EdgeType m
  linked_edges.sort( key = lambda x: (x.distance is None, x.distance))
  return linked_edges*/
 
-std::vector<long> PFBlock::linkedIds(longId uniqueid, Edge::EdgeType edgetype) const {
+std::vector<long> PFBlock::linkedIds(Id::type uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   /// sorted in order of increasing distance
   /** returns a list of the otherids sorted by distance to uniqueid and by decreasing energies
@@ -114,7 +114,7 @@ std::vector<long> PFBlock::linkedIds(longId uniqueid, Edge::EdgeType edgetype) c
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     linkedIds.push_back(m_edges.find(key)->second.otherid(uniqueid));
   }
-  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](longId a, longId b) -> bool
+  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](Id::type a, Id::type b) -> bool
   //                  { return this->compareEdges(a, b, uniqueid); } );
   return linkedIds;
 }
@@ -207,7 +207,7 @@ std::string PFBlock::edgeMatrixString() const {
   return os.str();
 }
 
-const Edge& PFBlock::edge(longId id1, longId id2) const {
+const Edge& PFBlock::edge(Id::type id1, Id::type id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)
@@ -234,13 +234,13 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
 }
 
 int test_blocks() {
-  PFBlock::longId id1 = Id::makeECALClusterId();
-  PFBlock::longId id2 = Id::makeHCALClusterId();
-  PFBlock::longId id3 = Id::makeTrackId();
+  Id::type id1 = Id::makeECALClusterId();
+  Id::type id2 = Id::makeHCALClusterId();
+  Id::type id3 = Id::makeTrackId();
 
-  PFBlock::longId id4 = Id::makeECALClusterId();
-  PFBlock::longId id5 = Id::makeHCALClusterId();
-  PFBlock::longId id6 = Id::makeTrackId();
+  Id::type id4 = Id::makeECALClusterId();
+  Id::type id5 = Id::makeHCALClusterId();
+  Id::type id6 = Id::makeTrackId();
 
   PFBlock::Ids ids{id1, id2, id3};
   PFBlock::Ids ids2{id4, id5, id6};

@@ -1,7 +1,6 @@
 #include "edge.h"
-#include "Id.h"
 
-Edge::Edge(longId id1, longId id2, bool isLinked, double distance) :
+Edge::Edge(Id::type id1, Id::type id2, bool isLinked, double distance) :
 m_id1(id1),
 m_id2(id2),
 m_isLinked(isLinked),
@@ -14,7 +13,7 @@ m_key(Edge::makeKey(id1, id2))
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
-long long Edge::makeKey(longId id1, longId id2) {
+long long Edge::makeKey(Id::type id1, Id::type id2) {
 
   long long key;
   if (id1 > id2) //ensure that the order of the ids does not matter
@@ -24,7 +23,7 @@ long long Edge::makeKey(longId id1, longId id2) {
   return key;
 }
 
-Edge::longId Edge::otherid(longId id) const
+Id::type Edge::otherid(Id::type id) const
 {
   if (m_id1==id)
     return m_id2;
@@ -68,9 +67,9 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 }
 
 int test_edges() {
-  Edge::longId id1=Id::makeECALClusterId();
-  Edge::longId id2=Id::makeHCALClusterId();
-  Edge::longId id3=Id::makeTrackId();
+  Id::type id1=Id::makeECALClusterId();
+  Id::type id2=Id::makeHCALClusterId();
+  Id::type id3=Id::makeTrackId();
   
   Edge edge=Edge(id1,id2,false,0.0);
   Edge edge1=Edge(id1,id3,true,0.0);

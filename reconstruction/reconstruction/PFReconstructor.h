@@ -22,15 +22,13 @@ class Track;
 class TVector3;
 
 //TODO simparticles is not right
-//TODO store typedefs centrally
-typedef long longId;
-typedef std::unordered_map<longId, PFParticle> Particles;
-typedef std::vector<longId> Ids;
-//typedef std::unordered_map<longId, Cluster> Clusters;
-typedef DAG::Node<longId> PFNode;
-typedef std::unordered_map<longId, PFNode> Nodes;
-typedef std::unordered_map<longId, PFBlock> Blocks;
-//typedef std::unordered_map<longId, Track> Tracks;
+typedef std::unordered_map<Id::type, PFParticle> Particles;
+typedef std::vector<Id::type> Ids;
+//typedef std::unordered_map<Id::type, Cluster> Clusters;
+typedef DAG::Node<Id::type> PFNode;
+typedef std::unordered_map<Id::type, PFNode> Nodes;
+typedef std::unordered_map<Id::type, PFBlock> Blocks;
+//typedef std::unordered_map<Id::type, Track> Tracks;
 
 class PFReconstructor {
   
@@ -41,7 +39,7 @@ public:
 private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);
-  void reconstructHcal(const PFBlock& block, longId hcalId);
+  void reconstructHcal(const PFBlock& block, Id::type hcalId);
   PFParticle reconstructTrack(const Track& track);
   PFParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1,
                                  TVector3 vertex= TVector3());
@@ -55,7 +53,7 @@ private:
   Particles m_particles; //owns the particles it makes
   bool m_hasHistory;
   Ids m_unused;
-  std::unordered_map<longId, bool> m_locked;
+  std::unordered_map<Id::type, bool> m_locked;
   
 };
 

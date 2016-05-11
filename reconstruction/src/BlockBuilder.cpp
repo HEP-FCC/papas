@@ -80,14 +80,14 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder)
   return os;
 }
 
-/*void BlockBuilder::sortIds(std::vector<longId>& ids) // sorts by type and energy
+/*void BlockBuilder::sortIds(std::vector<Id::type>& ids) // sorts by type and energy
 {//TODO move to helper
-  std::sort( ids.begin(), ids.end(), [this] (longId a, longId b) { return this->m_pfEvent.compare(a,b);});
+  std::sort( ids.begin(), ids.end(), [this] (Id::type a, Id::type b) { return this->m_pfEvent.compare(a,b);});
 }*/
 
 
 
-/*bool BlockBuilder::compareEdges(long long key1, long long key2, longId uniqueid) const//TODO check direction of sort
+/*bool BlockBuilder::compareEdges(long long key1, long long key2, Id::type uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy
@@ -112,15 +112,15 @@ int test_BlockBuilder()
 {
 
 
-  PFBlock::longId id1 = Id::makeECALClusterId();
-  PFBlock::longId id2 = Id::makeHCALClusterId();
-  PFBlock::longId id3 = Id::makeTrackId();
+  Id::type id1 = Id::makeECALClusterId();
+  Id::type id2 = Id::makeHCALClusterId();
+  Id::type id3 = Id::makeTrackId();
 
-  PFBlock::longId id4 = Id::makeECALClusterId();
-  PFBlock::longId id5 = Id::makeHCALClusterId();
-  PFBlock::longId id6 = Id::makeTrackId();
+  Id::type id4 = Id::makeECALClusterId();
+  Id::type id5 = Id::makeHCALClusterId();
+  Id::type id6 = Id::makeTrackId();
 
-  std::vector<PFBlock::longId> ids {id1, id2, id3, id4, id5, id6};
+  std::vector<Id::type> ids {id1, id2, id3, id4, id5, id6};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);

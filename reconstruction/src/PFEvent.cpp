@@ -14,7 +14,7 @@
 #include "path.h"
 
 /*
-bool PFEvent::compare(longId id1, longId id2) const //TODO check direction of sort
+bool PFEvent::compare(Id::type id1, Id::type id2) const //TODO check direction of sort
 {
   //sort by the type eg ecal hcal
   // and then in order of decreasing energy
@@ -31,7 +31,7 @@ bool PFEvent::compare(longId id1, longId id2) const //TODO check direction of so
 }
 
 
-double PFEvent::energy(longId id1) const //TODO check direction of sort
+double PFEvent::energy(Id::type id1) const //TODO check direction of sort
 {
   return 12.5; //TODO
 }*/
@@ -42,7 +42,7 @@ m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)
   
 }
 
-const Track& PFEvent::track(longId id) const {
+const Track& PFEvent::track(Id::type id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);
   }
@@ -52,7 +52,7 @@ const Track& PFEvent::track(longId id) const {
   };
 }
 
-const Cluster&  PFEvent::ECALCluster(longId id) const {
+const Cluster&  PFEvent::ECALCluster(Id::type id) const {
   if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
@@ -75,7 +75,7 @@ Ids PFEvent::elementIds() const {
   return std::move(ids);
 }
 
-const Cluster&  PFEvent::HCALCluster(longId id) const {
+const Cluster&  PFEvent::HCALCluster(Id::type id) const {
   if (m_hcals.find(id) != m_hcals.end()) {
     return m_hcals.at(id);
   }
@@ -83,7 +83,7 @@ const Cluster&  PFEvent::HCALCluster(longId id) const {
   return std::move(c); //TODO produce error
 }
 
-const Cluster&  PFEvent::cluster(longId id) const {
+const Cluster&  PFEvent::cluster(Id::type id) const {
   if (m_hcals.find(id) != m_hcals.end()) {
     return m_hcals.at(id);
   }

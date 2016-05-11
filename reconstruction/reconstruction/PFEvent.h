@@ -17,30 +17,29 @@
 #include <unordered_map>
 #include "Id.h"
 #include "directedacyclicgraph.h"
-
+#include "PFBlock.h"
 class Track;
 class Cluster;
-#include "PFBlock.h"
+
 
 //TODO home for typedefs
-typedef long longId;
-typedef std::vector<longId> Ids;
-typedef DAG::Node<longId> PFNode;
-typedef std::unordered_map<longId, PFNode> Nodes;
-typedef std::unordered_map<longId, Track> Tracks;
-typedef std::unordered_map<longId, PFBlock> Blocks;
-typedef std::unordered_map<longId, Cluster> Clusters;
+typedef std::vector<Id::type> Ids;
+typedef DAG::Node<Id::type> PFNode;
+typedef std::unordered_map<Id::type, PFNode> Nodes;
+typedef std::unordered_map<Id::type, Track> Tracks;
+typedef std::unordered_map<Id::type, PFBlock> Blocks;
+typedef std::unordered_map<Id::type, Cluster> Clusters;
 extern Nodes emptyNodes;
 
 class PFEvent {
 public:
   PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
-  bool compare(longId id1, longId id2) const;
-  double energy(longId id1) const;
-  const Track& track(longId id ) const;
-  const Cluster& cluster(longId id) const;
-  const class Cluster& ECALCluster(longId id) const;
-  const class Cluster& HCALCluster(longId id) const;
+  bool compare(Id::type id1, Id::type id2) const;
+  double energy(Id::type id1) const;
+  const Track& track(Id::type id ) const;
+  const Cluster& cluster(Id::type id) const;
+  const class Cluster& ECALCluster(Id::type id) const;
+  const class Cluster& HCALCluster(Id::type id) const;
   Ids elementIds() const;
   Nodes& historyNodes() { return m_historyNodes;} //allow these to be changed
   const Clusters& ecalClusters() const { return m_ecals;}

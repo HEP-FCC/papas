@@ -10,23 +10,23 @@
 #define Ruler_h
 
 #include <stdio.h>
+#include "Id.h"
 class Cluster;
 class Track;
 class Distance;
 class PFEvent;
 
-//TODO
-typedef long longId;
+
 
 //TODO template on Distance class
 class Ruler {
   
 public:
   Ruler (const PFEvent& pfevent);
-  Distance distance(longId id1 ,longId id2);
+  Distance distance(Id::type id1 ,Id::type id2);
 private:
-  Distance clusterClusterDistance(longId id1 ,longId id2);
-  Distance clusterTrackDistance(longId id1 ,longId id2);
+  Distance clusterClusterDistance(Id::type id1 ,Id::type id2);
+  Distance clusterTrackDistance(Id::type id1 ,Id::type id2);
   Distance distance();
   
   const PFEvent& m_pfEvent;

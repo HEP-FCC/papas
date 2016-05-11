@@ -12,14 +12,14 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include "Id.h"
 class PFEvent;
 class PFBlock;
 
-typedef long longId;
-typedef DAG::Node<longId> PFNode;
-typedef std::unordered_map<longId, PFNode> Nodes;
-typedef std::unordered_map<longId, PFBlock> Blocks;
-typedef std::vector<longId> Ids;
+typedef DAG::Node<Id::type> PFNode;
+typedef std::unordered_map<Id::type, PFNode> Nodes;
+typedef std::unordered_map<Id::type, PFBlock> Blocks;
+typedef std::vector<Id::type> Ids;
 
 class PFBlockBuilder {
 public:
@@ -45,6 +45,5 @@ private:
   Ids m_uniqueIds;
   // void sortIds(Ids& ids); //sorts elements by type
 };
-#include <stdio.h>
 
 #endif /* PFBlockBuilder_hpp */

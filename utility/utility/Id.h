@@ -14,6 +14,7 @@
 class Id {
 public:
   Id() {};
+  typedef long type;
   typedef fastsim::enumLayer   eLayer;
   typedef fastsim::enumSubtype  eSubtype;
   typedef fastsim::enumSource  eSource;

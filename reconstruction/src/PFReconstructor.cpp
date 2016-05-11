@@ -146,7 +146,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   
   
   if (ids.size() == 1 ) { //#TODO WARNING!!! LOTS OF MISSING CASES
-    longId id = ids[0];
+    Id::type id = ids[0];
     if (Id::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),fastsim::enumLayer::ECAL));
     }
@@ -197,7 +197,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newpart
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   //if (newparticle) :
-  longId newid = newparticle.id();
+  Id::type newid = newparticle.id();
   m_particles[newid] = newparticle;
   
   //check if history nodes exists
@@ -244,7 +244,7 @@ double PFReconstructor::nsigmaHcal(const Cluster& cluster)  const{
   
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, longId hcalId) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, Id::type hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -375,7 +375,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
   
-  longId newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
   
@@ -402,7 +402,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
-  longId newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, track};
   //particle.setPath(track.path());
