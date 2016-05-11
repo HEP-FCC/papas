@@ -1,5 +1,5 @@
 
-#include "particle.h"
+#include "Particle.h"
 
 //
 //  Created by Alice Robson on 09/11/15.

@@ -26,7 +26,7 @@
 #include "material.h"
 #include "geometry.h"
 #include "CMS.h"
-#include "particle.h"
+#include "Particle.h"
 #include "datatypes.h"
 #include "Simulator.h"
 #include "path.h"

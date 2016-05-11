@@ -24,6 +24,7 @@
 #include "PFParticle.h"
 #include "PFReconstructor.h"
 #include "Track.h"
+#include "path.h"
 
 #include "MyAnalysis.h"
 

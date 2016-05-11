@@ -1,10 +1,11 @@
 
 
 //#include <iostream>
-#include "path.h"
+#include "Path.h"
 #include "propagator.h"
 #include "geotools.h"
 #include "PFParticle.h"
+#include "Helix.h"
 
 
 
@@ -21,13 +22,12 @@ void StraightLinePropagator::propagateOne(PFParticle& ptc,
                                           double cylinderz,
                                           double cylinderradius)
 {
-  std::shared_ptr<Path> line = ptc.path();
-   
-   TVector3 udir = line->udir();
+   Path::Ptr line = ptc.path();
+   TVector3 udir = line->unitDirection();
    TVector3 origin = line->origin();
    double theta = udir.Theta();
    
-   double zbar = line->udir().Z(); // Z of unit vex
+   double zbar = line->unitDirection().Z(); // Z of unit vex
    if (zbar != 0) {
       double destz = (zbar > 0) ? cylinderz : -cylinderz;
       double length = (destz - origin.Z()) / cos(theta); //TODO check Length >0
@@ -82,7 +82,7 @@ void HelixPropagator::propagateOne(PFParticle& ptc,
    auto helix = std::static_pointer_cast<Helix>(ptc.path());
    
    bool is_looper = helix->extremePointXY().Mag() < cyl.getRadius();
-   double udir_z=helix->udir().Z();
+   double udir_z=helix->unitDirection().Z();
    
    if (!is_looper) {
       auto intersect =

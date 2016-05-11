@@ -22,7 +22,7 @@
 #include "material.h"
 #include "geometry.h"
 #include "CMS.h"
-#include "particle.h"
+#include "Particle.h"
 #include "Simulator.h"
 #include "path.h"
 #include "displaygeometry.h"

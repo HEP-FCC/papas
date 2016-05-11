@@ -9,6 +9,7 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
+#include "path.h"
 
 GBlob::GBlob(const Cluster& cluster)
 {

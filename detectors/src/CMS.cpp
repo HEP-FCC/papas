@@ -14,6 +14,7 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "path.h"
+#include "Particle.h"
 
 /*
  CMSECAL::CMSECAL(fastsim::enumLayer layer, const VolumeCylinder& volume,

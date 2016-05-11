@@ -10,7 +10,8 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
-#include "particledata.h"
+#include "ParticleData.h"
+#include "Path.h"
 
 using fastsim::enumLayer;
 
