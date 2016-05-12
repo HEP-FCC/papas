@@ -17,9 +17,8 @@
 #include "displaygeometry.h"
 
 
-class Cluster;
+//class Cluster;
 class PFParticle;
-
 
 ///Used to display Clusters on output graphs
 class GBlob  {

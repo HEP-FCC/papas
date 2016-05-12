@@ -73,8 +73,8 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
 {
 
    //some things are not sensible so skip these
-  if ( (m_layer == papas::XLayer::kEcal && projection == "HCAL_thetaphi") ||
-         (m_layer == papas::XLayer::kHcal && projection == "ECAL_thetaphi"))
+  if ( (m_layer == papas::Layer::kEcal && projection == "HCAL_thetaphi") ||
+         (m_layer == papas::Layer::kHcal && projection == "ECAL_thetaphi"))
       return;
 
    std::string useopt = opt + "psame";

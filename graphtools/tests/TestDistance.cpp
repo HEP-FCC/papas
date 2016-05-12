@@ -17,8 +17,8 @@
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::XLayer::kEcal, fastsim::enumSubtype::RAW)};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::XLayer::kHcal, fastsim::enumSubtype::RAW)};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kEcal, papas::enumSubtype::RAW)};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kHcal, papas::enumSubtype::RAW)};
   
   
   TVector3 p3 = c1.position().Unit()*100.;

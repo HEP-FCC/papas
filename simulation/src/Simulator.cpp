@@ -13,7 +13,7 @@
 #include "ParticleData.h"
 #include "Path.h"
 
-//using papas::XLayer;
+//using papas::Layer;
 
 Simulator::Simulator(const Detector& d) :
     m_detector(d),
@@ -98,7 +98,7 @@ void  Simulator::propagate(PFParticle& ptc, const SurfaceCylinder& cylinder) {
 
 const Cluster& Simulator::cluster(long clusterId) const {
   auto layer=Id::layer(clusterId);
-  if (layer==papas::XLayer::kEcal)
+  if (layer==papas::Layer::kEcal)
     return m_ecalClusters.at(clusterId);
   else
     return m_hcalClusters.at(clusterId);
@@ -107,7 +107,7 @@ const Cluster& Simulator::cluster(long clusterId) const {
 PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
   double field = m_detector.field()->getMagnitude();
-  long uniqueid = Id::makeParticleId(fastsim::enumSource::SIMULATION);
+  long uniqueid = Id::makeParticleId(papas::enumSource::SIMULATION);
   m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, tlv, vertex, field});
   addNode(uniqueid); //add node to history graph
   return m_particles[uniqueid];
@@ -143,25 +143,25 @@ TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi
 
 long Simulator::addEcalCluster(PFParticle& ptc,long parentid,double fraction, double csize)
 {
-  Cluster cluster = makeCluster(ptc, parentid, papas::XLayer::kEcal, fraction, csize);
+  Cluster cluster = makeCluster(ptc, parentid, papas::Layer::kEcal, fraction, csize);
   m_ecalClusters.emplace(cluster.id(), std::move(cluster));
   return cluster.id();
 }
 
 long Simulator::addHcalCluster(PFParticle& ptc,long parentid,double fraction, double csize)
 {
-  Cluster cluster = makeCluster(ptc, parentid, papas::XLayer::kHcal, fraction, csize);
+  Cluster cluster = makeCluster(ptc, parentid, papas::Layer::kHcal, fraction, csize);
   m_hcalClusters.emplace(cluster.id(), std::move(cluster));
   return cluster.id();
 }
 
 
-Cluster Simulator::makeCluster(PFParticle& ptc, long parentid,papas::XLayer layer, double fraction, double csize)
+Cluster Simulator::makeCluster(PFParticle& ptc, long parentid,papas::Layer layer, double fraction, double csize)
 {
   if (!parentid) {
     parentid = ptc.id();
   }
-  long clusterid = Id::makeClusterId(layer, fastsim::enumSubtype::RAW);
+  long clusterid = Id::makeClusterId(layer, papas::enumSubtype::RAW);
   double energy = ptc.p4().E() * fraction;
   
   //TODO change string to ENUM
@@ -185,7 +185,7 @@ long Simulator::addSmearedCluster(long parentClusterId)
   
   if (m_detector.calorimeter(layer)->acceptance(smeared)) {
     addNode(smeared.id(), parentClusterId);
-    if(layer ==papas::XLayer::kEcal) {
+    if(layer ==papas::Layer::kEcal) {
       m_smearedEcalClusters.emplace(smeared.id(), std::move(smeared));
     }
     else
@@ -203,7 +203,7 @@ Cluster Simulator::makeSmearedCluster(long parentClusterId) //, double energyres
 {
   //create a new id
   auto layer = Id::layer(parentClusterId);
-  long newclusterid = Id::makeClusterId(layer, fastsim::enumSubtype::SMEARED);
+  long newclusterid = Id::makeClusterId(layer, papas::enumSubtype::SMEARED);
   const Cluster& parent = cluster(parentClusterId);
   
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
@@ -225,7 +225,7 @@ const Track& Simulator::addTrack(PFParticle& ptc)
 
 
 long Simulator::addSmearedTrack( const Track& track, bool accept) {
-  long smearedTrackId = Id::makeTrackId(fastsim::enumSubtype::SMEARED);
+  long smearedTrackId = Id::makeTrackId(papas::enumSubtype::SMEARED);
   //double ptResolution = m_detector.tracker()->ptResolution(track);
   //TODO after testing double scale_factor = randomgen::RandNormal(1, ptResolution).next()
   double scale_factor = 1.1;
@@ -243,19 +243,19 @@ void Simulator::addNode(long newid, const long parentid)
   //add the new node into the set of all nodes
   m_nodes[newid] = {newid};
   if (parentid) {
-    Node& parent = m_nodes[parentid];
-    Node& child = m_nodes[newid];
+    PFNode& parent = m_nodes[parentid];
+    PFNode& child = m_nodes[newid];
     parent.addChild(child);
   }
 }
 
-std::shared_ptr<const DetectorElement> Simulator::elem(papas::XLayer layer) const {
+std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const {
   return m_detector.element(layer);
 }
 
 void Simulator::testing()
 {
-  DAG::BFSVisitor<Node> bfs;
+  DAG::BFSVisitor<PFNode> bfs;
   for (auto p : m_particles) {
     std::cout<< "Connected to "<<p.first<< std::endl;
     auto res =bfs.traverseUndirected(m_nodes[p.first]);
@@ -267,45 +267,45 @@ void Simulator::testing()
 Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kCluster,
-                        papas::XLayer::kEcal,
-                        fastsim::enumSubtype::SMEARED,
-                        fastsim::enumSource::SIMULATION);
+                        papas::Layer::kEcal,
+                        papas::enumSubtype::SMEARED,
+                        papas::enumSource::SIMULATION);
 }
 
 Ids  Simulator::linkedRawTrackIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kTrack,
-                        papas::XLayer::kNone,
-                        fastsim::enumSubtype::RAW,
-                        fastsim::enumSource::SIMULATION);
+                        papas::Layer::kNone,
+                        papas::enumSubtype::RAW,
+                        papas::enumSource::SIMULATION);
 }
 
 Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kTrack,
-                        papas::XLayer::kNone,
-                        fastsim::enumSubtype::SMEARED,
-                        fastsim::enumSource::SIMULATION);
+                        papas::Layer::kNone,
+                        papas::enumSubtype::SMEARED,
+                        papas::enumSource::SIMULATION);
 }
 
 Ids Simulator::linkedParticleIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kParticle,
-                        papas::XLayer::kNone,
-                        fastsim::enumSubtype::RAW,
-                        fastsim::enumSource::SIMULATION);
+                        papas::Layer::kNone,
+                        papas::enumSubtype::RAW,
+                        papas::enumSource::SIMULATION);
 }
 
 Ids Simulator::parentParticleIds(long nodeid) const {
   return getMatchingParentIds(nodeid,
                               Id::DataType::kParticle,
-                              papas::XLayer::kNone,
-                              fastsim::enumSubtype::RAW,
-                              fastsim::enumSource::SIMULATION);
+                              papas::Layer::kNone,
+                              papas::enumSubtype::RAW,
+                              papas::enumSource::SIMULATION);
 }
 
 Ids Simulator::linkedIds(long nodeid) const {
-  DAG::BFSVisitor<Node> bfs;
+  DAG::BFSVisitor<PFNode> bfs;
   Ids foundids;
   foundids.reserve(1000); //TODO how
   auto res = bfs.traverseUndirected(m_nodes.at(nodeid));
@@ -316,9 +316,9 @@ Ids Simulator::linkedIds(long nodeid) const {
   return foundids;
 }
 
-Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::XLayer layer, fastsim::enumSubtype type, fastsim::enumSource source) const
+Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::enumSubtype type, papas::enumSource source) const
 {
-  DAG::BFSVisitor<Node> bfs;
+  DAG::BFSVisitor<PFNode> bfs;
   Ids foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseUndirected(m_nodes.at(nodeid));
@@ -332,9 +332,9 @@ Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::XLayer 
   return foundids;
 }
 
-Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::XLayer layer, fastsim::enumSubtype type,fastsim::enumSource source) const
+Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::enumSubtype type,papas::enumSource source) const
 {
-  DAG::BFSVisitor<Node> bfs;
+  DAG::BFSVisitor<PFNode> bfs;
   Ids foundids;
   //foundids.reserve(1000); //TODO set sizes sensible.... how
   auto res =bfs.traverseParents(m_nodes.at(nodeid));

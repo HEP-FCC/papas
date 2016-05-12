@@ -1,10 +1,6 @@
 #ifndef RECONSTRUCTION_PFEVENT_H
 #define RECONSTRUCTION_PFEVENT_H
 
-#include <iostream>
-#include <vector>
-#include <unordered_set>
-
 /** @class   rec::PFEvent Reconstruction/Reconstruction/PFEvent.h PFEvent.h
  *
  *  @brief An PFEvent created blocks of connected elements
@@ -14,22 +10,14 @@
  *  @author  Alice Robson
  *  @date    2016-04-06
  */
-#include <unordered_map>
-#include "Id.h"
-#include "directedacyclicgraph.h"
+
+#include "NodeDefinitions.h"
 #include "PFBlock.h"
 class Track;
 class Cluster;
 
 
 //TODO home for typedefs
-typedef std::vector<Id::Type> Ids;
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
-typedef std::unordered_map<Id::Type, Track> Tracks;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-typedef std::unordered_map<Id::Type, Cluster> Clusters;
-extern Nodes emptyNodes;
 
 class PFEvent {
 public:

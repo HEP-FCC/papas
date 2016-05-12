@@ -32,7 +32,7 @@ private:
  */
 class VolumeCylinder {
 public:
-  VolumeCylinder(papas::XLayer layer, double outerrad, double outerz, double innerrad = 0., double innerz = 0.);
+  VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad = 0., double innerz = 0.);
    bool Contains(const TVector3& point) const;
    const SurfaceCylinder& inner() const {return m_inner;}
    const SurfaceCylinder& outer() const {return m_outer;}
@@ -40,7 +40,7 @@ public:
   ~VolumeCylinder();
 private:
   //const std::string m_name;
-   papas::XLayer m_layer;
+   papas::Layer m_layer;
    SurfaceCylinder m_outer;
    SurfaceCylinder m_inner;
 };

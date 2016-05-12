@@ -8,18 +8,11 @@
 
 #ifndef PFBlockBuilder_h
 #define PFBlockBuilder_h
-#include "directedacyclicgraph.h"
-#include <iostream>
-#include <unordered_map>
-#include <vector>
-#include "Id.h"
-class PFEvent;
-class PFBlock;
 
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-typedef std::vector<Id::Type> Ids;
+#include <iostream>
+#include "NodeDefinitions.h"
+
+class PFEvent;
 
 class PFBlockBuilder {
 public:

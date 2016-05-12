@@ -8,10 +8,7 @@
 
 #include "BlockSplitter.h"
 #include "PFBlock.h"
-#include "BlockBuilder.h"
-
-//const BlockBuilder emptyBlockBuilder;
-
+#include "Edge.h"
 
 
 BlockSplitter::BlockSplitter(const Edges& unlinkEdges,

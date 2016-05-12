@@ -26,9 +26,9 @@ void Id::setCounter(int startid) /// allows user to start counter at another poi
 
 //TODO rename as OBJECTTYpe not PFObjectType
 long Id::makeId(DataType type,     // 6 bits  (to be refined later )
-                                papas::XLayer layer,       // 4 bits
-                                fastsim::enumSubtype subtype,   // 3 bits
-                                fastsim::enumSource source,     // 3 bits
+                                papas::Layer layer,       // 4 bits
+                                papas::enumSubtype subtype,   // 3 bits
+                                papas::enumSource source,     // 3 bits
                                 int uniqueid)
 {
    // consider reordering to source ... layer .. type ,.. subtype ..uniqueid
@@ -48,22 +48,22 @@ long Id::makeAnotherId(long id)
    return newid;
 }
 
-papas::XLayer Id::layer(long id)
+papas::Layer Id::layer(long id)
 {
    int layer = (id >> 6) & 0b1111 ;//(4 bits)
-   return static_cast<papas::XLayer>(layer);
+   return static_cast<papas::Layer>(layer);
 }
 
-fastsim::enumSubtype Id::subType(long id)
+papas::enumSubtype Id::subType(long id)
 {
    int subtype = (id >> 10) & 0b111 ;//(3 bits)
-   return static_cast<fastsim::enumSubtype>(subtype);
+   return static_cast<papas::enumSubtype>(subtype);
 }
 
-fastsim::enumSource Id::source(long id)
+papas::enumSource Id::source(long id)
 {
    int source = (id >> 13) & 0b111 ;//(3 bits)
-   return static_cast<fastsim::enumSource>(source);
+   return static_cast<papas::enumSource>(source);
 }
 
 Id::DataType Id::dataType(long id)
@@ -77,27 +77,27 @@ int Id::uniqueId(long id)
    return (id >> 16);
 }
 
-long Id::makeClusterId(papas::XLayer layer, fastsim::enumSubtype subtype) {
-  return Id::makeId(DataType::kCluster, layer, subtype, fastsim::enumSource::SIMULATION);
+long Id::makeClusterId(papas::Layer layer, papas::enumSubtype subtype) {
+  return Id::makeId(DataType::kCluster, layer, subtype, papas::enumSource::SIMULATION);
 }
 
-long Id::makeTrackId(fastsim::enumSubtype subtype) {
+long Id::makeTrackId(papas::enumSubtype subtype) {
   return Id::makeId(
-      DataType::kTrack, papas::XLayer::kTracker, subtype, fastsim::enumSource::SIMULATION);
+      DataType::kTrack, papas::Layer::kTracker, subtype, papas::enumSource::SIMULATION);
 }
 
 long Id::makeBlockId() {
   return Id::makeId(DataType::kBlock,
-                    papas::XLayer::kNone,
-                    fastsim::enumSubtype::NONE,
-                    fastsim::enumSource::RECONSTRUCTION);
+                    papas::Layer::kNone,
+                    papas::enumSubtype::NONE,
+                    papas::enumSource::RECONSTRUCTION);
 }
 
 long Id::makeParticleId(eSource source)
 {
    return Id::makeId(DataType::kParticle,
-                                     papas::XLayer::kNone,
-                                     fastsim::enumSubtype::RAW,
+                                     papas::Layer::kNone,
+                                     papas::enumSubtype::RAW,
                                      source);
 }
 
@@ -108,12 +108,12 @@ bool Id::isCluster(long id)
 
 bool Id::isEcal(long id)
 {
-  return (Id::layer(id)==papas::XLayer::kEcal);
+  return (Id::layer(id)==papas::Layer::kEcal);
 }
 
 bool Id::isHcal(long id)
 {
-  return (Id::layer(id)==papas::XLayer::kHcal);
+  return (Id::layer(id)==papas::Layer::kHcal);
 }
 
 bool Id::isTrack(long id)
@@ -126,14 +126,14 @@ bool Id::isBlock(long id)
   return (Id::dataType(id)==DataType::kBlock);
 }
 
-bool Id::isUniqueIdMatch(long id, DataType datatype, papas::XLayer layer,
-                               fastsim::enumSubtype subtype)
+bool Id::isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
+                               papas::enumSubtype subtype)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype);
 }
 
-bool Id::isUniqueIdMatch(long id, DataType datatype, papas::XLayer layer,
-                                 fastsim::enumSubtype subtype,fastsim::enumSource source)
+bool Id::isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
+                                 papas::enumSubtype subtype,papas::enumSource source)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype
            && Id::source(id)==source);
@@ -141,16 +141,16 @@ bool Id::isUniqueIdMatch(long id, DataType datatype, papas::XLayer layer,
 
 bool Id::isSmeared(long id)
 {
-   return (Id::subType(id)==fastsim::enumSubtype::SMEARED );
+   return (Id::subType(id)==papas::enumSubtype::SMEARED );
 }
 
 char Id::typeShortCode(long id)
 {
   auto layer = Id::layer(id);
   auto dataType = Id::dataType(id);
-  if (dataType==DataType::kCluster &&  layer==papas::XLayer::kEcal)
+  if (dataType==DataType::kCluster &&  layer==papas::Layer::kEcal)
     return 'e';
-  else if (dataType==DataType::kCluster &&  layer==papas::XLayer::kHcal)
+  else if (dataType==DataType::kCluster &&  layer==papas::Layer::kHcal)
     return 'h';
   else if(dataType==DataType::kTrack)
     return 't';

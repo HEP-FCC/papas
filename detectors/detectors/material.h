@@ -2,14 +2,16 @@
 //  Created by Alice Robson on 29/11/15.
 //
 //
-#ifndef  MATERIAL_H
+#ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <string>
-#include <limits>
+//#include <string>
+//#include <limits>
 #include "Definitions.h"
 #include "random.h"
 
+
+//TODO handle centrally
 const int c_vecsize = 10000;
 const double c_exp_lambda = 3.5; //AJR where does this come from
 
@@ -19,7 +21,7 @@ const double c_exp_lambda = 3.5; //AJR where does this come from
 */
 class Material {
 public:
-   Material(/*Id::Layer layer,*/ double x0, double lambda);
+   Material( double x0, double lambda);
    virtual double pathLength(bool is_em) const;
   
 private:
@@ -35,11 +37,9 @@ private:
 class TestMaterial: public Material {
 public:
    TestMaterial( double x0, double lambda);
-   double PathLength(/*Particle &*/);
+   double PathLength();
 private:
-   //Id::Layer m_layer;
-   //double m_x0;
-   //double m_lambdaI;
+
 };
 
 #endif

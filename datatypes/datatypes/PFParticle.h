@@ -5,7 +5,7 @@
 #define PFParticle_H
 
 #include "Particle.h"
-#include "path.h"
+#include "Path.h"
 
 class Track;
 class TLorentzVector;

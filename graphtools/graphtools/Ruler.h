@@ -33,10 +33,4 @@ private:
 };
 
 
-  
-
-
-
-
-
 #endif /* Ruler_hpp */

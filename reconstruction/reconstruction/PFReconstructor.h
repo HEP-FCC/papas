@@ -9,26 +9,10 @@
 #ifndef PFReconstructor_h
 #define PFReconstructor_h
 
-#include <unordered_map>
 #include "TVector3.h"
-#include "Id.h"
-#include "directedacyclicgraph.h"
+#include "NodeDefinitions.h"
 
 class PFEvent;
-class PFBlock;
-class PFParticle;
-class Cluster;
-class Track;
-class TVector3;
-
-//TODO simparticles is not right
-typedef std::unordered_map<Id::Type, PFParticle> Particles;
-typedef std::vector<Id::Type> Ids;
-//typedef std::unordered_map<Id::Type, Cluster> Clusters;
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-//typedef std::unordered_map<Id::Type, Track> Tracks;
 
 class PFReconstructor {
   
@@ -41,7 +25,7 @@ private:
   void reconstructBlock(const PFBlock& block);
   void reconstructHcal(const PFBlock& block, Id::Type hcalId);
   PFParticle reconstructTrack(const Track& track);
-  PFParticle reconstructCluster(const Cluster& cluster, papas::XLayer layer, double energy = -1,
+  PFParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
                                  TVector3 vertex= TVector3());
   void insertParticle(const PFBlock& block, PFParticle&& particle);
   double neutralHadronEnergyResolution(const Cluster& hcal) const;

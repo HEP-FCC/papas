@@ -148,10 +148,10 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   if (ids.size() == 1 ) { //#TODO WARNING!!! LOTS OF MISSING CASES
     Id::Type id = ids[0];
     if (Id::isEcal(id)) {
-      insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),papas::XLayer::kEcal));
+      insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),papas::Layer::kEcal));
     }
     else if(Id::isHcal(id)) {
-      insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id),papas::XLayer::kHcal));
+      insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id),papas::Layer::kHcal));
     }
     else if(Id::isTrack(id)) {
       insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
@@ -315,17 +315,17 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
     if (excess <= ecalEnergy ) { /* # approx means hcal energy > track energies
                                   # Make a photon from the ecal energy
                                   # We make only one photon using only the combined ecal energies*/
-      insertParticle(block, reconstructCluster(hcal, papas::XLayer::kEcal, excess));
+      insertParticle(block, reconstructCluster(hcal, papas::Layer::kEcal, excess));
     }
     
     else { // approx means that hcal energy>track energies so we must have a neutral hadron
            //excess-ecal_energy is approximately hcal energy  - track energies
-      insertParticle(block, reconstructCluster(hcal, papas::XLayer::kHcal, excess-ecalEnergy));
+      insertParticle(block, reconstructCluster(hcal, papas::Layer::kHcal, excess-ecalEnergy));
       if (ecalEnergy) {
         //make a photon from the remaining ecal energies
         //again history is confusingbecause hcal is used to provide direction
         //be better to make several smaller photons one per ecal?
-        insertParticle(block, reconstructCluster(hcal, papas::XLayer::kEcal, ecalEnergy));
+        insertParticle(block, reconstructCluster(hcal, papas::Layer::kEcal, ecalEnergy));
       }
     }
     
@@ -334,14 +334,14 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
          //# note that hcal-ecal links have been removed so hcal should only be linked to
          //# other hcals
     
-    insertParticle(block,  reconstructCluster(hcal, papas::XLayer::kHcal));
+    insertParticle(block,  reconstructCluster(hcal, papas::Layer::kHcal));
   }
   m_locked[hcalId] = true;
   
 }
 
 PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
-                                                papas::XLayer layer,
+                                                papas::Layer layer,
                                                 double energy,
                                                 TVector3 vertex) {
   //construct a photon if it is an ecal
@@ -350,10 +350,10 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   if (energy<0) {
     energy = cluster.energy();
   }
-  if (layer == papas::XLayer::kEcal) {
+  if (layer == papas::Layer::kEcal) {
     pdgId = 22; //photon
   }
-  else if (layer == papas::XLayer::kHcal) {
+  else if (layer == papas::Layer::kHcal) {
     pdgId = 130; //K0
   }
   else {
@@ -375,7 +375,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
   
-  Id::Type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::Type newid = Id::makeParticleId(papas::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
   
@@ -402,7 +402,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
-  Id::Type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::Type newid = Id::makeParticleId(papas::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, track};
   //particle.setPath(track.path());

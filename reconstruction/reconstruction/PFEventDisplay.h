@@ -10,8 +10,8 @@
 #define PFEventDisplay_h
 
 #include "displaycore.h"
-class PFEvent;
 
+class PFEvent;
 
 class PFEventDisplay: public Display {
 public:

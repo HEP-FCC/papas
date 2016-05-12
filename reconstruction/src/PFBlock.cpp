@@ -242,8 +242,8 @@ int test_blocks() {
   Id::Type id5 = Id::makeHCALClusterId();
   Id::Type id6 = Id::makeTrackId();
 
-  PFBlock::Ids ids{id1, id2, id3};
-  PFBlock::Ids ids2{id4, id5, id6};
+  Ids ids{id1, id2, id3};
+  Ids ids2{id4, id5, id6};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
@@ -253,7 +253,7 @@ int test_blocks() {
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
 
-  PFBlock::Edges edges;
+  Edges edges;
   edges.reserve(100);
 
   // edges.emplace(10000.0,  std::move(edge));

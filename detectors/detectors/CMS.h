@@ -33,13 +33,13 @@ class CMSECAL: public Calorimeter {
 public:
    //AJRTODO check whether both cosntructors are needed
    ///constructor - allows the Material and Volume to be created on the fly
-   CMSECAL(papas::XLayer layer, const VolumeCylinder&& volume,
+   CMSECAL(papas::Layer layer, const VolumeCylinder&& volume,
         const Material&& material, double eta_crack, double emin,
         const std::vector<double>&&
         eres);
 
    ///constructor - requires the Material and Volume to be already in existance
-   /*ECAL(papas::XLayer layer, const VolumeCylinder& volume,
+   /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
         const Material& material , double eta_crack, double emin,
         const std::vector<double>& eres);*/
 
@@ -58,12 +58,12 @@ class CMSHCAL: public Calorimeter {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   CMSHCAL(papas::XLayer layer, const VolumeCylinder&& volume,
+   CMSHCAL(papas::Layer layer, const VolumeCylinder&& volume,
         const Material&& material,
         const std::vector<double>&&
         eres);
    ///constructor - requires the Material and Volume to be already in existance
-   CMSHCAL(papas::XLayer layer, const VolumeCylinder& volume,
+   CMSHCAL(papas::Layer layer, const VolumeCylinder& volume,
         const Material& material ,
         const std::vector<double>&
         eres);
@@ -80,9 +80,9 @@ class CMSTracker: public Tracker {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   CMSTracker(papas::XLayer layer, const VolumeCylinder&& volume );
+   CMSTracker(papas::Layer layer, const VolumeCylinder&& volume );
    ///constructor - requires the Material and Volume to be already in existance
-   CMSTracker(papas::XLayer layer, const VolumeCylinder& volume);
+   CMSTracker(papas::Layer layer, const VolumeCylinder& volume);
    virtual double ptResolution(const Track&) const override;
    virtual bool   acceptance(const Track&) const override;
       //TODOAJR space_resolution(self, ptc):
@@ -93,11 +93,11 @@ class CMSField: public Field {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   CMSField(papas::XLayer layer, const VolumeCylinder&& volume,
+   CMSField(papas::Layer layer, const VolumeCylinder&& volume,
               double magnitude
               );
    ///constructor - requires the Material and Volume to be already in existance
-   CMSField(papas::XLayer layer, const VolumeCylinder& volume, double);
+   CMSField(papas::Layer layer, const VolumeCylinder& volume, double);
    
 private:
    

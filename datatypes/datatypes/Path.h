@@ -11,9 +11,6 @@
 #include "TVector3.h"
 #include "Definitions.h"
 
-//temp
-#include <iostream>
-
 
 /// Path followed by a particle in 3D space.
 class Path {
@@ -22,7 +19,7 @@ class Path {
   /// Path base class is for straightline.
   ///
 public:
-  typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;  // TODO make this an enumeration
+  typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
   Path(const TLorentzVector& p4, TVector3 origin, double field);

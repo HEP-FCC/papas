@@ -5,18 +5,12 @@
 //  Created by Alice Robson on 17/04/16.
 //
 //
-
 #include "PFBlockBuilder.h"
-#include <iostream>
 #include "BlockBuilder.h"
 #include "PFBlock.h"
-#include "Edge.h"
 #include "PFEvent.h"
 #include "Distance.h"
 #include "Ruler.h"
-#include "directedacyclicgraph.h"
-#include <iostream>
-
 
 PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
   m_pfEvent(pfevent),

@@ -1,16 +1,10 @@
 #ifndef RECONSTRUCTION_GRAPHBUILDER_H
 #define RECONSTRUCTION_GRAPHBUILDER_H
 
-#include <iostream>
-#include <unordered_map>
-#include <vector>
+#include "NodeDefinitions.h"
 
-#include "directedacyclicgraph.h"
-#include "Id.h"
-
+// TODO namespace
 class PFEvent;
-class PFBlock;
-class Edge;
 
 /** @class   rec::GraphBuilder Reconstruction/Reconstruction/GraphBuilder.h GraphBuilder.h
  *
@@ -33,21 +27,6 @@ class Edge;
  *  @date    2016-04-06
  */
 
-// TODO namespace
-class PFEvent;
-
-// TODO figure out best place to keep the typedefs
-typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-typedef std::vector<Id::Type> Ids;
-
-// Allow optional parameters where construction arguments are references
-// TODO make sattic class member
-extern Nodes emptyNodes;
-extern const Nodes emptyconstNodes;
-
 class GraphBuilder {
 public:
   /** Constructor
@@ -57,17 +36,14 @@ public:
    *            an edge records the distance and links between two ids
    */
   GraphBuilder(Ids ids, Edges& edges);
-  // GraphBuilder();
   GraphBuilder& operator=(const GraphBuilder&);
   const std::vector<Ids> subGraphs() const {
     return m_subGraphs;
   };                             ///<return the unordered map of the resulting subgraphs;
-  std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
-
 protected:
   void sortIds(Ids& ids);  ///<sorted by energy
   Edges& m_edges;
-
+  std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
 private:
   Ids m_elementIds;    ///<uniqueids to be grouped into subgraphs
   Nodes m_localNodes;  ///<local nodes used in building subgraphs

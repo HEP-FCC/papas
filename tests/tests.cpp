@@ -94,7 +94,7 @@ TEST(fastsim,Structures){
    // Try base classes ;
    Material M(1, 1);
   SurfaceCylinder S(papas::Position::kEcalIn);
-  VolumeCylinder V(papas::XLayer::kEcal, 4, 6, 3, 6);
+  VolumeCylinder V(papas::Layer::kEcal, 4, 6, 3, 6);
    return SUCCEED();
 }
 
@@ -151,7 +151,7 @@ TEST(fastsim,Cylinder){
 
    auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1, 2);
    auto cyl2 = SurfaceCylinder(papas::Position::kEcalIn, 0.7, 1.5);
-   auto subcyl = VolumeCylinder(papas::XLayer::kEcal, 1 ,2, 0.7, 1.5 );
+   auto subcyl = VolumeCylinder(papas::Layer::kEcal, 1 ,2, 0.7, 1.5 );
    
    EXPECT_EQ(subcyl.inner().getRadius(),0.7 );
    EXPECT_EQ(subcyl.inner().Z(),1.5);
@@ -232,7 +232,7 @@ TEST(fastsim, StraightLine){
    auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2, 1);
    
    TLorentzVector tlv{1, 0, 1, 2.};
-   long uid=Id::makeParticleId(fastsim::enumSource::SIMULATION);
+   long uid=Id::makeParticleId(papas::enumSource::SIMULATION);
    PFParticle photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -247,7 +247,7 @@ TEST(fastsim, StraightLine){
    
    //testing extrapolation to -z
    tlv=TLorentzVector(1, 0, -1, 2.);
-   uid=Id::makeParticleId(fastsim::enumSource::SIMULATION);
+   uid=Id::makeParticleId(papas::enumSource::SIMULATION);
    photon = PFParticle(uid,22,tlv ) ;
    propStraight.propagateOne(photon, cyl1);
    propStraight.propagateOne(photon, cyl2);
@@ -337,7 +337,7 @@ void test_Structures()
   std::cout << "Try base classes\n";
   Material M(1, 1);
   SurfaceCylinder S(papas::Position::kEcalIn);
-  VolumeCylinder V(papas::XLayer::kEcal, 4, 6, 3, 6);
+  VolumeCylinder V(papas::Layer::kEcal, 4, 6, 3, 6);
 }
 
 

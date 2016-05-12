@@ -24,7 +24,7 @@
  m_eres(eres)
  {}*/
 
-CMSECAL::CMSECAL(papas::XLayer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
+CMSECAL::CMSECAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
                  double emin, const std::vector<double>&& eres)
     : Calorimeter(layer, volume, material), m_eta_crack(eta_crack), m_emin(emin), m_eres(eres) {}
 
@@ -67,7 +67,7 @@ double CMSECAL::energyResolution(double energy) const {
 
 CMS::CMS() : Detector() {
   // ECAL detector Element
-  papas::XLayer layer = papas::XLayer::kEcal;
+  papas::Layer layer = papas::Layer::kEcal;
   m_ecal =
       std::shared_ptr<const class Calorimeter>{new CMSECAL(layer,
                                                            VolumeCylinder(layer, 1.55, 2.1, 1.30, 2),
@@ -77,7 +77,7 @@ CMS::CMS() : Detector() {
                                                            std::vector<double>{.073, .1, .005})};
 
   // HCAL detector element
-  layer = papas::XLayer::kHcal;
+  layer = papas::Layer::kHcal;
   m_hcal =
       std::shared_ptr<const class Calorimeter>{new CMSHCAL(layer,
                                                            VolumeCylinder(layer, 2.9, 3.6, 1.9, 2.6),
@@ -85,11 +85,11 @@ CMS::CMS() : Detector() {
                                                            std::vector<double>{1.1, 0., 0.})};
 
   // Tracker detector element
-  layer = papas::XLayer::kTracker;
+  layer = papas::Layer::kTracker;
   m_tracker = std::shared_ptr<const Tracker>{new CMSTracker(layer, VolumeCylinder(layer, 1.29, 1.99))};
 
   // Field detector element
-  layer = papas::XLayer::kField;
+  layer = papas::Layer::kField;
   m_field = std::shared_ptr<const Field>{
       new CMSField(layer, VolumeCylinder(layer, 2.9, 3.6), 20)
       // 3.8)
@@ -107,11 +107,11 @@ CMS::CMS() : Detector() {
   // TODOAJR add in  tracker etc below
 }
 
-CMSHCAL::CMSHCAL(papas::XLayer layer, const VolumeCylinder& volume, const Material& material,
+CMSHCAL::CMSHCAL(papas::Layer layer, const VolumeCylinder& volume, const Material& material,
                  const std::vector<double>& eres)
     : Calorimeter(layer, volume, material), m_eres(eres) {}
 
-CMSHCAL::CMSHCAL(papas::XLayer layer, const VolumeCylinder&& volume, const Material&& material,
+CMSHCAL::CMSHCAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material,
                  const std::vector<double>&& eres)
     : Calorimeter(layer, volume, material), m_eres(eres) {}
 
@@ -142,10 +142,10 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
 
 double CMSHCAL::energyResolution(double energy) const { return m_eres[0] / sqrt(energy); }
 
-CMSTracker::CMSTracker(papas::XLayer layer, const VolumeCylinder& volume)
+CMSTracker::CMSTracker(papas::Layer layer, const VolumeCylinder& volume)
     : Tracker(layer, volume, Material(0, 0)) {}
 
-CMSTracker::CMSTracker(papas::XLayer layer, const VolumeCylinder&& volume)
+CMSTracker::CMSTracker(papas::Layer layer, const VolumeCylinder&& volume)
     : Tracker(layer, volume, Material(0, 0)) {}
 
 bool CMSTracker::acceptance(const Track& track) const {
@@ -162,10 +162,10 @@ double CMSTracker::ptResolution(const Track& track) const {
   return 5e-3;
 }
 
-CMSField::CMSField(papas::XLayer layer, const VolumeCylinder& volume, double magnitude)
+CMSField::CMSField(papas::Layer layer, const VolumeCylinder& volume, double magnitude)
     : Field(layer, volume, Material(0, 0), magnitude) {}
 
-CMSField::CMSField(papas::XLayer layer, const VolumeCylinder&& volume, double magnitude)
+CMSField::CMSField(papas::Layer layer, const VolumeCylinder&& volume, double magnitude)
     : Field(layer, volume, Material(0, 0), magnitude) {}
 
 // def space_resolution(self, ptc):

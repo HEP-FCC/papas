@@ -4,16 +4,12 @@
 //
 #ifndef  SIMULATOR_H
 #define  SIMULATOR_H
-#include <string>
-#include <unordered_map>
-#include <map>
+
 #include "TVector3.h"
 #include "TLorentzVector.h"
-
 #include "Definitions.h"
-#include "directedacyclicgraph.h"
+#include "NodeDefinitions.h"
 #include "propagator.h"
-#include "Id.h"
 
 class PFParticle;
 class Cluster;
@@ -21,19 +17,6 @@ class Track;
 class Detector;
 class DetectorElement;
 class SurfaceCylinder;
-
-
-//TODO home for typedefs
-typedef DAG::Node<long> Node;
-typedef std::unordered_map<long, Node> Nodes;
-typedef std::unordered_map<long, Cluster> Clusters;
-typedef std::unordered_map<long, Cluster> SmearedEcalClusters;
-typedef std::unordered_map<long, Cluster> SmearedHcalClusters;
-typedef std::unordered_map<long, Cluster> EcalClusters;
-typedef std::unordered_map<long, Cluster> HcalClusters;
-typedef std::unordered_map<long, Track> Tracks;
-typedef std::unordered_map<long, PFParticle> Particles;
-typedef std::vector<long> Ids;
 
 class Simulator {
 
@@ -65,25 +48,25 @@ public:
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  //long makeClusterId(papas::XLayer layer, fastsim::enumSubtype subtype) const;
-  //long makeParticleId(fastsim::enumSource source) const;
+  //long makeClusterId(papas::Layer layer, papas::enumSubtype subtype) const;
+  //long makeParticleId(papas::enumSource source) const;
   long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addSmearedCluster(long parentClusterId);
-  Cluster makeCluster(PFParticle& ptc, long parentid, papas::XLayer layer, double fraction = 1., double csize = 0.);
+  Cluster makeCluster(PFParticle& ptc, long parentid, papas::Layer layer, double fraction = 1., double csize = 0.);
   Cluster makeSmearedCluster(long parentClusterId);
   const Track& addTrack(PFParticle& ptc);
   long addSmearedTrack(const Track& track, bool accept = false);
   void addNode(const long newid, const long parentid = 0);
-  std::shared_ptr<const DetectorElement> elem(papas::XLayer layer) const;
+  std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
   static TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy);
   Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedIds(long nodeid) const; //TODO move to helper/history class
-  Ids getMatchingIds(long nodeid, Id::DataType datatype, papas::XLayer layer,
-                     fastsim::enumSubtype type, fastsim::enumSource source) const; //TODO move to helper/history class
-  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, papas::XLayer layer,
-                           fastsim::enumSubtype type, fastsim::enumSource source) const ;  //TODO move to helper/history class
+  Ids getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer,
+                     papas::enumSubtype type, papas::enumSource source) const; //TODO move to helper/history class
+  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer,
+                           papas::enumSubtype type, papas::enumSource source) const ;  //TODO move to helper/history class
 
   Clusters m_ecalClusters;
   Clusters m_hcalClusters;

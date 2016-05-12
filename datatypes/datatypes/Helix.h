@@ -28,7 +28,6 @@ public:
   TVector3 centerXY() const { return m_centerXY; }
 
 private:
-  // double m_charge;
   double m_rho;  /// Radius of Helix
   double m_omega;
   double m_phi0;

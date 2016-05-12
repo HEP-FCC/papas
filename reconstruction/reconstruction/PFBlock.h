@@ -3,9 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <unordered_map>
-#include <vector>
-#include "Id.h"
+#include "NodeDefinitions.h"
 #include "Edge.h"
 
 /** @class   rec::PFBlock Reconstruction/Reconstruction/PFBlock.h PFBlock.h
@@ -46,9 +44,7 @@ class PFBlock {
 
 public:
   typedef long long edgeKey;
-  typedef std::vector<Id::Type> Ids;
-  typedef std::unordered_map<long long, class Edge> Edges;
-
+  
   /** Constructor
    @param[in] element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
    @param[inout] edges: is an unordered map of edges, it must contain at least all needed edges. It is not a problem

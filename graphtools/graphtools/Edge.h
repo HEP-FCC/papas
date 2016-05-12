@@ -18,7 +18,6 @@
 
 class Edge {
 public:
-  //typedef long Id::Type; /// unique long //TODO come back to this
   
  /** @enum foo::EdgeType
   *  enumeration to describe the type of edge eg an hcal to hcal edge is type kHcalHcal

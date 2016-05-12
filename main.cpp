@@ -14,17 +14,15 @@
 
 #include "CMS.h"
 #include "PFEventDisplay.h"
+#include "displaypfobjects.h"
 #include "Simulator.h"
-#include "displaygeometry.h"
-//#include "displaypfobjects.h"
-#include "Cluster.h"
-#include "PFBlock.h"
 #include "PFBlockBuilder.h"
 #include "PFEvent.h"
 #include "PFParticle.h"
 #include "PFReconstructor.h"
+#include "Cluster.h"
 #include "Track.h"
-#include "path.h"
+#include "Path.h"
 
 
 extern int run_tests(int argc, char* argv[]);

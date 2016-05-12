@@ -9,7 +9,7 @@
 #include "geometry.h"
 
 
-DetectorElement::DetectorElement(papas::XLayer layer, const  VolumeCylinder& volume , const Material& material) :
+DetectorElement::DetectorElement(papas::Layer layer, const  VolumeCylinder& volume , const Material& material) :
    m_volume(volume), m_material(material), m_layer(layer)
 {}
 
@@ -33,12 +33,12 @@ const std::list<SurfaceCylinder>& Detector::sortedCylinders()
    return m_cylinders;*/
 }
 
-std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::XLayer layer) const{
+std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const{
   switch (layer) {
-    case papas::XLayer::kEcal:
+    case papas::Layer::kEcal:
       return m_ecal;
       break;
-    case papas::XLayer::kHcal:
+    case papas::Layer::kHcal:
       return m_hcal;
       break;
     default:
@@ -48,14 +48,14 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::XLayer layer) co
 }
 
 //const DetectorElement& Detector::element(Id::Layer layer) const
-std::shared_ptr<const DetectorElement> Detector::element(papas::XLayer layer) const
+std::shared_ptr<const DetectorElement> Detector::element(papas::Layer layer) const
 {
 
    switch (layer) {
-      case papas::XLayer::kEcal:
+      case papas::Layer::kEcal:
          return m_ecal;
          break;
-      case papas::XLayer::kHcal:
+      case papas::Layer::kHcal:
          return m_hcal;
          break;
      default:
@@ -69,7 +69,7 @@ std::shared_ptr<const DetectorElement> Detector::element(papas::XLayer layer) co
    return nullptr;
 }
 
-Field::Field(papas::XLayer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
+Field::Field(papas::Layer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
   DetectorElement(layer, volume, material),
   m_magnitude(magnitude)
 {}

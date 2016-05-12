@@ -2,15 +2,9 @@
 #define RECONSTRUCTION_BLOCKSPLITTER_H
 
 #include <iostream>
-#include <unordered_map>
-#include <vector>
-
 #include "BlockBuilder.h"
-#include "directedacyclicgraph.h"
 
 class PFEvent;
-class PFBlock;
-class Edge;
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *
@@ -50,18 +44,6 @@ class Edge;
 
 // TODO namespace
 class PFEvent;
-
-// TODO figure out best place to keep the typedefs
-//typedef long Id::Type;
-typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-typedef std::vector<Id::Type> Ids;
-
-// Allow optional parameters where construction arguments are references
-extern Nodes emptyNodes;
-extern const Nodes emptyconstNodes;
 
 class BlockSplitter {
 public:

@@ -1,18 +1,7 @@
 #ifndef RECONSTRUCTION_BLOCKBUILDER_H
 #define RECONSTRUCTION_BLOCKBUILDER_H
 
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-
-#include "directedacyclicgraph.h"
 #include "GraphBuilder.h"
-
-class PFEvent;
-class PFBlock;
-class Edge;
-class GraphBuilder;
-
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *
@@ -37,19 +26,6 @@ class GraphBuilder;
 
 //TODO namespace
 class PFEvent;
-
-//TODO figure out best place to keep the typedefs
-//typedef long Id::Type;
-typedef std::unordered_map<long long, class Edge> Edges;
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type,PFNode> Nodes;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
-typedef std::vector<Id::Type> Ids;
-
-//Allow optional parameters where construction arguments are references
-//TODO make these internal static members
-extern Nodes emptyNodes;
-extern const Nodes emptyconstNodes;
 
 class BlockBuilder: public GraphBuilder {
 public:
