@@ -5,14 +5,17 @@
 #ifndef DETECTOR_H
 #define DETECTOR_H
 
+
+#include <list>
 #include "geometry.h"
 #include "material.h"
-#include <list>
+
 class Particle;
 class Material;
 class VolumeCylinder;
 class Cluster;
 class Track;
+
 
 /**
  Class base for Calorimeter, Tracker and Field
@@ -20,21 +23,21 @@ class Track;
 
 class DetectorElement {
 public:
-  DetectorElement(fastsim::enumLayer layer,
+  DetectorElement(papas::XLayer layer,
                   const VolumeCylinder&& volume,
                   const Material&& material);  ///< allows the Material and Volume to be created on the fly
 
-  DetectorElement(fastsim::enumLayer layer,
+  DetectorElement(papas::XLayer layer,
                   const VolumeCylinder& volume,
                   const Material& material);  ///< requires the Material and Volume to be already in existance
   const VolumeCylinder& volumeCylinder() const { return m_volume; }  ///< return the volume cyclinder
-  fastsim::enumLayer layer() const { return m_layer; };
+  papas::XLayer layer() const { return m_layer; };
   const Material& material() const { return m_material; }
 
 protected:
   VolumeCylinder m_volume;
   Material m_material;
-  fastsim::enumLayer m_layer;
+  papas::XLayer m_layer;
 
 private:
 };
@@ -54,10 +57,10 @@ private:
 
 class Field : public DetectorElement {
 public:
-  Field(fastsim::enumLayer layer, const VolumeCylinder&& volume, const Material&& material,
+  Field(papas::XLayer layer, const VolumeCylinder&& volume, const Material&& material,
         double magnitude);  ///< allows the Material and Volume to be created on the fly
 
-  Field(fastsim::enumLayer layer, const VolumeCylinder& volume, const Material& material, double magnitude);
+  Field(papas::XLayer layer, const VolumeCylinder& volume, const Material& material, double magnitude);
   double getMagnitude() const { return m_magnitude; };
 
 protected:
@@ -83,10 +86,9 @@ class Detector {
 public:
   Detector();
 
-  const std::list<SurfaceCylinder>&
-  sortedCylinders();  /// AJRTODO make this simply return the list (or a copy) - sort on initialisation
-  std::shared_ptr<const DetectorElement> element(fastsim::enumLayer layer) const;
-  std::shared_ptr<const Calorimeter> calorimeter(fastsim::enumLayer layer) const;
+  const std::list<SurfaceCylinder>& sortedCylinders();  /// AJRTODO make this sort on initialisation
+  std::shared_ptr<const DetectorElement> element(papas::XLayer layer) const;
+  std::shared_ptr<const Calorimeter> calorimeter(papas::XLayer layer) const;
   std::shared_ptr<const Calorimeter> ecal() const { return m_ecal; }
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }

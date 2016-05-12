@@ -17,8 +17,8 @@
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(fastsim::enumLayer::ECAL, fastsim::enumSubtype::RAW)};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(fastsim::enumLayer::HCAL, fastsim::enumSubtype::RAW)};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::XLayer::kEcal, fastsim::enumSubtype::RAW)};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::XLayer::kHcal, fastsim::enumSubtype::RAW)};
   
   
   TVector3 p3 = c1.position().Unit()*100.;
@@ -27,8 +27,8 @@ TEST(Distance, distance) {
   std::shared_ptr<Path> path =std::make_shared<Path>(p4, TVector3(0,0,0),20.);
   double charge = 1.;
   Track tr{p3, charge, path, 0};
-  path->addPoint("_ECALin", c1.position());
-  path->addPoint("_HCALin", c2.position());
+  path->addPoint(papas::Position::kEcalIn, c1.position());
+  path->addPoint(papas::Position::kHcalIn, c2.position());
   
   Distance distc1t(c1, tr);
   EXPECT_EQ(distc1t.distance(),0.);

@@ -23,10 +23,10 @@ class Ruler {
   
 public:
   Ruler (const PFEvent& pfevent);
-  Distance distance(Id::type id1 ,Id::type id2);
+  Distance distance(Id::Type id1 ,Id::Type id2);
 private:
-  Distance clusterClusterDistance(Id::type id1 ,Id::type id2);
-  Distance clusterTrackDistance(Id::type id1 ,Id::type id2);
+  Distance clusterClusterDistance(Id::Type id1 ,Id::Type id2);
+  Distance clusterTrackDistance(Id::Type id1 ,Id::Type id2);
   Distance distance();
   
   const PFEvent& m_pfEvent;

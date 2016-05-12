@@ -9,13 +9,13 @@ class PFParticle;
 class Propagator {
 public:
    Propagator();
-   //virtual void propagateOne(PFParticle& ptc, fastsim::enumLayer Layer,
+   //virtual void propagateOne(PFParticle& ptc, Id::Layer Layer,
    //                          bool inner = true) = 0;
    
    virtual void propagateOne(PFParticle& ptc, const SurfaceCylinder & cyl)=0;
 
 protected:
-   virtual void propagateOne(PFParticle& ptc, std::string cylindername,
+  virtual void propagateOne(PFParticle& ptc, papas::Position layer,
                              double cylinderz, double cylinderradius) = 0;
 
 };
@@ -23,12 +23,12 @@ protected:
 class StraightLinePropagator  {
 public:
    StraightLinePropagator();
-   //void propagateOne(PFParticle& ptc, fastsim::enumLayer Layer,
+   //void propagateOne(PFParticle& ptc, Id::Layer Layer,
    //                  bool inner = true) override;
    void propagateOne(PFParticle& ptc, const SurfaceCylinder & cyl) ;
 
 private:
-   void propagateOne(PFParticle& ptc, std::string cylindername, double cylinderz,
+   void propagateOne(PFParticle& ptc, papas::Position layer, double cylinderz,
                      double cylinderradius) ;
 
 
@@ -40,7 +40,7 @@ public:
    virtual void propagateOne(PFParticle& ptc, const SurfaceCylinder & cyl) ;
    private:
    double m_field;
-   void propagateOne(PFParticle& ptc, std::string cylindername, double cylinderz,
+   void propagateOne(PFParticle& ptc, papas::Position layer, double cylinderz,
                      double cylinderradius,const Field& field,
                      bool debugInfo) ;
 

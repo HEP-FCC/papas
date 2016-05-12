@@ -16,10 +16,10 @@
 class PFEvent;
 class PFBlock;
 
-typedef DAG::Node<Id::type> PFNode;
-typedef std::unordered_map<Id::type, PFNode> Nodes;
-typedef std::unordered_map<Id::type, PFBlock> Blocks;
-typedef std::vector<Id::type> Ids;
+typedef DAG::Node<Id::Type> PFNode;
+typedef std::unordered_map<Id::Type, PFNode> Nodes;
+typedef std::unordered_map<Id::Type, PFBlock> Blocks;
+typedef std::vector<Id::Type> Ids;
 
 class PFBlockBuilder {
 public:

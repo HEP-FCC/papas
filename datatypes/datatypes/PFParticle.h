@@ -6,6 +6,7 @@
 
 #include "Particle.h"
 #include "path.h"
+
 class Track;
 class TLorentzVector;
 
@@ -16,7 +17,7 @@ public:
   PFParticle(long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
   PFParticle(long uniqueid, const Track& track);
   Path::Ptr path() const { return m_path; }
-  TVector3 pathPosition(std::string name) const;
+  TVector3 pathPosition(papas::Position layer) const;
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }
 

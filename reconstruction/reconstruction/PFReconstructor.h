@@ -22,13 +22,13 @@ class Track;
 class TVector3;
 
 //TODO simparticles is not right
-typedef std::unordered_map<Id::type, PFParticle> Particles;
-typedef std::vector<Id::type> Ids;
-//typedef std::unordered_map<Id::type, Cluster> Clusters;
-typedef DAG::Node<Id::type> PFNode;
-typedef std::unordered_map<Id::type, PFNode> Nodes;
-typedef std::unordered_map<Id::type, PFBlock> Blocks;
-//typedef std::unordered_map<Id::type, Track> Tracks;
+typedef std::unordered_map<Id::Type, PFParticle> Particles;
+typedef std::vector<Id::Type> Ids;
+//typedef std::unordered_map<Id::Type, Cluster> Clusters;
+typedef DAG::Node<Id::Type> PFNode;
+typedef std::unordered_map<Id::Type, PFNode> Nodes;
+typedef std::unordered_map<Id::Type, PFBlock> Blocks;
+//typedef std::unordered_map<Id::Type, Track> Tracks;
 
 class PFReconstructor {
   
@@ -39,9 +39,9 @@ public:
 private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);
-  void reconstructHcal(const PFBlock& block, Id::type hcalId);
+  void reconstructHcal(const PFBlock& block, Id::Type hcalId);
   PFParticle reconstructTrack(const Track& track);
-  PFParticle reconstructCluster(const Cluster& cluster, fastsim::enumLayer layer, double energy = -1,
+  PFParticle reconstructCluster(const Cluster& cluster, papas::XLayer layer, double energy = -1,
                                  TVector3 vertex= TVector3());
   void insertParticle(const PFBlock& block, PFParticle&& particle);
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
@@ -53,7 +53,7 @@ private:
   Particles m_particles; //owns the particles it makes
   bool m_hasHistory;
   Ids m_unused;
-  std::unordered_map<Id::type, bool> m_locked;
+  std::unordered_map<Id::Type, bool> m_locked;
   
 };
 

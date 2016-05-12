@@ -1,5 +1,5 @@
 //
-//  enums.h
+//  Definitions.h
 //  fastsim
 //
 //  Created by Alice Robson on 12/01/16.

@@ -26,7 +26,6 @@
 #include "Track.h"
 #include "path.h"
 
-#include "MyAnalysis.h"
 
 extern int run_tests(int argc, char* argv[]);
 

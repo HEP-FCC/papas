@@ -18,7 +18,7 @@
 
 class Edge {
 public:
-  //typedef long Id::type; /// unique long //TODO come back to this
+  //typedef long Id::Type; /// unique long //TODO come back to this
   
  /** @enum foo::EdgeType
   *  enumeration to describe the type of edge eg an hcal to hcal edge is type kHcalHcal
@@ -36,24 +36,24 @@ public:
    *   @param[in]  isLinked : boolean T/F
    *   @param[in]  distance: distance between two elements
    */
-  Edge(Id::type id1, Id::type id2, bool isLinked, double distance);
+  Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance);
   Edge(const Edge&) = default ;/* {std::cout <<"copy Edge";};*/
   Edge(Edge&&) = default; // {std::cout <<"move Edge";};
   Edge& operator=(const Edge& other) = default;// copy assignment
                                                //{  std::cout<<"copy EDGE =";}
   Edge& operator=(Edge&& other) = default; //{ std::cout <<"move edge =";}
   
-  Id::type id1() const {return m_id1;}
-  Id::type id2() const {return m_id2;}
+  Id::Type id1() const {return m_id1;}
+  Id::Type id2() const {return m_id2;}
   bool isLinked() const {return m_isLinked;}  ///<boolean to mark if this edge links the two elements
   void setLinked(bool link) { m_isLinked=link;};
   double distance() const {return m_distance;} ///<distance between the two elements
   long long key() const {return m_key;} ///<unique key for this edge that can be found from the two element ids
   EdgeType edgeType() const {return m_edgeType;} ///<describes what types of elements are connected
-  Id::type otherid(Id::type id) const; /// return the id of the other end, or -1 if id is not part of this edge
+  Id::Type otherid(Id::Type id) const; /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
 /**
-  *   @brief  Static function that creates a unique key given two Id::types
+  *   @brief  Static function that creates a unique key given two Id::Types
   *
   *   @description
   *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids
@@ -62,7 +62,7 @@ public:
   *   @param  id1 : element uniqueid enerated from Id class for one end
   *   @param  id2 : element2 uniqueid generated from Id class for other end
   */
-  static long long makeKey(Id::type id1, Id::type id2);  ///<static function to create a unique key
+  static long long makeKey(Id::Type id1, Id::Type id2);  ///<static function to create a unique key
   
 private:
   /** Produces an EdgeType enumeration such as kEcalTrack

@@ -20,7 +20,7 @@ m_pfEvent(pfevent)
 {
 }
 
-Distance Ruler::distance(Id::type id1, Id::type id2)
+Distance Ruler::distance(Id::Type id1, Id::Type id2)
 {
   if (Id::isCluster(id1) && Id::isCluster(id2))
     if (Id::layer(id1) == Id::layer(id2))
@@ -38,7 +38,7 @@ Distance Ruler::distance(Id::type id1, Id::type id2)
 }
 
 
-Distance Ruler::clusterClusterDistance(Id::type id1 , Id::type id2)
+Distance Ruler::clusterClusterDistance(Id::Type id1 , Id::Type id2)
 {
   const Cluster& cluster1 = m_pfEvent.cluster(id1);
   const Cluster& cluster2 = m_pfEvent.cluster(id2);
@@ -69,7 +69,7 @@ Distance Ruler::clusterClusterDistance(Id::type id1 , Id::type id2)
 }
 
 
-Distance Ruler::clusterTrackDistance(Id::type clustId , Id::type trackId)
+Distance Ruler::clusterTrackDistance(Id::Type clustId , Id::Type trackId)
 {
   const Cluster& cluster = m_pfEvent.cluster(clustId);
   const Track& track = m_pfEvent.track(trackId);

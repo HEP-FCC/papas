@@ -5,7 +5,7 @@
 
 #include "material.h"
 
-Material::Material(/*fastsim::enumLayer layer,*/ double x0, double lambdaI) :
+Material::Material(/*Id::Layer layer,*/ double x0, double lambdaI) :
 //m_layer(layer),
     m_x0(x0),
     m_lambdaI(lambdaI) ,

@@ -10,7 +10,7 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
-#include "enums.h"
+#include "Definitions.h"
 #include "directedacyclicgraph.h"
 #include "propagator.h"
 #include "Id.h"
@@ -65,24 +65,24 @@ public:
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  //long makeClusterId(fastsim::enumLayer layer, fastsim::enumSubtype subtype) const;
+  //long makeClusterId(papas::XLayer layer, fastsim::enumSubtype subtype) const;
   //long makeParticleId(fastsim::enumSource source) const;
   long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addSmearedCluster(long parentClusterId);
-  Cluster makeCluster(PFParticle& ptc, long parentid, fastsim::enumLayer layer, double fraction = 1., double csize = 0.);
+  Cluster makeCluster(PFParticle& ptc, long parentid, papas::XLayer layer, double fraction = 1., double csize = 0.);
   Cluster makeSmearedCluster(long parentClusterId);
   const Track& addTrack(PFParticle& ptc);
   long addSmearedTrack(const Track& track, bool accept = false);
   void addNode(const long newid, const long parentid = 0);
-  std::shared_ptr<const DetectorElement> elem(fastsim::enumLayer layer) const;
+  std::shared_ptr<const DetectorElement> elem(papas::XLayer layer) const;
   static TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy);
   Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedIds(long nodeid) const; //TODO move to helper/history class
-  Ids getMatchingIds(long nodeid, Id::DataType datatype, fastsim::enumLayer layer,
+  Ids getMatchingIds(long nodeid, Id::DataType datatype, papas::XLayer layer,
                      fastsim::enumSubtype type, fastsim::enumSource source) const; //TODO move to helper/history class
-  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, fastsim::enumLayer layer,
+  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, papas::XLayer layer,
                            fastsim::enumSubtype type, fastsim::enumSource source) const ;  //TODO move to helper/history class
 
   Clusters m_ecalClusters;

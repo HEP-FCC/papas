@@ -28,7 +28,7 @@ m_elementIds(ids)
       m_localNodes[e.id1()].addChild(m_localNodes[e.id2()]);
   }
   
-  DAG::FloodFill<Id::type> FFill;
+  DAG::FloodFill<Id::Type> FFill;
   
   //traverse does the work and returns a vector of connected node groups
   for (auto & group : FFill.traverse(m_localNodes)) {
@@ -61,9 +61,9 @@ GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)
   return *this;
 }
 
-void GraphBuilder::sortIds(std::vector<Id::type>& ids)
+void GraphBuilder::sortIds(std::vector<Id::Type>& ids)
 {
-  std::sort(ids.begin(), ids.end(), [](Id::type a, Id::type b) -> bool
+  std::sort(ids.begin(), ids.end(), [](Id::Type a, Id::Type b) -> bool
             { return Id::typeShortCode(a) < Id::typeShortCode(b); } );
 }
 
@@ -76,14 +76,14 @@ void GraphBuilder::sortIds(std::vector<Id::type>& ids)
   return os;
 }*/
 
-/*void GraphBuilder::sortIds(std::vector<Id::type>& ids) // sorts by type and energy
+/*void GraphBuilder::sortIds(std::vector<Id::Type>& ids) // sorts by type and energy
  {//TODO move to helper
- std::sort( ids.begin(), ids.end(), [this] (Id::type a, Id::type b) { return this->m_pfEvent.compare(a,b);});
+ std::sort( ids.begin(), ids.end(), [this] (Id::Type a, Id::Type b) { return this->m_pfEvent.compare(a,b);});
  }*/
 
 
 
-/*bool GraphBuilder::compareEdges(long long key1, long long key2, Id::type uniqueid) const//TODO check direction of sort
+/*bool GraphBuilder::compareEdges(long long key1, long long key2, Id::Type uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy

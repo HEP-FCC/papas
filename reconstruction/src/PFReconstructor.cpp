@@ -146,12 +146,12 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   
   
   if (ids.size() == 1 ) { //#TODO WARNING!!! LOTS OF MISSING CASES
-    Id::type id = ids[0];
+    Id::Type id = ids[0];
     if (Id::isEcal(id)) {
-      insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),fastsim::enumLayer::ECAL));
+      insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id),papas::XLayer::kEcal));
     }
     else if(Id::isHcal(id)) {
-      insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id),fastsim::enumLayer::HCAL));
+      insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id),papas::XLayer::kHcal));
     }
     else if(Id::isTrack(id)) {
       insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
@@ -197,7 +197,7 @@ void  PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newpart
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   //if (newparticle) :
-  Id::type newid = newparticle.id();
+  Id::Type newid = newparticle.id();
   m_particles[newid] = newparticle;
   
   //check if history nodes exists
@@ -244,7 +244,7 @@ double PFReconstructor::nsigmaHcal(const Cluster& cluster)  const{
   
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, Id::type hcalId) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -315,17 +315,17 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::type hcalId) {
     if (excess <= ecalEnergy ) { /* # approx means hcal energy > track energies
                                   # Make a photon from the ecal energy
                                   # We make only one photon using only the combined ecal energies*/
-      insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::ECAL, excess));
+      insertParticle(block, reconstructCluster(hcal, papas::XLayer::kEcal, excess));
     }
     
     else { // approx means that hcal energy>track energies so we must have a neutral hadron
            //excess-ecal_energy is approximately hcal energy  - track energies
-      insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::HCAL, excess-ecalEnergy));
+      insertParticle(block, reconstructCluster(hcal, papas::XLayer::kHcal, excess-ecalEnergy));
       if (ecalEnergy) {
         //make a photon from the remaining ecal energies
         //again history is confusingbecause hcal is used to provide direction
         //be better to make several smaller photons one per ecal?
-        insertParticle(block, reconstructCluster(hcal, fastsim::enumLayer::ECAL, ecalEnergy));
+        insertParticle(block, reconstructCluster(hcal, papas::XLayer::kEcal, ecalEnergy));
       }
     }
     
@@ -334,14 +334,14 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::type hcalId) {
          //# note that hcal-ecal links have been removed so hcal should only be linked to
          //# other hcals
     
-    insertParticle(block,  reconstructCluster(hcal, fastsim::enumLayer::HCAL));
+    insertParticle(block,  reconstructCluster(hcal, papas::XLayer::kHcal));
   }
   m_locked[hcalId] = true;
   
 }
 
 PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
-                                                fastsim::enumLayer layer,
+                                                papas::XLayer layer,
                                                 double energy,
                                                 TVector3 vertex) {
   //construct a photon if it is an ecal
@@ -350,10 +350,10 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   if (energy<0) {
     energy = cluster.energy();
   }
-  if (layer == fastsim::enumLayer::ECAL) {
+  if (layer == papas::XLayer::kEcal) {
     pdgId = 22; //photon
   }
-  else if (layer == fastsim::enumLayer::HCAL) {
+  else if (layer == papas::XLayer::kHcal) {
     pdgId = 130; //K0
   }
   else {
@@ -375,7 +375,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy) ;//mass is not accurate here
   
-  Id::type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::Type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
   
@@ -383,7 +383,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
   //Path path{p4, vertex}; //default is strightline path
   
   //TODO make addpoint use layer also??
-  particle.path()->addPoint("ecal_in", cluster.position()); //alice: Colin this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
+  particle.path()->addPoint(papas::Position::kEcalIn, cluster.position()); //alice: Colin this may be a bit strange because we can make a photon with a path where the point is actually that of the hcal?
                                                            // nb this only is problem if the cluster and the assigned layer are different
                                                            //particle.setPath(path);
                                                            //particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
@@ -402,7 +402,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   double charge = ParticleData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
-  Id::type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
+  Id::Type newid = Id::makeParticleId(fastsim::enumSource::RECONSTRUCTION);
   //TODO check field and charge match?????
   PFParticle particle{newid, track};
   //particle.setPath(track.path());

@@ -9,7 +9,6 @@
 #include "BlockSplitter.h"
 #include "PFBlock.h"
 #include "BlockBuilder.h"
-#include "Id.h"
 
 //const BlockBuilder emptyBlockBuilder;
 
@@ -60,16 +59,18 @@ std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
  ##self.history_nodes[block.uniqueid].add_child(history_nodes[subblockid])
  
  #set the original block to be inactive*/
+#include "Id.h"
+
 int test_BlockSplitter() {
-  Id::type id1 = Id::makeECALClusterId();
-  Id::type id2 = Id::makeHCALClusterId();
-  Id::type id3 = Id::makeTrackId();
+  Id::Type id1 = Id::makeECALClusterId();
+  Id::Type id2 = Id::makeHCALClusterId();
+  Id::Type id3 = Id::makeTrackId();
   
-  Id::type id4 = Id::makeECALClusterId();
-  Id::type id5 = Id::makeHCALClusterId();
-  Id::type id6 = Id::makeTrackId();
+  Id::Type id4 = Id::makeECALClusterId();
+  Id::Type id5 = Id::makeHCALClusterId();
+  Id::Type id6 = Id::makeTrackId();
   
-  std::vector<Id::type> ids {id1,id2,id3, id4,id5,id6};
+  std::vector<Id::Type> ids {id1,id2,id3, id4,id5,id6};
   
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);

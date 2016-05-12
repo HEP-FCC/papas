@@ -15,20 +15,21 @@
 #include "ParticleData.h"
 #include "Path.h"
 #include "Helix.h"
+#include "Definitions.h"
 
 
-PFParticle::PFParticle(long uniqueid,const Track& track) :
-PFParticle(uniqueid,
+PFParticle::PFParticle(long uniqueid,const Track& track) : //TODO check what this is used for
+    PFParticle(uniqueid,
             211 * track.charge(),
             TLorentzVector(track.p3(), track.energy()),
-            track.path()->namedPoint("vertex"),
+            track.path()->namedPoint(papas::Position::kVertex),
             track.path()->field()) {
 }
 
 PFParticle::PFParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
-Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
-m_vertex(vertex),
-m_isHelix(fabs(charge())>0.5)
+  Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
+  m_vertex(vertex),
+  m_isHelix(fabs(charge())>0.5)
 {
   if (m_isHelix)
     m_path = std::make_shared<Helix>(tlv, vertex, field, charge());
@@ -47,9 +48,9 @@ void PFParticle::setPath(const Path& path) {
 }*/
 
 
-TVector3 PFParticle::pathPosition(std::string name) const
+TVector3 PFParticle::pathPosition(papas::Position layer) const
 {
-  return m_path->namedPoint(name);
+  return m_path->namedPoint(layer);
 }
 
 

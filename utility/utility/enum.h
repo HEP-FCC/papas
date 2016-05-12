@@ -1,5 +1,5 @@
 //
-//  enums.h
+//  Definitions.h
 //  fastsim
 //
 //  Created by Alice Robson on 12/01/16.
@@ -12,7 +12,7 @@
 
 namespace fastsim {
   //ENUM_WITH_STRINGS(enumDataType , PARTICLE, CLUSTER, TRACK)
-   ENUM_WITH_STRINGS(enumLayer , NONE, HCAL, ECAL, TRACKER)
+  // ENUM_WITH_STRINGS(enumLayer , NONE, HCAL, ECAL, TRACKER)
    ENUM_WITH_STRINGS(enumSubtype , RAW, MERGED, SMEARED)
    ENUM_WITH_STRINGS(enumSource , NONE, SIMULATION, RECONSTRUCTION, OBSERVED)
 }

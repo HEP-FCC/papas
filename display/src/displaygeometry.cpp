@@ -11,9 +11,9 @@ std::map<std::string, int> goldCOLORMap {
    {"Hcal" , kBlue - 10}
 };
 
-std::map<fastsim::enumLayer, int> gCOLORMap {
-   {fastsim::enumLayer::ECAL , kRed - 10},
-   {fastsim::enumLayer::HCAL , kBlue - 10}
+std::map<papas::XLayer, int> gCOLORMap {
+   {papas::XLayer::kEcal , kRed - 10},
+   {papas::XLayer::kHcal , kBlue - 10}
 };
 
 void GDetectorElement::Draw(const std::string& projection) const 

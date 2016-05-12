@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "TVector3.h"
+#include "Id.h"
 
 class Cluster{
 public:
@@ -24,23 +25,23 @@ public:
   double pt() const       {return m_pt;}
   double energy() const   {return m_energy;}
   double eta() const      {return m_position.Eta();}
-  long id() const         {return m_uniqueId;}
+  Id::Type id() const         {return m_uniqueId;}
   TVector3 position() const {return m_position;}
   void setEnergy(double energy);
   void setSize(double value) ;
-  std::vector<long> subClusters() const { return m_subClusters;};
+  std::vector<Id::Type> subClusters() const { return m_subClusters;};
   static double s_maxEnergy; //AJR is this in the right place
   
   friend std::ostream& operator<<(std::ostream& os, const Cluster& cluster); //TODO move to helper class
   
 protected:
-  long m_uniqueId;
+  Id::Type m_uniqueId;
   double m_size;
   double m_angularSize;
   double m_pt;
   TVector3 m_position;
   double m_energy;
-  std::vector<long> m_subClusters;
+  std::vector<Id::Type> m_subClusters;
 };
 
 

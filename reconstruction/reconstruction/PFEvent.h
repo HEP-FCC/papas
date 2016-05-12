@@ -23,23 +23,23 @@ class Cluster;
 
 
 //TODO home for typedefs
-typedef std::vector<Id::type> Ids;
-typedef DAG::Node<Id::type> PFNode;
-typedef std::unordered_map<Id::type, PFNode> Nodes;
-typedef std::unordered_map<Id::type, Track> Tracks;
-typedef std::unordered_map<Id::type, PFBlock> Blocks;
-typedef std::unordered_map<Id::type, Cluster> Clusters;
+typedef std::vector<Id::Type> Ids;
+typedef DAG::Node<Id::Type> PFNode;
+typedef std::unordered_map<Id::Type, PFNode> Nodes;
+typedef std::unordered_map<Id::Type, Track> Tracks;
+typedef std::unordered_map<Id::Type, PFBlock> Blocks;
+typedef std::unordered_map<Id::Type, Cluster> Clusters;
 extern Nodes emptyNodes;
 
 class PFEvent {
 public:
   PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
-  bool compare(Id::type id1, Id::type id2) const;
-  double energy(Id::type id1) const;
-  const Track& track(Id::type id ) const;
-  const Cluster& cluster(Id::type id) const;
-  const class Cluster& ECALCluster(Id::type id) const;
-  const class Cluster& HCALCluster(Id::type id) const;
+  bool compare(Id::Type id1, Id::Type id2) const;
+  double energy(Id::Type id1) const;
+  const Track& track(Id::Type id ) const;
+  const Cluster& cluster(Id::Type id) const;
+  const class Cluster& ECALCluster(Id::Type id) const;
+  const class Cluster& HCALCluster(Id::Type id) const;
   Ids elementIds() const;
   Nodes& historyNodes() { return m_historyNodes;} //allow these to be changed
   const Clusters& ecalClusters() const { return m_ecals;}

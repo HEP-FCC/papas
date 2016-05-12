@@ -7,7 +7,7 @@
 //
 
 #include "Distance.h"
-#include "Id.h"
+//#include "Id.h"
 #include "Cluster.h"
 #include "Track.h"
 #include "deltar.h"
@@ -54,13 +54,13 @@ m_isLinked(islinked)
 Distance::Distance(const Cluster& cluster,const Track& track)
 : m_distance(-1), m_isLinked(false)
 {
-  std::string lname="_ECALin";
-  if(Id::layer(cluster.id())==fastsim::enumLayer::HCAL) //TODO sort this and make an ENUM instead of lname
-    lname="_HCALin";
-  
-  if (track.path()->hasNamedPoint(lname)) { //check exists {
-    TVector3 pos = track.path()->namedPoint(lname);
-    setDistanceToPoint(pos,cluster);
+  papas::Position cyl_layer = papas::Position::kEcalIn;
+  if (Id::layer(cluster.id()) == papas::XLayer::kHcal) {
+    cyl_layer = papas::Position::kHcalIn;
+  }
+  if (track.path()->hasNamedPoint(cyl_layer)) { //check exists {
+    TVector3 pos = track.path()->namedPoint(cyl_layer);
+    setDistanceToPoint(pos, cluster);
   }
   //TODO throw error
 }

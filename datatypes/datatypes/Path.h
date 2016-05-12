@@ -9,6 +9,7 @@
 #include <vector>
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "Definitions.h"
 
 //temp
 #include <iostream>
@@ -21,13 +22,14 @@ class Path {
   /// Path base class is for straightline.
   ///
 public:
-  typedef std::unordered_map<std::string, TVector3> Points;  // TODO make this an enumeration
+  typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;  // TODO make this an enumeration
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
   Path(const TLorentzVector& p4, TVector3 origin, double field);
   Path();
 
-  void addPoint(std::string label, TVector3 vec) { m_points[label] = vec; }
+  //void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
+  void addPoint(papas::Position layer, TVector3 vec) { m_points[layer] = vec; }
   double timeAtZ(double z) const;
   double deltaT(double path_length) const;
   double vZ() const;
@@ -35,8 +37,8 @@ public:
   double speed() const { return m_speed; }
   TVector3 unitDirection() const { return m_unitDirection; }
   TVector3 origin() const { return m_origin; }
-  bool hasNamedPoint(std::string name) const;
-  TVector3 namedPoint(std::string name) const;
+  bool hasNamedPoint(papas::Position layer) const;
+  TVector3 namedPoint(papas::Position layer) const;
   virtual TVector3 pointAtTime(double time) const;
   const Points& points() const { return m_points; }
   double field() const { return m_field; }

@@ -24,7 +24,8 @@
 #include "CMS.h"
 #include "Particle.h"
 #include "Simulator.h"
-#include "path.h"
+#include "Path.h"
+#include "Helix.h"
 #include "displaygeometry.h"
 #include "displaycore.h"
 #include "displaypfobjects.h"
@@ -33,9 +34,10 @@
 #include "Track.h"
 #include "PFParticle.h"
 #include "Id.h"
+#include "Definitions.h"
 
 //include "random.h"
-#include "rand.h"
+#include "random.h"
 
 //gtest test
 #include "gtest/gtest.h"
@@ -91,8 +93,8 @@ TEST(fastsim,Structures){
    //testing cylinders etc
    // Try base classes ;
    Material M(1, 1);
-   SurfaceCylinder S("empty");
-   VolumeCylinder V("new", 4, 6, 3, 6);
+  SurfaceCylinder S(papas::Position::kEcalIn);
+  VolumeCylinder V(papas::XLayer::kEcal, 4, 6, 3, 6);
    return SUCCEED();
 }
 
@@ -147,9 +149,9 @@ void testGraphs()
 
 TEST(fastsim,Cylinder){
 
-   auto cyl1 = SurfaceCylinder("cyl1", 1, 2);
-   auto cyl2 = SurfaceCylinder("cyl2", 0.7, 1.5);
-   auto subcyl = VolumeCylinder("subcyl", 1 ,2, 0.7, 1.5 );
+   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1, 2);
+   auto cyl2 = SurfaceCylinder(papas::Position::kEcalIn, 0.7, 1.5);
+   auto subcyl = VolumeCylinder(papas::XLayer::kEcal, 1 ,2, 0.7, 1.5 );
    
    EXPECT_EQ(subcyl.inner().getRadius(),0.7 );
    EXPECT_EQ(subcyl.inner().Z(),1.5);
@@ -226,8 +228,8 @@ TEST(fastsim, Canvas) { //change to concrete object or unique pointer is there i
 TEST(fastsim, StraightLine){
    TVector3 origin {0,0,0};
    StraightLinePropagator propStraight;
-   auto cyl1 = SurfaceCylinder("cyl1", 1, 2);
-   auto cyl2 = SurfaceCylinder("cyl2", 2, 1);
+   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1, 2);
+   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2, 1);
    
    TLorentzVector tlv{1, 0, 1, 2.};
    long uid=Id::makeParticleId(fastsim::enumSource::SIMULATION);
@@ -238,10 +240,10 @@ TEST(fastsim, StraightLine){
    
    // test extrapolation to barrel
    EXPECT_EQ(points.size(),3UL); 
-   EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
-   EXPECT_NEAR(points["cyl1"].Z(), 1. ,1e-6);
+  EXPECT_NEAR(points[papas::Position::kEcalIn].Perp(), 1.,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Z(), 1. ,1e-6);
    // test extrapolation to endcap
-   EXPECT_NEAR(points["cyl2"].Z(), 1. ,1e-6);
+   EXPECT_NEAR(points[papas::Position::kEcalOut].Z(), 1. ,1e-6);
    
    //testing extrapolation to -z
    tlv=TLorentzVector(1, 0, -1, 2.);
@@ -251,10 +253,10 @@ TEST(fastsim, StraightLine){
    propStraight.propagateOne(photon, cyl2);
    points=photon.path()->points();
    EXPECT_EQ(points.size(),3UL);
-   EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
-   EXPECT_NEAR(points["cyl1"].Z(), -1. ,1e-6);
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Perp(), 1.,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Z(), -1. ,1e-6);
    // test extrapolation to endcap
-   EXPECT_NEAR(points["cyl2"].Z(), -1. ,1e-6);
+   EXPECT_NEAR(points[papas::Position::kEcalOut].Z(), -1. ,1e-6);
 
    
    // extrapolating from a vertex close to +endcap
@@ -262,22 +264,22 @@ TEST(fastsim, StraightLine){
    photon = PFParticle(uid,22,tlv , {0,0,1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
-   EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Perp(), .5,1e-6 );
 
    // extrapolating from a vertex close to -endcap
    tlv=TLorentzVector(1, 0, -1, 2.);
    photon = PFParticle(uid,22,tlv, {0,0,-1.5}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
-   EXPECT_NEAR(points["cyl1"].Perp(), .5,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Perp(), .5,1e-6 );
    
    // extrapolating from a non-zero radius
    tlv=TLorentzVector(0, 0.5, 1, 2.);
    photon = PFParticle(uid,22,tlv, {0.,0.5,0,}, 0.);
    propStraight.propagateOne(photon, cyl1);
    points=photon.path()->points();
-   EXPECT_NEAR(points["cyl1"].Perp(), 1.,1e-6 );
-   EXPECT_NEAR(points["cyl1"].Z(), 1.,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Perp(), 1.,1e-6 );
+   EXPECT_NEAR(points[papas::Position::kEcalIn].Z(), 1.,1e-6 );
    
 }
 
@@ -334,8 +336,8 @@ void test_Structures()
   //testing cylinders etc
   std::cout << "Try base classes\n";
   Material M(1, 1);
-  SurfaceCylinder S("empty");
-  VolumeCylinder V("new", 4, 6, 3, 6);
+  SurfaceCylinder S(papas::Position::kEcalIn);
+  VolumeCylinder V(papas::XLayer::kEcal, 4, 6, 3, 6);
 }
 
 

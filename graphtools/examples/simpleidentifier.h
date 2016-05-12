@@ -13,7 +13,7 @@
 enum class enumDataType {PARTICLE, TRACK, CLUSTER};
 enum class enumSubType {RAW, MERGED, SMEARED};
 
-class Id {
+class Identifier {
 public:
    Identifier() {};
    static long makeIdentifier(enumDataType datatype, enumSubType subtype);

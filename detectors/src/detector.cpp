@@ -9,7 +9,7 @@
 #include "geometry.h"
 
 
-DetectorElement::DetectorElement(fastsim::enumLayer layer, const  VolumeCylinder& volume , const Material& material) :
+DetectorElement::DetectorElement(papas::XLayer layer, const  VolumeCylinder& volume , const Material& material) :
    m_volume(volume), m_material(material), m_layer(layer)
 {}
 
@@ -33,12 +33,12 @@ const std::list<SurfaceCylinder>& Detector::sortedCylinders()
    return m_cylinders;*/
 }
 
-std::shared_ptr<const Calorimeter> Detector::calorimeter(fastsim::enumLayer layer) const{
+std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::XLayer layer) const{
   switch (layer) {
-    case fastsim::enumLayer::ECAL:
+    case papas::XLayer::kEcal:
       return m_ecal;
       break;
-    case fastsim::enumLayer::HCAL:
+    case papas::XLayer::kHcal:
       return m_hcal;
       break;
     default:
@@ -47,16 +47,15 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(fastsim::enumLayer laye
   }
 }
 
-//const DetectorElement& Detector::element(fastsim::enumLayer layer) const
-std::shared_ptr<const DetectorElement> Detector::element(
-   fastsim::enumLayer layer) const
+//const DetectorElement& Detector::element(Id::Layer layer) const
+std::shared_ptr<const DetectorElement> Detector::element(papas::XLayer layer) const
 {
 
    switch (layer) {
-      case fastsim::enumLayer::ECAL:
+      case papas::XLayer::kEcal:
          return m_ecal;
          break;
-      case fastsim::enumLayer::HCAL:
+      case papas::XLayer::kHcal:
          return m_hcal;
          break;
      default:
@@ -70,8 +69,9 @@ std::shared_ptr<const DetectorElement> Detector::element(
    return nullptr;
 }
 
-Field::Field(fastsim::enumLayer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
-DetectorElement(layer,volume,material), m_magnitude(magnitude)
+Field::Field(papas::XLayer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
+  DetectorElement(layer, volume, material),
+  m_magnitude(magnitude)
 {}
 
 /*

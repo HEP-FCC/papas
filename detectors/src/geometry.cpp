@@ -7,19 +7,25 @@
 #include "TVector3.h"
 #include "geometry.h"
 
-SurfaceCylinder::SurfaceCylinder(const std::string& name, double rad ,
-                                 double z): m_name(name), m_radius(rad), m_z(z)
+SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad ,double z):
+   m_layer(layer), m_radius(rad), m_z(z)
 {
+  }
 
-}
 
-
-VolumeCylinder::VolumeCylinder(const std::string& name, double outerrad,
-                               double outerz, double innerrad, double innerz) :
-   m_name(name),
-   m_outer("_" + name + "out", outerrad, outerz),
-   m_inner("_" + name + "in", innerrad, innerz)
+VolumeCylinder::VolumeCylinder(papas::XLayer layer, double outerrad, double outerz, double innerrad, double innerz):
+m_layer(layer),
+m_outer(papas::Position::kHcalOut, outerrad, outerz),
+m_inner(papas::Position::kHcalIn, innerrad, innerz)
 {
+ 
+  
+  if (layer==papas::XLayer::kEcal) {
+    m_outer = SurfaceCylinder(papas::Position::kEcalOut, outerrad, outerz);
+    m_inner = SurfaceCylinder(papas::Position::kEcalIn, innerrad, innerz);
+  }
+ 
+  
    if (innerrad > outerrad) {
       std::cout << "ERROR: outer radius of subtracted cylinder must be smaller";
    } else if (innerz > outerz) {
@@ -43,3 +49,10 @@ bool VolumeCylinder::Contains(const TVector3& point) const
    } else
       return false;
 }
+
+/*
+const std::string VolumeCylinder::innerName() const {
+  if (m_layer==Id::Layer::kEcal)
+    return "_ECALin";
+  return "_HCALin";
+}*/

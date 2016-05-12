@@ -10,6 +10,7 @@
 #include "Track.h"
 #include "PFParticle.h"
 #include "path.h"
+//#include "Id.h"
 
 GBlob::GBlob(const Cluster& cluster)
 {
@@ -21,7 +22,7 @@ GBlob::GBlob(const Cluster& cluster)
    double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
    //set the layer
-   m_layer = to_str(Id::layer(cluster.id()));
+   //m_layer = Id::layer(cluster.id());
 
    //set the color according to particle type
    int color = 1;
@@ -72,8 +73,8 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
 {
 
    //some things are not sensible so skip these
-   if ( (m_layer == "ECAL" && projection == "HCAL_thetaphi") ||
-         (m_layer == "HCAL" && projection == "ECAL_thetaphi"))
+  if ( (m_layer == papas::XLayer::kEcal && projection == "HCAL_thetaphi") ||
+         (m_layer == papas::XLayer::kHcal && projection == "ECAL_thetaphi"))
       return;
 
    std::string useopt = opt + "psame";
@@ -160,7 +161,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
 GTrajectory::GTrajectory(const  PFParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
-   const std::unordered_map<std::string, TVector3>& points = particle.path()->points();
+  const Path::Points& points = particle.path()->points();
    int npoints = points.size();
    std::vector<double> X;
    std::vector<double> Y;
@@ -218,7 +219,7 @@ GTrajectory::GTrajectory(const  Track& track, int linestyle,
 {
   
   //TODO implement a helix curve here somewhere
-  const std::unordered_map<std::string, TVector3>& points=track.path()->points();
+  const Path::Points& points=track.path()->points();
   int npoints = points.size();
   std::vector<double> X;
   std::vector<double> Y;

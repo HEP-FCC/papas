@@ -18,7 +18,7 @@ StraightLinePropagator::StraightLinePropagator()
 }
 
 void StraightLinePropagator::propagateOne(PFParticle& ptc,
-                                          std::string cylindername,
+                                          papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius)
 {
@@ -57,7 +57,7 @@ void StraightLinePropagator::propagateOne(PFParticle& ptc,
          std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
           destination.Z() << std::endl;
 #endif
-      line->addPoint(cylindername, destination);
+      line->addPoint(layer, destination);
    }
 }
 
@@ -65,7 +65,7 @@ void StraightLinePropagator::propagateOne(PFParticle& ptc,
 void StraightLinePropagator::propagateOne(PFParticle& ptc,
                                           const SurfaceCylinder & cyl)
 {
-   propagateOne(ptc, cyl.getName(), cyl.Z(), cyl.getRadius());
+   propagateOne(ptc, cyl.Layer(), cyl.Z(), cyl.getRadius());
 }
 
 
@@ -97,7 +97,7 @@ void HelixPropagator::propagateOne(PFParticle& ptc,
       }
       
       if (fabs(destination.Z())<cyl.Z()){
-         helix->addPoint(cyl.getName(),destination);
+         helix->addPoint(cyl.Layer(),destination);
       }
       else
          is_looper = true;
@@ -108,7 +108,7 @@ void HelixPropagator::propagateOne(PFParticle& ptc,
       if (udir_z < 0.)
          destz = -destz;
       TVector3 destination = helix->pointAtZ(destz);
-      helix->addPoint(cyl.getName(), destination);
+      helix->addPoint(cyl.Layer(), destination);
    }
    
 }

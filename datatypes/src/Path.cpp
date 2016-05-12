@@ -18,7 +18,7 @@ Path::Path(const TLorentzVector& p4, TVector3 origin, double field)
       m_speed(p4.Beta() * gconstc),
       m_origin(origin.X(), origin.Y(), origin.Z()),
       m_field(field) {
-  m_points["vertex"] = m_origin;
+        m_points[papas::Position::kVertex] = m_origin;
 }
 
 /*!
@@ -52,13 +52,13 @@ double Path::vPerp() const {
   return m_speed * m_unitDirection.Perp();
 }
 
-bool Path::hasNamedPoint(std::string name) const {  // TODO change to enum {
-  return (m_points.find(name) != m_points.end());
+bool Path::hasNamedPoint(papas::Position layer) const {  // TODO change to enum {
+  return (m_points.find(layer) != m_points.end());
 }
 
-TVector3 Path::namedPoint(std::string name) const {  // const //TODO change to enum
-  if (hasNamedPoint(name)) {
-    return m_points.at(name);  
+TVector3 Path::namedPoint(papas::Position layer) const {  // const //TODO change to enum
+  if (hasNamedPoint(layer)) {
+    return m_points.at(layer);
   } else
     return TVector3(0, 0, 0);  // todo consider if this is sufficient for missing value case
 }

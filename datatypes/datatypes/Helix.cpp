@@ -7,6 +7,7 @@
 //
 
 #include "Helix.h"
+#include "Definitions.h"
 #include "deltar.h"
 
 
