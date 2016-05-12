@@ -23,12 +23,19 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "Path.h"
+#include "random.h"
 
 
 extern int run_tests(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
 
+  randomgen::RandExponential rexp{49.3};
+  rexp.setSeed(100);
+  std::cout << rexp.next() << rexp.next();
+  
+  
+  
   // Create CMS detector and simulator
   CMS CMSDetector;
   Simulator sim = Simulator{CMSDetector};

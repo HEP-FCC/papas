@@ -291,16 +291,16 @@ TEST(fastsim, StraightLine){
 TEST(utility, RandomExp)
 {
    //seed it to have known start point
-  randomgen::setSeed(100);
+  randomgen::setEngineSeed(100);
    randomgen::RandExponential rexp(5.);
    double r1 = rexp.next();
-    randomgen::setSeed(100);
+    randomgen::setEngineSeed(100);
    randomgen::RandExponential rexp3(5.);
    double r2 = rexp3.next();
    EXPECT_EQ(r1, r2);
    
    //use a random start point so should not give same answers
-    randomgen::setSeed();
+    randomgen::setEngineSeed();
    randomgen::RandExponential rexpA(5.);
    double r3 = rexpA.next();
   //std::cout << rexpA()<<", "<< rexpA()<<", "<< rexpA()<<", "<< rexpA();
@@ -537,7 +537,7 @@ void test_RandomNew()
   for (auto i =1 ; i <20; i++) {
     std::cout<<rgen2.next()<<",";
   }
-  randomgen::setSeed();
+  randomgen::setEngineSeed();
   std::cout<<std::endl<<std::endl <<std::endl;
   std::cout<<std::endl <<std::endl;
   auto rgen3 = randomgen::RandUniform(1,2);
@@ -550,19 +550,19 @@ void test_RandomNew()
 TEST(utility, randomgen)
 {
   //seed it to have known start point
-  randomgen::setSeed(100);
+  randomgen::setEngineSeed(100);
   randomgen::RandNormal rnorm(5., 1.);
   double r1 = rnorm.next();
 
   //reseed at same point
-  randomgen::setSeed(100);
+  randomgen::setEngineSeed(100);
   randomgen::RandNormal rnorm3(5., 1.);
   double r2 = rnorm3.next();
   //test random normal seeded comes out same
   EXPECT_EQ(r1, r2);
 
   //seed randomly
-  randomgen::setSeed();
+  randomgen::setEngineSeed();
   randomgen::RandNormal rnormA(5., 1.);
   double r3 = rnormA.next();
   double r5 = rnormA.next();
