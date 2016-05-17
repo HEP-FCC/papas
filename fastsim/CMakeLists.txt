@@ -96,7 +96,15 @@ ${MAINDIR}/utility/utility/
 ${MAINDIR}/reconstruction/reconstruction/
 )
 
-file(GLOB_RECURSE headers *.h)
+file(GLOB_RECURSE headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+${MAINDIR}/datatypes/datatypes/*.h
+${MAINDIR}/fastsim/*.h
+${MAINDIR}/display/display/*.h
+${MAINDIR}/detectors/detectors/*.h
+${MAINDIR}/simulation/simulation/*.h
+${MAINDIR}/graphtools/graphtools/*.h
+${MAINDIR}/utility/utility/*.h
+${MAINDIR}/reconstruction/reconstruction/*.h)
 
 project(event)
 
@@ -133,17 +141,17 @@ REFLEX_GENERATE_DICTIONARY(fastsimDict ${headers} SELECTION selection.xml)
 add_library(fastsim SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h ) # fastsimDict.cpp)
+${MAINDIR}/utility/utility/random.h  fastsimDict.cxx)
 target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
 install(TARGETS fastsim DESTINATION lib)
 
 ## Install the dictionary
-#if (${ROOT_VERSION} GREATER 6)
-#install(FILES
-#"${PROJECT_BINARY_DIR}/example-lib-alice/fastsimDict_rdict.pcm"
-#DESTINATION lib COMPONENT dev)
-#endif()
+if (${ROOT_VERSION} GREATER 6)
+install(FILES
+"${PROJECT_BINARY_DIR}/fastsimDict_rdict.pcm"
+DESTINATION lib COMPONENT dev)
+endif()
 
 
 
