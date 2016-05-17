@@ -96,6 +96,8 @@ ${MAINDIR}/utility/utility/
 ${MAINDIR}/reconstruction/reconstruction/
 )
 
+file(GLOB_RECURSE headers *.h)
+
 project(event)
 
 # You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
@@ -115,21 +117,33 @@ add_definitions(${ROOT_CXX_FLAGS})
 find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-#message(${sources})
+message(STATUS ${headers})
 
 #get_cmake_property(_variableNames VARIABLES)
 #foreach (_variableName ${_variableNames})
 #message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
+
+REFLEX_GENERATE_DICTIONARY(fastsimDict ${headers} SELECTION selection.xml)
+
+
+
+
 add_library(fastsim SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
-${MAINDIR}/utility/src/rand.cpp
-${MAINDIR}/utility/utility/rand.h
-)
-target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${GTEST_LIBRARIES})
+${MAINDIR}/utility/src/random.cpp
+${MAINDIR}/utility/utility/random.h ) # fastsimDict.cpp)
+target_link_libraries(fastsim ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
+install(TARGETS fastsim DESTINATION lib)
 
+## Install the dictionary
+#if (${ROOT_VERSION} GREATER 6)
+#install(FILES
+#"${PROJECT_BINARY_DIR}/example-lib-alice/fastsimDict_rdict.pcm"
+#DESTINATION lib COMPONENT dev)
+#endif()
 
 
 

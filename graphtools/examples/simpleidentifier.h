@@ -7,16 +7,16 @@
 
 #ifndef simpleidentifier_h
 #define simpleidentifier_h
-#include <stdint.h>
+
 
 
 enum class enumDataType {PARTICLE, TRACK, CLUSTER};
 enum class enumSubType {RAW, MERGED, SMEARED};
 
-class Identifier {
+class Id {
 public:
-   Identifier() {};
-   static long makeIdentifier(enumDataType datatype, enumSubType subtype);
+   Id() {};
+   static long makeId(enumDataType datatype, enumSubType subtype);
    //Access stored Identifier information
    static enumDataType        dataType(long id);
    static enumSubType         subType(long id);

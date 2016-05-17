@@ -27,7 +27,9 @@
 #include "geometry.h"
 #include "CMS.h"
 #include "Particle.h"
-#include "datatypes.h"
+#include "PFParticle.h"
+#include "Cluster.h"
+#include "Track.h"
 #include "Simulator.h"
 #include "path.h"
 #include "TVector3.h"
@@ -61,7 +63,7 @@ void tryR(int argc, char* argv[]) {
    PFParticle& photon =sim.addParticle(22, M_PI/2. +0.025*i, M_PI/2.+0.3*i, 100);
     sim.simulatePhoton(photon);
     // R test of smearing
-    Ids c_Ids=sim.linkedECALSmearedClusterIds(photon.id());
+    Ids c_Ids=sim.linkedEcalSmearedClusterIds(photon.id());
     smeared_clust_Ids.insert(std::end(smeared_clust_Ids),std::begin(c_Ids) ,std::end(c_Ids));
     
   }
@@ -76,7 +78,7 @@ void tryR(int argc, char* argv[]) {
   // Rtest of smearing
    std::vector<double> w;
    w.reserve(10000);
-   const Clusters& clusters =sim.smearedECALClusters();
+   const Clusters& clusters =sim.smearedEcalClusters();
    for (auto x :smeared_clust_Ids)
    {
    w.push_back( clusters.find(x)->second.energy());
@@ -88,7 +90,7 @@ void tryR(int argc, char* argv[]) {
    //Check density plot for smeared Photons
    std::vector<double> w2;
    w2.reserve(10000);
-   for (auto x :sim.smearedECALClusters())
+   for (auto x :sim.smearedEcalClusters())
    { if (Id::isSmeared(x.second.id()))
    w2.push_back( x.second.energy());
    }

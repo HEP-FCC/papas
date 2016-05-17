@@ -17,7 +17,7 @@ int Id::s_counter =
    0; /// static which will be used to create a unique long
 
 
-long Id::makeIdentifier(enumDataType datatype,   // 2 bits
+long Id::makeId(enumDataType datatype,   // 2 bits
                                 enumSubType subtype)    // 3 bits
 {
    s_counter++; //default is to start at 1 for first id so that id=0 means unset
