@@ -13,7 +13,9 @@
 
 #include "NodeDefinitions.h"
 #include "PFBlock.h"
-class Track;
+
+namespace papas {
+  class Track;
 class Cluster;
 
 
@@ -44,6 +46,6 @@ private:
   Blocks m_blocks;
 };
 
-
+} // end namespace papas
 
 #endif /* PFEvent_h */

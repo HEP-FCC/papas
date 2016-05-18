@@ -27,7 +27,7 @@
 
 
 extern int run_tests(int argc, char* argv[]);
-
+using namespace papas;
 int main(int argc, char* argv[]) {
 
   randomgen::RandExponential rexp{49.3};

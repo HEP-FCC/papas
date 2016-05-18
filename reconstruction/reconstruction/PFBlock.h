@@ -15,7 +15,8 @@
  *  @date    2016-04-05
  */
 
-// TODO namespace
+
+namespace papas {
 
 /** A Particle Flow Block stores a set of element ids that are connected to each other
  together with the edge data (distances) for each possible edge combination
@@ -99,4 +100,5 @@ private:
   Edges m_edges;              // all the edges for elements in this block
   const class Edge& edge(Id::Type id1, Id::Type id2) const;
 };
+} // end namespace papas
 #endif /* PFBlock_h */

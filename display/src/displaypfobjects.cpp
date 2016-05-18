@@ -9,8 +9,10 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
-#include "path.h"
+#include "Path.h"
 //#include "Id.h"
+
+namespace papas {
 
 GBlob::GBlob(const Cluster& cluster)
 {
@@ -341,3 +343,4 @@ void GTrajectories::Draw(const std::string& projection) const
    }
 }
 
+} // end namespace papas

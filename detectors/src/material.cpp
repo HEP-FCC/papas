@@ -5,6 +5,8 @@
 
 #include "material.h"
 
+namespace papas {
+
 Material::Material(/*Id::Layer layer,*/ double x0, double lambdaI) :
 //m_layer(layer),
     m_x0(x0),
@@ -45,6 +47,8 @@ double TestMaterial::PathLength(/*AJRTODO const Particle& ptc)*/)
 {
    return 99.999;
 }
+
+} // end namespace papas
 /*
 void = Material('void', 0, 0)
 

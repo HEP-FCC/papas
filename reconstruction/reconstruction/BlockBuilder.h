@@ -24,8 +24,9 @@
  *  @date    2016-04-06
  */
 
-//TODO namespace
-class PFEvent;
+
+namespace papas {
+  class PFEvent;
 
 class BlockBuilder: public GraphBuilder {
 public:
@@ -55,5 +56,5 @@ private:
   
 };
 
-
+} // end namespace papas
 #endif /* BlockBuilder_h */

@@ -12,6 +12,9 @@
 #include "Distance.h"
 #include "Ruler.h"
 
+
+namespace papas {
+
 PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
   m_pfEvent(pfevent),
   m_historyNodes(pfevent.historyNodes()),
@@ -46,5 +49,5 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
  
 }
 
-
+} // end namespace papas
 

@@ -13,8 +13,11 @@
 #include "TCanvas.h"
 #include "TH1.h"
 #include "TH2F.h"
-#include "enummanager.h"
+#include "Enummanager.h"
 
+
+namespace papas {
+  
 class ViewPane;
 class Drawable;
 
@@ -89,7 +92,7 @@ private:
 
 }  ;
 
-
+} // end namespace papas
 #endif
 /*
 class ViewPane {

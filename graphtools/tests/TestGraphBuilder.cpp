@@ -3,6 +3,9 @@
 #include "Id.h"
 #include "Edge.h"
 
+
+namespace papas {
+
 TEST(GraphBuilder, one) {
   
   Id::Type id1 = Id::makeECALClusterId();
@@ -44,3 +47,5 @@ TEST(GraphBuilder, one) {
   //std::cout<<graphbuilder;
 
 }
+  
+} // end namespace papas

@@ -9,6 +9,9 @@
 #include <string>
 #include "TVector3.h"
 #include "Definitions.h"
+
+
+namespace papas {
 /**
   Component of Volume which is used to define a detector element
  */
@@ -44,5 +47,5 @@ private:
    SurfaceCylinder m_outer;
    SurfaceCylinder m_inner;
 };
-
+} // end namespace papas
 #endif

@@ -7,8 +7,10 @@
 #include "Particle.h"
 #include "Path.h"
 
+
+namespace papas {
+
 class Track;
-class TLorentzVector;
 
 class PFParticle : public Particle {
 public:
@@ -27,4 +29,5 @@ private:
   bool m_isHelix;
 };
 
+} // end namespace papas
 #endif  // PFParticle_H

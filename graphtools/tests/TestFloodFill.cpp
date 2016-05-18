@@ -10,6 +10,9 @@
 #include "FloodFill.h"
 #include <unordered_map>
 
+
+namespace papas {
+
 TEST(floodfill, one) {
   typedef DAG::Node<long> PFNode;
   typedef std::unordered_map<long, PFNode> Nodes;
@@ -33,3 +36,5 @@ TEST(floodfill, one) {
   }
   
 }
+
+} // end namespace papas

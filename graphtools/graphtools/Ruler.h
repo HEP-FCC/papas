@@ -11,6 +11,9 @@
 
 #include <stdio.h>
 #include "Id.h"
+
+namespace papas {
+  
 class Cluster;
 class Track;
 class Distance;
@@ -31,6 +34,6 @@ private:
   
   const PFEvent& m_pfEvent;
 };
-
+} // end namespace papas
 
 #endif /* Ruler_hpp */

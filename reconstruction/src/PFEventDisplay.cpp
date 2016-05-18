@@ -15,6 +15,8 @@
 #include "Cluster.h"
 
 
+namespace papas {
+
 PFEventDisplay::PFEventDisplay(std::list<Projection> views)
 :Display(views){
 }
@@ -36,3 +38,4 @@ void PFEventDisplay::drawPFEvent(const PFEvent& pfEvent) {
   }
   draw();
 }
+} // end namespace papas

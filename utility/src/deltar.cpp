@@ -2,6 +2,9 @@
 #include <cmath>
 #include "TLorentzVector.h"
 
+
+namespace papas {
+
 double deltaPhi(double  p1, double p2)
 {
    ///Computes delta phi, handling periodic limit conditions.'''
@@ -25,3 +28,4 @@ double deltaR(double e1, double p1, double e2, double p2)
     return deltaR(e1.eta(),e1.phi(), p1.eta(), p1.phi()) ;
 }*/
 
+} // end namespace papas

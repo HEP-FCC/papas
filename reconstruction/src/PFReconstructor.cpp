@@ -8,16 +8,10 @@
 
 
 #include "PFReconstructor.h"
-
-
 #include <algorithm>
-
 #include <vector>
 #include <math.h>
-
-
 #include "TLorentzVector.h"
-
 #include "BlockSplitter.h"
 #include "PFParticle.h"
 #include "Path.h"
@@ -27,6 +21,9 @@
 #include "ParticleData.h"
 #include "Cluster.h"
 #include "Track.h"
+
+
+namespace papas {
 
 PFReconstructor::PFReconstructor (PFEvent& pfEvent) :
     m_pfEvent(pfEvent),
@@ -412,6 +409,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   std::cout << "made particle from track " <<particle.pdgId()<< " : " ;//<<  track ;//TODO << particle;
   return particle;
 }
+} // end namespace papas
 
 /*
  def __str__(self):

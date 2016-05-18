@@ -12,6 +12,8 @@
 #include <iostream>
 #include "NodeDefinitions.h"
 
+
+namespace papas {
 class PFEvent;
 
 class PFBlockBuilder {
@@ -38,5 +40,5 @@ private:
   Ids m_uniqueIds;
   // void sortIds(Ids& ids); //sorts elements by type
 };
-
+} // end namespace papas
 #endif /* PFBlockBuilder_hpp */

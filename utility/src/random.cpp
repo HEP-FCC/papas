@@ -62,5 +62,4 @@ double RandExponential::next() {
 void RandExponential::setSeed(double seed) {
   setEngineSeed(seed);
 }
-
-}
+} // end namespace randomgen

@@ -9,6 +9,9 @@
 #include "geometry.h"
 #include "material.h"
 
+
+namespace papas {
+  
 class Particle;
 class Material;
 class VolumeCylinder;
@@ -103,5 +106,5 @@ protected:
 private:
   std::list<SurfaceCylinder> m_cylinders;  // or use pointers here?
 };
-
+} // end namespace papas
 #endif

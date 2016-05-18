@@ -13,6 +13,9 @@
  Contains 4-momentum vector, particle id and accessor functions
  Intended to be used as the base for derived Particle classes
  */
+
+namespace papas {
+
 class Particle {
 public:
   Particle();
@@ -46,5 +49,7 @@ private:
   TVector3 m_startVertex;
   TVector3 m_endVertex;
 };
+  
+} // end namespace papas
 
 #endif

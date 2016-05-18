@@ -1,5 +1,8 @@
 #include "edge.h"
 
+
+namespace papas {
+
 Edge::Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance) :
 m_id1(id1),
 m_id2(id2),
@@ -66,7 +69,12 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
   return os;
 }
 
+
+
+} // end namespace papas
+
 int test_edges() {
+  using namespace papas;
   Id::Type id1=Id::makeECALClusterId();
   Id::Type id2=Id::makeHCALClusterId();
   Id::Type id3=Id::makeTrackId();
@@ -80,4 +88,3 @@ int test_edges() {
   
   return 0;
 }
-

@@ -11,6 +11,8 @@
 #include "Edge.h"
 
 
+namespace papas {
+
 BlockSplitter::BlockSplitter(const Edges& unlinkEdges,
                              PFBlock& block,
                              Nodes& historynodes) :
@@ -106,6 +108,7 @@ int test_BlockSplitter() {
   return 0;
   
 }
- 
+
+} // end namespace papas
  
  

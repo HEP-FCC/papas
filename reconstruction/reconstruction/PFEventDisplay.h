@@ -11,6 +11,9 @@
 
 #include "displaycore.h"
 
+
+namespace papas {
+  
 class PFEvent;
 
 class PFEventDisplay: public Display {
@@ -19,6 +22,6 @@ public:
   void drawPFEvent(const PFEvent& pfevent);
 private:
 };
-
+} // end namespace papas
 
 #endif /* PFEventDisplay_h */

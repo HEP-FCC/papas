@@ -42,7 +42,8 @@ class PFEvent;
  *  @date    2016-04-06
  */
 
-// TODO namespace
+
+namespace papas {
 class PFEvent;
 
 class BlockSplitter {
@@ -61,5 +62,5 @@ public:
 private:
   Blocks m_blocks;
 };
-
+} // end namespace papas
 #endif /* BlockSplitter_h */

@@ -11,8 +11,10 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "deltar.h"
-#include "path.h"
+#include "Path.h"
 
+
+namespace papas {
 
 Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) :
     m_distance(-1),
@@ -27,7 +29,7 @@ Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) :
 }
 
 
-void Distance::setDistanceToPoint(const TVector3& point, const Cluster& cluster)
+  void Distance::setDistanceToPoint(TVector3 point, const Cluster& cluster)
 {
   //TODO check bottom later cluster
       m_distance = (cluster.position()-point).Mag();
@@ -65,6 +67,7 @@ Distance::Distance(const Cluster& cluster,const Track& track)
   //TODO throw error
 }
 
+} // end namespace papas
 
 
 /*

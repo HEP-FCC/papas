@@ -31,9 +31,10 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "Simulator.h"
-#include "path.h"
+#include "Path.h"
 #include "TVector3.h"
 
+using namespace papas;
 void tryR(int argc, char* argv[]);
 void r_density_plot(const std::vector<double>& v, RInside &);
 

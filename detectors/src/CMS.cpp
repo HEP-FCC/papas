@@ -12,10 +12,11 @@
 #include "Track.h"
 #include "geometry.h"
 #include "material.h"
-#include "path.h"
+#include "Path.h"
 #include <cmath>
 #include <vector>
 
+namespace papas {
 /*
  CMSECAL::CMSECAL(papas::Layer layer, const VolumeCylinder& volume,
  const  Material& material , double eta_crack,
@@ -168,6 +169,7 @@ CMSField::CMSField(papas::Layer layer, const VolumeCylinder& volume, double magn
 CMSField::CMSField(papas::Layer layer, const VolumeCylinder&& volume, double magnitude)
     : Field(layer, volume, Material(0, 0), magnitude) {}
 
+} // end namespace papas
 // def space_resolution(self, ptc):
 // pass
 

@@ -12,6 +12,8 @@
 #include "Definitions.h"
 
 
+namespace papas {
+
 /// Path followed by a particle in 3D space.
 class Path {
   ///
@@ -22,7 +24,7 @@ public:
   typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
-  Path(const TLorentzVector& p4, TVector3 origin, double field);
+  Path(TLorentzVector p4, TVector3 origin, double field);
   Path();
 
   //void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
@@ -48,6 +50,6 @@ protected:
   double m_field;  // set to 0 for a straightline
 private:
 };
-
+} // end namespace papas
 
 #endif /* path_h */

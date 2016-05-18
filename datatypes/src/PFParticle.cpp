@@ -17,16 +17,17 @@
 #include "Helix.h"
 #include "Definitions.h"
 
-
+namespace papas {
+  
 PFParticle::PFParticle(long uniqueid,const Track& track) : //TODO check what this is used for
     PFParticle(uniqueid,
             211 * track.charge(),
-            TLorentzVector(track.p3(), track.energy()),
+               TLorentzVector(track.p3(), track.energy()),
             track.path()->namedPoint(papas::Position::kVertex),
             track.path()->field()) {
 }
 
-PFParticle::PFParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+  PFParticle::PFParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
   Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
   m_vertex(vertex),
   m_isHelix(fabs(charge())>0.5)
@@ -74,3 +75,5 @@ bool PFParticle::isElectroMagnetic() const
     return false;
   
 };
+  
+} // end namespace papas

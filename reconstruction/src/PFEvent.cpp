@@ -11,7 +11,9 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "Id.h"
-#include "path.h"
+#include "Path.h"
+
+namespace papas {
 
 /*
 bool PFEvent::compare(Id::Type id1, Id::Type id2) const //TODO check direction of sort
@@ -94,4 +96,4 @@ const Cluster&  PFEvent::cluster(Id::Type id) const {
   return std::move(c); //TODO produce error
 }
 
-
+} // end namespace papas

@@ -16,6 +16,7 @@
 #include "TVector3.h"
 #include "displaygeometry.h"
 
+namespace papas {
 
 //class Cluster;
 class PFParticle;
@@ -66,7 +67,7 @@ private:
    std::list<GBlob> m_gBlobs;
 };
 
-
+} // end namespace papas
 
 
 

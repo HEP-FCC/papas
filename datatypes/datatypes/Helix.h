@@ -9,12 +9,15 @@
 #ifndef Helix_h
 #define Helix_h
 
-#include "path.h"
+#include "Path.h"
+
+
+namespace papas {
 
 class Helix : public Path {
 public:
   Helix();
-  Helix(const TLorentzVector& p4, const TVector3& origin, double field, double charge);
+  Helix(TLorentzVector p4, TVector3 origin, double field, double charge);
   std::vector<double> polarAtTime(double time) const;
   double timeAtPhi(double phi) const;
   double phi(double x, double y) const;
@@ -37,5 +40,7 @@ private:
   TVector3 m_centerXY;
   TVector3 m_extremePointXY;
 };
+  
+} // end namespace papas
 
 #endif /* Helix_h */

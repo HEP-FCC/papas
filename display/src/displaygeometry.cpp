@@ -5,6 +5,8 @@
 #include "displaygeometry.h"
 #include <memory>
 
+namespace papas {
+
 
 std::map<std::string, int> goldCOLORMap {
    {"Ecal" , kRed - 10},
@@ -89,6 +91,8 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> de) :
       color = 0; //Set color = 0 for inner
    }
 }
+  
+} // end namespace papas
 /*
 
  void GDetectorElement::Draw(std::string projection){

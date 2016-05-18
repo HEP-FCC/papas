@@ -8,6 +8,8 @@
 #include "Helix.h"
 
 
+namespace papas {
+
 
 Propagator::Propagator()
 {
@@ -114,7 +116,7 @@ void HelixPropagator::propagateOne(PFParticle& ptc,
 }
 
 
-
+} // end namespace papas
       
        
        

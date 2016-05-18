@@ -9,6 +9,8 @@
 #include "Cluster.h"
 #include "Id.h"
 
+namespace papas {
+
 double Cluster::s_maxEnergy = 0;
 
 
@@ -67,7 +69,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move
 
 
 
-
+} // end namespace papas
 
 /*
  Cluster::Cluster( Cluster && c) :

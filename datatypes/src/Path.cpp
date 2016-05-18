@@ -9,11 +9,13 @@
 #include "Path.h"
 #include <iostream>
 
+namespace papas {
+
 double gconstc = 299792458.0;  // TODO constants.c)
 
 Path::Path() {}
 
-Path::Path(const TLorentzVector& p4, TVector3 origin, double field)
+  Path::Path(TLorentzVector p4, TVector3 origin, double field)
     : m_unitDirection(p4.Vect().Unit()),
       m_speed(p4.Beta() * gconstc),
       m_origin(origin.X(), origin.Y(), origin.Z()),
@@ -62,3 +64,5 @@ TVector3 Path::namedPoint(papas::Position layer) const {  // const //TODO change
   } else
     return TVector3(0, 0, 0);  // todo consider if this is sufficient for missing value case
 }
+
+} // end namespace papas

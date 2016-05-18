@@ -15,7 +15,7 @@
 #include "Definitions.h"
 #include "Id.h"
 
-
+namespace papas {
 
 std::string Particle::stringDescription() const
 {
@@ -32,7 +32,7 @@ std::string Particle::stringDescription() const
 
 
 
-Particle::Particle(int pdgid, double charge, TLorentzVector tlv,
+  Particle::Particle(int pdgid, double charge, TLorentzVector tlv,
                            double status) :
 m_uniqueId(Id::makeParticleId(papas::enumSource::NONE)),
 m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
@@ -72,7 +72,7 @@ Particle::Particle(long id, int pdgid, double charge) :
 }
 
 
-Particle::Particle(long id, int pdgid, double charge, TLorentzVector tlv, double status) :
+  Particle::Particle(long id, int pdgid, double charge, TLorentzVector tlv, double status) :
   m_uniqueId(id),
   m_tlv(tlv),
   m_particleId(pdgid),
@@ -81,4 +81,6 @@ Particle::Particle(long id, int pdgid, double charge, TLorentzVector tlv, double
 {
 
 }
+  
+  } // end namespace papas
 

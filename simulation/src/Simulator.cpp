@@ -13,6 +13,9 @@
 #include "ParticleData.h"
 #include "Path.h"
 
+
+namespace papas {
+
 //using papas::Layer;
 
 Simulator::Simulator(const Detector& d) :
@@ -104,7 +107,7 @@ const Cluster& Simulator::cluster(long clusterId) const {
     return m_hcalClusters.at(clusterId);
 }
 
-PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
+  PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
   double field = m_detector.field()->getMagnitude();
   long uniqueid = Id::makeParticleId(papas::enumSource::SIMULATION);
@@ -161,7 +164,7 @@ Cluster Simulator::makeCluster(PFParticle& ptc, long parentid,papas::Layer layer
   if (!parentid) {
     parentid = ptc.id();
   }
-  long clusterid = Id::makeClusterId(layer, papas::enumSubtype::RAW);
+  long clusterid = Id::makeClusterId(layer, papas::SubType::RAW);
   double energy = ptc.p4().E() * fraction;
   
   //TODO change string to ENUM
@@ -203,7 +206,7 @@ Cluster Simulator::makeSmearedCluster(long parentClusterId) //, double energyres
 {
   //create a new id
   auto layer = Id::layer(parentClusterId);
-  long newclusterid = Id::makeClusterId(layer, papas::enumSubtype::SMEARED);
+  long newclusterid = Id::makeClusterId(layer, papas::SubType::SMEARED);
   const Cluster& parent = cluster(parentClusterId);
   
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
@@ -225,7 +228,7 @@ const Track& Simulator::addTrack(PFParticle& ptc)
 
 
 long Simulator::addSmearedTrack( const Track& track, bool accept) {
-  long smearedTrackId = Id::makeTrackId(papas::enumSubtype::SMEARED);
+  long smearedTrackId = Id::makeTrackId(papas::SubType::SMEARED);
   //double ptResolution = m_detector.tracker()->ptResolution(track);
   //TODO after testing double scale_factor = randomgen::RandNormal(1, ptResolution).next()
   double scale_factor = 1.1;
@@ -268,7 +271,7 @@ Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kCluster,
                         papas::Layer::kEcal,
-                        papas::enumSubtype::SMEARED,
+                        papas::SubType::SMEARED,
                         papas::enumSource::SIMULATION);
 }
 
@@ -276,7 +279,7 @@ Ids  Simulator::linkedRawTrackIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kTrack,
                         papas::Layer::kNone,
-                        papas::enumSubtype::RAW,
+                        papas::SubType::RAW,
                         papas::enumSource::SIMULATION);
 }
 
@@ -284,7 +287,7 @@ Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kTrack,
                         papas::Layer::kNone,
-                        papas::enumSubtype::SMEARED,
+                        papas::SubType::SMEARED,
                         papas::enumSource::SIMULATION);
 }
 
@@ -292,7 +295,7 @@ Ids Simulator::linkedParticleIds(long nodeid) const {
   return getMatchingIds(nodeid,
                         Id::DataType::kParticle,
                         papas::Layer::kNone,
-                        papas::enumSubtype::RAW,
+                        papas::SubType::RAW,
                         papas::enumSource::SIMULATION);
 }
 
@@ -300,7 +303,7 @@ Ids Simulator::parentParticleIds(long nodeid) const {
   return getMatchingParentIds(nodeid,
                               Id::DataType::kParticle,
                               papas::Layer::kNone,
-                              papas::enumSubtype::RAW,
+                              papas::SubType::RAW,
                               papas::enumSource::SIMULATION);
 }
 
@@ -316,7 +319,7 @@ Ids Simulator::linkedIds(long nodeid) const {
   return foundids;
 }
 
-Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::enumSubtype type, papas::enumSource source) const
+Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type, papas::enumSource source) const
 {
   DAG::BFSVisitor<PFNode> bfs;
   Ids foundids;
@@ -332,7 +335,7 @@ Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer l
   return foundids;
 }
 
-Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::enumSubtype type,papas::enumSource source) const
+Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,papas::enumSource source) const
 {
   DAG::BFSVisitor<PFNode> bfs;
   Ids foundids;
@@ -349,7 +352,7 @@ Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::L
 }
 
 
-
+} // end namespace papas
 
 
 

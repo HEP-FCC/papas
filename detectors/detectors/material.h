@@ -10,6 +10,7 @@
 #include "Definitions.h"
 #include "random.h"
 
+namespace papas {
 
 //TODO handle centrally
 const int c_vecsize = 10000;
@@ -41,6 +42,6 @@ public:
 private:
 
 };
-
+} // end namespace papas
 #endif
 

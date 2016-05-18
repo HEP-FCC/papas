@@ -7,6 +7,8 @@
 #include "TVector3.h"
 #include "geometry.h"
 
+namespace papas {
+
 SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad ,double z):
    m_layer(layer), m_radius(rad), m_z(z)
 {
@@ -50,6 +52,7 @@ bool VolumeCylinder::Contains(const TVector3& point) const
       return false;
 }
 
+} // end namespace papas
 /*
 const std::string VolumeCylinder::innerName() const {
   if (m_layer==Id::Layer::kEcal)

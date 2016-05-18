@@ -13,6 +13,9 @@
 #include "TVector3.h"
 #include "Id.h"
 
+
+namespace papas {
+
 class Cluster{
 public:
   Cluster(double energy, TVector3 position, double size_m, long id);
@@ -44,7 +47,7 @@ protected:
   std::vector<Id::Type> m_subClusters;
 };
 
-
+} // end namespace papas
 
 
 #endif /* Cluster_h */

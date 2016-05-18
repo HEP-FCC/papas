@@ -10,6 +10,9 @@
 #include "detector.h"
 #include "Definitions.h"
 
+
+namespace papas {
+
 class Track;
 
 /**
@@ -110,4 +113,6 @@ public:
 private:
 
 };
+  
+} // end namespace papas
 #endif

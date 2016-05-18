@@ -14,10 +14,13 @@
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <unordered_set>
 #include <vector>
 #
 //#include "PFEvent.h"
+
+namespace papas {
 
 int PFBlock::tempBlockCount = 0;
 
@@ -233,29 +236,32 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   return os;
 }
 
+} // end namespace papas
+
 int test_blocks() {
+  using namespace papas;
   Id::Type id1 = Id::makeECALClusterId();
   Id::Type id2 = Id::makeHCALClusterId();
   Id::Type id3 = Id::makeTrackId();
-
+  
   Id::Type id4 = Id::makeECALClusterId();
   Id::Type id5 = Id::makeHCALClusterId();
   Id::Type id6 = Id::makeTrackId();
-
+  
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
-
+  
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
   Edge edge2 = Edge(id2, id3, true, 0.00005);
-
+  
   Edge edge4 = Edge(id4, id5, false, 3.1234);
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
-
+  
   Edges edges;
   edges.reserve(100);
-
+  
   // edges.emplace(10000.0,  std::move(edge));
   edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
@@ -263,10 +269,10 @@ int test_blocks() {
   edges.emplace(edge4.key(), std::move(edge4));
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
-
+  
   PFBlock block(ids, edges);
   PFBlock block2(ids2, edges);
-
+  
   std::cout << block;
   std::cout << block2;
   std::cout << edges.size();

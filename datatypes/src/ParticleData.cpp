@@ -8,7 +8,8 @@
 
 
 #include "ParticleData.h"
-
+namespace papas {
+  
 const double ParticleData::m_e = 0.000511;
 const double ParticleData::m_mu = 0.105;
 const double ParticleData::m_pi = 0.139;
@@ -26,3 +27,5 @@ std::unordered_map<int, std::pair<double, int>> ParticleData::m_datamap =  {
   {211, {ParticleData::m_pi,  1}},
   {-211,{ParticleData::m_pi, -1}}
 }  ;
+  
+}//end namesapce

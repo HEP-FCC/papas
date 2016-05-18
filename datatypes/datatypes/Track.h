@@ -3,7 +3,9 @@
 
 #include "TLorentzVector.h"
 #include "TVector3.h"
-#include "path.h"
+#include "Path.h"
+
+namespace papas {
 
 class Track {
 public:
@@ -37,5 +39,5 @@ protected:
   double m_charge;
   Path::Ptr m_path;  // not owned by track but useful to know where it is
 };
-
+} // end namespace papas
 #endif  // TRACK_H

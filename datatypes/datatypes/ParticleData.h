@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <utility>
 
+namespace papas {
 class ParticleData {
 public:
   static const double m_e;   // = 0.000511;
@@ -26,5 +27,5 @@ public:
   static std::pair<double, int>& particleData(int pid) { return m_datamap[pid]; };
   static std::unordered_map<int, std::pair<double, int>> m_datamap;
 };
-
+} //end namespace papas
 #endif /* particledata_h */

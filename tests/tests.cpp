@@ -35,6 +35,7 @@
 #include "PFParticle.h"
 #include "Id.h"
 #include "Definitions.h"
+#include "Edge.h"
 
 //include "random.h"
 #include "random.h"
@@ -46,6 +47,7 @@
 
 
 using namespace std;
+using namespace papas;
 extern int test_edges();
 extern int test_blocks();
 extern int test_BlockBuilder();
@@ -62,9 +64,9 @@ int main(int argc, char* argv[]){
   //test_RandomNew();
   
   //TODO convert to Gtest
-    test_edges();
-    test_blocks();
-    test_BlockBuilder();
+  test_edges();
+  test_blocks();
+  test_BlockBuilder();
   //tryMapMoveObject();
     
     
@@ -291,10 +293,10 @@ TEST(fastsim, StraightLine){
 TEST(utility, RandomExp)
 {
    //seed it to have known start point
-  randomgen::setEngineSeed(100);
+   randomgen::setEngineSeed(100);
    randomgen::RandExponential rexp(5.);
    double r1 = rexp.next();
-    randomgen::setEngineSeed(100);
+  randomgen::setEngineSeed(100);
    randomgen::RandExponential rexp3(5.);
    double r2 = rexp3.next();
    EXPECT_EQ(r1, r2);

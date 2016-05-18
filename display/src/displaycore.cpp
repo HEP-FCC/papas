@@ -8,6 +8,8 @@
 #include "displaygeometry.h"
 #include "displaypfobjects.h"
 
+namespace papas {
+
 //Static counter
 int ViewPane::nviews = 0;
 
@@ -153,6 +155,8 @@ void ViewPane::unZoom()
    m_canvas.Update();
 }
 
+  
+} // end namespace papas
 
 /**
  * \param[in]  name  Name to show at top of viewpane

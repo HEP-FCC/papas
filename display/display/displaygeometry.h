@@ -13,6 +13,9 @@
 #include "TColor.h"
 #include "detector.h"
 
+
+namespace papas {
+  
 /// This is the base class used for other elements that are to be drawn.
 /// The key thing is to have the Draw element
 class Drawable {
@@ -57,7 +60,7 @@ private:
    std::list<std::shared_ptr<Drawable>> m_drawElems;
 
 };
-
+} // end namespace papas
 
 
 #endif

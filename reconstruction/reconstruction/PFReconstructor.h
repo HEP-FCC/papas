@@ -12,6 +12,7 @@
 #include "TVector3.h"
 #include "NodeDefinitions.h"
 
+namespace papas {
 class PFEvent;
 
 class PFReconstructor {
@@ -40,5 +41,5 @@ private:
   std::unordered_map<Id::Type, bool> m_locked;
   
 };
-
+} // end namespace papas
 #endif /* PFReconstructor_h */

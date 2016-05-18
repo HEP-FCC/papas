@@ -11,29 +11,30 @@
 #include <iostream>
 #include "Definitions.h"
 
+namespace papas {
 
 class Id {
 public:
   Id() {};
   typedef long Type;
  
-  typedef papas::enumSubtype  eSubtype;
+  //typedef papas::Subtype  papas::SubType;
   typedef papas::enumSource  eSource;
   enum DataType{kParticle, kCluster, kTrack, kBlock};
 
   static long makeId(DataType type, //check name with Colin
                              papas::Layer layer,
-                             eSubtype subtype,
+                             papas::SubType subtype,
                              eSource source,
                              int uniqueid = Id::s_counter);
   static long makeAnotherId(long
                                     existingid);///uses same enums as existing id  but sets a new uniqueId.
   
-  static long makeClusterId(papas::Layer layer, eSubtype subtype = eSubtype::RAW);
-  static long makeECALClusterId(eSubtype subtype = eSubtype::RAW) { return Id::makeClusterId(papas::Layer::kEcal, subtype); };
-  static long makeHCALClusterId(eSubtype subtype = eSubtype::RAW) { return Id::makeClusterId(papas::Layer::kHcal, subtype); };
+  static long makeClusterId(papas::Layer layer, papas::SubType subtype = papas::SubType::RAW);
+  static long makeECALClusterId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kEcal, subtype); };
+  static long makeHCALClusterId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kHcal, subtype); };
   static long makeParticleId(eSource source);
-  static long makeTrackId( papas::enumSubtype subtype= eSubtype::RAW);
+  static long makeTrackId( papas::SubType subtype= papas::SubType::RAW);
   static long makeBlockId();
   
   
@@ -44,16 +45,16 @@ public:
   static bool isBlock(long id);
   
   static bool isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
-                              papas::enumSubtype subtype,papas::enumSource source);
+                              papas::SubType subtype,papas::enumSource source);
   static bool isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
-                              papas::enumSubtype subtype);
+                              papas::SubType subtype);
   static bool isSmeared(long id);
   
   static void setCounter(int startid);  ///intended for use once at start
   
   //Access stored Idendtifier information
   static papas::Layer        layer(long id);
-  static papas::enumSubtype      subType(long id);
+  static papas::SubType      subType(long id);
   static papas::enumSource       source(long id);
   static DataType dataType(long id);
   
@@ -67,6 +68,6 @@ private:
 };
 
 
-
+} // end namespace papas
 
 #endif /* identifier_hpp */

@@ -11,6 +11,7 @@
 #include "NodeDefinitions.h"
 #include "propagator.h"
 
+namespace papas {
 class PFParticle;
 class Cluster;
 class Track;
@@ -48,7 +49,7 @@ public:
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  //long makeClusterId(papas::Layer layer, papas::enumSubtype subtype) const;
+  //long makeClusterId(papas::Layer layer, papas::SubType subtype) const;
   //long makeParticleId(papas::enumSource source) const;
   long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
   long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
@@ -64,9 +65,9 @@ private:
   Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
   Ids linkedIds(long nodeid) const; //TODO move to helper/history class
   Ids getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer,
-                     papas::enumSubtype type, papas::enumSource source) const; //TODO move to helper/history class
+                     papas::SubType type, papas::enumSource source) const; //TODO move to helper/history class
   Ids getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer,
-                           papas::enumSubtype type, papas::enumSource source) const ;  //TODO move to helper/history class
+                           papas::SubType type, papas::enumSource source) const ;  //TODO move to helper/history class
 
   Clusters m_ecalClusters;
   Clusters m_hcalClusters;
@@ -81,6 +82,6 @@ private:
   StraightLinePropagator m_propStraight;
   HelixPropagator m_propHelix;
 };
-
+} // end namespace papas
 #endif
 

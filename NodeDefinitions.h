@@ -13,6 +13,7 @@
 #include <vector>
 #include "directedacyclicgraph.h"
 #include "Id.h"
+namespace papas {
 
 typedef DAG::Node<Id::Type> PFNode;
 typedef std::unordered_map<Id::Type, PFNode> Nodes;
@@ -32,6 +33,6 @@ typedef std::unordered_map<Id::Type, Track> Tracks;
 typedef std::unordered_map<Id::Type, PFBlock> Blocks;
 typedef std::unordered_map<Id::Type, Cluster> Clusters;
 
-
+  } // end namespace papas
 
 #endif /* NodeDefinitions_h */

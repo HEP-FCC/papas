@@ -14,7 +14,7 @@
  *  @date    2016-04-05
  */
 
-//TODO namespace
+namespace papas {
 
 class Edge {
 public:
@@ -78,7 +78,7 @@ private:
   long long m_key; ///<unique key for this edge that allows lookup in an unordered_map of edges
 };
 
-
+} // end namespace papas
 
 
 #endif /* edge_h */

@@ -13,6 +13,7 @@
 #include "PFBlock.h"
 #include "Cluster.h"
 
+namespace papas {
 
 Ruler::Ruler(const PFEvent& pfevent) :
 m_pfEvent(pfevent)
@@ -101,3 +102,5 @@ Distance Ruler::distance()
   //could bypass this as its a null distance
   return Distance{};
 }
+  
+} // end namespace papas

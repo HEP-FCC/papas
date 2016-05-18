@@ -4,6 +4,8 @@
 #include "FloodFill.h"
 
 
+namespace papas {
+
 //Allow optional parameters where construction arguments are references
 
 Edges emptyEdges;
@@ -64,6 +66,7 @@ void GraphBuilder::sortIds(std::vector<Id::Type>& ids)
             { return Id::typeShortCode(a) < Id::typeShortCode(b); } );
 }
 
+} // end namespace papas
 
 /*std::ostream& operator<<(std::ostream& os, const GraphBuilder& builder) {
   //TODO move to helper

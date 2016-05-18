@@ -13,12 +13,15 @@
 #include "Track.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
-#include "path.h"
+#include "Path.h"
+
+
+namespace papas {
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kEcal, papas::enumSubtype::RAW)};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kHcal, papas::enumSubtype::RAW)};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kEcal, papas::SubType::RAW)};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kHcal, papas::SubType::RAW)};
   
   
   TVector3 p3 = c1.position().Unit()*100.;
@@ -45,4 +48,6 @@ TEST(Distance, distance) {
   EXPECT_FALSE(disttt.isLinked());
   
 }
+
+} // end namespace papas
 

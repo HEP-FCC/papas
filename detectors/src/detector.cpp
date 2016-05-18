@@ -8,6 +8,7 @@
 #include "material.h"
 #include "geometry.h"
 
+namespace papas {
 
 DetectorElement::DetectorElement(papas::Layer layer, const  VolumeCylinder& volume , const Material& material) :
    m_volume(volume), m_material(material), m_layer(layer)
@@ -74,6 +75,7 @@ Field::Field(papas::Layer layer, const  VolumeCylinder& volume , const Material&
   m_magnitude(magnitude)
 {}
 
+} // end namespace papas
 /*
  Experiments
 

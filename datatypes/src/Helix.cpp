@@ -10,12 +10,12 @@
 #include "Definitions.h"
 #include "deltar.h"
 
-
+namespace papas {
 extern double gconstc;
 
 Helix::Helix() {}
 
-Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double field, double charge)
+  Helix::Helix(TLorentzVector p4, TVector3 origin, double field, double charge)
     : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
   m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
   m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
@@ -81,3 +81,5 @@ double Helix::pathLength(double deltat) const {
   //          deltat;
   return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat;
 }
+
+} // end namespace papas

@@ -3,6 +3,7 @@
 #define propogator_h
 #include "detector.h"
 
+namespace papas {
 class PFParticle;
 
 
@@ -46,5 +47,6 @@ public:
 
 
 };
+} // end namespace papas
 #endif
 

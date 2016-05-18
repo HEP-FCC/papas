@@ -17,6 +17,8 @@
 #include "Definitions.h"
 
 
+namespace papas {
+
 int Id::s_counter = 0; /// static which will be used to create a unique long
 
 void Id::setCounter(int startid) /// allows user to start counter at another point
@@ -27,7 +29,7 @@ void Id::setCounter(int startid) /// allows user to start counter at another poi
 //TODO rename as OBJECTTYpe not PFObjectType
 long Id::makeId(DataType type,     // 6 bits  (to be refined later )
                                 papas::Layer layer,       // 4 bits
-                                papas::enumSubtype subtype,   // 3 bits
+                                papas::SubType subtype,   // 3 bits
                                 papas::enumSource source,     // 3 bits
                                 int uniqueid)
 {
@@ -54,10 +56,10 @@ papas::Layer Id::layer(long id)
    return static_cast<papas::Layer>(layer);
 }
 
-papas::enumSubtype Id::subType(long id)
+papas::SubType Id::subType(long id)
 {
    int subtype = (id >> 10) & 0b111 ;//(3 bits)
-   return static_cast<papas::enumSubtype>(subtype);
+   return static_cast<papas::SubType>(subtype);
 }
 
 papas::enumSource Id::source(long id)
@@ -77,11 +79,11 @@ int Id::uniqueId(long id)
    return (id >> 16);
 }
 
-long Id::makeClusterId(papas::Layer layer, papas::enumSubtype subtype) {
+long Id::makeClusterId(papas::Layer layer, papas::SubType subtype) {
   return Id::makeId(DataType::kCluster, layer, subtype, papas::enumSource::SIMULATION);
 }
 
-long Id::makeTrackId(papas::enumSubtype subtype) {
+long Id::makeTrackId(papas::SubType subtype) {
   return Id::makeId(
       DataType::kTrack, papas::Layer::kTracker, subtype, papas::enumSource::SIMULATION);
 }
@@ -89,7 +91,7 @@ long Id::makeTrackId(papas::enumSubtype subtype) {
 long Id::makeBlockId() {
   return Id::makeId(DataType::kBlock,
                     papas::Layer::kNone,
-                    papas::enumSubtype::NONE,
+                    papas::SubType::kNONE,
                     papas::enumSource::RECONSTRUCTION);
 }
 
@@ -97,7 +99,7 @@ long Id::makeParticleId(eSource source)
 {
    return Id::makeId(DataType::kParticle,
                                      papas::Layer::kNone,
-                                     papas::enumSubtype::RAW,
+                                     papas::SubType::RAW,
                                      source);
 }
 
@@ -127,13 +129,13 @@ bool Id::isBlock(long id)
 }
 
 bool Id::isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
-                               papas::enumSubtype subtype)
+                               papas::SubType subtype)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype);
 }
 
 bool Id::isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
-                                 papas::enumSubtype subtype,papas::enumSource source)
+                                 papas::SubType subtype,papas::enumSource source)
 {
    return (Id::layer(id)==layer && Id::subType(id)==subtype && Id::dataType(id)==datatype
            && Id::source(id)==source);
@@ -141,7 +143,7 @@ bool Id::isUniqueIdMatch(long id, DataType datatype, papas::Layer layer,
 
 bool Id::isSmeared(long id)
 {
-   return (Id::subType(id)==papas::enumSubtype::SMEARED );
+   return (Id::subType(id)==papas::SubType::SMEARED );
 }
 
 char Id::typeShortCode(long id)
@@ -159,7 +161,7 @@ char Id::typeShortCode(long id)
   else
     return 'x';
 }
-
+} // end namespace papas
 
 /*
 

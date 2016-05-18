@@ -3,7 +3,9 @@
 
 #include "NodeDefinitions.h"
 
-// TODO namespace
+
+namespace papas {
+
 class PFEvent;
 
 /** @class   rec::GraphBuilder Reconstruction/Reconstruction/GraphBuilder.h GraphBuilder.h
@@ -48,5 +50,5 @@ private:
   Ids m_elementIds;    ///<uniqueids to be grouped into subgraphs
   Nodes m_localNodes;  ///<local nodes used in building subgraphs
 };
-
+} // end namespace papas
 #endif /* GraphBuilder_h */

@@ -1,6 +1,9 @@
 #include "geotools.h"
 #include <math.h>
 
+
+namespace papas {
+
 std::vector<std::pair<double,double>> circleIntersection(double x1,double  y1, double r1, double r2)
 {
    ///Intersections between a circle 1 and a circle 2 centred at origin.'''
@@ -41,3 +44,5 @@ std::vector<std::pair<double,double>> circleIntersection(double x1,double  y1, d
    
    return std::vector<std::pair<double,double>>{mpair,ppair};
 }
+
+} // end namespace papas
