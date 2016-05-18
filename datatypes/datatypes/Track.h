@@ -1,5 +1,5 @@
-#ifndef TRACK_H
-#define TRACK_H
+#ifndef PAPAS_TRACK_H
+#define PAPAS_TRACK_H
 
 #include "TLorentzVector.h"
 #include "TVector3.h"
@@ -40,4 +40,4 @@ protected:
   Path::Ptr m_path;  // not owned by track but useful to know where it is
 };
 } // end namespace papas
-#endif  // TRACK_H
+#endif  // PAPAS_TRACK_H

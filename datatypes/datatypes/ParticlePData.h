@@ -13,7 +13,7 @@
 #include <utility>
 
 namespace papas {
-class ParticleData {
+class ParticlePData {
 public:
   static const double m_e;   // = 0.000511;
   static const double m_mu;  //= 0.105;

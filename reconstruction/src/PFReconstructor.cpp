@@ -18,7 +18,7 @@
 #include "PFEvent.h"
 #include "PFBlock.h"
 #include "Edge.h"
-#include "ParticleData.h"
+#include "ParticlePData.h"
 #include "Cluster.h"
 #include "Track.h"
 
@@ -357,8 +357,8 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
     //TODO raise ValueError('layer must be equal to ecal_in or hcal_in')
   }
   //assert(pdg_id)
-  double mass = ParticleData::particleMass(pdgId);
-  //double charge = ParticleData::particleCharge(pdgId);
+  double mass = ParticlePData::particleMass(pdgId);
+  //double charge = ParticlePData::particleCharge(pdgId);
   if (energy < mass) //null particle
     return PFParticle();
   
@@ -395,8 +395,8 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
    */
   /*TVector3 vertex = track.path()->namedPoint("vertex");
   int pdgId = 211 * track.charge();
-  double mass = ParticleData::particleMass(pdgId);
-  double charge = ParticleData::particleCharge(pdgId);
+  double mass = ParticlePData::particleMass(pdgId);
+  double charge = ParticlePData::particleCharge(pdgId);
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), mass);*/
   Id::Type newid = Id::makeParticleId(papas::enumSource::RECONSTRUCTION);

@@ -12,7 +12,7 @@
 #include "Track.h"
 #include "Id.h"
 #include "Particle.h"
-#include "ParticleData.h"
+#include "ParticlePData.h"
 #include "Path.h"
 #include "Helix.h"
 #include "Definitions.h"
@@ -28,7 +28,7 @@ PFParticle::PFParticle(long uniqueid,const Track& track) : //TODO check what thi
 }
 
   PFParticle::PFParticle(long uniqueid,int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
-  Particle(uniqueid, pdgid, ParticleData::particleCharge(pdgid), tlv),
+  Particle(uniqueid, pdgid, ParticlePData::particleCharge(pdgid), tlv),
   m_vertex(vertex),
   m_isHelix(fabs(charge())>0.5)
 {

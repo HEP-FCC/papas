@@ -10,7 +10,7 @@
 #include "Cluster.h"
 #include "Track.h"
 #include "PFParticle.h"
-#include "ParticleData.h"
+#include "ParticlePData.h"
 #include "Path.h"
 
 
@@ -125,7 +125,7 @@ PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double e
 
 TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi, double energy)
 {
-  double mass = ParticleData::particleMass(pdgid);
+  double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
   double sintheta = sin(theta);
