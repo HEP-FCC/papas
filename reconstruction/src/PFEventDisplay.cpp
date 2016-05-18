@@ -17,7 +17,7 @@
 
 namespace papas {
 
-PFEventDisplay::PFEventDisplay(std::list<Projection> views)
+PFEventDisplay::PFEventDisplay(std::list<ViewPane::Projection> views)
 :Display(views){
 }
 

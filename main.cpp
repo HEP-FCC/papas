@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
   // All displays
   // Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi
   // ,Projection::HCAL_thetaphi });
-  auto display = PFEventDisplay({Projection::xy, Projection::yz});
+  auto display = PFEventDisplay({ViewPane::Projection::xy, ViewPane::Projection::yz});
   std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));  // TODO remove shared_ptr?
   display.addToRegister(gdetector, 0);
   display.drawPFEvent(pfEvent);

@@ -18,7 +18,7 @@ class PFEvent;
 
 class PFEventDisplay: public Display {
 public:
-  PFEventDisplay(std::list<Projection> views = {});
+  PFEventDisplay(std::list<ViewPane::Projection> views = {});
   void drawPFEvent(const PFEvent& pfevent);
 private:
 };

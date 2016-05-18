@@ -12,23 +12,25 @@ namespace papas {
 
 //Static counter
 int ViewPane::nviews = 0;
+  
+  std::vector<std::string> ViewPane::ProjectionStrings {"xy", "yz", "xz", "ECAL_thetaphi", "HCAL_thetaphi"};
 
-Display::Display(std::list<Projection> views)
+Display::Display(std::list<ViewPane::Projection> views)
 {
    //TODO consider making views concrete objects
    if (views.size() == 0) {
-      views = {Projection::xy, Projection::yz, Projection::xz};
+     views = {ViewPane::Projection::xy, ViewPane::Projection::yz, ViewPane::Projection::xz};
    }
    ///Creates viewpanes //AJRTODO use an ENUM instead
    for (auto view : views) {
-      if (view == Projection::xy | view == Projection::yz | view == Projection::xz) {
-         m_views[to_str(view)] = std::unique_ptr<ViewPane> {
+      if (view == ViewPane::Projection::xy | view == ViewPane::Projection::yz | view == ViewPane::Projection::xz) {
+        m_views[ViewPane::ProjectionStrings[view]] = std::unique_ptr<ViewPane> {
             new ViewPane(view,
             100, -4, 4, 100, -4, 4)
          };
-      } else if (view == Projection::ECAL_thetaphi
-                 || view == Projection::HCAL_thetaphi) { //AJRTODO check this
-         m_views[to_str(view)] = std::unique_ptr<ViewPane> {
+      } else if (view == ViewPane::Projection::ECAL_thetaphi
+                 || view == ViewPane::Projection::HCAL_thetaphi) { //AJRTODO check this
+         m_views[ViewPane::ProjectionStrings[view]] = std::unique_ptr<ViewPane> {
             new ViewPane(view,
             100, -M_PI / 2., M_PI / 2.,
             100, -M_PI, M_PI,
@@ -80,14 +82,14 @@ void Display::draw() const
 
 ViewPane::ViewPane(Projection p, int nx,
                    double xmin, double xmax, int ny, double ymin, double ymax,  int dx , int dy) :
-   m_canvas(to_str(p).c_str(), to_str(p).c_str(),
+   m_canvas(ProjectionStrings[p].c_str(), ProjectionStrings[p].c_str(),
             50. + ViewPane::nviews * (dx + 10.), 50.,
             dx, dy),
    m_projection(p)
 {
 
    TH1::AddDirectory(false);
-   m_hist = TH2F(to_str(p).c_str(), to_str(p).c_str(), nx, xmin, xmax, ny, ymin,
+   m_hist = TH2F(ProjectionStrings[p].c_str(), ProjectionStrings[p].c_str(), nx, xmin, xmax, ny, ymin,
                  ymax);
    TH1::AddDirectory(true);
    m_hist.Draw();
@@ -131,7 +133,7 @@ void ViewPane::draw()
 
    //Now draw all registered items
    for (auto const& reg : m_registered) {
-      reg.first->Draw(to_str(m_projection));
+      reg.first->Draw(ProjectionStrings[m_projection]);
    }
 
    //Flush to screen
