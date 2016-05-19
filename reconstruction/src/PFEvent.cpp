@@ -12,6 +12,8 @@
 #include "Track.h"
 #include "Id.h"
 #include "Path.h"
+#include "Simulator.h" //temp
+#include "PFBlockBuilder.h"
 
 namespace papas {
 
@@ -43,7 +45,17 @@ m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)
 {
   
 }
+  
+  PFEvent::PFEvent(Simulator& sim) :
+  m_ecals(sim.smearedEcalClusters()), m_hcals(sim.smearedHcalClusters()), m_tracks(sim.smearedTracks()), m_historyNodes(sim.historyNodes())
+  {
+   
+  }
 
+  void PFEvent::setBlocks(PFBlockBuilder& builder){
+    m_blocks = builder.blocks();
+  }
+  
 const Track& PFEvent::track(Id::Type id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);

@@ -15,15 +15,17 @@
 #include "PFBlock.h"
 
 namespace papas {
-  class Track;
+class Track;
 class Cluster;
-
+class Simulator;
+class PFBlockBuilder;
 
 //TODO home for typedefs
 
 class PFEvent {
 public:
   PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
+  PFEvent(Simulator& sim); // temporary for Python testing
   bool compare(Id::Type id1, Id::Type id2) const;
   double energy(Id::Type id1) const;
   const Track& track(Id::Type id ) const;
@@ -36,8 +38,8 @@ public:
   const Clusters& hcalClusters() const { return m_hcals;}
   const Tracks& tracks() const { return m_tracks;}
   const Blocks& blocks() const { return m_blocks;}
-  void setBlocks(Blocks&& blocks) {m_blocks=blocks;}
-
+  void setBlocks(Blocks&& blocks) {m_blocks = blocks;}
+  void setBlocks(PFBlockBuilder& builder);  //temp for python
 private:
   Clusters m_ecals; //should these be references instead of owned?
   Clusters m_hcals;

@@ -7,6 +7,7 @@
 //
 // C++
 #include <iostream>
+#include <stdio.h>
 
 #include "TApplication.h"
 #include "TROOT.h"
@@ -24,6 +25,8 @@
 #include "Track.h"
 #include "Path.h"
 #include "random.h"
+
+#include "AliceDisplay.h"
 
 
 extern int run_tests(int argc, char* argv[]);
@@ -54,16 +57,24 @@ int main(int argc, char* argv[]) {
 
   // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
   // and using a reference to the history nodes
-  PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
+  //PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
+  PFEvent pfEvent{sim}; //for python test
 
   // Reconstruct
   PFBlockBuilder bBuilder{pfEvent};
-  pfEvent.setBlocks(std::move(bBuilder.blocks()));
+  //pfEvent.setBlocks(std::move(bBuilder.blocks()));
+  pfEvent.setBlocks(bBuilder);//for python
   PFReconstructor pfReconstructor{pfEvent};
   pfReconstructor.reconstruct();
 
   // Now move on to Displaying results
 
+  PFApp myApp{};
+  myApp.display(pfEvent, CMSDetector);
+  myApp.run();
+  return 0;
+  
+  
   // ROOT App to allow graphs to be plotted
   TApplication theApp("App", &argc, argv);
   if (gROOT->IsBatch()) {

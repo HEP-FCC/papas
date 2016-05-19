@@ -22,6 +22,8 @@ public:
   void drawPFEvent(const PFEvent& pfevent);
 private:
 };
-} // end namespace papas
-
+  
+} // end namespace PFEvent
+  
+ 
 #endif /* PFEventDisplay_h */
