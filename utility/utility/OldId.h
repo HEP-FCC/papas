@@ -1,5 +1,4 @@
 //
-//  simpleidentifier.h for DAG example
 //
 //  Created by Alice Robson on 05/01/16.
 //
@@ -31,8 +30,8 @@ public:
                                     existingid);///uses same enums as existing id  but sets a new uniqueId.
   
   static long makeClusterId(papas::Layer layer, papas::SubType subtype = papas::SubType::RAW);
-  static long makeECALClusterId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kEcal, subtype); };
-  static long makeHCALClusterId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kHcal, subtype); };
+  static long makeEcalId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kEcal, subtype); };
+  static long makeHcalId(papas::SubType subtype = papas::SubType::RAW) { return Id::makeClusterId(papas::Layer::kHcal, subtype); };
   static long makeParticleId(eSource source);
   static long makeTrackId( papas::SubType subtype= papas::SubType::RAW);
   static long makeBlockId();

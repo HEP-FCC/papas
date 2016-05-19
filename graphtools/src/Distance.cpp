@@ -57,7 +57,7 @@ Distance::Distance(const Cluster& cluster,const Track& track)
 : m_distance(-1), m_isLinked(false)
 {
   papas::Position cyl_layer = papas::Position::kEcalIn;
-  if (Id::layer(cluster.id()) == papas::Layer::kHcal) {
+  if (Id::isHcal(cluster.id())) {
     cyl_layer = papas::Position::kHcalIn;
   }
   if (track.path()->hasNamedPoint(cyl_layer)) { //check exists {

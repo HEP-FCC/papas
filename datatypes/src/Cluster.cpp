@@ -14,7 +14,7 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 
-Cluster::Cluster(double energy, TVector3 position, double size_m, long id) :
+Cluster::Cluster(double energy, TVector3 position, double size_m, long long id) :
 m_uniqueId(id),  m_position(position), m_subClusters()
 {
   setSize(size_m);
@@ -45,7 +45,7 @@ void Cluster::setEnergy(double energy)
 //put into subClusters its not rght just yet
 Cluster& Cluster::operator+=(const Cluster& rhs){
   
-  if (Id::layer(m_uniqueId) != Id::layer(rhs.id())) {
+  if (Id::itemType(m_uniqueId) != Id::itemType(rhs.id())) {
     std::cout << "can only add a cluster from the same layer";
   }
   m_position = m_position * m_energy + rhs.position() * rhs.energy();
@@ -62,7 +62,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs){
 }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move to helper class
-  os << "Cluster:" << Id::layer(cluster.m_uniqueId)  << ": "<< std::setw(9) << std::fixed  << cluster.m_energy ;
+  os << "Cluster:" << Id::itemType(cluster.m_uniqueId)  << ": "<< std::setw(9) << std::fixed  << cluster.m_energy ;
   os << cluster.m_position.Phi() << ", " << M_PI/2. - cluster.m_position.Theta()<< std::endl;
   return os;
 }

@@ -27,11 +27,16 @@
 #include "random.h"
 
 #include "AliceDisplay.h"
-
+#include "Id.h"
 
 extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
+  
+  Id::Type id=Id::makeEcalId();
+  std::cout<<Id::uniqueId(id);
+  std::cout<<Id::itemType(id);
+
 
   randomgen::RandExponential rexp{49.3};
   rexp.setSeed(100);
@@ -44,13 +49,13 @@ int main(int argc, char* argv[]) {
   Simulator sim = Simulator{CMSDetector};
 
   // Make Some Photons
-  for (int i = 1; i < 1; i++) {
+  for (int i = 1; i < 2; i++) {
     PFParticle& photon = sim.addParticle(22, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
     sim.simulatePhoton(photon);
   }
 
   // Make Some Hadrons
-  for (int i = 0; i < 1; i++) {
+  for (int i = 1; i < 2; i++) {
     PFParticle& hadron = sim.addParticle(211, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
     sim.simulateHadron(hadron);
   }
@@ -71,7 +76,7 @@ int main(int argc, char* argv[]) {
 
   PFApp myApp{};
   myApp.display(pfEvent, CMSDetector);
-  myApp.run();
+  //myApp.run();
   return 0;
   
   

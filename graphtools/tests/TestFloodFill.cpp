@@ -14,14 +14,14 @@
 namespace papas {
 
 TEST(floodfill, one) {
-  typedef DAG::Node<long> PFNode;
-  typedef std::unordered_map<long, PFNode> Nodes;
+  typedef DAG::Node<long long> PFNode;
+  typedef std::unordered_map<long long, PFNode> Nodes;
   
   Nodes myNodes;
-  long id1, id2;
+  long long id1, id2;
   id1=1;
   id2=2;
-  DAG::FloodFill<long> FFill;
+  DAG::FloodFill<long long> FFill;
   myNodes.emplace(id1, PFNode(id1));
   myNodes.emplace(id2, PFNode(id2));
   myNodes[id1].addChild(myNodes[id2]);

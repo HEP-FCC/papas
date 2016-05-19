@@ -16,8 +16,8 @@ class PFParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
   PFParticle() = default;
-  PFParticle(long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
-  PFParticle(long uniqueid, const Track& track);
+  PFParticle(long long uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
+  PFParticle(long long uniqueid, const Track& track);
   Path::Ptr path() const { return m_path; }
   TVector3 pathPosition(papas::Position layer) const;
   void setPath(Path::Ptr path) { m_path = path; }

@@ -23,7 +23,7 @@ m_pfEvent(pfevent)
 Distance Ruler::distance(Id::Type id1, Id::Type id2)
 {
   if (Id::isCluster(id1) && Id::isCluster(id2))
-    if (Id::layer(id1) == Id::layer(id2))
+    if (Id::itemType(id1) == Id::itemType(id2))
       return clusterClusterDistance(id1, id2);
     else //hcal ecal not linked
       return Distance();

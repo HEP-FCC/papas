@@ -11,6 +11,7 @@
 
 
 namespace papas {
+  
   enum Position {kVertex,  kEcalIn, kEcalOut, kEcalDecay, kHcalIn, kHcalOut};
   enum Layer { kNone, kTracker, kEcal, kHcal, kField};
   enum SubType { kNONE, RAW, MERGED, SMEARED};

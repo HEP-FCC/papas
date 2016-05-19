@@ -30,7 +30,7 @@ public:
 
   PFParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
 
-  const Cluster& cluster(long clusterId) const;
+  const Cluster& cluster(Id::Type clusterId) const;
   Clusters ecalClusters() const {return m_ecalClusters;} ///<Copy of Ecal clusters
   Clusters hcalClusters() const {return m_hcalClusters;} ///<Copy of Hcal clusters
   Clusters smearedEcalClusters() const {return m_smearedEcalClusters;} ///<Copy of smeared Ecal clusters
@@ -42,33 +42,33 @@ public:
   const Particles& particles() const {return m_particles;} ///<Copy of particles
 
   void testing();
-  Ids linkedEcalSmearedClusterIds(long nodeid) const; //TODO move to helper/history class
-  Ids linkedParticleIds(long nodeid) const ; //TODO move to helper/history class
-  Ids parentParticleIds(long nodeid) const ; //TODO move to helper/history class
+  Ids linkedEcalSmearedClusterIds(Id::Type nodeid) const; //TODO move to helper/history class
+  Ids linkedParticleIds(Id::Type nodeid) const ; //TODO move to helper/history class
+  Ids parentParticleIds(Id::Type nodeid) const ; //TODO move to helper/history class
 
 private:
   PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   void propagate(PFParticle& ptc, const SurfaceCylinder&); //more args needed
-  //long makeClusterId(papas::Layer layer, papas::SubType subtype) const;
-  //long makeParticleId(papas::enumSource source) const;
-  long addEcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
-  long addHcalCluster(PFParticle& ptc, long parentid = 0, double fraction = 1., double csize = 0.);
-  long addSmearedCluster(long parentClusterId);
-  Cluster makeCluster(PFParticle& ptc, long parentid, papas::Layer layer, double fraction = 1., double csize = 0.);
-  Cluster makeSmearedCluster(long parentClusterId);
+  //Id::Type makeClusterId(papas::Layer layer, papas::SubType subtype) const;
+  //Id::Type makeParticleId(papas::enumSource source) const;
+  Id::Type addEcalCluster(PFParticle& ptc, Id::Type parentid = 0, double fraction = 1., double csize = 0.);
+  Id::Type addHcalCluster(PFParticle& ptc, Id::Type parentid = 0, double fraction = 1., double csize = 0.);
+  Id::Type addSmearedCluster(Id::Type parentClusterId);
+  Cluster makeCluster(PFParticle& ptc, Id::Type parentid, papas::Layer layer, double fraction = 1., double csize = 0.);
+  Cluster makeSmearedCluster(Id::Type parentClusterId);
   const Track& addTrack(PFParticle& ptc);
-  long addSmearedTrack(const Track& track, bool accept = false);
-  void addNode(const long newid, const long parentid = 0);
+  Id::Type addSmearedTrack(const Track& track, bool accept = false);
+  void addNode(const Id::Type newid, const Id::Type parentid = 0);
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
   static TLorentzVector makeTLorentzVector(int pdgid, double theta, double phi, double energy);
-  Ids linkedRawTrackIds(long nodeid) const; //TODO move to helper/history class
-  Ids linkedSmearedTrackIds(long nodeid) const; //TODO move to helper/history class
-  Ids linkedIds(long nodeid) const; //TODO move to helper/history class
-  Ids getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer,
+  Ids linkedRawTrackIds(Id::Type nodeid) const; //TODO move to helper/history class
+  Ids linkedSmearedTrackIds(Id::Type nodeid) const; //TODO move to helper/history class
+  Ids linkedIds(Id::Type nodeid) const; //TODO move to helper/history class
+  /*Ids getMatchingIds(Id::Type nodeid, Id::DataType datatype, papas::Layer layer,
                      papas::SubType type, papas::enumSource source) const; //TODO move to helper/history class
-  Ids getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer,
+  Ids getMatchingParentIds(Id::Type nodeid, Id::DataType datatype, papas::Layer layer,
                            papas::SubType type, papas::enumSource source) const ;  //TODO move to helper/history class
-
+  */
   Clusters m_ecalClusters;
   Clusters m_hcalClusters;
   Clusters m_smearedEcalClusters;

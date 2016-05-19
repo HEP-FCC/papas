@@ -118,12 +118,12 @@ int test_BlockBuilder()
 {
   using namespace papas;
   
-  Id::Type id1 = Id::makeECALClusterId();
-  Id::Type id2 = Id::makeHCALClusterId();
+  Id::Type id1 = Id::makeEcalId();
+  Id::Type id2 = Id::makeHcalId();
   Id::Type id3 = Id::makeTrackId();
   
-  Id::Type id4 = Id::makeECALClusterId();
-  Id::Type id5 = Id::makeHCALClusterId();
+  Id::Type id4 = Id::makeEcalId();
+  Id::Type id5 = Id::makeHcalId();
   Id::Type id6 = Id::makeTrackId();
   
   std::vector<Id::Type> ids {id1, id2, id3, id4, id5, id6};

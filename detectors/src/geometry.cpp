@@ -53,9 +53,4 @@ bool VolumeCylinder::Contains(const TVector3& point) const
 }
 
 } // end namespace papas
-/*
-const std::string VolumeCylinder::innerName() const {
-  if (m_layer==Id::Layer::kEcal)
-    return "_ECALin";
-  return "_HCALin";
-}*/
+

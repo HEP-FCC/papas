@@ -18,7 +18,7 @@ namespace papas {
 
 class Cluster{
 public:
-  Cluster(double energy, TVector3 position, double size_m, long id);
+  Cluster(double energy, TVector3 position, double size_m, long long id);
   Cluster() = default;
   Cluster(Cluster&& c)    = default;
   Cluster(const Cluster&) = default; //=default {std::cout<< "copy" ;} ;
@@ -28,7 +28,7 @@ public:
   double pt() const       {return m_pt;}
   double energy() const   {return m_energy;}
   double eta() const      {return m_position.Eta();}
-  Id::Type id() const         {return m_uniqueId;}
+  long long id() const         {return m_uniqueId;}
   TVector3 position() const {return m_position;}
   void setEnergy(double energy);
   void setSize(double value) ;
@@ -38,7 +38,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const Cluster& cluster); //TODO move to helper class
   
 protected:
-  Id::Type m_uniqueId;
+  long long m_uniqueId;
   double m_size;
   double m_angularSize;
   double m_pt;

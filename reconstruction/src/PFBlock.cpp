@@ -102,7 +102,7 @@ std::vector<long long> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType
  linked_edges.sort( key = lambda x: (x.distance is None, x.distance))
  return linked_edges*/
 
-std::vector<long> PFBlock::linkedIds(Id::Type uniqueid, Edge::EdgeType edgetype) const {
+std::vector<Id::Type> PFBlock::linkedIds(Id::Type uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   /// sorted in order of increasing distance
   /** returns a list of the otherids sorted by distance to uniqueid and by decreasing energies
@@ -240,12 +240,12 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
 
 int test_blocks() {
   using namespace papas;
-  Id::Type id1 = Id::makeECALClusterId();
-  Id::Type id2 = Id::makeHCALClusterId();
+  Id::Type id1 = Id::makeEcalId();
+  Id::Type id2 = Id::makeHcalId();
   Id::Type id3 = Id::makeTrackId();
   
-  Id::Type id4 = Id::makeECALClusterId();
-  Id::Type id5 = Id::makeHCALClusterId();
+  Id::Type id4 = Id::makeEcalId();
+  Id::Type id5 = Id::makeHcalId();
   Id::Type id6 = Id::makeTrackId();
   
   Ids ids{id1, id2, id3};

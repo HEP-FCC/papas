@@ -106,7 +106,7 @@ void testGraphs()
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    
    TVector3 vpos(1.,.5,.3);
-   Cluster cluster =  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
+   Cluster cluster =  Cluster(10., vpos, 1.,Id::makeEcalId() );
    std::vector<TVector3> tvec;
    tvec.push_back(TVector3(0.,0.,0.));
    tvec.push_back(TVector3(1.,1.,1.));
@@ -122,7 +122,7 @@ void testGraphs()
    //Testing graphics
    /*
     TVector3 vpos(1.,.5,.3);
-    Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
+    Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
     std::vector<TVector3> tvec;
     
     std::cout <<"cluster "<< cluster.pt()<<"\n";
@@ -405,7 +405,7 @@ void test_graphs()
   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
   
   TVector3 vpos(1.,.5,.3);
-  Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
+  Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0.,0.,0.));
   tvec.push_back(TVector3(1.,1.,1.));
@@ -420,7 +420,7 @@ void test_graphs()
   
   //Testing graphics
   /* TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeECALClusterId() );
+   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
    std::vector<TVector3> tvec;
    
    std::cout <<"cluster "<< cluster.pt()<<"\n";

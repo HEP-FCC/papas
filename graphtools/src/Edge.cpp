@@ -75,8 +75,8 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 
 int test_edges() {
   using namespace papas;
-  Id::Type id1=Id::makeECALClusterId();
-  Id::Type id2=Id::makeHCALClusterId();
+  Id::Type id1=Id::makeEcalId();
+  Id::Type id2=Id::makeHcalId();
   Id::Type id3=Id::makeTrackId();
   
   Edge edge=Edge(id1,id2,false,0.0);

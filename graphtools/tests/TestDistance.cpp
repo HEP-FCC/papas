@@ -20,8 +20,8 @@ namespace papas {
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kEcal, papas::SubType::RAW)};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeClusterId(papas::Layer::kHcal, papas::SubType::RAW)};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeEcalId()};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeHcalId()};
   
   
   TVector3 p3 = c1.position().Unit()*100.;

@@ -33,7 +33,7 @@ public:
   static double s_maxenergy;  // AJR is this in the right place
 
 protected:
-  long m_uniqueId;
+  long long m_uniqueId;
   double m_pt;
   TVector3 m_p3;
   double m_charge;

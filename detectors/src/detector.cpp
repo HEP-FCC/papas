@@ -48,7 +48,6 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
   }
 }
 
-//const DetectorElement& Detector::element(Id::Layer layer) const
 std::shared_ptr<const DetectorElement> Detector::element(papas::Layer layer) const
 {
 
