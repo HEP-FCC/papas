@@ -34,7 +34,7 @@ public:
   void run(){ m_theApp.Run();}
 private:
   Int_t m_argc; //dummy arguments
-  char* m_str[0];
+  char* m_str[1];
   TApplication m_theApp;
   PFEventDisplay* m_display;
   std::shared_ptr<GDetector> m_gdetector;

@@ -16,9 +16,9 @@ m_key(Edge::makeKey(id1, id2))
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
-long long Edge::makeKey(Id::Type id1, Id::Type id2) {
+Edge::EdgeKey Edge::makeKey(Id::Type id1, Id::Type id2) {
 
-  long long key;
+  EdgeKey key;
   if (id1 > id2) //ensure that the order of the ids does not matter
     key= (id1 << 32) | id2;
   else

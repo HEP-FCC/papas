@@ -75,7 +75,7 @@ std::string PFBlock::shortName() const {
 
 int PFBlock::size() const { return m_elementIds.size(); }
 
-std::vector<long long> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
+  std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    The list is sorted in order of increasing distance
@@ -84,7 +84,7 @@ std::vector<long long> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType
    uniqueid : is the id of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    */
-  std::vector<long long> linkedEdgeKeys;
+  std::vector<Edge::EdgeKey> linkedEdgeKeys;
   for (auto edge : m_edges) {
     // if this is an edge that includes uniqueid
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {

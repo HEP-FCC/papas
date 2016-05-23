@@ -21,6 +21,7 @@ namespace papas {
 class Drawable {
 public:
    Drawable();
+  //virtual ~Drawable() = 0;
    virtual void Draw(const std::string& projection) const = 0;
 private:
 
@@ -30,6 +31,7 @@ private:
 class GDetectorElement : public Drawable {
 public:
    GDetectorElement(std::shared_ptr<const DetectorElement> de);
+  // ~GDetectorElement();
    //GDetectorElement(const DetectorElement& de);
    void Draw(const std::string& projection) const override;
 private:
@@ -48,6 +50,7 @@ private:
 class GDetector: public Drawable {
 public:
    GDetector(const Detector& detector);
+  //~GDetector();
    void Draw(const std::string& projection) const override;
 private:
    ///ECAL graphical detector element

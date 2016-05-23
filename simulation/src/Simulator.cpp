@@ -88,7 +88,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 }
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
-  
+  //TODO
 }
 
 void  Simulator::propagate(PFParticle& ptc, const SurfaceCylinder& cylinder) {
@@ -104,7 +104,7 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
     return m_ecalClusters.at(clusterId);
   else if (Id::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
-  
+  //TODO or throw error
 }
 
 PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)

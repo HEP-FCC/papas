@@ -18,7 +18,7 @@ namespace papas {
   class Id {
   public:
     Id() {};
-    typedef long long Type;
+    typedef long Type;
     
     //typedef papas::Subtype  papas::SubType;
     typedef papas::enumSource  eSource;

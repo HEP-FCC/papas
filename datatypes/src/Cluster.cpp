@@ -13,14 +13,12 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-
-Cluster::Cluster(double energy, TVector3 position, double size_m, long long id) :
+Cluster::Cluster(double energy, TVector3 position, double size_m, Idtype id) :
 m_uniqueId(id),  m_position(position), m_subClusters()
 {
   setSize(size_m);
   setEnergy(energy);
 }
-
 
 void Cluster::setSize(double value)
 {
@@ -39,7 +37,6 @@ void Cluster::setEnergy(double energy)
     s_maxEnergy = energy;
   m_pt = energy * m_position.Unit().Perp() ;
 }
-
 
 //TODO need to change this so that the merged cluster has its ownID and the cluster from which it is made is
 //put into subClusters its not rght just yet

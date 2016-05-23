@@ -17,6 +17,7 @@ namespace papas {
 class Helix : public Path {
 public:
   Helix();
+  ~Helix() = default;
   Helix(TLorentzVector p4, TVector3 origin, double field, double charge);
   std::vector<double> polarAtTime(double time) const;
   double timeAtPhi(double phi) const;

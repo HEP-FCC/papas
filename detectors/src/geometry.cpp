@@ -16,7 +16,7 @@ SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad ,double z):
 
 
 VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad, double innerz):
-m_layer(layer),
+  //m_layer(layer),
 m_outer(papas::Position::kHcalOut, outerrad, outerz),
 m_inner(papas::Position::kHcalIn, innerrad, innerz)
 {

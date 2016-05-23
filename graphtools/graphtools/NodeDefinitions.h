@@ -20,7 +20,7 @@ typedef std::unordered_map<Id::Type, PFNode> Nodes;
 extern Nodes emptyNodes;
 extern const Nodes emptyconstNodes;
 
-//put these into individual classes
+
 class Cluster;
 class PFBlock;
 class Track;

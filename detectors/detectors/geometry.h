@@ -43,7 +43,7 @@ public:
   ~VolumeCylinder();
 private:
   //const std::string m_name;
-   papas::Layer m_layer;
+  //papas::Layer m_layer;
    SurfaceCylinder m_outer;
    SurfaceCylinder m_inner;
 };

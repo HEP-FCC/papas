@@ -44,8 +44,7 @@ class PFEvent;
 class PFBlock {
 
 public:
-  typedef long long edgeKey;
-  
+    
   /** Constructor
    @param[in] element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
    @param[inout] edges: is an unordered map of edges, it must contain at least all needed edges. It is not a problem
@@ -57,17 +56,17 @@ public:
   PFBlock(const Ids& elementIds, Edges& edges);
   PFBlock();
   const Ids elementIds() const { return m_elementIds; }
-  Edge Edge(long long key) { return m_edges.find(key)->second; }
-  const class Edge& Edge(long long key) const { return m_edges.find(key)->second; }
+  Edge Edge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
+  const class Edge& Edge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
 
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing distance
   @param[in] uniqueid : is the id of item of interest
   @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
-  @return vector of long long keys to linked edges
+  @return vector of EdgeKeys to linked edges
  */
-  std::vector<long long> linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::vector<Edge::EdgeKey> linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id

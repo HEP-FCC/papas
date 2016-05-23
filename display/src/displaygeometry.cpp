@@ -17,6 +17,10 @@ std::map<papas::Layer, int> gCOLORMap {
    {papas::Layer::kEcal , kRed - 10},
    {papas::Layer::kHcal , kBlue - 10}
 };
+  
+/*GDetectorElement::~GDetectorElement() {
+    //TODO
+}*/
 
 void GDetectorElement::Draw(const std::string& projection) const 
 {
@@ -38,12 +42,20 @@ void GDetectorElement::Draw(const std::string& projection) const
 Drawable::Drawable()
 {
 }
+  
+/*Drawable::~Drawable()
+{
+}*/
 
-GDetector::GDetector(const Detector& detector) :
+GDetector::GDetector(const Detector& detector):
    m_gEcal(detector.ecal()),
    m_gHcal(detector.hcal())
 {
 }
+  
+/*GDetector::~GDetector() {
+  //TODO
+}*/
 
 void GDetector::Draw(const std::string& projection) const {
    m_gHcal.Draw(projection);

@@ -26,6 +26,7 @@ public:
 
   Path(TLorentzVector p4, TVector3 origin, double field);
   Path();
+  virtual ~Path() = default;
 
   //void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
   void addPoint(papas::Position layer, TVector3 vec) { m_points[layer] = vec; }

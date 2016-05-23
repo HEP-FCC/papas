@@ -25,6 +25,7 @@ public:
   enum class EdgeType {
     kUnknown=0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack
   };
+  typedef long long EdgeKey;
 
   Edge() : m_id1(0), m_id2(0),m_isLinked(false), m_distance(0) {};
   /**
@@ -47,7 +48,7 @@ public:
   bool isLinked() const {return m_isLinked;}  ///<boolean to mark if this edge links the two elements
   void setLinked(bool link) { m_isLinked=link;};
   double distance() const {return m_distance;} ///<distance between the two elements
-  long long key() const {return m_key;} ///<unique key for this edge that can be found from the two element ids
+  Edge::EdgeKey key() const {return m_key;} ///<unique key for this edge that can be found from the two element ids
   EdgeType edgeType() const {return m_edgeType;} ///<describes what types of elements are connected
   Id::Type otherid(Id::Type id) const; /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
@@ -61,7 +62,7 @@ public:
   *   @param  id1 : element uniqueid enerated from Id class for one end
   *   @param  id2 : element2 uniqueid generated from Id class for other end
   */
-  static long long makeKey(Id::Type id1, Id::Type id2);  ///<static function to create a unique key
+  static EdgeKey makeKey(Id::Type id1, Id::Type id2);  ///<static function to create a unique key
   
 private:
   /** Produces an EdgeType enumeration such as kEcalTrack
@@ -75,7 +76,7 @@ private:
   bool m_isLinked; ///< boolean to day if there is a link between the two edges
   double m_distance; ///< distance between two ends
   EdgeType m_edgeType; ///<enum describing the edge type eg ecal-hcal or track-track
-  long long m_key; ///<unique key for this edge that allows lookup in an unordered_map of edges
+  EdgeKey m_key; ///<unique key for this edge that allows lookup in an unordered_map of edges
 };
 
 } // end namespace papas

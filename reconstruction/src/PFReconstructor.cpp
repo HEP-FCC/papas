@@ -90,7 +90,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock & block) {
    - for tracks unink all hcals except the closest hcal
    - for ecals unlink hcals */
   Edges toUnlink; //TODO think about copy
-  std::vector<long long> linkedEdgeKeys;
+  std::vector<Edge::EdgeKey> linkedEdgeKeys;
   bool firstHCAL;
   double firstDist = -1;
   

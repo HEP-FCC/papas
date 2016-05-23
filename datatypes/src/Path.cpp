@@ -22,6 +22,7 @@ Path::Path() {}
       m_field(field) {
         m_points[papas::Position::kVertex] = m_origin;
 }
+  
 
 /*!
  * @discussion Find the time taken to reach a position on z axis
