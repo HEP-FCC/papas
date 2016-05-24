@@ -35,11 +35,7 @@ ${MAINDIR}/reconstruction/reconstruction
 ${MAINDIR}/graphtools/graphtools
 )
 
-include_directories(/users/alice/local/lib /users/alice/fcc/cpp/papas/install/lib)
-
-
-
-set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/papas/)
+include_directories(/usr/local/lib ${CMAKE_SOURCE_DIR}/install/lib)
 
 
 #---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)

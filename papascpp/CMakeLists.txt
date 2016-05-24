@@ -129,7 +129,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 
 include_directories(
-  "${ROOT_INCLUDE_DIR}"
+  "${ROOT_INCLUDE_DIRS}"
   )
 
 REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
