@@ -102,7 +102,7 @@ TEST(fastsim,Structures){
 
 void testGraphs()
 {//Testing graphics
-   Display display = Display({Projection::xy,Projection::yz});
+  Display display = Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz});
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    
    TVector3 vpos(1.,.5,.3);
@@ -401,8 +401,8 @@ int old_main_stuff(int argc, char* argv[])
 
 void test_graphs()
 {//Testing graphics
-  Display display = Display({Projection::xy,Projection::yz});
-  //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+  Display display = Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz});
+  //Display display = Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi ,papas::ViewPane::Projection::HCAL_thetaphi });
   
   TVector3 vpos(1.,.5,.3);
   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );

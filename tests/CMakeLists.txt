@@ -11,17 +11,19 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(Boost 1.59.0 REQUIRED)
-set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/src/)
 
-include_directories( ${Boost_INCLUDE_DIRS} )
-include_directories(${CMAKE_SOURCE_DIR}/fastsim
-${CMAKE_SOURCE_DIR}/utility/utility
-${CMAKE_SOURCE_DIR}/detectors
-${CMAKE_SOURCE_DIR}/display
-${CMAKE_SOURCE_DIR}/datatypes
-${CMAKE_SOURCE_DIR}/simulation
-${CMAKE_SOURCE_DIR}/graphtools )
+find_package(Boost 1.59.0 REQUIRED)
+if (BOOST_found)
+include_directories( ${Boost_INCLUDE_DIRS})
+endif()
+set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
+include_directories(
+${MAINDIR}/utility/utility
+${MAINDIR}/detectors/detectors
+${MAINDIR}/display/display
+${MAINDIR}/datatypes/datatypes
+${MAINDIR}/simulation/simulation
+${MAINDIR}/graphtools/graphtools )
 
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
@@ -36,11 +38,11 @@ Message(STATUS  "here1")
 FIND_PACKAGE(Boost 1.59.0 COMPONENTS python)
 
 find_package(GTest)
-include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib  ${Boost_INCLUDE_DIRS}  "/usr/include/python2.7" ${CMAKE_SOURCE_DIR}/utility/src)
+include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib  ${Boost_INCLUDE_DIRS}  "/usr/include/python2.7" ${CMAKE_SOURCE_DIR}/papascpp/utility/src)
 
 
-add_executable(othertests tests.cpp ${CMAKE_SOURCE_DIR}/utility/src/random.cpp)
-target_link_libraries(othertests  fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
+add_executable(othertests tests.cpp ${CMAKE_SOURCE_DIR}/papascpp/utility/src/random.cpp)
+target_link_libraries(othertests  papascpp ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
 
 
 

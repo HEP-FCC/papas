@@ -29,7 +29,7 @@
 #include "AliceDisplay.h"
 #include "Id.h"
 
-extern int run_tests(int argc, char* argv[]);
+//extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
   
@@ -76,7 +76,8 @@ int main(int argc, char* argv[]) {
 
   PFApp myApp{};
   myApp.display(pfEvent, CMSDetector);
-  //myApp.run();
+  
+    //myApp.run();
   return 0;
   
   
@@ -96,10 +97,10 @@ int main(int argc, char* argv[]) {
   display.drawPFEvent(pfEvent);
 
   // TODO uncomment for commandline
-  // run theApp.Run();
+  theApp.Run();
 
   // sim.testing(); //Write lists of connected items
-  // int test = run_tests(argc, argv);
+ 
 
   return EXIT_SUCCESS;
 }

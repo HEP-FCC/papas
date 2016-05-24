@@ -32,28 +32,19 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF GRAF3D  RIO Hist Tree Net   )
 
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-include(${ROOT_USE_FILE})
+#include(${ROOT_USE_FILE})
 
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-include_directories(
-${CMAKE_SOURCE_DIR}/fastsim/fastsim 
-${CMAKE_SOURCE_DIR}/utility/utility
-${CMAKE_SOURCE_DIR}/detectors/detectors
-${CMAKE_SOURCE_DIR}/display/display
-${CMAKE_SOURCE_DIR}/datatypes/datatypes
-${CMAKE_SOURCE_DIR}/simulation/simulation
-${CMAKE_SOURCE_DIR}/graphtools/graphtools
-)
 
-add_subdirectory(fastsim)
-add_subdirectory(graphtools)
+add_subdirectory(papascpp)
+add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+
 #note there are a lot of R related warnings (originating from R)
-add_subdirectory(tests/rtest)
+#add_subdirectory(tests/rtest)
 
 add_subdirectory(tests)
 

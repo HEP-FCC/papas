@@ -23,20 +23,20 @@ include_directories(
 ${Boost_INCLUDE_DIRS}
 ${CMAKE_SOURCE_DIR}/graphtools)
 endif()
+set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
 
 include_directories(
-${CMAKE_SOURCE_DIR}/fastsim/fastsim
-${CMAKE_SOURCE_DIR}/utility/utility
-${CMAKE_SOURCE_DIR}/detectors/detectors
-${CMAKE_SOURCE_DIR}/display/display
-${CMAKE_SOURCE_DIR}/datatypes/datatypes/
-${CMAKE_SOURCE_DIR}/simulation/simulation
-${CMAKE_SOURCE_DIR}/reconstruction/reconstruction
-${CMAKE_SOURCE_DIR}/graphtools/graphtools
-${CMAKE_SOURCE_DIR}/pythia8
+${MAINDIR}/utility/utility
+${MAINDIR}/detectors/detectors
+${MAINDIR}/display/display
+${MAINDIR}/datatypes/datatypes/
+${MAINDIR}/simulation/simulation
+${MAINDIR}/reconstruction/reconstruction
+${MAINDIR}/graphtools/graphtools
 )
 
-include_directories(/users/alice/local/lib /users/alice/fcc/fcc-physics/install/lib)
+include_directories(/users/alice/local/lib /users/alice/fcc/cpp/papas/install/lib)
+
 
 
 set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/papas/)
@@ -55,8 +55,8 @@ find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib )
 
 add_executable(mainexe ../main.cpp)
-target_link_libraries(mainexe fastsim ${ROOT_LIBRARIES} ${GTEST_LIBRARIES} )
-#/users/alice/fcc/fcc-physics/install/lib/libfccphysics-myanalysis.dylib)
+target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES} ${GTEST_LIBRARIES} )
+#/users/alice/fcc/cpp/papas/install/lib/libpapascpp.dylib)
 
 
 

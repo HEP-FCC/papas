@@ -21,14 +21,14 @@ find_package(Boost 1.59.0 REQUIRED)
 set (PAPAS_ROOT /Users/alice/fcc/cpp/papas/src/)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-
-include_directories(${CMAKE_SOURCE_DIR}/fastsim
-${CMAKE_SOURCE_DIR}/utility
-${CMAKE_SOURCE_DIR}/detectors
-${CMAKE_SOURCE_DIR}/display
-${CMAKE_SOURCE_DIR}/datatypes
-${CMAKE_SOURCE_DIR}/simulation
-${CMAKE_SOURCE_DIR}/DAGtool )
+set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
+include_directories(
+${MAINDIR}/utility/utility
+${MAINDIR}/detectors/detectors
+${MAINDIR}/display/display
+${MAINDIR}/datatypes/datatypes
+${MAINDIR}/simulation/simulation
+${MAINDIR}/graphtools/graphtools)
 
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
@@ -59,7 +59,7 @@ set (DYLD_LIBRARY_PATH  $RLIB_ROOT $RINSIDE_ROOT)
 
 
 add_executable(rtest  r_test.cpp )
-target_link_libraries(rtest  fastsim ${ROOT_LIBRARIES} /Library/Frameworks/R.framework/Versions/3.2/Resources/lib/libR.dylib  /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib/libRInside.dylib ${GTEST_LIBRARIES})
+target_link_libraries(rtest  papascpp ${ROOT_LIBRARIES} /Library/Frameworks/R.framework/Versions/3.2/Resources/lib/libR.dylib  /Library/Frameworks/R.framework/Versions/3.2/Resources/library/RInside/lib/libRInside.dylib ${GTEST_LIBRARIES})
 add_library(RInside SHARED IMPORTED)
 add_library(R SHARED IMPORTED)
 
