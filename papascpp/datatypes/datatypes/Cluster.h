@@ -23,7 +23,7 @@ public:
   Cluster() = default;
   Cluster(Cluster&& c)    = default;
   Cluster(const Cluster&) = default;
-  //Cluster& operator=(const Cluster&)= default;;//=default {std::cout<< "copy" ;} ;
+  Cluster& operator=(const Cluster&)= default;;//=default {std::cout<< "copy" ;} ;
   Cluster& operator+=(const Cluster& rhs);
   double angularSize() const {return m_angularSize;}
   double size() const     {return m_size;}

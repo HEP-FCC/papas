@@ -55,8 +55,8 @@ SET( INSTALL_DOC OFF )
 ENDIF()
 ENDIF()
 
-
-
+SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../install")
+Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 
 #make this automated
 set (MAINDIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -134,13 +134,13 @@ include_directories(
 
 REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
 
-message(${PROJECT_BINARY_DIR})
+message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
 
 add_library(papascpp SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h  ) # papascppDict.cxx)
+${MAINDIR}/utility/utility/random.h ) # papascppDict.cxx)
 target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
 install(TARGETS papascpp DESTINATION lib)
