@@ -25,7 +25,7 @@ public:
   enum class EdgeType {
     kUnknown=0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack
   };
-  typedef long long EdgeKey;
+  typedef uint64_t EdgeKey;
 
   Edge() : m_id1(0), m_id2(0),m_isLinked(false), m_distance(0) {};
   /**
@@ -71,8 +71,8 @@ private:
    */
   EdgeType makeEdgeType() const;
   
-  long m_id1; ///< long identifier for one end of the edge (order does not matter)
-  long m_id2; ///< long identifier for other end of ede (order does not matter)
+  IdType m_id1; ///< long identifier for one end of the edge (order does not matter)
+  IdType m_id2; ///< long identifier for other end of ede (order does not matter)
   bool m_isLinked; ///< boolean to day if there is a link between the two edges
   double m_distance; ///< distance between two ends
   EdgeType m_edgeType; ///<enum describing the edge type eg ecal-hcal or track-track

@@ -159,7 +159,7 @@ Id::Type Simulator::addHcalCluster(PFParticle& ptc,Id::Type parentid,double frac
 }
 
 
-  Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer layer, double fraction, double csize)
+Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer layer, double fraction, double csize)
 {
   if (!parentid) {
     parentid = ptc.id();
@@ -210,7 +210,7 @@ Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId)
 Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId) //, double energyresolution )
 {
   //create a new id
-  auto itemType = Id::ItemType(parentClusterId);
+  auto itemType = Id::itemType(parentClusterId);
   Id::Type newclusterid = Id::makeId(itemType);
   const Cluster& parent = cluster(parentClusterId);
   auto layer = Id::layer(parentClusterId);

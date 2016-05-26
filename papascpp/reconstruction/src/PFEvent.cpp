@@ -88,6 +88,22 @@ Ids PFEvent::elementIds() const {
   }
   return std::move(ids);
 }
+  
+  
+std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move to helper class
+  os << "PFEvent:" ;
+  for(auto it = pfevent.m_ecals.begin(); it != pfevent.m_ecals.end(); ++it) {
+    os << "EC: " << it->second;
+  }
+  for(auto it = pfevent.m_hcals.begin(); it != pfevent.m_hcals.end(); ++it) {
+     os << "HC: " << it->second;
+  }
+  for(auto it = pfevent.m_tracks.begin(); it != pfevent.m_tracks.end(); ++it) {
+     os << "TR: " << it->second;
+  }
+    return os;
+}
+
 
 const Cluster&  PFEvent::HCALCluster(Id::Type id) const {
   if (m_hcals.find(id) != m_hcals.end()) {

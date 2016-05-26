@@ -8,7 +8,8 @@
 
 #include "Id.h"
 
-
+#include <cmath>
+#include <inttypes.h> 
 #include <iostream> //temp
 //  Created by Alice Robson on 05/01/16.
 //
@@ -21,37 +22,48 @@
 
 namespace papas {
   
-  int Id::s_counter = 0; /// static which will be used to create a unique long
-  
+  unsigned int Id::s_counter = 0; /// static which will be used to create a unique long
+                                  //const unsigned int Id::bitshift =32;
   /*void Id::setCounter(int startid) /// allows user to start counter at another point
   {
     s_counter = startid;
   }*/
   
   //TODO rename as OBJECTTYpe not PFObjectType
-  Id::Type Id::makeId(ItemType type, int uniqueid)
+  Id::Type Id::makeId(ItemType type, unsigned int uniqueid)
   {
-    // consider reordering to source ... layer .. type ,.. subtype ..uniqueid
+    
     s_counter++; //default is to start at 1 for first id so that id=0 means unset
                  //long id = (uniqueid << 16) | ((int)source << 13) | ((int)subtype << 10) | ((
                  //int)layer << 6) | (int)type;
     
-    //long long thing = ((int)type) << 20;
-    //std::cout<< type << ":" << thing << std::endl;
-    Type id =  ( ((int)type) << 20) | uniqueid;
+    if (type>6) { //TODO error cghecking on type
+      std::cout <<"TOO big" << std::endl;
+    }
+    //uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
+    //if the btshift is 32 or more the shift is undefined and can return 0
+    Type id =  ( ((uint64_t)type) << bitshift) | uniqueid;
+    Type shifted =(((uint64_t)type) << bitshift);
+
+    std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
+    std::cout << "shifted: "  << shifted << std::endl;
+    std::cout<< "size type "<< sizeof(Id::Type)<<std::endl;
+    
+    /*std::cout<< "size type "<< sizeof(unsigned long)<<std::endl;
+    std::cout<< "size type "<< sizeof(unsigned long long)<<std::endl;
+    std::cout<< "size unsigned int "<< sizeof(unsigned int)<<std::endl;*/
     return id;
   }
   
   
   Id::ItemType Id::itemType(Type id)
   {
-    return static_cast<ItemType>(id >> 20);
+    return static_cast<ItemType>(id >> bitshift);
   }
   
-  int Id::uniqueId(Type id)
+  unsigned int Id::uniqueId(Type id)
   {
-    return id &  0xFFFFF; // 0xFFFFF == 0b11111111111111111111;//11111111111111111111;
-  }
+    return id & (uint64_t)(pow(2, bitshift) - 1) ; }
   
   papas::Layer Id::layer(Type id) {
     if(Id::isEcal(id) )
@@ -67,17 +79,8 @@ namespace papas {
   char Id::typeShortCode(Id::Type id)
   {
     std::string typelist = ".eht.......";
-    return typelist[(int)Id::itemType(id)];
-    /*if (isEcal(id))
-      return 'e';
-    else if (isHcal(id))
-      return 'h';
-    else if(isTrack(id))
-      return 't';
-    else if (isParticle(id))
-      return 'p';
-    else
-      return 'x';*/
+    return typelist[(unsigned int)Id::itemType(id)];
+    //TODO error handling
   }
 } // end namespace papas
 

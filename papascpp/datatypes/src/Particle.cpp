@@ -64,7 +64,7 @@ Particle::Particle() :
 
 }
 
-Particle::Particle(Idtype id, int pdgid, double charge) :
+Particle::Particle(IdType id, int pdgid, double charge) :
   m_uniqueId(id), m_particleId(pdgid), m_charge(charge), m_status(0)
 {
   m_tlv = TLorentzVector{0., 0., 0., 0.};
@@ -72,7 +72,7 @@ Particle::Particle(Idtype id, int pdgid, double charge) :
 }
 
 
-  Particle::Particle(Idtype id, int pdgid, double charge, TLorentzVector tlv, double status) :
+  Particle::Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status) :
   m_uniqueId(id),
   m_tlv(tlv),
   m_particleId(pdgid),

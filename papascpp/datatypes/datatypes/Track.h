@@ -9,8 +9,7 @@ namespace papas {
 
 class Track {
 public:
-  typedef long Idtype;
-  Track(TVector3 p3, double charge, Path::Ptr path, Idtype id);
+  Track(TVector3 p3, double charge, Path::Ptr path, IdType id);
   Track() : m_uniqueId(0), m_path(std::make_shared<Path>()){};
   // Track(Track& T);
   // Track(const Track& T);
@@ -25,16 +24,16 @@ public:
   double energy() const { return m_p3.Mag(); }
   double eta() const { return m_p3.Eta(); }
   double charge() const { return m_charge; }
-  Idtype id() const { return m_uniqueId; }
+  IdType id() const { return m_uniqueId; }
   TVector3 p3() const { return m_p3; }
   Path::Ptr path() const { return m_path; }
   void setPath(Path::Ptr path) { m_path = path; }
   void setEnergy(double energy);
   void setSize(double value);
   static double s_maxenergy;  // AJR is this in the right place
-
+  friend std::ostream& operator<<(std::ostream& os, const Track& track); // move to helper class
 protected:
-  Idtype m_uniqueId;
+  IdType m_uniqueId;
   double m_pt;
   TVector3 m_p3;
   double m_charge;

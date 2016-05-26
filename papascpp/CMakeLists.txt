@@ -140,7 +140,7 @@ message(${PROJECT_BINARY_DIR})
 add_library(papascpp SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h  papascppDict.cxx)
+${MAINDIR}/utility/utility/random.h  ) # papascppDict.cxx)
 target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
 install(TARGETS papascpp DESTINATION lib)

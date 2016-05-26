@@ -11,7 +11,8 @@
  *  @date    2016-04-06
  */
 
-#include "NodeDefinitions.h"
+#include "DefinitionsNodes.h"
+#include "DefinitionsCollections.h"
 #include "PFBlock.h"
 
 namespace papas {
@@ -40,6 +41,8 @@ public:
   const Blocks& blocks() const { return m_blocks;}
   void setBlocks(Blocks&& blocks) {m_blocks = blocks;}
   void setBlocks(PFBlockBuilder& builder);  //temp for python
+  friend std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent); //TODO move to helper class
+  
 private:
   Clusters m_ecals; //should these be references instead of owned?
   Clusters m_hcals;

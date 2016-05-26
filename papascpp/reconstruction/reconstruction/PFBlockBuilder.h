@@ -10,8 +10,8 @@
 #define PFBlockBuilder_h
 
 #include <iostream>
-#include "NodeDefinitions.h"
-
+#include "DefinitionsNodes.h"
+#include "DefinitionsCollections.h"
 
 namespace papas {
 class PFEvent;

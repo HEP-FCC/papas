@@ -10,7 +10,8 @@
 #define PFReconstructor_h
 
 #include "TVector3.h"
-#include "NodeDefinitions.h"
+#include "DefinitionsNodes.h"
+#include "DefinitionsCollections.h"
 
 namespace papas {
 class PFEvent;

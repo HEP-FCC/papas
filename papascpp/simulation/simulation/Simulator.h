@@ -8,7 +8,8 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "Definitions.h"
-#include "NodeDefinitions.h"
+#include "DefinitionsNodes.h"
+#include "DefinitionsCollections.h"
 #include "propagator.h"
 
 namespace papas {

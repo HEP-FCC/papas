@@ -17,7 +17,7 @@ const double ParticlePData::m_K0 = 0.498;
 const double ParticlePData::m_n = 1.;
 const double ParticlePData::m_p = 1.;
 
-std::unordered_map<int, std::pair<double, int>> ParticlePData::m_datamap =  {
+std::unordered_map<unsigned int, std::pair<double, unsigned int>> ParticlePData::m_datamap =  {
   {11,  {ParticlePData::m_e,   1}},
   {-11, {ParticlePData::m_e,  -1}},
   {13,  {ParticlePData::m_mu,  1}},

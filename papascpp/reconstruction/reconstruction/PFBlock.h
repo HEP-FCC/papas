@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include "NodeDefinitions.h"
+#include "DefinitionsNodes.h"
+#include "DefinitionsCollections.h"
 #include "Edge.h"
 
 /** @class   rec::PFBlock Reconstruction/Reconstruction/PFBlock.h PFBlock.h

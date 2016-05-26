@@ -7,7 +7,7 @@
 
 #include "TLorentzVector.h"
 #include "TVector3.h"
-
+#include "Definitions.h"
 /// Particle
 /**
  Contains 4-momentum vector, particle id and accessor functions
@@ -18,13 +18,12 @@ namespace papas {
 
 class Particle {
 public:
-  typedef long Idtype;
-  Particle();
+    Particle();
   Particle& operator=(const Particle& P)=default;
   Particle(int pdgid, double charge, TLorentzVector tlv, double status = 0);
   Particle(int pdgid, double charge);
-  Particle(Idtype id, int pdgid, double charge, TLorentzVector tlv, double status = 0);
-  Particle(Idtype id, int pdgid, double charge);
+  Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 0);
+  Particle(IdType id, int pdgid, double charge);
   std::string stringDescription() const;              ///< String to describe the particle
   const TLorentzVector p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   const TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz
@@ -39,10 +38,10 @@ public:
   bool status() const { return m_status; }                ///<status code, e.g. from generator. 1:stable.
   TVector3 startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   TVector3 endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
-  Idtype id() const { return m_uniqueId; }
+  IdType id() const { return m_uniqueId; }
 
 protected:
-  Idtype m_uniqueId;  // to be used by virtual classes
+  IdType m_uniqueId;  // to be used by virtual classes
 private:
   TLorentzVector m_tlv;
   int m_particleId;

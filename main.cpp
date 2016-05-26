@@ -34,8 +34,14 @@ using namespace papas;
 int main(int argc, char* argv[]) {
   
   Id::Type id=Id::makeEcalId();
-  std::cout<<Id::uniqueId(id);
-  std::cout<<Id::itemType(id);
+  //std::cout<<Id::uniqueId(id)<<std::endl;
+  std::cout<<Id::itemType(id)<<std::endl;
+  id=Id::makeHcalId();
+  //std::cout<<Id::uniqueId(id)<<std::endl;
+  std::cout<<Id::itemType(id)<<std::endl;
+  id=Id::makeHcalId();
+  //std::cout<<Id::uniqueId(id)<<std::endl;
+  std::cout<<Id::itemType(id)<<std::endl;
 
 
   randomgen::RandExponential rexp{49.3};
@@ -64,6 +70,8 @@ int main(int argc, char* argv[]) {
   // and using a reference to the history nodes
   //PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
   PFEvent pfEvent{sim}; //for python test
+  
+  std::cout<<"PFEVENT coming up"<<pfEvent<< std::endl;
 
   // Reconstruct
   PFBlockBuilder bBuilder{pfEvent};

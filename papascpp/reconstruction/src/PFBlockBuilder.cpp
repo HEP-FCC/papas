@@ -11,7 +11,7 @@
 #include "PFEvent.h"
 #include "Distance.h"
 #include "Ruler.h"
-
+#include "DefinitionsCollections.h"
 
 namespace papas {
 
