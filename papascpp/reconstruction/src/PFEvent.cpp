@@ -91,7 +91,7 @@ Ids PFEvent::elementIds() const {
   
   
 std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move to helper class
-  os << "PFEvent:" ;
+  os << "PFEvent:" <<std::endl;
   for(auto it = pfevent.m_ecals.begin(); it != pfevent.m_ecals.end(); ++it) {
     os << "EC: " << it->second;
   }

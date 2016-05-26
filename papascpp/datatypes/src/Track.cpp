@@ -12,7 +12,8 @@ m_path(path)
 }
   
   std::ostream& operator<<(std::ostream& os, const Track& track) { //TODO move to helper class
-    os << "Track:" << Id::itemType(track.m_uniqueId) << " (" <<Id::uniqueId(track.m_uniqueId) << ") : "<< std::setw(9) << std::fixed  << track.m_charge << std::endl;
+    os << "Track  :" << Id::typeShortCode(track.m_uniqueId)  <<Id::uniqueId(track.m_uniqueId) << ": "<< std::setw(9) << std::fixed  << track.m_charge << std::endl;
+   
     return os;
   }
 

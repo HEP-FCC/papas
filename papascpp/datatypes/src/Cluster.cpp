@@ -59,7 +59,8 @@ Cluster& Cluster::operator+=(const Cluster& rhs){
 }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move to helper class
-  os << "Cluster:" << Id::itemType(cluster.m_uniqueId) << " (" <<Id::uniqueId(cluster.m_uniqueId) << ") : "<< std::setw(9) << std::fixed  << cluster.m_energy ;
+
+  os << "Cluster: " <<Id::typeShortCode(cluster.m_uniqueId)  <<Id::uniqueId(cluster.m_uniqueId) << ": "<< std::setw(9) << std::fixed  << cluster.m_energy << ", ";
   os << cluster.m_position.Phi() << ", " << M_PI/2. - cluster.m_position.Theta()<< std::endl;
   return os;
 }

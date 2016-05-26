@@ -138,8 +138,8 @@ std::string PFBlock::elementsString() const {
   std::string offset = "      ";
   std::string s = offset + "elements: \n";
   for (auto id : m_elementIds) {
-    s += offset + "          " + Id::typeShortCode(id) + std::to_string(count) + ": " + std::to_string(id) +
-        "\n";
+    s += offset + "          " + Id::typeShortCode(id) + std::to_string(count) + "= " + Id::typeShortCode(id) +  std::to_string(Id::uniqueId(id)) + "(" + std::to_string(id) +
+        ")\n";
     count = count + 1;
   }
   /*elemdetails = "\n      elements: {\n"
@@ -169,47 +169,49 @@ std::string PFBlock::edgeMatrixString() const {
   // make the header line for the matrix
   int count = 0;
   std::ostringstream os;
-  os.precision(2);
-  std::string offset = "      ";
-  // os<< offset + "distances:\n     " + offset;
-  os << offset + "distances:  ";
 
-  std::string shortid;
-  for (auto e1 : m_elementIds) {
-    // will produce short id of form E2 H3, T4 etc in tidy format
-    shortid = Id::typeShortCode(e1) + std::to_string(count);
-    os << std::setw(9) << shortid;
-    count += 1;
-  }
-  os << std::endl;
+  if (m_elementIds.size() > 1) {
+    os.precision(2);
+    std::string offset = "      ";
+    // os<< offset + "distances:\n     " + offset;
+    os << offset + "distances:  ";
 
-  // for each element find distances to all other items that are in the lower part of the matrix
-  int countrow = 0;
-  std::string rowstr = "";
-  std::string rowname = "";
-  std::string colname = "";
-  for (auto e1 : m_elementIds) {  // this will be the rows
-    rowstr = "";
-    // make short name for the row element eg E3, H5 etc
-    os << std::setw(18) << Id::typeShortCode(e1) + std::to_string(countrow);
-    countrow += 1;
-    for (auto e2 : m_elementIds) {  // these will be the columns
-      if (e1 == e2) {
-        os << "        .";
-        break;
-      } else if (edge(e1, e2).distance() < 0)
-        os << "      ---";
-      else if (edge(e1, e2).isLinked() == false)
-        os << "      xxx";
-      else {
-        os << std::setw(9) << std::fixed << edge(e1, e2).distance();
-      }
+    std::string shortid;
+    for (auto e1 : m_elementIds) {
+      // will produce short id of form E2 H3, T4 etc in tidy format
+      shortid = Id::typeShortCode(e1) + std::to_string(count);
+      os << std::setw(9) << shortid;
+      count += 1;
     }
-    os << " \n";
+    os << std::endl;
+
+    // for each element find distances to all other items that are in the lower part of the matrix
+    int countrow = 0;
+    std::string rowstr = "";
+    std::string rowname = "";
+    std::string colname = "";
+    for (auto e1 : m_elementIds) {  // this will be the rows
+      rowstr = "";
+      // make short name for the row element eg E3, H5 etc
+      os << std::setw(18) << Id::typeShortCode(e1) + std::to_string(countrow);
+      countrow += 1;
+      for (auto e2 : m_elementIds) {  // these will be the columns
+        if (e1 == e2) {
+          os << "        .";
+          break;
+        } else if (edge(e1, e2).distance() < 0)
+          os << "      ---";
+        else if (edge(e1, e2).isLinked() == false)
+          os << "      xxx";
+        else {
+          os << std::setw(9) << std::fixed << edge(e1, e2).distance();
+        }
+      }
+      os << " \n";
+    }
   }
   return os.str();
 }
-
 const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
@@ -219,13 +221,15 @@ const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
-
+  Id::Type id= block.m_uniqueId;
   if (block.m_isActive)
     os << "block: ";
   else
     os << "deactivated block: ";
+  
+  os << "b" << block.m_blockCount<<" ";
   os << block.shortName();
-  os << " id=" << block.m_blockCount << " uid=" << block.m_uniqueId;
+  os << " id= " <<Id::typeShortCode(id)  <<Id::uniqueId(id) << "("<< id<<")";
   os << " ecals= " << block.countEcal() << " hcals= " << block.countHcal() << " tracks= " << block.countTracks()
      << "\n";
 

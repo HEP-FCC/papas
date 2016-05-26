@@ -180,7 +180,8 @@ Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer l
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
   
-  const Cluster& cluster{energy, pos, csize, clusterid};
+  //const Cluster& cluster{energy, pos, csize, clusterid};
+  Cluster cluster{energy, pos, csize, clusterid};
   addNode(clusterid, parentid); //a track may be the parent of a cluster
   return cluster; //check this defaults OK
 }

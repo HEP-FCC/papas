@@ -40,14 +40,14 @@ namespace papas {
     if (type>6) { //TODO error cghecking on type
       std::cout <<"TOO big" << std::endl;
     }
-    //uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
+    //NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
     //if the btshift is 32 or more the shift is undefined and can return 0
     Type id =  ( ((uint64_t)type) << bitshift) | uniqueid;
-    Type shifted =(((uint64_t)type) << bitshift);
-
+    
+    /*Type shifted =(((uint64_t)type) << bitshift);
     std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
     std::cout << "shifted: "  << shifted << std::endl;
-    std::cout<< "size type "<< sizeof(Id::Type)<<std::endl;
+    std::cout<< "size type "<< sizeof(Id::Type)<<std::endl;"*/
     
     /*std::cout<< "size type "<< sizeof(unsigned long)<<std::endl;
     std::cout<< "size type "<< sizeof(unsigned long long)<<std::endl;
@@ -78,7 +78,7 @@ namespace papas {
   
   char Id::typeShortCode(Id::Type id)
   {
-    std::string typelist = ".eht.......";
+    std::string typelist = ".ehtprb....";
     return typelist[(unsigned int)Id::itemType(id)];
     //TODO error handling
   }

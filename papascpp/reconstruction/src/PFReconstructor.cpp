@@ -42,7 +42,7 @@ void PFReconstructor::reconstruct() {
   // each track will end up linked to at most one hcal
   
   for (auto& block : m_blocks) {
-    std::cout << "block: " << block.second.shortName();
+    //std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
     Blocks newBlocks = simplifyBlock(block.second);
     if (newBlocks.size() >0) {
       m_blocks.insert(newBlocks.begin(), newBlocks.end());
@@ -51,6 +51,8 @@ void PFReconstructor::reconstruct() {
   
   for (auto& block : m_blocks) {
     if (block.second.isActive()) { //when blocks are split the original gets deactivated
+        std::cout << "Reconstructing block: " << block.second.shortName()<<std::endl;
+
       reconstructBlock(block.second);
     }
   }
@@ -386,7 +388,7 @@ PFParticle PFReconstructor::reconstructCluster(const Cluster& cluster,
                                                            //particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true; //alice : just OK but not nice if hcal used to make ecal.
                                  //if self.debugprint:
-  std::cout << "made particle from cluster " <<pdgId<< " : " <<  cluster ;//TODO << particle;
+  std::cout << "made particle pdgid: " <<pdgId<< " from cluster: " <<  cluster ;//TODO << particle;
   return particle;
 }
 
@@ -406,7 +408,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {// Cclusters =
   //particle.clusters = clusters
   m_locked[track.id()] = true;
   
-  std::cout << "made particle from track " <<particle.pdgId()<< " : " ;//<<  track ;//TODO << particle;
+  std::cout << "made particle pdgid: " <<particle.pdgId()<< " from track: "  << track ;//TODO << particle;
   return particle;
 }
 } // end namespace papas
