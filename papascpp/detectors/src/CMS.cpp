@@ -13,6 +13,7 @@
 #include "geometry.h"
 #include "material.h"
 #include "Path.h"
+#include "random.h"
 #include <cmath>
 #include <vector>
 
@@ -25,8 +26,8 @@ namespace papas {
  m_eres(eres)
  {}*/
 
-CMSECAL::CMSECAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
-                 std::vector<double> emin, const std::vector<std::vector<double>>&& eres)
+CMSECAL::CMSECAL(Layer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
+                 std::vector<double> emin, const std::vector<std::vector<double>> eres)
     : Calorimeter(layer, volume, material), m_etaCrack(eta_crack), m_emin(emin), m_eres(eres) {}
 
 // will need to be rewritten for different detectors
@@ -68,33 +69,36 @@ double CMSECAL::energyResolution(double energy, double eta) const {
   double constant = m_eres[location][2];
   return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
 }
+  
+
 
 CMS::CMS() : Detector() {
   // ECAL detector Element
-  papas::Layer layer = papas::Layer::kEcal;
-  m_ecal =
-      std::shared_ptr<const class Calorimeter>{new CMSECAL(layer,
-                                                           VolumeCylinder(layer, 1.55, 2.1, 1.30, 2),
-                                                           Material(8.9e-3, 0.275),
-                                                           0.15,  // eta_crack
-                                                           std::vector<double>{0.3, 1},  // emin
-                                                           std::vector<std::vector<double>>{{.073, .1, .005},
-                                                             {.213, .224, .005}} )};
+  papas::Layer layer = Layer::kEcal;
+  m_ecal = std::shared_ptr<const class Calorimeter>{
+      new CMSECAL(layer,
+                  VolumeCylinder(layer, 1.55, 2.1, 1.30, 2),
+                  Material(8.9e-3, 0.275),
+                  0.15,                         // eta_crack
+                  std::vector<double>{0.3, 1},  // emin
+                  std::vector<std::vector<double>>{{.073, .1, .005}, {.213, .224, .005}})};
 
   // HCAL detector element
-  layer = papas::Layer::kHcal;
-  m_hcal =
-      std::shared_ptr<const class Calorimeter>{new CMSHCAL(layer,
-                                                           VolumeCylinder(layer, 2.9, 3.6, 1.9, 2.6),
-                                                           Material(0.0, 0.175),
-                                                           std::vector<double>{1.1, 0., 0.})};
+  layer = Layer::kHcal;
+  m_hcal = std::shared_ptr<const class Calorimeter>{
+      new CMSHCAL(layer,
+                  VolumeCylinder(layer, 2.9, 3.6, 1.9, 2.6),
+                  Material(0.0, 0.17),
+                  1.5,
+                  std::vector<std::vector<double>>{{1.25829, 0., 0.175950}, {1.32242e-06, 6.99123, 2.70281e-01}},
+                  std::vector<std::vector<double>>{{1.03430, 5.23646, -2.03400}, {1.06742, 9.41242, -2.75191}})};
 
   // Tracker detector element
-  layer = papas::Layer::kTracker;
+  layer = Layer::kTracker;
   m_tracker = std::shared_ptr<const Tracker>{new CMSTracker(layer, VolumeCylinder(layer, 1.29, 1.99))};
 
   // Field detector element
-  layer = papas::Layer::kField;
+  layer = Layer::kField;
   m_field = std::shared_ptr<const Field>{
       new CMSField(layer, VolumeCylinder(layer, 2.9, 3.6), 20)
       // 3.8)
@@ -111,14 +115,13 @@ CMS::CMS() : Detector() {
 
   // TODOAJR add in  tracker etc below
 }
+CMSHCAL::CMSHCAL(Layer layer, const VolumeCylinder& volume, const Material& material, double etacrack,
+                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
+  : Calorimeter(layer, volume, material), m_eres(eres), m_eresp(eresp){}
 
-CMSHCAL::CMSHCAL(papas::Layer layer, const VolumeCylinder& volume, const Material& material,
-                 const std::vector<double>& eres)
-    : Calorimeter(layer, volume, material), m_eres(eres) {}
-
-CMSHCAL::CMSHCAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material,
-                 const std::vector<double>&& eres)
-    : Calorimeter(layer, volume, material), m_eres(eres) {}
+CMSHCAL::CMSHCAL(Layer layer, const VolumeCylinder&& volume, const Material&& material, double etacrack,
+                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
+    : Calorimeter(layer, volume, material), m_eres(eres), m_eresp(eresp) {}
 
 // will need to be rewritten for different detectors
 /**
@@ -136,17 +139,45 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());
 
-  // AJRTOCHECK should this be more parameterized et eta_crack etc
-  if (eta < 3.)
-    return energy > 4.;
-  else if (eta < 5.)
-    return energy > 7.;
-  else
-    return false;
+  bool accept=false;
+  randomgen::RandUniform rUniform{0,1};
+  if (eta < m_etaCrack) {
+    if (energy>1.)
+      accept= rUniform.next()<(1/(1 + exp((energy-1.93816)/(-1.75330))));
+  }
+  else if (eta < 3.) {
+    if (energy>1.1) {
+      if (energy<10.)
+        accept= rUniform.next()<(1.05634-1.66943e-01*energy+1.05997e-02*(pow(energy,2)));
+      else
+        accept= rUniform.next()<(8.09522e-01/(1+exp((energy-9.90855)/-5.30366)));
+    }
+  }
+  else if (eta < 5. && energy>7)
+    accept=true;
+  
+  return accept;
 }
 
-double CMSHCAL::energyResolution(double energy, double eta) const { return m_eres[0] / sqrt(energy); }
-
+double CMSHCAL::energyResolution(double energy, double eta) const {
+  int part = kBarrel;
+  if (fabs(eta)>m_etaCrack)
+    part = kEndCap;
+  double stoch = m_eres[part][0] / sqrt(energy);
+  double  noise = m_eres[part][1] / energy;
+  double  constant = m_eres[part][2];
+  return sqrt( pow(stoch,2) + pow(noise, 2) + pow(constant, 2));
+}
+  
+  
+double CMSHCAL::energyResponse(double energy, double eta) const{
+    int part = kBarrel;
+    if (fabs(eta)>m_etaCrack)
+      part = kEndCap;
+    //using fermi-dirac function : [0]/(1 + exp( (energy-[1]) /[2] ))
+    return m_eresp[part][0]/(1+exp((energy-m_eresp[part][1])/m_eresp[part][2]));
+}
+  
 CMSTracker::CMSTracker(papas::Layer layer, const VolumeCylinder& volume)
     : Tracker(layer, volume, Material(0, 0)) {}
 
@@ -161,6 +192,10 @@ bool CMSTracker::acceptance(const Track& track) const {
   else
     return false;
 }
+  
+ 
+  
+
 
 double CMSTracker::ptResolution(const Track& track) const {
   double pt = track.pt();  // TODO inherited from Colin: depends on the field

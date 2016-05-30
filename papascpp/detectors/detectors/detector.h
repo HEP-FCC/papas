@@ -49,8 +49,10 @@ private:
 */
 class Calorimeter : public DetectorElement {
 public:
+  enum LOCATION {kBarrel = 0, kEndCap = 1};
   using DetectorElement::DetectorElement;
   virtual double energyResolution(double energy, double eta) const = 0;
+  virtual double energyResponse(double energy, double  eta = 0) const { return 1;}
   virtual double clusterSize(const Particle& ptc) const = 0;
   virtual bool acceptance(const Cluster& ptc) const = 0;
 

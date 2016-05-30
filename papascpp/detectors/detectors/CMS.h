@@ -11,6 +11,7 @@
 #include "Definitions.h"
 
 
+
 namespace papas {
 
 class Track;
@@ -32,55 +33,60 @@ class VolumeCylinder;
  */
 //CMSECAL inherits from ECAL clustersize/acceptance/energy resolution
 //ECAL inherits from DetectorElement
-class CMSECAL: public Calorimeter {
+class CMSECAL : public Calorimeter {
 public:
-   enum LOCATION {kBarrel = 0, kEndCap = 1};
-   //AJRTODO check whether both cosntructors are needed
-   ///constructor - allows the Material and Volume to be created on the fly
-   CMSECAL(papas::Layer layer, const VolumeCylinder&& volume,
-        const Material&& material, double eta_crack, std::vector<double> emin,
-        const std::vector<std::vector<double>>&& eres);
+  // AJRTODO check whether both cosntructors are needed
+  /// constructor - allows the Material and Volume to be created on the fly
+  CMSECAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
+          std::vector<double> emin, const std::vector<std::vector<double>> eres);
 
-   ///constructor - requires the Material and Volume to be already in existance
-   /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
-        const Material& material , double eta_crack, double emin,
-        const std::vector<double>& eres);*/
+  /// constructor - requires the Material and Volume to be already in existance
+  /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
+       const Material& material , double eta_crack, double emin,
+       const std::vector<double>& eres);*/
 
-   double clusterSize(const Particle& ptc) const override;
-   bool acceptance(const Cluster& cluster) const override;
-   double energyResolution(double energy, double eta=0) const override;
-   //TODOAJR space_resolution(self, ptc):
+  double clusterSize(const Particle& ptc) const override;
+  bool acceptance(const Cluster& cluster) const override;
+  double energyResolution(double energy, double eta = 0 ) const override;
+  // TODOAJR space_resolution(self, ptc):
 private:
-   double m_etaCrack;
-  //double m_emin;
-  //bool m_isBarrel;
-   std::vector<double> m_emin;
-   std::vector<std::vector<double>> m_eres;  ///energy resolution
+  double m_etaCrack;
+  // double m_emin;
+  // bool m_isBarrel;
+  std::vector<double> m_emin;
+  std::vector<std::vector<double>> m_eres;  /// energy resolution
 };
-
 
 class CMSHCAL: public Calorimeter {
 public:
    //TODO consider best approach for below?
    ///constructor - allows the Material and Volume to be created on the fly
-   CMSHCAL(papas::Layer layer, const VolumeCylinder&& volume,
-        const Material&& material,
-        const std::vector<double>&&
-        eres);
+   CMSHCAL(Layer layer,
+           const VolumeCylinder&& volume,
+           const Material&& material,
+           double m_eta_crack,
+           std::vector<std::vector<double>> eres,
+           std::vector<std::vector<double>> eresp);
    ///constructor - requires the Material and Volume to be already in existance
-   CMSHCAL(papas::Layer layer, const VolumeCylinder& volume,
-        const Material& material ,
-        const std::vector<double>&
-        eres);
+   CMSHCAL(Layer layer,
+           const VolumeCylinder& volume,
+           const Material& material,
+           double m_eta_crack,
+           std::vector<std::vector<double>> eres,
+           std::vector<std::vector<double>> eresp);
 
    double clusterSize(const Particle& ptc) const override;
    bool acceptance(const Cluster& cluster)  const override;
    double energyResolution(double energy, double eta=0)  const override;
+   double energyResponse(double energy, double  eta=0) const override;
    //TODOAJR space_resolution(self, ptc):
 private:
-   std::vector<double> m_eres; ///energy resolution
-};
+   double m_etaCrack;
+   std::vector<std::vector<double>> m_eres; ///energy resolution
+   std::vector<std::vector<double>> m_eresp; ///ask Colin what this is};
 
+};
+  
 class CMSTracker: public Tracker {
 public:
    //TODO consider best approach for below?
