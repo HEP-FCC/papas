@@ -48,7 +48,7 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
   }
 }
 
-std::shared_ptr<const DetectorElement> Detector::element(papas::Layer layer) const
+std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const
 {
 
    switch (layer) {
@@ -69,65 +69,10 @@ std::shared_ptr<const DetectorElement> Detector::element(papas::Layer layer) con
    return nullptr;
 }
 
-Field::Field(papas::Layer layer, const  VolumeCylinder& volume , const Material& material, double magnitude) :
-  DetectorElement(layer, volume, material),
+Field::Field(const VolumeCylinder& volume , const Material& material, double magnitude) :
+  DetectorElement(Layer::kField, volume, material),
   m_magnitude(magnitude)
 {}
 
 } // end namespace papas
-/*
- Experiments
 
- Detector::Detector(const DetectorElement & ecal) : m_ECAL(&ecal),  m_cylinders()
- {
- }
- Detector::Detector(std::shared_ptr<const DetectorElement> ecal,std::shared_ptr<const DetectorElement> hcal) : m_ECAL(ecal),m_Hcal(hcal)
- {
- }*/
-/*Detector::Detector(DetectorElement && ecal,DetectorElement && hcal) : m_ECAL(std::move(ecal)),m_Hcal(std::move(hcal))
- {
- }
-
-BaseECAL::BaseECAL(const std::string& name, const VolumeCylinder& volume, const Material& material) :
-   DetectorElement(name, volume, material)
-{
-
-}
-
-
-BaseECAL::BaseECAL(const std::string& name, const VolumeCylinder&& volume, const Material&& material) :
-   DetectorElement(name, volume, material)
-{
-
-}*/
-
-
-
-/*
-BaseECAL::BaseECAL(const std::string& name, const VolumeCylinder& volume, const Material& material, double eta_crack, double emin, const std::vector<double>& eres) :
-DetectorElement(name, volume, material),
-m_eta_crack(eta_crack),
-m_emin(emin),
-m_eres(eres)
-{
-
-}
-
-BaseECAL::BaseECAL(const std::string& name,const VolumeCylinder&& volume, const Material&& material, double eta_crack, double emin,const std::vector<double> &&eres) :
-DetectorElement(name, volume, material),
-m_eta_crack(eta_crack),
-m_emin(emin),
-m_eres(eres)
-{
-
-}
-
-double BaseECAL::energy_resolution(double energy) const
-{
-    double stoch = m_eres[0] / sqrt(energy);
-    double noise = m_eres[1] / energy;
-    double constant = m_eres[2];
-    return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
-}
-
-*/

@@ -20,40 +20,73 @@ class Track;
 
 
 /**
- Class base for Calorimeter, Tracker and Field
+ Detector Element is the  base for Calorimeter, Tracker and Field
 */
 
 class DetectorElement {
 public:
-  DetectorElement(papas::Layer layer,
+  /** Constructor (allows the Material and Volume to be created on the fly)
+   * @param[in] layer : enum kEcal, kHcal, ktracker, kField
+   * @param[in] const VolumeCylinder&& volume : defines the element cyclinders
+   * @param[in] const Material&& material : material allows the Material to be created on the fly
+    */
+  DetectorElement(Layer layer,
                   const VolumeCylinder&& volume,
-                  const Material&& material);  ///< allows the Material and Volume to be created on the fly
+                  const Material&& material);
 
-  DetectorElement(papas::Layer layer,
+  /** Constructor (requires the Material and Volume to be already in existance)
+   * @param[in] layer : enum kEcal, kHcal, ktracker, kField
+   * @param[in] const VolumeCylinder& volume : defines the element cyclinders
+   * @param[in] const Material& material : material
+   */
+  DetectorElement(Layer layer,
                   const VolumeCylinder& volume,
-                  const Material& material);  ///< requires the Material and Volume to be already in existance
+                  const Material& material);
   const VolumeCylinder& volumeCylinder() const { return m_volume; }  ///< return the volume cyclinder
-  papas::Layer layer() const { return m_layer; };
+  Layer layer() const { return m_layer; }; ///< returns kEcal, kHcal etc
   const Material& material() const { return m_material; }
 
 protected:
-  VolumeCylinder m_volume;
+  VolumeCylinder m_volume; ///< The cyclinders describing the detector element
   Material m_material;
-  papas::Layer m_layer;
+  Layer m_layer; ///< eg kEcal, kHcal
 
 private:
 };
 
-/**
- Holds virtual functions that the user must define when creating their own ECAL class
-*/
+/** The Calorimeter class  is the basis of HCAL and ECAL elements. 
+    It contains virtual functions that must be implemented by users so as to be detector specific. 
+    Users must provide clusterSize/acceptance/energyResolution methods for the inheriting class
+ */
 class Calorimeter : public DetectorElement {
 public:
   enum LOCATION {kBarrel = 0, kEndCap = 1};
   using DetectorElement::DetectorElement;
+  
+  /** energy Resolution of ECAL
+   @param[in] energy : TODO
+   @param[in] eta : angle of arrival
+   @return minimum energy resolution of the detector
+   */
   virtual double energyResolution(double energy, double eta) const = 0;
+  
+  /** energy response of ECAL
+   @param[in] energy : TODO
+   @param[in] eta : angle of arrival
+   @return TODO ask COLIN
+   */
   virtual double energyResponse(double energy, double  eta = 0) const { return 1;}
+  
+  /** Minimum size that will be seen by a detector
+   @param[in]  const Particle& ptc : particle that is to be detected
+   @return size of resulting cluster (TODO units)
+   */
   virtual double clusterSize(const Particle& ptc) const = 0;
+  
+  /** Decides whether a cluster will be seen by a detector
+   @param[in]  the cluster to be analysed
+   @return true is cluster is detected, false it if is too small to be seen
+   */
   virtual bool acceptance(const Cluster& ptc) const = 0;
 
 private:
@@ -61,10 +94,10 @@ private:
 
 class Field : public DetectorElement {
 public:
-  Field(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material,
+  Field(const VolumeCylinder&& volume, const Material&& material,
         double magnitude);  ///< allows the Material and Volume to be created on the fly
 
-  Field(papas::Layer layer, const VolumeCylinder& volume, const Material& material, double magnitude);
+  Field(const VolumeCylinder& volume, const Material& material, double magnitude);
   double getMagnitude() const { return m_magnitude; };
 
 protected:
