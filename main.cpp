@@ -22,7 +22,7 @@
 #include "PFParticle.h"
 #include "PFReconstructor.h"
 #include "Cluster.h"
-#include "Track.h"
+#include "pTrack.h"
 #include "Path.h"
 #include "random.h"
 
@@ -32,8 +32,34 @@
 //extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
+  randomgen::RandUniform runi1{0,1};
+  randomgen::RandUniform runi2{0, 1};
+  randomgen::RandExponential rexp1{3};
+  randomgen::RandExponential rexp2{4};
   
+  
+  //rexp1.setSeed(0xdeadbeef);
+  runi1.setSeed(0xdeadbeef);
 
+  
+  
+  std::cout << runi1.next()<< std::endl;
+  std::cout << runi2.next()<< std::endl;
+  std::cout << rexp1.next()<< std::endl;
+  std::cout << rexp2.next()<< std::endl;
+  
+  runi1.setSeed(0xdeadbeef);
+  std::cout << runi1.next()<< std::endl;
+  std::cout << runi2.next()<< std::endl;
+  std::cout << rexp1.next()<< std::endl;
+  std::cout << rexp2.next()<< std::endl;
+  
+  runi1.setSeed(0xdeadbeef);
+  for (int i =0; i<6 ; i++)
+    std::cout << runi2.next()<< std::endl;
+  
+  
+  
 
   randomgen::RandExponential rexp{49.3};
   rexp.setSeed(100);

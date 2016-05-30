@@ -8,8 +8,8 @@
  */
 #include "CMS.h"
 #include "Cluster.h"
-#include "Particle.h"
-#include "Track.h"
+#include "BaseParticle.h"
+#include "pTrack.h"
 #include "geometry.h"
 #include "material.h"
 #include "Path.h"
@@ -26,8 +26,8 @@ namespace papas {
  {}*/
 
 CMSECAL::CMSECAL(papas::Layer layer, const VolumeCylinder&& volume, const Material&& material, double eta_crack,
-                 double emin, const std::vector<double>&& eres)
-    : Calorimeter(layer, volume, material), m_eta_crack(eta_crack), m_emin(emin), m_eres(eres) {}
+                 std::vector<double> emin, const std::vector<std::vector<double>>&& eres)
+    : Calorimeter(layer, volume, material), m_etaCrack(eta_crack), m_emin(emin), m_eres(eres) {}
 
 // will need to be rewritten for different detectors
 /**
@@ -51,18 +51,21 @@ double CMSECAL::clusterSize(const Particle& ptc) const {
 bool CMSECAL::acceptance(const Cluster& cluster) const {
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());
-  if (eta < m_eta_crack)
-    return energy > m_emin;
+  if (eta < m_etaCrack)
+    return energy > m_emin[kBarrel];
   else if (eta < 3.)
-    return (energy > m_emin & cluster.pt() > 0.5);
+    return (energy > m_emin[kEndCap] & cluster.pt() > 0.5);
   else
     return false;
 }
 
-double CMSECAL::energyResolution(double energy) const {
-  double stoch = m_eres[0] / sqrt(energy);
-  double noise = m_eres[1] / energy;
-  double constant = m_eres[2];
+double CMSECAL::energyResolution(double energy, double eta) const {
+  int location = kBarrel;
+  if (fabs(eta)>1.479 && fabs(eta)<3.0 )
+    location = kEndCap; //endcap
+  double stoch = m_eres[location][0] / sqrt(energy);
+  double noise = m_eres[location][1] / energy;
+  double constant = m_eres[location][2];
   return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
 }
 
@@ -74,8 +77,9 @@ CMS::CMS() : Detector() {
                                                            VolumeCylinder(layer, 1.55, 2.1, 1.30, 2),
                                                            Material(8.9e-3, 0.275),
                                                            0.15,  // eta_crack
-                                                           0.4,   // emin
-                                                           std::vector<double>{.073, .1, .005})};
+                                                           std::vector<double>{0.3, 1},  // emin
+                                                           std::vector<std::vector<double>>{{.073, .1, .005},
+                                                             {.213, .224, .005}} )};
 
   // HCAL detector element
   layer = papas::Layer::kHcal;
@@ -141,7 +145,7 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
     return false;
 }
 
-double CMSHCAL::energyResolution(double energy) const { return m_eres[0] / sqrt(energy); }
+double CMSHCAL::energyResolution(double energy, double eta) const { return m_eres[0] / sqrt(energy); }
 
 CMSTracker::CMSTracker(papas::Layer layer, const VolumeCylinder& volume)
     : Tracker(layer, volume, Material(0, 0)) {}

@@ -14,15 +14,15 @@
 namespace papas {
 
 class Track;
-
-/**
- * @file CMS.h
- * @brief Implementation of CMS detector
- */
 class Particle;
 class Cluster;
 class Material;
 class VolumeCylinder;
+/**
+ * @file CMS.h
+ * @brief Implementation of CMS detector
+ */
+
 
 ///CMSECAL Class (CMS implementation)
 /** This ECAL is implmented specifically for CMS
@@ -34,12 +34,12 @@ class VolumeCylinder;
 //ECAL inherits from DetectorElement
 class CMSECAL: public Calorimeter {
 public:
+   enum LOCATION {kBarrel = 0, kEndCap = 1};
    //AJRTODO check whether both cosntructors are needed
    ///constructor - allows the Material and Volume to be created on the fly
    CMSECAL(papas::Layer layer, const VolumeCylinder&& volume,
-        const Material&& material, double eta_crack, double emin,
-        const std::vector<double>&&
-        eres);
+        const Material&& material, double eta_crack, std::vector<double> emin,
+        const std::vector<std::vector<double>>&& eres);
 
    ///constructor - requires the Material and Volume to be already in existance
    /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
@@ -48,12 +48,14 @@ public:
 
    double clusterSize(const Particle& ptc) const override;
    bool acceptance(const Cluster& cluster) const override;
-   double energyResolution(double energy) const override;
+   double energyResolution(double energy, double eta=0) const override;
    //TODOAJR space_resolution(self, ptc):
 private:
-   double m_eta_crack;
-   double m_emin;
-   std::vector<double> m_eres;  ///energy resolution
+   double m_etaCrack;
+  //double m_emin;
+  //bool m_isBarrel;
+   std::vector<double> m_emin;
+   std::vector<std::vector<double>> m_eres;  ///energy resolution
 };
 
 
@@ -73,7 +75,7 @@ public:
 
    double clusterSize(const Particle& ptc) const override;
    bool acceptance(const Cluster& cluster)  const override;
-   double energyResolution(double energy)  const override;
+   double energyResolution(double energy, double eta=0)  const override;
    //TODOAJR space_resolution(self, ptc):
 private:
    std::vector<double> m_eres; ///energy resolution

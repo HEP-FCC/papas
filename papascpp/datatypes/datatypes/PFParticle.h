@@ -4,7 +4,7 @@
 #ifndef PFParticle_H
 #define PFParticle_H
 
-#include "Particle.h"
+#include "BaseParticle.h"
 #include "Path.h"
 
 

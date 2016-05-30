@@ -21,45 +21,13 @@ IF("${isSystemDir}" STREQUAL "-1")
 ENDIF("${isSystemDir}" STREQUAL "-1")
 
 
-#Set compiler flags
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-else()
-message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-endif()
 
-MESSAGE( STATUS "Doxygen engaging " )
-FIND_PACKAGE( Doxygen )
-IF( DOXYGEN_FOUND )
-
-# Add doc target
-ADD_CUSTOM_TARGET( doc )
-ADD_CUSTOM_COMMAND( TARGET doc
-COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-"${PROJECT_SOURCE_DIR}/../README.md" "${PROJECT_SOURCE_DIR}/../doc/README.md"
-COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile"
-WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/../doc"
-COMMENT "Building API Documentation in ${PROJECT_SOURCE_DIR}/../doc... "
-VERBATIM )
-
-ELSE()
-MESSAGE( STATUS "Doxygen not found in your system!!" )
-IF( INSTALL_DOC )
-MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
-SET( INSTALL_DOC OFF )
-ENDIF()
-ENDIF()
 
 SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../install")
 Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 
 #make this automated
-set (MAINDIR ${CMAKE_CURRENT_SOURCE_DIR})
+set (MAINDIR ${CMAKE_SOURCE_DIR}/papascpp)
 file(GLOB_RECURSE sources     
 ${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/datatypes/*.h
 ${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/graphtools/*.h
@@ -132,25 +100,25 @@ include_directories(
   "${ROOT_INCLUDE_DIRS}"
   )
 
-REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
+REFLEX_GENERATE_DICTIONARY(papascppstuffDict ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
 
-add_library(papascpp SHARED ${sources} 
+add_library(papascppstuff SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h ) # papascppDict.cxx)
-target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
+${MAINDIR}/utility/utility/random.h  papascppstuffDict.cxx)
+target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
-#install(TARGETS papascpp DESTINATION lib)
+install(TARGETS papascppstuff DESTINATION lib)
 
 ### Install the dictionary
-#if (${ROOT_VERSION} GREATER 6)
-#install(FILES
-#"${PROJECT_BINARY_DIR}/papascppDict_rdict.pcm"
-#DESTINATION lib COMPONENT dev)
-#endif()
+if (${ROOT_VERSION} GREATER 6)
+install(FILES
+"${PROJECT_BINARY_DIR}/papascppstuffDict_rdict.pcm"
+DESTINATION lib COMPONENT dev)
+endif()
 
 
 

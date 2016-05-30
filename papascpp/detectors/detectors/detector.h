@@ -50,7 +50,7 @@ private:
 class Calorimeter : public DetectorElement {
 public:
   using DetectorElement::DetectorElement;
-  virtual double energyResolution(double energy) const = 0;
+  virtual double energyResolution(double energy, double eta) const = 0;
   virtual double clusterSize(const Particle& ptc) const = 0;
   virtual bool acceptance(const Cluster& ptc) const = 0;
 
@@ -97,7 +97,8 @@ public:
   std::shared_ptr<const Field> field() const { return m_field; };
 
 protected:
-  // shared pointers allow user to have their own derived ECAL and HCAL calorimeter classs
+  // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
+  // that has a fixed interface defined by Calorimeter
   std::shared_ptr<const class Calorimeter> m_ecal;
   std::shared_ptr<const class Calorimeter> m_hcal;
   std::shared_ptr<const Tracker> m_tracker;
