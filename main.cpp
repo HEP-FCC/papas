@@ -28,16 +28,37 @@
 
 #include "AliceDisplay.h"
 #include "Id.h"
+ #include "Log.h"
+
 
 //extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
+  //Log::init();
+  
+  //try
+  //{
+    //Multithreaded console logger(with color support)
+    
+
+    
+  /*}
+  catch (const spdlog::spdlog_ex& ex)
+  {
+    std::cout << "Log failed: " << ex.what() << std::endl;
+  }*/
+
+  
   randomgen::RandUniform runi1{0,1};
   randomgen::RandUniform runi2{0, 1};
   randomgen::RandExponential rexp1{3};
   randomgen::RandExponential rexp2{4};
   
+  //LOG(INFO)<<"Hello World!";
   
+  
+  //BOOST_LOG_TRIVIAL(trace) << "A trace severity message";
+ 
   //rexp1.setSeed(0xdeadbeef);
   runi1.setSeed(0xdeadbeef);
 
@@ -89,6 +110,10 @@ int main(int argc, char* argv[]) {
   PFEvent pfEvent{sim}; //for python test
   
   std::cout<<pfEvent<< std::endl;
+  
+  Log::log()->info()<<pfEvent;
+  Log::log()->flush();
+
 
   // Reconstruct
   PFBlockBuilder bBuilder{pfEvent};

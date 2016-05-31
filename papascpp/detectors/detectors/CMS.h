@@ -71,6 +71,7 @@ public:
    @return minimum energy resolution of the detector
    */
   double energyResolution(double energy, double eta = 0 ) const override;
+  double energyResponse(double energy = 0, double eta = 0) const override;
   
   // TODOAJR space_resolution(self, ptc):
 private:

@@ -8,6 +8,7 @@
 
 #include "Cluster.h"
 #include "Id.h"
+#include "Log.h"
 
 namespace papas {
 
@@ -18,16 +19,18 @@ m_uniqueId(id), m_position(position), m_subClusters()
 {
   setSize(size_m);
   setEnergy(energy);
+  
+  
+  Log::log()->info() << "custom class with operator<<: "  << "..";
 }
 
 void Cluster::setSize(double value)
 {
   m_size = value;
   //AJRTODO put in exception here
-  //try:
+
   m_angularSize = atan(m_size / m_position.Mag()) ;
-  //except:
-  //   import pdb; pdb.set_trace()
+
 }
 
 void Cluster::setEnergy(double energy)

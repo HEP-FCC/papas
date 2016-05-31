@@ -37,9 +37,9 @@ find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-
-add_subdirectory(papascpp)
 add_subdirectory(papaslib)
+add_subdirectory(papascpp)
+
 add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
 #

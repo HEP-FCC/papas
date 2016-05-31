@@ -75,7 +75,7 @@ public:
    @param[in] eta : angle of arrival
    @return TODO ask COLIN
    */
-  virtual double energyResponse(double energy, double  eta = 0) const { return 1;}
+  virtual double energyResponse(double energy, double  eta = 0) const = 0; 
   
   /** Minimum size that will be seen by a detector
    @param[in]  const Particle& ptc : particle that is to be detected

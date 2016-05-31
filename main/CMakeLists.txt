@@ -15,10 +15,12 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-#this should come from env variables
-#set(BOOST_ROOT /usr/local/boost_1_59_0)
+#ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+SET(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.59.0 REQUIRED)
+message("Boost searched for")
 if (Boost_FOUND)
+message("Boost Found")
 include_directories(
 ${Boost_INCLUDE_DIRS}
 ${CMAKE_SOURCE_DIR}/graphtools)
@@ -33,6 +35,7 @@ ${MAINDIR}/datatypes/datatypes/
 ${MAINDIR}/simulation/simulation
 ${MAINDIR}/reconstruction/reconstruction
 ${MAINDIR}/graphtools/graphtools
+${MAINDIR}/spdlog
 )
 
 include_directories(/usr/local/lib ${CMAKE_SOURCE_DIR}/install/lib)

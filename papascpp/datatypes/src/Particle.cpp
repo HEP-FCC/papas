@@ -14,6 +14,7 @@
 #include <sstream> //AJRTODO temp
 #include "Definitions.h"
 #include "Id.h"
+//#include "easylogging.h"
 
 namespace papas {
 
@@ -32,13 +33,14 @@ std::string Particle::stringDescription() const
 
 
 
-  Particle::Particle(int pdgid, double charge, TLorentzVector tlv,
+Particle::Particle(int pdgid, double charge, TLorentzVector tlv,
                            double status) :
 m_uniqueId(Id::makeParticleId(papas::enumSource::NONE)),
 m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 {
-  
+  //LOG(INFO)<< "Made a particle";
+
   /*std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
    tlv.Et() << " ";
    std::cout << m_tlv.X() << " " << m_tlv.Y() << " " << m_tlv.Z() << " " <<
@@ -54,6 +56,8 @@ Particle::Particle(int pdgid, double charge) :
 {
   m_tlv = TLorentzVector{0., 0., 0., 0.};
   ;
+  //LOG(INFO)<< "Made a particle";
+
 }
 
 
@@ -61,6 +65,7 @@ Particle::Particle() :
   m_uniqueId(Id::makeParticleId(papas::enumSource::NONE)),
   m_particleId(0), m_charge(0), m_status(0)
 {
+  //LOG(INFO)<< "Made a particle";
 
 }
 
@@ -68,17 +73,19 @@ Particle::Particle(IdType id, int pdgid, double charge) :
   m_uniqueId(id), m_particleId(pdgid), m_charge(charge), m_status(0)
 {
   m_tlv = TLorentzVector{0., 0., 0., 0.};
+  //LOG(INFO)<< "Made a particle";
 
 }
 
 
-  Particle::Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status) :
+Particle::Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status) :
   m_uniqueId(id),
   m_tlv(tlv),
   m_particleId(pdgid),
   m_charge(charge),
   m_status(status)
 {
+  //LOG(INFO)<< "Made a particle";
 
 }
   

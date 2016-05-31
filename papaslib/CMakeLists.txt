@@ -29,7 +29,7 @@ Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 #make this automated
 set (MAINDIR ${CMAKE_SOURCE_DIR}/papascpp)
 file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/datatypes/*.h
+${MAINDIR}/datatypes/src/*.cpp 
 ${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/graphtools/*.h
 ${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/fastsim/*.h
 ${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/utility/*.h
@@ -45,27 +45,31 @@ ${MAINDIR}/display/test/*.cpp
 ${MAINDIR}/detectors/test/*.cpp 
 ${MAINDIR}/simulation/test/*.cpp 
 ${MAINDIR}/reconstruction/test/*.cpp
+
 )
 
-include_directories(
-${CMAKE_CURRENT_SOURCE_DIR}
-${MAINDIR}/datatypes/datatypes/
-${MAINDIR}/display/display/
-${MAINDIR}/detectors/detectors/
-${MAINDIR}/simulation/simulation/
-${MAINDIR}/graphtools/graphtools/
-${MAINDIR}/utility/utility/
-${MAINDIR}/reconstruction/reconstruction/
-)
-
-file(GLOB_RECURSE headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+file(GLOB_RECURSE headers 
 ${MAINDIR}/datatypes/datatypes/*.h
 ${MAINDIR}/display/display/*.h
 ${MAINDIR}/detectors/detectors/*.h
 ${MAINDIR}/simulation/simulation/*.h
 ${MAINDIR}/graphtools/graphtools/*.h
 ${MAINDIR}/utility/utility/*.h
-${MAINDIR}/reconstruction/reconstruction/*.h)
+${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/spdlog
+)
+#message(${headers})
+include_directories(
+${MAINDIR}/datatypes/datatypes
+${MAINDIR}/display/display
+${MAINDIR}/detectors/detectors
+${MAINDIR}/simulation/simulation
+${MAINDIR}/graphtools/graphtools
+${MAINDIR}/utility/utility
+${MAINDIR}/reconstruction/reconstruction
+${MAINDIR}/spdlog
+)
+
 
 project(event)
 
@@ -108,7 +112,7 @@ message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 add_library(papascppstuff SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h  papascppstuffDict.cxx)
+${MAINDIR}/utility/utility/random.h papascppstuffDict.cxx)
 target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
 install(TARGETS papascppstuff DESTINATION lib)

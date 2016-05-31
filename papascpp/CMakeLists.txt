@@ -77,10 +77,11 @@ ${MAINDIR}/display/test/*.cpp
 ${MAINDIR}/detectors/test/*.cpp 
 ${MAINDIR}/simulation/test/*.cpp 
 ${MAINDIR}/reconstruction/test/*.cpp
+
 )
 
 include_directories(
-${CMAKE_CURRENT_SOURCE_DIR}
+
 ${MAINDIR}/datatypes/datatypes/
 ${MAINDIR}/display/display/
 ${MAINDIR}/detectors/detectors/
@@ -88,16 +89,18 @@ ${MAINDIR}/simulation/simulation/
 ${MAINDIR}/graphtools/graphtools/
 ${MAINDIR}/utility/utility/
 ${MAINDIR}/reconstruction/reconstruction/
+${MAINDIR}/spdlog
 )
 
-file(GLOB_RECURSE headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+file(GLOB_RECURSE headers 
 ${MAINDIR}/datatypes/datatypes/*.h
 ${MAINDIR}/display/display/*.h
 ${MAINDIR}/detectors/detectors/*.h
 ${MAINDIR}/simulation/simulation/*.h
 ${MAINDIR}/graphtools/graphtools/*.h
 ${MAINDIR}/utility/utility/*.h
-${MAINDIR}/reconstruction/reconstruction/*.h)
+${MAINDIR}/reconstruction/reconstruction/*.h
+)
 
 project(event)
 

@@ -93,6 +93,8 @@ double CMSECAL::energyResolution(double energy, double eta) const {
   return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
 }
   
+double CMSECAL::energyResponse(double energy, double  eta) const  { return 1;}
+
 
 
 CMSHCAL::CMSHCAL(const VolumeCylinder& volume, const Material& material, double etacrack,
