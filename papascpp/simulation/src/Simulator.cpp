@@ -13,6 +13,7 @@
 #include "ParticlePData.h"
 #include "Path.h"
 #include "random.h"
+#include "Log.h"
 
 namespace papas {
 
@@ -38,6 +39,7 @@ Simulator::Simulator(const Detector& d) :
 
 void  Simulator::simulatePhoton(PFParticle& ptc)
 {
+  PDebug::write("Simulating Photon \n");
   auto ecal_sp=m_detector.ecal();
   
   //find where it meets the Ecal inner cylinder
@@ -48,6 +50,7 @@ void  Simulator::simulatePhoton(PFParticle& ptc)
 }
 
 void Simulator::simulateHadron(PFParticle& ptc) {
+  PDebug::write("Simulating Hadron \n");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
   auto field_sp = m_detector.field();
@@ -89,7 +92,8 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 }
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
-  //TODO
+  PDebug::write("Simulating Neutrino \n");
+  (void)ptc;
 }
 
 void  Simulator::propagate(PFParticle& ptc, const SurfaceCylinder& cylinder) {
@@ -114,6 +118,7 @@ PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 verte
   Id::Type uniqueid = Id::makeParticleId();
   m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, tlv, vertex, field});
   addNode(uniqueid); //add node to history graph
+                     //PDebug::write()<<  ;
   return m_particles[uniqueid];
 }
 
@@ -218,6 +223,8 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId) //, double energ
   auto layer = Id::layer(parentClusterId);
   
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
+  
+  
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   //double energyresolution = sp_calorimeter->energyResolution(parent.energy());

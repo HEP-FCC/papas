@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
-// A pretty printing library for C++
+// A pretty printing library for C++ collections
 //
 // Usage:
 // Include this header, and operator<< will "just work".

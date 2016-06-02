@@ -93,7 +93,11 @@ double CMSECAL::energyResolution(double energy, double eta) const {
   return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
 }
   
-double CMSECAL::energyResponse(double energy, double  eta) const  { return 1;}
+double CMSECAL::energyResponse(double energy, double  eta) const  {
+  (void)energy; //suppress warning messages for unused parameters;
+  (void)eta;
+  return 1;
+}
 
 
 
@@ -111,7 +115,10 @@ CMSHCAL::CMSHCAL(const VolumeCylinder&& volume, const Material&& material, doubl
  @param ptc particle
  @return size of resulting cluster
  */
-double CMSHCAL::clusterSize(const Particle& ptc) const { return 0.2; }
+double CMSHCAL::clusterSize(const Particle& ptc) const {
+  (void)ptc ;//suppress warning messages for unused parameters;
+  return 0.2;
+}
 
 /* Decides whether a cluster will be seen by a detector
  @param cluster the cluster to be analysed
@@ -186,6 +193,7 @@ bool CMSTracker::acceptance(const Track& track) const {
 
 double CMSTracker::ptResolution(const Track& track) const {
   double pt = track.pt();  // TODO inherited from Colin: depends on the field
+  (void)pt; //suppress unused parameter warning
   return 5e-3;
 }
 

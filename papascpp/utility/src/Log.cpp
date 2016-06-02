@@ -10,17 +10,19 @@
 #include "Log.h"
 namespace papas{
 
-  bool Log::logInitialized =false;
-  
+  bool Log::logInitialized = false;
+  bool PDebug::logInitialized = false;
+std::vector<spdlog::sink_ptr> Log::m_sinks;
+  std::vector<spdlog::sink_ptr> PDebug::m_sinks;
   
 void Log::init(){
   logInitialized=true;
   //auto console = spdlog::stdout_logger_mt("console", true );
   
-  std::vector<spdlog::sink_ptr> sinks;
-  sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_st>());
-  sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("logfile",true));
-  auto combined_logger = std::make_shared<spdlog::logger>("papas_logger", begin(sinks), end(sinks));
+
+  m_sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_st>());
+  m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("logfile",true));
+  auto combined_logger = std::make_shared<spdlog::logger>("papas_logger", begin(m_sinks), end(m_sinks));
   //register it if you need to access it globally
   spdlog::register_logger(combined_logger);
   combined_logger->set_pattern("%l: %v");
@@ -34,5 +36,23 @@ std::shared_ptr<spdlog::logger> Log::log() {
   }
   return spdlog::get("papas_logger");
 }
+  
+  void PDebug::init(){
+    logInitialized=true;
+    m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("/Users/alice/work/Outputs/physicsoutput.log",true));
+    auto plogger = std::make_shared<spdlog::logger>("pdebug", begin(m_sinks), end(m_sinks));
+    //auto plogger = spdlog::sinks::simple_file_sink_st("pdebug","/Users/alice/work/Outputs/physicsoutput");
+    plogger->set_level(spdlog::level::info);
+    plogger->set_pattern("%v");
+    spdlog::register_logger(plogger);
+  
+  }
+  
+  std::shared_ptr<spdlog::logger> PDebug::log() {
+    if (!logInitialized) {
+      PDebug::init();
+    }
+    return spdlog::get("pdebug");
+  }
 
 } //namesapce papas

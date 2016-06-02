@@ -28,7 +28,7 @@
 
 #include "AliceDisplay.h"
 #include "Id.h"
- #include "Log.h"
+#include "Log.h"
 #include "StringFormatter.h"
 void dosomerandom ();
 
@@ -63,7 +63,13 @@ int main(int argc, char* argv[]) {
   
 
   Log::info() << pfEvent;
+  PDebug::info() << pfEvent;
+  
+  PDebug::write( pfEvent);
+  PDebug::write( "things {:8s}{:1d}{}", "happen", 5, pfEvent);
   Log::log()->flush();
+  PDebug::log()->flush();
+
 
 
   // Reconstruct

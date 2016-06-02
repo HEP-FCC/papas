@@ -1,11 +1,3 @@
-//
-//  Id.cpp
-//  papas
-//
-//  Created by Alice Robson on 19/05/16.
-//
-//
-
 #include "Id.h"
 
 #include <cmath>
@@ -20,7 +12,39 @@
 //
 
 
+/** @class   Id Datatypes/Datatypes/Id.h Id.h
+ *
+ *  @brief Encode information into a unique identifier
+ *  Example usage: Id::Type uid=Id::MakeId(kEcalCluster)
+ *
+ *  @author  Alice Robson
+ *  @date    2016-04-05
+ */
+
+
 namespace papas {
+  
+  /** A Particle Flow Block stores a set of element ids that are connected to each other
+   together with the edge data (distances) for each possible edge combination
+   
+   class attributes:
+   
+   uniqueid : the block's unique id generated from Id class
+   element_uniqueids : list of uniqueids of its elements
+   pfevent : contains the tracks and clusters and a get_object method to allow access to the
+   underlying objects given their uniqueid
+   edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
+   use  get_edge(id1,id2) to find an edge
+   is_active : bool true/false, set to false if the block is subsequently subdivided
+   
+   Usage:
+   block = PFBlock(element_ids,  edges, pfevent)
+   for uid in block.element_uniqueids:
+   print pfevent.get_object(uid).__str__() + "\n"
+   
+   */
+
+
   
   unsigned int Id::s_counter = 1; /// static which will be used to create a unique long
                                   //const unsigned int Id::bitshift =32;
@@ -32,11 +56,7 @@ namespace papas {
   //TODO rename as OBJECTTYpe not PFObjectType
   Id::Type Id::makeId(ItemType type, unsigned int uniqueid)
   {
-    
-     //default is to start at 1 for first id so that id=0 means unset
-                 //long id = (uniqueid << 16) | ((int)source << 13) | ((int)subtype << 10) | ((
-                 //int)layer << 6) | (int)type;
-    
+
     if (type>6) { //TODO error cghecking on type
       std::cout <<"TOO big" << std::endl;
     }
