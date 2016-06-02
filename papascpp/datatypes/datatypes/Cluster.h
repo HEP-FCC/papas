@@ -29,25 +29,28 @@ public:
   double size() const     {return m_size;}
   double pt() const       {return m_pt;}
   double energy() const   {return m_energy;}
-  double eta() const      {return m_position.Eta();}
+  double eta() const      {return m_p3.Eta();}
+  double theta() const    {return M_PI/2. - m_p3.Theta();}
   IdType id() const         {return m_uniqueId;}
-  TVector3 position() const {return m_position;}
+  TVector3 position() const {return m_p3;}
   void setEnergy(double energy);
   void setSize(double value) ;
   std::vector<IdType> subClusters() const { return m_subClusters;};
   static double s_maxEnergy; //AJR is this in the right place
   
-  friend std::ostream& operator<<(std::ostream& os, const Cluster& cluster); //TODO move to helper class
   
 protected:
   IdType m_uniqueId;
   double m_size;
   double m_angularSize;
   double m_pt;
-  TVector3 m_position;
+  TVector3 m_p3;
   double m_energy;
   std::vector<IdType> m_subClusters;
 };
+  
+  std::ostream& operator<<(std::ostream& os, const Cluster& cluster); 
+
 
 } // end namespace papas
 

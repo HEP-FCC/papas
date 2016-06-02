@@ -12,7 +12,7 @@
 #include "PFParticle.h"
 #include "ParticlePData.h"
 #include "Path.h"
-
+#include "random.h"
 
 namespace papas {
 
@@ -33,6 +33,7 @@ Simulator::Simulator(const Detector& d) :
   m_tracks.reserve(isize);
   m_smearedTracks.reserve(isize);
   m_nodes.reserve(isize);
+  randomgen::setEngineSeed(0xdeadbeef);
 }
 
 void  Simulator::simulatePhoton(PFParticle& ptc)
@@ -54,7 +55,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 
   // make a track
   const Track& track = addTrack(ptc);
-  addSmearedTrack(track);
+
 
   // find where it meets the inner Ecal cyclinder
   propagate(ptc, ecal_sp->volumeCylinder().inner());
@@ -71,9 +72,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     TVector3 pointDecay = path->pointAtTime(timeDecay);
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().Contains(pointDecay)) {
-      // TODO reinstate after testingdouble fracEcal = randomgen::randomUniform(0., 0.7).next(); // could also have a
-      // static member number generator
-      fracEcal = 0.35;
+      fracEcal = randomgen::RandUniform(0., 0.7).next();
       Id::Type ecalId = addEcalCluster(ptc, track.id(), fracEcal);
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
@@ -85,6 +84,8 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   propagate(ptc, hcal_sp->volumeCylinder().inner());
   Id::Type hcalId = addHcalCluster(ptc, ptc.id(), 1 - fracEcal);
   addSmearedCluster(hcalId);
+  
+  addSmearedTrack(track);
 }
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
@@ -217,9 +218,11 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId) //, double energ
   auto layer = Id::layer(parentClusterId);
   
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
+  double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
+  double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   //double energyresolution = sp_calorimeter->energyResolution(parent.energy());
-  //double energy = parent.energy() * randomgen::RandNormal(1, energyresolution).next();
-  double energy = parent.energy() * 0.95;
+  double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
+  //double energy = parent.energy() * 0.95;
   
   Cluster cluster = Cluster{ energy, parent.position(), parent.size(), newclusterid};
   return cluster;
@@ -235,10 +238,10 @@ const Track& Simulator::addTrack(PFParticle& ptc)
 
 
 Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
-  Id::Type smearedTrackId = Id::makeTrackId(papas::SubType::SMEARED);
-  //double ptResolution = m_detector.tracker()->ptResolution(track);
-  //TODO after testing double scale_factor = randomgen::RandNormal(1, ptResolution).next()
-  double scale_factor = 1.1;
+  Id::Type smearedTrackId = Id::makeTrackId();
+  double ptResolution = m_detector.tracker()->ptResolution(track);
+  double scale_factor = randomgen::RandNormal(1, ptResolution).next();
+  
   Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path(), smearedTrackId};
   
   if (m_detector.tracker()->acceptance(smeared) || accept ) {

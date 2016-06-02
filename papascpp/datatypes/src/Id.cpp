@@ -22,7 +22,7 @@
 
 namespace papas {
   
-  unsigned int Id::s_counter = 0; /// static which will be used to create a unique long
+  unsigned int Id::s_counter = 1; /// static which will be used to create a unique long
                                   //const unsigned int Id::bitshift =32;
   /*void Id::setCounter(int startid) /// allows user to start counter at another point
   {
@@ -33,7 +33,7 @@ namespace papas {
   Id::Type Id::makeId(ItemType type, unsigned int uniqueid)
   {
     
-    s_counter++; //default is to start at 1 for first id so that id=0 means unset
+     //default is to start at 1 for first id so that id=0 means unset
                  //long id = (uniqueid << 16) | ((int)source << 13) | ((int)subtype << 10) | ((
                  //int)layer << 6) | (int)type;
     
@@ -43,12 +43,10 @@ namespace papas {
     //NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
     //if the btshift is 32 or more the shift is undefined and can return 0
     Type id =  ( ((uint64_t)type) << bitshift) | uniqueid;
-    
-    /*Type shifted =(((uint64_t)type) << bitshift);
+    s_counter++;
+
     std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
-    std::cout << "shifted: "  << shifted << std::endl;
-    std::cout<< "size type "<< sizeof(Id::Type)<<std::endl;"*/
-    
+       
     /*std::cout<< "size type "<< sizeof(unsigned long)<<std::endl;
     std::cout<< "size type "<< sizeof(unsigned long long)<<std::endl;
     std::cout<< "size unsigned int "<< sizeof(unsigned int)<<std::endl;*/

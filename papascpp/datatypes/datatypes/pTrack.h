@@ -26,6 +26,7 @@ public:
   double charge() const { return m_charge; }
   IdType id() const { return m_uniqueId; }
   TVector3 p3() const { return m_p3; }
+  double theta() const    {return M_PI/2. - m_p3.Theta();}
   Path::Ptr path() const { return m_path; }
   void setPath(Path::Ptr path) { m_path = path; }
   void setEnergy(double energy);

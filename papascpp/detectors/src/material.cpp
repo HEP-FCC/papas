@@ -7,33 +7,27 @@
 
 namespace papas {
 
-Material::Material(/*Id::Layer layer,*/ double x0, double lambdaI) :
-//m_layer(layer),
+Material::Material(double x0, double lambdaI) :
     m_x0(x0),
-    m_lambdaI(lambdaI) ,
-    m_randomLambda(lambdaI),
-    m_randomX0(x0) {
-
+  m_lambdaI(lambdaI) {
 }
 
 double Material::pathLength(bool is_em) const
 {
    //AJRTODO check with Colin about what happens if x= is none
    double freepath;
-   if (is_em){
-       freepath = m_x0;
-       if (m_x0 == 0.) {
+   if (is_em)
+      freepath = m_x0;
+   else
+     freepath = m_lambdaI;
+  
+   if (freepath == 0.) {
          return std::numeric_limits<double>::max();
-       }
-     //return m_randomX0(); //TODO reinstante once testing is complete
-     return m_x0*0.8;
-   }
+      }
+  
    else{
-     if (m_lambdaI == 0.) {
-       return std::numeric_limits<double>::max();
-     }
-     //return m_randomLambda.next(); //TODO reinstante once testing is complete
-     return m_lambdaI*0.8;
+     
+     return randomgen::RandExponential(freepath).next();
    }
  
 }

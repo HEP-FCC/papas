@@ -29,89 +29,40 @@
 #include "AliceDisplay.h"
 #include "Id.h"
  #include "Log.h"
-
+#include "StringFormatter.h"
+void dosomerandom ();
 
 //extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
-  //Log::init();
-  
-  //try
-  //{
-    //Multithreaded console logger(with color support)
-    
-
-    
-  /*}
-  catch (const spdlog::spdlog_ex& ex)
-  {
-    std::cout << "Log failed: " << ex.what() << std::endl;
-  }*/
-
-  
-  randomgen::RandUniform runi1{0,1};
-  randomgen::RandUniform runi2{0, 1};
-  randomgen::RandExponential rexp1{3};
-  randomgen::RandExponential rexp2{4};
-  
-  //LOG(INFO)<<"Hello World!";
-  
-  
-  //BOOST_LOG_TRIVIAL(trace) << "A trace severity message";
- 
-  //rexp1.setSeed(0xdeadbeef);
-  runi1.setSeed(0xdeadbeef);
-
-  
-  
-  std::cout << runi1.next()<< std::endl;
-  std::cout << runi2.next()<< std::endl;
-  std::cout << rexp1.next()<< std::endl;
-  std::cout << rexp2.next()<< std::endl;
-  
-  runi1.setSeed(0xdeadbeef);
-  std::cout << runi1.next()<< std::endl;
-  std::cout << runi2.next()<< std::endl;
-  std::cout << rexp1.next()<< std::endl;
-  std::cout << rexp2.next()<< std::endl;
-  
-  runi1.setSeed(0xdeadbeef);
-  for (int i =0; i<6 ; i++)
-    std::cout << runi2.next()<< std::endl;
-  
-  
-  
-
-  randomgen::RandExponential rexp{49.3};
-  rexp.setSeed(100);
-  std::cout << rexp.next() << rexp.next()<<std::endl;;
-  
-  
   
   // Create CMS detector and simulator
   CMS CMSDetector;
   Simulator sim = Simulator{CMSDetector};
 
   // Make Some Photons
-  for (int i = 1; i < 2; i++) {
+  for (int i = 1; i < 0; i++) {
     PFParticle& photon = sim.addParticle(22, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
     sim.simulatePhoton(photon);
   }
 
   // Make Some Hadrons
-  for (int i = 1; i < 2; i++) {
+  for (int i = 1; i < 0; i++) {
     PFParticle& hadron = sim.addParticle(211, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
     sim.simulateHadron(hadron);
   }
+  //Python comparison step 0.1
+  PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
+  sim.simulateHadron(hadron);
+  
 
   // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
   // and using a reference to the history nodes
   //PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
   PFEvent pfEvent{sim}; //for python test
   
-  std::cout<<pfEvent<< std::endl;
-  
-  Log::log()->info()<<pfEvent;
+
+  Log::info() << pfEvent;
   Log::log()->flush();
 
 
@@ -123,11 +74,13 @@ int main(int argc, char* argv[]) {
   pfReconstructor.reconstruct();
 
   // Now move on to Displaying results
+  Log::info() << pfEvent;
+  Log::log()->flush();
 
   PFApp myApp{};
   myApp.display(pfEvent, CMSDetector);
   
-    //myApp.run();
+  myApp.run();
   return 0;
   
   
@@ -153,4 +106,37 @@ int main(int argc, char* argv[]) {
  
 
   return EXIT_SUCCESS;
+}
+
+
+void dosomerandom () {
+  randomgen::RandUniform runi1{0,1};
+  randomgen::RandUniform runi2{0, 1};
+  randomgen::RandExponential rexp1{3};
+  randomgen::RandExponential rexp2{4};
+  
+  runi1.setSeed(0xdeadbeef);
+  
+  
+  std::cout << runi1.next()<< std::endl;
+  std::cout << runi2.next()<< std::endl;
+  std::cout << rexp1.next()<< std::endl;
+  std::cout << rexp2.next()<< std::endl;
+  
+  runi1.setSeed(0xdeadbeef);
+  std::cout << runi1.next()<< std::endl;
+  std::cout << runi2.next()<< std::endl;
+  std::cout << rexp1.next()<< std::endl;
+  std::cout << rexp2.next()<< std::endl;
+  
+  runi1.setSeed(0xdeadbeef);
+  for (int i =0; i<6 ; i++)
+    std::cout << runi2.next()<< std::endl;
+  
+  
+  randomgen::RandExponential rexp{49.3};
+  rexp.setSeed(100);
+  std::cout << rexp.next() << rexp.next()<<std::endl;;
+  
+  
 }

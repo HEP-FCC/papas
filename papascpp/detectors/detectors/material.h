@@ -29,8 +29,8 @@ private:
   //Id::Layer m_layer;
    double m_x0;
    double m_lambdaI;
-   randomgen::RandExponential m_randomLambda;
-   randomgen::RandExponential m_randomX0;
+  //randomgen::RandExponential m_randomLambda;
+  //randomgen::RandExponential m_randomX0;
   };
 
 

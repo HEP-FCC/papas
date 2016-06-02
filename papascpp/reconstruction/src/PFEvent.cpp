@@ -14,6 +14,7 @@
 #include "Path.h"
 #include "Simulator.h" //temp
 #include "PFBlockBuilder.h"
+#include "PrettyPrinter.h"
 
 namespace papas {
 
@@ -92,7 +93,10 @@ Ids PFEvent::elementIds() const {
   
 std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move to helper class
   os << "PFEvent:" <<std::endl;
-  for(auto it = pfevent.m_ecals.begin(); it != pfevent.m_ecals.end(); ++it) {
+  os <<" EC: " << pfevent.m_ecals<<std::endl;
+  os <<" HC: " << pfevent.m_hcals<<std::endl;
+  os <<" TR: " << pfevent.m_tracks<<std::endl;
+  /*for(auto it = pfevent.m_tracks.begin(); it != pfevent.m_ecals.end(); ++it) {
     os << "EC: " << it->second;
   }
   for(auto it = pfevent.m_hcals.begin(); it != pfevent.m_hcals.end(); ++it) {
@@ -100,7 +104,7 @@ std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move
   }
   for(auto it = pfevent.m_tracks.begin(); it != pfevent.m_tracks.end(); ++it) {
      os << "TR: " << it->second;
-  }
+  }*/
     return os;
 }
 
