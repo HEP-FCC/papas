@@ -39,7 +39,7 @@ Simulator::Simulator(const Detector& d) :
 
 void  Simulator::simulatePhoton(PFParticle& ptc)
 {
-  PDebug::write("Simulating Photon \n");
+  PDebug::write("Simulating Photon");
   auto ecal_sp=m_detector.ecal();
   
   //find where it meets the Ecal inner cylinder
@@ -50,7 +50,7 @@ void  Simulator::simulatePhoton(PFParticle& ptc)
 }
 
 void Simulator::simulateHadron(PFParticle& ptc) {
-  PDebug::write("Simulating Hadron \n");
+  PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
   auto field_sp = m_detector.field();
@@ -58,7 +58,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 
   // make a track
   const Track& track = addTrack(ptc);
-
+  addSmearedTrack(track);
 
   // find where it meets the inner Ecal cyclinder
   propagate(ptc, ecal_sp->volumeCylinder().inner());
@@ -79,7 +79,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
       Id::Type ecalId = addEcalCluster(ptc, track.id(), fracEcal);
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
-      addSmearedCluster(ecalId);
+      addSmearedCluster(ecalId, papas::Layer::kHcal, papas::Layer::kEcal );
     }
   }
 
@@ -88,7 +88,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   Id::Type hcalId = addHcalCluster(ptc, ptc.id(), 1 - fracEcal);
   addSmearedCluster(hcalId);
   
-  addSmearedTrack(track);
+  
 }
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
@@ -114,13 +114,39 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
 
 PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
 {
+  
   double field = m_detector.field()->getMagnitude();
   Id::Type uniqueid = Id::makeParticleId();
   m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, tlv, vertex, field});
   addNode(uniqueid); //add node to history graph
                      //PDebug::write()<<  ;
+                     //PDebug::write("Made Simulation Particle {}", m_particles[uniqueid].info());
   return m_particles[uniqueid];
 }
+  
+  PFParticle& Simulator::addGunParticle(int pdgid, double thetamin,double thetamax, double ptmin, double ptmax, TVector3 vertex)
+  {
+    double theta = randomgen::RandUniform(thetamin, thetamax).next();
+    double phi = randomgen::RandUniform(-M_PI, M_PI).next();
+    double energy = randomgen::RandUniform(ptmin, ptmax).next();
+  
+    double mass = ParticlePData::particleMass(pdgid);
+    double costheta = cos(M_PI/2-theta);
+    double sintheta = sin(M_PI/2-theta);
+    double cosphi = cos(phi);
+    double sinphi = sin(phi);
+    double momentum=energy/sintheta;
+    energy = sqrt(pow(momentum, 2) + pow(mass, 2));
+
+    TLorentzVector p4(momentum * sintheta * cosphi,
+                      momentum * sintheta * sinphi,
+                      momentum * costheta,
+                      energy);
+    return addParticle(pdgid, p4, vertex);
+  }
+
+  
+
 
 PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex)
 {
@@ -147,8 +173,8 @@ TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi
    " " << cosphi <<
    " " << sintheta << " ";*/
   return p4;
-}                              
-
+}
+  
 
 Id::Type Simulator::addEcalCluster(PFParticle& ptc,Id::Type parentid,double fraction, double csize)
 {
@@ -167,6 +193,7 @@ Id::Type Simulator::addHcalCluster(PFParticle& ptc,Id::Type parentid,double frac
 
 Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer layer, double fraction, double csize)
 {
+  
   if (!parentid) {
     parentid = ptc.id();
   }
@@ -189,48 +216,58 @@ Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer l
   //const Cluster& cluster{energy, pos, csize, clusterid};
   Cluster cluster{energy, pos, csize, clusterid};
   addNode(clusterid, parentid); //a track may be the parent of a cluster
+  PDebug::write("Made {}", cluster);
   return cluster; //check this defaults OK
 }
 
+Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer,  papas::Layer acceptlayer, bool accept)
 
-Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId)
 {
-  Cluster smeared=makeSmearedCluster(parentClusterId);
-  auto layer = Id::layer(parentClusterId);
+  Cluster smeared=makeSmearedCluster(parentClusterId,  detlayer);
+  PDebug::write("Made Smeared{}", smeared);
   
-  if (m_detector.calorimeter(layer)->acceptance(smeared)) {
+  if (detlayer == papas::Layer::kNone)
+    detlayer = Id::layer(parentClusterId);
+  if (acceptlayer == papas::Layer::kNone)
+    acceptlayer = detlayer;
+  
+  if (m_detector.calorimeter(acceptlayer)->acceptance(smeared)|| accept) {
     addNode(smeared.id(), parentClusterId);
-    if(layer ==papas::Layer::kEcal) {
+    if(Id::layer(parentClusterId) ==papas::Layer::kEcal) {
       m_smearedEcalClusters.emplace(smeared.id(), std::move(smeared));
     }
     else
       m_smearedHcalClusters.emplace(smeared.id(), std::move(smeared));
+    
     return smeared.id();
   }
   else {
+    PDebug::write("Rejected Smeared{}", smeared);
     //cluster.erase(smeared.id());
     return parentClusterId;
   }
 }
 
 
-Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId) //, double energyresolution )
+Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer  detlayer)
 {
   //create a new id
   auto itemType = Id::itemType(parentClusterId);
   Id::Type newclusterid = Id::makeId(itemType);
   const Cluster& parent = cluster(parentClusterId);
-  auto layer = Id::layer(parentClusterId);
   
-  std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(layer);
+  if (Id::pretty(parentClusterId).compare(0,4, "h113")==0)
+    std::cout <<"e106";
   
+  if(detlayer==papas::Layer::kNone)
+    detlayer = Id::layer(parentClusterId);
+  
+  std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detlayer);
   
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
-  //double energyresolution = sp_calorimeter->energyResolution(parent.energy());
   double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
-  //double energy = parent.energy() * 0.95;
-  
+ 
   Cluster cluster = Cluster{ energy, parent.position(), parent.size(), newclusterid};
   return cluster;
 }
@@ -240,6 +277,7 @@ const Track& Simulator::addTrack(PFParticle& ptc)
   Id::Type trackid = Id::makeTrackId();
   m_tracks.emplace(trackid, Track{ ptc.p3(), ptc.charge(), ptc.path(), trackid});
   addNode(trackid, ptc.id());
+  PDebug::write("Made {}", m_tracks.at(trackid));
   return m_tracks.at(trackid); //check this defaults OK
 }
 
@@ -250,10 +288,13 @@ Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
   
   Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path(), smearedTrackId};
-  
+  PDebug::write("Made Smeared{}", smeared);
   if (m_detector.tracker()->acceptance(smeared) || accept ) {
     addNode(smearedTrackId, track.id());
     m_smearedTracks.emplace(smearedTrackId, std::move(smeared));
+  }
+  else {
+      PDebug::write("Rejected Smeared{}", smeared);
   }
   return smearedTrackId;
 }

@@ -42,6 +42,7 @@ namespace papas {
     static spdlog::details::line_logger error() {return log()->error();}
     static spdlog::details::line_logger debug() {return log()->debug();}
     static void init();
+    static void consoleinit();
     static std::shared_ptr<spdlog::logger> log();
     static bool logInitialized;
     template <typename T> static spdlog::details::line_logger write(const T& t) {return log()->info(t);};

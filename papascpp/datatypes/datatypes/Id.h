@@ -42,7 +42,7 @@ namespace papas {
     static ItemType itemType(Type id); ///< For example particle/cluster/block (kParticle etc)
     static unsigned int uniqueId(Type id); ///< normally starts at one and incremented by one for each new id
     static char typeShortCode(Type id); ///<One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
-    
+    static std::string pretty(Id::Type id);
     //TODO add a checkValid function
   private:
     static unsigned int s_counter;

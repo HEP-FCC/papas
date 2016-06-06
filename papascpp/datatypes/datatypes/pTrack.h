@@ -32,7 +32,7 @@ public:
   void setEnergy(double energy);
   void setSize(double value);
   static double s_maxenergy;  // AJR is this in the right place
-  friend std::ostream& operator<<(std::ostream& os, const Track& track); // move to helper class
+  std::string info() const;
 protected:
   IdType m_uniqueId;
   double m_pt;
@@ -40,5 +40,8 @@ protected:
   double m_charge;
   Path::Ptr m_path;  // not owned by track but useful to know where it is
 };
+  
+  std::ostream& operator<<(std::ostream& os, const Track& track);
+
 } // end namespace papas
 #endif  // PAPAS_TRACK_H

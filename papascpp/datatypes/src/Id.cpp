@@ -3,6 +3,7 @@
 #include <cmath>
 #include <inttypes.h> 
 #include <iostream> //temp
+#include  "StringFormatter.h"
 //  Created by Alice Robson on 05/01/16.
 //
 //Encode information into a unique identifier
@@ -65,7 +66,7 @@ namespace papas {
     Type id =  ( ((uint64_t)type) << bitshift) | uniqueid;
     s_counter++;
 
-    std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
+    //std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
        
     /*std::cout<< "size type "<< sizeof(unsigned long)<<std::endl;
     std::cout<< "size type "<< sizeof(unsigned long long)<<std::endl;
@@ -99,6 +100,11 @@ namespace papas {
     std::string typelist = ".ehtprb....";
     return typelist[(unsigned int)Id::itemType(id)];
     //TODO error handling
+  }
+  
+  std::string Id::pretty(Id::Type id)
+  {
+    return string_format("%1c%-8d", Id::typeShortCode(id), Id::uniqueId(id));
   }
 } // end namespace papas
 

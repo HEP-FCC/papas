@@ -37,7 +37,7 @@ public:
   void setSize(double value) ;
   std::vector<IdType> subClusters() const { return m_subClusters;};
   static double s_maxEnergy; //AJR is this in the right place
-  
+  std::string info() const;
   
 protected:
   IdType m_uniqueId;

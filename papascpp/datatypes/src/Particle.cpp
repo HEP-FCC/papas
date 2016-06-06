@@ -14,22 +14,27 @@
 #include <sstream> //AJRTODO temp
 #include "Definitions.h"
 #include "Id.h"
+#include "spdlog/details/format.h"
 //#include "easylogging.h"
 
 namespace papas {
 
-std::string Particle::stringDescription() const
+std::string Particle::info() const
 {
-  std::ostringstream oss;
   
-  oss << (std::string)typeid(this).name();
-  oss << " : pdgid = " << m_particleId; //AJRTODO  make length 5
-  oss << " status = " << m_status; //AJRTODO  make length 3
-  oss << " q = " << m_charge; //AJRTODO  make length 3
-  oss << " status = " << m_status; //AJRTODO  make length 3
-                                   //todo continue oss<<" status = " << status; //AJRTODO  make length 3
-  return oss.str();
+  fmt::MemoryWriter out;
+  out.write("pdgid = {:5}, status = {:3}, q = {:2}",m_particleId, m_status,m_charge);
+  out.write(", pt = {:5.1f}, e = {:5.1f}, eta = {:5.2f}, theta = {:5.2f}, phi = {:5.2f}, mass = {:5.2f}",
+            pt(), e(), eta(), theta(), phi(), m());
+  return out.str();
+  
 }
+  
+std::ostream& operator<<(std::ostream& os, const Particle& particle) {
+    os<< "Particle :"<< Id::pretty(particle.id())<<": "<<particle.info();
+    return os;
+}
+
 
 
 
@@ -39,12 +44,7 @@ m_uniqueId(Id::makeParticleId(papas::enumSource::NONE)),
 m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status)
 
 {
-  //LOG(INFO)<< "Made a particle";
-
-  /*std::cout << "BASE " << tlv.X() << " " << tlv.Y() << " " << tlv.Z() << " " <<
-   tlv.Et() << " ";
-   std::cout << m_tlv.X() << " " << m_tlv.Y() << " " << m_tlv.Z() << " " <<
-   m_tlv.Et() << " ";*/
+  
 }
 
 

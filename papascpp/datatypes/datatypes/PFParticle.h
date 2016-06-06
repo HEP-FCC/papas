@@ -28,6 +28,8 @@ private:
   Path::Ptr m_path;
   bool m_isHelix;
 };
+  
+  
 
 } // end namespace papas
 #endif  // PFParticle_H

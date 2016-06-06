@@ -21,8 +21,6 @@ m_uniqueId(id), m_p3(position), m_subClusters()
   setSize(size_m);
   setEnergy(energy);
   
-  Log::debug() << "Made Cluster "  << *this;
-  
 }
 
 void Cluster::setSize(double value)
@@ -61,14 +59,15 @@ Cluster& Cluster::operator+=(const Cluster& rhs){
   
   return *this;
 }
+  
+  std::string Cluster::info() const {
+    return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi());
+  }
 
 
+std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
 
-std::ostream& operator<<(std::ostream& os, const Cluster& cluster) { //TODO move to helper class
-
-    os<<string_format("%10s:%1c%-8d: %7.2f %5.2f %5.2f","Cluster", Id::typeShortCode(cluster.id()) ,
-                          Id::uniqueId(cluster.id()),   cluster.energy(),
-                          cluster.theta(), cluster.position().Phi());
+   os<< "Cluster :"<< Id::pretty(cluster.id())<<": "<<cluster.info();
    return os;
 }
 

@@ -30,7 +30,8 @@ public:
   void simulateNeutrino(PFParticle& ptc);
 
   PFParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
-
+  PFParticle& addGunParticle(int pdgid, double thetamin,double thetamax, double ptmin, double ptmax, TVector3 vertex= TVector3(0., 0., 0.));
+  
   const Cluster& cluster(Id::Type clusterId) const;
   Clusters ecalClusters() const {return m_ecalClusters;} ///<Copy of Ecal clusters
   Clusters hcalClusters() const {return m_hcalClusters;} ///<Copy of Hcal clusters
@@ -54,9 +55,10 @@ private:
   //Id::Type makeParticleId(papas::enumSource source) const;
   Id::Type addEcalCluster(PFParticle& ptc, Id::Type parentid = 0, double fraction = 1., double csize = 0.);
   Id::Type addHcalCluster(PFParticle& ptc, Id::Type parentid = 0, double fraction = 1., double csize = 0.);
-  Id::Type addSmearedCluster(Id::Type parentClusterId);
+  Id::Type addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer = papas::Layer::kNone,
+                             papas::Layer acceptlayer =papas::Layer::kNone, bool accept=false);
   Cluster makeCluster(PFParticle& ptc, Id::Type parentid, papas::Layer layer, double fraction = 1., double csize = 0.);
-  Cluster makeSmearedCluster(Id::Type parentClusterId);
+  Cluster makeSmearedCluster(Id::Type parentClusterId,papas::Layer detlayer =papas::Layer::kNone );
   const Track& addTrack(PFParticle& ptc);
   Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void addNode(const Id::Type newid, const Id::Type parentid = 0);

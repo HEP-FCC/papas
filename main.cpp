@@ -43,18 +43,36 @@ int main(int argc, char* argv[]) {
   // Make Some Photons
   for (int i = 1; i < 0; i++) {
     PFParticle& photon = sim.addParticle(22, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
+    PDebug::write("Made {}", photon);
     sim.simulatePhoton(photon);
   }
 
   // Make Some Hadrons
   for (int i = 1; i < 0; i++) {
     PFParticle& hadron = sim.addParticle(211, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
+    PDebug::write("Made {}", hadron);
     sim.simulateHadron(hadron);
   }
-  //Python comparison step 0.1
-  PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
-  sim.simulateHadron(hadron);
   
+  //Python comparison step 0.1
+  //PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
+  for (int i = 0; i < 0 /*1000*/; i++) {
+   PFParticle& ptc = sim.addGunParticle(211, -1.5, 1.5, 0.1, 10);
+    PDebug::write("Made {}", ptc);
+    if (ptc.charge() && ptc.pt()<0.2)
+      continue;
+    sim.simulateHadron(ptc);
+    
+  }
+  for (int i = 0; i < 1; i++) {
+    PFParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
+    PDebug::write("Made {}", ptc);
+    if (ptc.charge() && ptc.pt()<0.2)
+      continue;
+    sim.simulatePhoton(ptc);
+    
+  }
+
 
   // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
   // and using a reference to the history nodes
@@ -62,12 +80,12 @@ int main(int argc, char* argv[]) {
   PFEvent pfEvent{sim}; //for python test
   
 
-  Log::info() << pfEvent;
-  PDebug::info() << pfEvent;
+  //Log::info() << pfEvent;
+  //PDebug::write() << pfEvent;
   
-  PDebug::write( pfEvent);
-  PDebug::write( "things {:8s}{:1d}{}", "happen", 5, pfEvent);
-  Log::log()->flush();
+  //PDebug::write( pfEvent);
+  //PDebug::write( "things {:8s}{:1d}{}", "happen", 5, pfEvent);
+  //Log::log()->flush();
   PDebug::log()->flush();
 
 

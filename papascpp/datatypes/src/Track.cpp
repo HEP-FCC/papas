@@ -11,16 +11,13 @@ m_p3(p3),
 m_charge(charge),
 m_path(path)
 {
-    Log::debug() << "Made Track   "  << *this;
 }
+  std::string Track::info() const {
+    return string_format("%7.2f %7.2f %5.2f %5.2f",   energy(), pt(), theta(), p3().Phi());
+  }
   
-std::ostream& operator<<(std::ostream& os, const Track& track) { //TODO move to helper class
-    os<<string_format("%10s:%1c%-8d: %7.2f %7.2f %5.2f %5.2f","Track", Id::typeShortCode(track.id()) ,
-                    Id::uniqueId(track.id()),   track.energy(), track.pt(),
-                    track.theta(), track.p3().Phi());
-  //  os << "Track  :" << Id::typeShortCode(track.m_uniqueId)  <<Id::uniqueId(track.m_uniqueId) << ": "<< std::setw(9) << //std::fixed  << track.m_charge << std::endl;
-   
-    return os;
+std::ostream& operator<<(std::ostream& os, const Track& track) {
+    os<< "Track :"<< Id::pretty(track.id())<<": "<<track.info();    return os;
   }
 
 
