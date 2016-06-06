@@ -64,12 +64,20 @@ int main(int argc, char* argv[]) {
     sim.simulateHadron(ptc);
     
   }
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 0 /*1000*/; i++) {
     PFParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
     if (ptc.charge() && ptc.pt()<0.2)
       continue;
     sim.simulatePhoton(ptc);
+    
+  }
+  for (int i = 0; i < 1000; i++) {
+    PFParticle& ptc = sim.addGunParticle(130, -1.5, 1.5, 0.1, 10);
+    PDebug::write("Made {}", ptc);
+    if (ptc.charge() && ptc.pt()<0.2)
+      continue;
+    sim.simulateHadron(ptc);
     
   }
 

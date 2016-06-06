@@ -77,8 +77,8 @@ bool CMSECAL::acceptance(const Cluster& cluster) const {
   double eta = fabs(cluster.eta());
   if (eta < m_etaCrack)
     return energy > m_emin[kBarrel];
-  else if (eta < 3.)
-    return (energy > m_emin[kEndCap] & cluster.pt() > 0.5);
+  else if (eta < 2.93)
+    return (energy > m_emin[kEndCap] & cluster.pt() > 0.2);
   else
     return false;
 }

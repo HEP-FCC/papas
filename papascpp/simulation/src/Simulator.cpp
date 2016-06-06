@@ -56,10 +56,11 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   auto field_sp = m_detector.field();
   double fracEcal = 0.;  // TODO ask Colin
 
-  // make a track
-  const Track& track = addTrack(ptc);
-  addSmearedTrack(track);
-
+  // make a track if it is charged
+  if (ptc.charge()!=0) {
+    const Track& track = addTrack(ptc);
+    addSmearedTrack(track);
+  }
   // find where it meets the inner Ecal cyclinder
   propagate(ptc, ecal_sp->volumeCylinder().inner());
   double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
@@ -76,7 +77,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().Contains(pointDecay)) {
       fracEcal = randomgen::RandUniform(0., 0.7).next();
-      Id::Type ecalId = addEcalCluster(ptc, track.id(), fracEcal);
+      Id::Type ecalId = addEcalCluster(ptc, ptc.id(), fracEcal);
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
       addSmearedCluster(ecalId, papas::Layer::kHcal, papas::Layer::kEcal );
@@ -176,7 +177,7 @@ TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi
 }
   
 
-Id::Type Simulator::addEcalCluster(PFParticle& ptc,Id::Type parentid,double fraction, double csize)
+Id::Type Simulator::addEcalCluster(PFParticle& ptc, Id::Type parentid,double fraction, double csize)
 {
   Cluster cluster = makeCluster(ptc, parentid, papas::Layer::kEcal, fraction, csize);
   m_ecalClusters.emplace(cluster.id(), std::move(cluster));
@@ -256,7 +257,7 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer  de
   Id::Type newclusterid = Id::makeId(itemType);
   const Cluster& parent = cluster(parentClusterId);
   
-  if (Id::pretty(parentClusterId).compare(0,4, "h113")==0)
+  if (Id::pretty(parentClusterId).compare(0,3, "e29")==0)
     std::cout <<"e106";
   
   if(detlayer==papas::Layer::kNone)
