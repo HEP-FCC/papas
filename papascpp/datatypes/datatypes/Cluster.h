@@ -20,6 +20,7 @@ class Cluster{
 public:
 
   Cluster(double energy, TVector3 position, double size_m, IdType id);
+  Cluster(const Cluster& cluster, IdType id);
   Cluster() = default;
   Cluster(Cluster&& c)    = default;
   Cluster(const Cluster&) = default;
@@ -35,7 +36,7 @@ public:
   TVector3 position() const {return m_p3;}
   void setEnergy(double energy);
   void setSize(double value) ;
-  std::vector<IdType> subClusters() const { return m_subClusters;};
+  const std::vector<IdType>& subClusters() const { return m_subClusters;};
   static double s_maxEnergy; //AJR is this in the right place
   std::string info() const;
   

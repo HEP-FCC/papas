@@ -21,6 +21,8 @@
 #include "PFEvent.h"
 #include "PFParticle.h"
 #include "PFReconstructor.h"
+#include "MergedClusterBuilder.h"
+#include "Ruler.h"
 #include "Cluster.h"
 #include "pTrack.h"
 #include "Path.h"
@@ -30,6 +32,8 @@
 #include "Id.h"
 #include "Log.h"
 #include "StringFormatter.h"
+
+
 void dosomerandom ();
 
 //extern int run_tests(int argc, char* argv[]);
@@ -59,12 +63,14 @@ int main(int argc, char* argv[]) {
   //PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
   for (int i = 0; i < 1000 /*1000*/; i++) {
     Simulator siml = Simulator{CMSDetector};
-   PFParticle& ptc = siml.addGunParticle(211, -1.5, 1.5, 0.1, 10);
+    PFParticle& ptc = siml.addGunParticle(211, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
     if (!(ptc.charge() && ptc.pt()<0.2))
       siml.simulateHadron(ptc);
     PFEvent pfEvent{siml}; //for python test
-    PFBlockBuilder bBuilder{pfEvent};
+    pfEvent.mergeClusters();
+    Ids  ids= pfEvent.mergedElementIds();
+    PFBlockBuilder bBuilder{pfEvent, ids};
     pfEvent.setBlocks(bBuilder);//for python
     PFReconstructor pfReconstructor{pfEvent};
     pfReconstructor.reconstruct();
@@ -105,7 +111,8 @@ int main(int argc, char* argv[]) {
 
 
   // Reconstruct
-  PFBlockBuilder bBuilder{pfEvent};sort
+  Ids ids=pfEvent.mergedElementIds();
+  PFBlockBuilder bBuilder{pfEvent, ids};
   //pfEvent.setBlocks(std::move(bBuilder.blocks()));
   pfEvent.setBlocks(bBuilder);//for python
   PFReconstructor pfReconstructor{pfEvent};
@@ -117,7 +124,6 @@ int main(int argc, char* argv[]) {
 
   PFApp myApp{};
   myApp.display(pfEvent, CMSDetector);
-  
   myApp.run();
   return 0;
   

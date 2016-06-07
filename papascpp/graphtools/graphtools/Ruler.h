@@ -26,11 +26,14 @@ class Ruler {
   
 public:
   Ruler (const PFEvent& pfevent);
-  Distance distance(Id::Type id1 ,Id::Type id2);
+  Distance distance(Id::Type id1, Id::Type id2) const;
 private:
-  Distance clusterClusterDistance(Id::Type id1 ,Id::Type id2);
-  Distance clusterTrackDistance(Id::Type id1 ,Id::Type id2);
-  Distance distance();
+  Distance clusterClusterDistance(Id::Type id1, Id::Type id2) const;
+  Distance clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const;
+  Distance clusterTrackDistance(Id::Type id1, Id::Type id2) const;
+  Distance clusterTrackDistance(const Cluster& cluster, const Track& track)  const;
+  
+  Distance distance() const;
   
   const PFEvent& m_pfEvent;
 };

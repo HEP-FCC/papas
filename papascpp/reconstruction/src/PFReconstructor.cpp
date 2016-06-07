@@ -275,7 +275,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
    self.log.info( hcal )
    self.log.info( '\tT {tracks}'.format(tracks=tracks) )
    self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
-  const Cluster& hcal = m_pfEvent.hcalClusters().at(hcalId);  // avoid copy
+  const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);  
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
   double trackEnergy = 0.;
@@ -373,7 +373,7 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
   // if self.debugprint:
-  PDebug::write("Made Reconstructed{} from Smeared{}", particle, cluster);
+  PDebug::write("Made Reconstructed{} from Merged{}", particle, cluster); //TODO make more flexible and able to detect what type cluster has
 
   std::cout << "made particle pdgid: " << pdgId << " from cluster: " << cluster;  // TODO << particle;
   return particle;

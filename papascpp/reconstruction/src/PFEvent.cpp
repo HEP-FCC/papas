@@ -15,6 +15,7 @@
 #include "Simulator.h" //temp
 #include "PFBlockBuilder.h"
 #include "PrettyPrinter.h"
+#include "MergedClusterBuilder.h"
 
 namespace papas {
 
@@ -57,6 +58,14 @@ m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)
     m_blocks = builder.blocks();
   }
   
+  void PFEvent::mergeClusters() {
+    Ruler ruler{*this};
+    MergedClusterBuilder ecalmerger{m_ecals, ruler, m_historyNodes};
+    MergedClusterBuilder hcalmerger{m_hcals, ruler, m_historyNodes};
+    m_mergedEcals = ecalmerger.mergedClusters();
+    m_mergedHcals = hcalmerger.mergedClusters();
+  }
+  
 const Track& PFEvent::track(Id::Type id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);
@@ -68,6 +77,9 @@ const Track& PFEvent::track(Id::Type id) const {
 }
 
 const Cluster&  PFEvent::ECALCluster(Id::Type id) const {
+  if (m_mergedEcals.find(id) != m_mergedEcals.end()) { //not quite as I want it yet...
+    return m_mergedEcals.at(id);
+  }
   if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
@@ -90,6 +102,22 @@ Ids PFEvent::elementIds() const {
   return std::move(ids);
 }
   
+  Ids PFEvent::mergedElementIds() const {
+    Ids ids;
+    ids.reserve(m_mergedEcals.size() + m_mergedHcals.size() + m_tracks.size());
+    for(auto it = m_mergedEcals.begin(); it != m_mergedEcals.end(); ++it) {
+      ids.push_back(it->first);
+    }
+    for(auto it = m_mergedHcals.begin(); it != m_mergedHcals.end(); ++it) {
+      ids.push_back(it->first);
+    }
+    for(auto it = m_tracks.begin(); it != m_tracks.end(); ++it) {
+      ids.push_back(it->first);
+    }
+    return std::move(ids);
+  }
+
+  
   
 std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move to helper class
   os << "PFEvent:" <<std::endl;
@@ -110,7 +138,10 @@ std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) { //TODO move
 
 
 const Cluster&  PFEvent::HCALCluster(Id::Type id) const {
-  if (m_hcals.find(id) != m_hcals.end()) {
+  if (m_mergedHcals.find(id) != m_mergedHcals.end()) { //not quite as I want it yet...
+    return m_mergedHcals.at(id);
+  }
+  else if (m_hcals.find(id) != m_hcals.end()) {
     return m_hcals.at(id);
   }
   class Cluster c;
@@ -118,12 +149,19 @@ const Cluster&  PFEvent::HCALCluster(Id::Type id) const {
 }
 
 const Cluster&  PFEvent::cluster(Id::Type id) const {
-  if (m_hcals.find(id) != m_hcals.end()) {
+  if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
+    return m_mergedHcals.at(id);
+  }
+  else if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
+    return m_mergedEcals.at(id);
+  }
+  else if (m_hcals.find(id) != m_hcals.end()) {
     return m_hcals.at(id);
   }
   else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
+  //TODO throw error
   class Cluster c;
   return std::move(c); //TODO produce error
 }

@@ -63,6 +63,20 @@ Cluster& Cluster::operator+=(const Cluster& rhs){
   std::string Cluster::info() const {
     return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi());
   }
+  
+  Cluster::Cluster(const Cluster &c, Id::Type id) :
+  m_uniqueId(id),
+  m_size(c.m_size),
+  m_angularSize(c.m_angularSize),
+  m_pt(c.m_pt),
+  m_energy(c.m_energy),
+  m_subClusters()
+  {
+    m_p3=c.m_p3;
+    //std::cout << m_subClusters.size();
+    m_subClusters.push_back(c.id());
+  }
+  
 
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
@@ -71,6 +85,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
    return os;
 }
 
+  
 
 
 } // end namespace papas

@@ -27,7 +27,7 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  PFBlockBuilder(PFEvent& pfevent);
+  PFBlockBuilder(PFEvent& pfevent, Ids& ids);
   // const Ids elementIds() const { return m_elementIds;};///< return the blockbuilders element ids
   Blocks& blocks() { return m_blocks; };  ///<return the unordered map of the resulting blocks;
   friend std::ostream& operator<<(std::ostream& os, const PFBlockBuilder& blockbuilder);  // TODO move to helper class
