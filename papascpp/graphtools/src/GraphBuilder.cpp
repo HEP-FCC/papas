@@ -20,6 +20,8 @@ m_elementIds(ids)
   for (auto id : ids)
     m_localNodes.emplace(id, PFNode(id));
   
+  
+  
   //use the edge information to say what is linked and add this into the local blocks
   for (const auto& edge : m_edges){
     const Edge& e = edge.second;
@@ -54,7 +56,7 @@ m_localNodes(emptyNodes)
 
 GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b)
 {
-  m_elementIds=b.m_elementIds;
+  m_elementIds = b.m_elementIds;
   m_edges = b.m_edges;
   m_subGraphs = b.m_subGraphs;
   return *this;

@@ -86,11 +86,10 @@ public:
   bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
   void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
   Edges& edges() { return m_edges; }
-
-  friend std::ostream& operator<<(std::ostream& os, const PFBlock& block);  ///< print block
-private:
+  std::string info() const;
   std::string elementsString() const;
-  std::string edgeMatrixString() const;
+  std::string edgeMatrixString() const;private:
+private:
 
   Id::Type m_uniqueId;          //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
@@ -100,5 +99,9 @@ private:
   Edges m_edges;              // all the edges for elements in this block
   const class Edge& edge(Id::Type id1, Id::Type id2) const;
 };
+  std::ostream& operator<<(std::ostream& os, const PFBlock& block);
 } // end namespace papas
 #endif /* PFBlock_h */
+
+
+

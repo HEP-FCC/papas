@@ -17,7 +17,10 @@
 #include <sstream>
 #include <unordered_set>
 #include <vector>
-#
+#include "spdlog/details/format.h"
+
+  
+
 //#include "PFEvent.h"
 
 namespace papas {
@@ -135,22 +138,13 @@ std::string PFBlock::elementsString() const {
    }
    */
   int count = 0;
-  std::string offset = "      ";
-  std::string s = offset + "elements: \n";
+  fmt::MemoryWriter out;
+  out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    s += offset + "          " + Id::typeShortCode(id) + std::to_string(count) + "= " + Id::typeShortCode(id) +  std::to_string(Id::uniqueId(id)) + "(" + std::to_string(id) +
-        ")\n";
+    out.write("{:>7}{} = {:9}\n",Id::typeShortCode(id), count, Id::pretty(id));
     count = count + 1;
   }
-  /*elemdetails = "\n      elements: {\n"
-   for (auto uid : m_elementUniqueIds:
-   elemdetails += "      {shortName}{count}:{strdescrip}".format(shortName=Identifier.type_short_code(uid),
-   count=count,
-   strdescrip=self.pfevent.get_object(uid).__str__() )
-
-   std::string s = (boost::format("%d") % 1).str();
-   count = count + 1*/
-  return s;
+  return out.str();
 }
 
 std::string PFBlock::edgeMatrixString() const {
@@ -165,25 +159,22 @@ std::string PFBlock::edgeMatrixString() const {
   T2  0.0000   0.0000        .
   T3  0.0287   0.0825      ---        .
   */
-
+  //TODO rewrite using MemoryWriter
   // make the header line for the matrix
   int count = 0;
-  std::ostringstream os;
-
+  fmt::MemoryWriter out;
+  std::string shortid;
+  
   if (m_elementIds.size() > 1) {
-    os.precision(2);
     std::string offset = "      ";
-    // os<< offset + "distances:\n     " + offset;
-    os << offset + "distances:  ";
-
-    std::string shortid;
+    out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
       shortid = Id::typeShortCode(e1) + std::to_string(count);
-      os << std::setw(9) << shortid;
+      out.write("{:>8}",shortid);
       count += 1;
     }
-    os << std::endl;
+    
 
     // for each element find distances to all other items that are in the lower part of the matrix
     int countrow = 0;
@@ -191,26 +182,28 @@ std::string PFBlock::edgeMatrixString() const {
     std::string rowname = "";
     std::string colname = "";
     for (auto e1 : m_elementIds) {  // this will be the rows
+      out.write("\n");
       rowstr = "";
       // make short name for the row element eg E3, H5 etc
-      os << std::setw(18) << Id::typeShortCode(e1) + std::to_string(countrow);
+      shortid = Id::typeShortCode(e1) + std::to_string(countrow);
+      out.write("{:>8}",shortid);
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
         if (e1 == e2) {
-          os << "        .";
+          out.write("       .");
           break;
         } else if (edge(e1, e2).distance() < 0)
-          os << "      ---";
+          out.write("     ---");
         else if (edge(e1, e2).isLinked() == false)
-          os << "      xxx";
+          out.write("     xxx");
         else {
-          os << std::setw(9) << std::fixed << edge(e1, e2).distance();
+          out.write("{:8.4f}",edge(e1, e2).distance());
         }
       }
-      os << " \n";
+      //out.write("\n");
     }
   }
-  return os.str();
+  return out.str();
 }
 const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
   /// Find the edge corresponding to e1 e2
@@ -219,22 +212,24 @@ const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
   ///                        '''
   return m_edges.find(Edge::makeKey(id1, id2))->second;
 }
+  std::string PFBlock::info() const {
+      
+      fmt::MemoryWriter out;
+      out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}",
+              shortName(), Id::pretty(m_uniqueId), countEcal(), countHcal(), countTracks());
+      return out.str();
+      
+    }
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
-  Id::Type id= block.m_uniqueId;
-  if (block.m_isActive)
-    os << "block: ";
+  if (block.isActive())
+    os << "block:";
   else
-    os << "deactivated block: ";
+    os << "deactivated block:";
   
-  os << "b" << block.m_blockCount<<" ";
-  os << block.shortName();
-  os << " id= " <<Id::typeShortCode(id)  <<Id::uniqueId(id) << "("<< id<<")";
-  os << " ecals= " << block.countEcal() << " hcals= " << block.countHcal() << " tracks= " << block.countTracks()
-     << "\n";
-
-  os << block.elementsString() << std::endl;
-  os << block.edgeMatrixString() << std::endl;
+  os << block.info()<<std::endl;
+  os << block.elementsString();
+  os << block.edgeMatrixString();
 
   //    return descrip
   return os;

@@ -25,7 +25,7 @@ std::string Particle::info() const
   fmt::MemoryWriter out;
   out.write("pdgid = {:5}, status = {:3}, q = {:2}",m_particleId, m_status,m_charge);
   out.write(", pt = {:5.1f}, e = {:5.1f}, eta = {:5.2f}, theta = {:5.2f}, phi = {:5.2f}, mass = {:5.2f}",
-            pt(), e(), eta(), theta(), phi(), m());
+            pt(), e(), eta(), theta(), phi(), mass());
   return out.str();
   
 }

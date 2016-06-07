@@ -11,6 +11,7 @@
 #include "PFBlock.h"
 #include "directedacyclicgraph.h"
 #include "FloodFill.h"
+#include "Log.h"
 
 namespace papas {
 
@@ -54,9 +55,9 @@ void BlockBuilder::makeBlocks()
   for (auto& elementIds : m_subGraphs) {
 
     //make the block
-    sortIds(elementIds);//TODO allow sorting my energy using a helper class
+    sortIds(elementIds);//TODO allow sorting by energy using a helper class
     PFBlock block {elementIds, m_edges};
-
+    PDebug::write("Made {}", block);
     //put the block in the unordered map of blocks using move
     m_blocks.emplace(block.uniqueId(), std::move(block));
 

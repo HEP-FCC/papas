@@ -13,6 +13,9 @@
 #include "Ruler.h"
 #include "DefinitionsCollections.h"
 
+//temp
+#include "Id.h"
+
 namespace papas {
 
 PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
@@ -35,6 +38,10 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent) :
   for (auto id1 : m_uniqueIds) {
     for (auto id2 : m_uniqueIds) {
       if (id1 < id2) {
+        if (Id::pretty(id1).compare(0,4, "h829")==0)
+          std::cout <<"id1";
+        if (Id::pretty(id2).compare(0,4, "h829")==0)
+          std::cout <<"id2";
         Distance dist = ruler.distance(id1,id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
         //the edge object is added into the edges dictionary

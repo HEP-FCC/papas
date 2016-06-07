@@ -32,7 +32,7 @@ public:
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane
   double eta() const { return m_tlv.Eta(); }                    ///<pseudo-rapidity (-ln(tan self._tlv.Theta()/2)).
   double phi() const { return m_tlv.Phi(); }              ///<azymuthal angle (from x axis, in the transverse plane)
-  double m() const { return m_tlv.M(); }               ///< mass
+  double mass() const { return m_tlv.M(); }               ///< mass
   int pdgId() const { return m_particleId; }              ///< particle type (an integer value)
   double charge() const { return m_charge; }              ///< particle charge
   bool status() const { return m_status; }                ///<status code, e.g. from generator. 1:stable.

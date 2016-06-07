@@ -34,7 +34,6 @@ Simulator::Simulator(const Detector& d) :
   m_tracks.reserve(isize);
   m_smearedTracks.reserve(isize);
   m_nodes.reserve(isize);
-  randomgen::setEngineSeed(0xdeadbeef);
 }
 
 void  Simulator::simulatePhoton(PFParticle& ptc)
@@ -257,7 +256,7 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer  de
   Id::Type newclusterid = Id::makeId(itemType);
   const Cluster& parent = cluster(parentClusterId);
   
-  if (Id::pretty(parentClusterId).compare(0,3, "e29")==0)
+  if (Id::pretty(parentClusterId).compare(0,5, "h3498")==0)
     std::cout <<"e106";
   
   if(detlayer==papas::Layer::kNone)

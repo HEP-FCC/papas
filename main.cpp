@@ -35,7 +35,8 @@ void dosomerandom ();
 //extern int run_tests(int argc, char* argv[]);
 using namespace papas;
 int main(int argc, char* argv[]) {
-  
+  randomgen::setEngineSeed(0xdeadbeef);
+
   // Create CMS detector and simulator
   CMS CMSDetector;
   Simulator sim = Simulator{CMSDetector};
@@ -56,15 +57,20 @@ int main(int argc, char* argv[]) {
   
   //Python comparison step 0.1
   //PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
-  for (int i = 0; i < 0 /*1000*/; i++) {
-   PFParticle& ptc = sim.addGunParticle(211, -1.5, 1.5, 0.1, 10);
+  for (int i = 0; i < 1000 /*1000*/; i++) {
+    Simulator siml = Simulator{CMSDetector};
+   PFParticle& ptc = siml.addGunParticle(211, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
-    if (ptc.charge() && ptc.pt()<0.2)
-      continue;
-    sim.simulateHadron(ptc);
-    
+    if (!(ptc.charge() && ptc.pt()<0.2))
+      siml.simulateHadron(ptc);
+    PFEvent pfEvent{siml}; //for python test
+    PFBlockBuilder bBuilder{pfEvent};
+    pfEvent.setBlocks(bBuilder);//for python
+    PFReconstructor pfReconstructor{pfEvent};
+    pfReconstructor.reconstruct();
+
   }
-  for (int i = 0; i < 0 /*1000*/; i++) {
+ /* for (int i = 0; i < 1000; i++) {
     PFParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
     if (ptc.charge() && ptc.pt()<0.2)
@@ -79,7 +85,7 @@ int main(int argc, char* argv[]) {
       continue;
     sim.simulateHadron(ptc);
     
-  }
+  }*/
 
 
   // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
@@ -99,7 +105,7 @@ int main(int argc, char* argv[]) {
 
 
   // Reconstruct
-  PFBlockBuilder bBuilder{pfEvent};
+  PFBlockBuilder bBuilder{pfEvent};sort
   //pfEvent.setBlocks(std::move(bBuilder.blocks()));
   pfEvent.setBlocks(bBuilder);//for python
   PFReconstructor pfReconstructor{pfEvent};

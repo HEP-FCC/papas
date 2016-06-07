@@ -19,13 +19,7 @@
 
 namespace papas {
   
-  PFParticle::PFParticle(IdType uniqueid, const Track& track) : //TODO check what this is used for
-    PFParticle(uniqueid,
-            211 * track.charge(),
-               TLorentzVector(track.p3(), track.energy()),
-            track.path()->namedPoint(papas::Position::kVertex),
-            track.path()->field()) {
-}
+
 
   PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
   Particle(uniqueid, pdgid, ParticlePData::particleCharge(pdgid), tlv),
@@ -39,6 +33,14 @@ namespace papas {
   
   
 }
+  
+  PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, const Track& track) : //calla above constructor
+  PFParticle(uniqueid,
+             pdgid,
+             tlv,
+             track.path()->namedPoint(papas::Position::kVertex),
+             track.path()->field()) {
+  }
 /*
 void PFParticle::setHelix(const Path& path) {
   m_helix = path; //copy??
