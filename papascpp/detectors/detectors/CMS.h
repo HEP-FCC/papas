@@ -61,7 +61,7 @@ public:
   
   /** Decides whether a cluster will be seen by a detector
    @param[in]  the cluster to be analysed
-   @return true is cluster is detected, false it if is too small to be seen
+   @return true if cluster is detected, false it if is too small to be seen
    */
   bool acceptance(const Cluster& cluster) const override;
   
@@ -71,6 +71,9 @@ public:
    @return minimum energy resolution of the detector
    */
   double energyResolution(double energy, double eta = 0 ) const override;
+  
+  /** ask Colin for details
+   */
   double energyResponse(double energy = 0, double eta = 0) const override;
   
   // TODOAJR space_resolution(self, ptc):

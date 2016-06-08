@@ -18,7 +18,7 @@ namespace papas {
   class Id {
   public:
     Id() {};
-    typedef IdType Type;
+    typedef IdType Type; 
     enum ItemType{kNone=0,  kEcalCluster=1, kHcalCluster, kTrack, kParticle, kRecParticle, kBlock};
     
     static Id::Type makeId(ItemType type, unsigned int uniqueid = Id::s_counter); ///< creates a new ID of given type
@@ -40,6 +40,7 @@ namespace papas {
     static bool isBlock(Type id)  {return (Id::itemType(id)==kBlock);}
     
     static ItemType itemType(Type id); ///< For example particle/cluster/block (kParticle etc)
+    static ItemType itemType(papas::Layer layer);
     static unsigned int uniqueId(Type id); ///< normally starts at one and incremented by one for each new id
     static char typeShortCode(Type id); ///<One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
     static std::string pretty(Id::Type id);

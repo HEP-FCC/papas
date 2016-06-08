@@ -19,26 +19,23 @@
 
 namespace papas {
 
-/** A Particle Flow Block stores a set of element ids that are connected to each other
+/** A Particle Flow Block (PFBlock) stores a set of element ids that are connected to each other
  together with the edge data (distances) for each possible edge combination
 
  class attributes:
 
- uniqueid : the block's unique id generated from Id class
- element_uniqueids : list of uniqueids of its elements
- pfevent : contains the tracks and clusters and a get_object method to allow access to the
- underlying objects given their uniqueid
- edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
- use  get_edge(id1,id2) to find an edge
- is_active : bool true/false, set to false if the block is subsequently subdivided
-
+ Id::Type m_uniqueid : the block's unique id generated from Id class
+ Ids m_elementIds : list of uniqueids of its elements
+ 
+ Edges m_edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
+          use  getEdge(id1,id2) to find an edge
+ bool m_isActive : bool true/false, set to false if the block is subsequently subdivided
+ static int tempBlockCount: sequential numbering of blocks (useful for debugging/tracing etc)
+ 
  Usage:
  block = PFBlock(element_ids,  edges, pfevent)
- for uid in block.element_uniqueids:
- print pfevent.get_object(uid).__str__() + "\n"
-
+ os << block;
  */
-class PFEvent;
 
 // import itertools
 
@@ -47,16 +44,14 @@ class PFBlock {
 public:
     
   /** Constructor
-   @param[in] element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
-   @param[inout] edges: is an unordered map of edges, it must contain at least all needed edges. It is not a problem
+   @param[in] const Ids& element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
+   @param[inout] Edges& edges: is an unordered map of edges, it must contain at least all needed edges. It is not a problem
    if it contains additional edges as only the ones needed will be extracted. Note that edges that are extracted will be
    removed from the Edges object.
-   @param[in] pfevent: allows access to the underlying elements given a uniqueid
-   must provide a get_object function
    */
   PFBlock(const Ids& elementIds, Edges& edges);
   PFBlock();
-  const Ids elementIds() const { return m_elementIds; }
+  const Ids elementIds() const { return m_elementIds; } ///< returns vector of all ids in the block
   Edge Edge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
   const class Edge& Edge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
 
@@ -71,9 +66,9 @@ public:
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
-   @param[in] uniqueid : is the id of item of interest
+   @param[in] uniqueId : is the id of item of interest
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
-   @return vector of Id::Types that are linked to the uniqueid
+   @return vector of ids that are linked to the uniqueid
   */
   Ids linkedIds(Id::Type uniqueId, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
@@ -88,19 +83,22 @@ public:
   Edges& edges() { return m_edges; }
   std::string info() const;
   std::string elementsString() const;
-  std::string edgeMatrixString() const;private:
+  std::string edgeMatrixString() const;
+  const class Edge& edge(Id::Type id1, Id::Type id2) const;
+
 private:
 
   Id::Type m_uniqueId;          //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
-  static int tempBlockCount;  // sequential numbering of blocks, not essential but helpful for debugging
-  int m_blockCount;           // sequential numbering of blocks, not essential but helpful for debugging
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy
   Edges m_edges;              // all the edges for elements in this block
-  const class Edge& edge(Id::Type id1, Id::Type id2) const;
-};
+  static int tempBlockCount;  // sequential numbering of blocks, not essential but helpful for debugging
+  };
+
   std::ostream& operator<<(std::ostream& os, const PFBlock& block);
 } // end namespace papas
+
+
 #endif /* PFBlock_h */
 
 

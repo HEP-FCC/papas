@@ -19,7 +19,7 @@ namespace papas {
 class Particle {
 public:
   Particle();
-  Particle& operator=(const Particle& P)=default;
+  Particle& operator=(const Particle& P) = default;
   Particle(int pdgid, double charge, TLorentzVector tlv, double status = 1);
   Particle(int pdgid, double charge);
   Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 1);
@@ -44,7 +44,7 @@ protected:
   IdType m_uniqueId;  // to be used by virtual classes
 private:
   TLorentzVector m_tlv;
-  int m_particleId;
+  int m_particleId; //TODO make unsigned int
   double m_charge;
   double m_status;
   TVector3 m_startVertex;

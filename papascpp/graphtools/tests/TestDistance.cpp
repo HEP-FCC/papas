@@ -20,8 +20,8 @@ namespace papas {
 
 TEST(Distance, distance) {
   
-  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::makeEcalId()};
-  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::makeHcalId()};
+  Cluster c1 {10, TVector3(1, 0, 0), 1., Id::ItemType::kEcalCluster};
+  Cluster c2 {20, TVector3(1, 0, 0), 1., Id::ItemType::kHcalCluster};
   
   
   TVector3 p3 = c1.position().Unit()*100.;
@@ -29,7 +29,7 @@ TEST(Distance, distance) {
   p4.SetVectM(p3, 1.);
   std::shared_ptr<Path> path =std::make_shared<Path>(p4, TVector3(0,0,0),20.);
   double charge = 1.;
-  Track tr{p3, charge, path, 0};
+  Track tr{p3, charge, path};
   path->addPoint(papas::Position::kEcalIn, c1.position());
   path->addPoint(papas::Position::kHcalIn, c2.position());
   

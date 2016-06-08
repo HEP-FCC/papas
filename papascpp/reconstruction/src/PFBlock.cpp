@@ -11,15 +11,13 @@
 //#include <boost/format.hpp>
 #include "Edge.h"
 #include "Id.h"
+#include "spdlog/details/format.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
 #include <vector>
-#include "spdlog/details/format.h"
-
-  
 
 //#include "PFEvent.h"
 
@@ -28,10 +26,7 @@ namespace papas {
 int PFBlock::tempBlockCount = 0;
 
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
-    : m_uniqueId(Id::makeBlockId()),
-      m_isActive(true),
-      m_blockCount(PFBlock::tempBlockCount),
-      m_elementIds(element_ids) {
+    : m_uniqueId(Id::makeBlockId()), m_isActive(true), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
 
   // extract the relevant parts of the complete set of edges and store this within the block
@@ -47,7 +42,7 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
   }
 }
 
-PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_blockCount(-1), m_elementIds() {}
+PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_elementIds() {}
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
@@ -67,22 +62,19 @@ int PFBlock::countTracks() const {
 std::string PFBlock::shortName() const {
   // constructs a short summary name for blocks allowing sorting based on contents
   // eg 'E1H1T2' for a block with 1 ecal, 1 hcal, 2 tracks
-  //
   std::string shortName = "";
   if (countEcal()) shortName = shortName + "E" + std::to_string(countEcal());
   if (countHcal()) shortName = shortName + "H" + std::to_string(countHcal());
   if (countTracks()) shortName = shortName + "T" + std::to_string(countTracks());
-
   return shortName;
 }
 
 int PFBlock::size() const { return m_elementIds.size(); }
 
-  std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
+std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
-   The list is sorted in order of increasing distance
-
+   
    Arguments:
    uniqueid : is the id of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
@@ -96,26 +88,13 @@ int PFBlock::size() const { return m_elementIds.size(); }
         linkedEdgeKeys.push_back(edge.first);
     }
   }
+  //TODO consider sorting
   return linkedEdgeKeys;
 }
-/*
-
- #this is a bit yucky and temporary solution as need to make sure the order returned is consistent
- # maybe should live outside of this class
- linked_edges.sort( key = lambda x: (x.distance is None, x.distance))
- return linked_edges*/
 
 std::vector<Id::Type> PFBlock::linkedIds(Id::Type uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
-  /// sorted in order of increasing distance
-  /** returns a list of the otherids sorted by distance to uniqueid and by decreasing energies
-
-   eg if uniqueid is an hcal
-   and other ids are  track1 energy = 18, dist to hcal = 0.1
-   track2 energy = 9,  dist to hcal = 0
-   track3 energy = 4,  dist to hcal = 0
-   this will return {track2, track3, track1}
-   */
+  /// TODO think about sorting
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     linkedIds.push_back(m_edges.find(key)->second.otherid(uniqueid));
@@ -126,29 +105,26 @@ std::vector<Id::Type> PFBlock::linkedIds(Id::Type uniqueid, Edge::EdgeType edget
 }
 
 std::string PFBlock::elementsString() const {
-  /** Construct a string descrip of each of the elements in a block:-
-   The elements are given a short name E/H/T according to ecal/hcal/track
-   and then sequential numbering starting from 0, this naming is also used to index the
-   matrix of distances. The full unique id is also given.
+  /** Construct an index to the elements linking shortname used in matrix to the pretty item identifier
    For example:-
    elements: {
-   E0:1104134446736:SmearedCluster : ecal_in       0.57  0.33 -2.78
-   H1:2203643940048:SmearedCluster : hcal_in       6.78  0.35 -2.86
-   T2:3303155568016:SmearedTrack   :    5.23    4.92  0.34 -2.63
+   E1 = E429
+   H1 = H430
+   T2 = T428
    }
    */
   int count = 0;
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9}\n",Id::typeShortCode(id), count, Id::pretty(id));
+    out.write("{:>7}{} = {:9}\n", Id::typeShortCode(id), count, Id::pretty(id));
     count = count + 1;
   }
   return out.str();
 }
 
 std::string PFBlock::edgeMatrixString() const {
-  /* produces a string containing the the lower part of the matrix of distances between elements
+  /** produces a string containing the the lower part of the matrix of distances between elements
    elements are ordered as ECAL(E), HCAL(H), Track(T)
   for example:-
 
@@ -159,48 +135,39 @@ std::string PFBlock::edgeMatrixString() const {
   T2  0.0000   0.0000        .
   T3  0.0287   0.0825      ---        .
   */
-  //TODO rewrite using MemoryWriter
-  // make the header line for the matrix
+  
   int count = 0;
   fmt::MemoryWriter out;
   std::string shortid;
-  
-  if (m_elementIds.size() > 1) {
-    std::string offset = "      ";
+
+  if (m_elementIds.size() > 1) { // make the header line for the matrix
     out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
       shortid = Id::typeShortCode(e1) + std::to_string(count);
-      out.write("{:>8}",shortid);
+      out.write("{:>8}", shortid);
       count += 1;
     }
-    
 
     // for each element find distances to all other items that are in the lower part of the matrix
     int countrow = 0;
-    std::string rowstr = "";
-    std::string rowname = "";
-    std::string colname = "";
-    for (auto e1 : m_elementIds) {  // this will be the rows
-      out.write("\n");
-      rowstr = "";
+    for (auto e1 : m_elementIds) {  // each iteration produces the next row of the matrix
       // make short name for the row element eg E3, H5 etc
       shortid = Id::typeShortCode(e1) + std::to_string(countrow);
-      out.write("{:>8}",shortid);
+      out.write("\n{:>8}", shortid);
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
         if (e1 == e2) {
-          out.write("       .");
+          out.write("       ."); //diagonal
           break;
         } else if (edge(e1, e2).distance() < 0)
-          out.write("     ---");
+          out.write("     ---"); //-ve distance
         else if (edge(e1, e2).isLinked() == false)
-          out.write("     xxx");
-        else {
-          out.write("{:8.4f}",edge(e1, e2).distance());
+          out.write("     xxx"); // not linked
+        else { //linked and has distance
+          out.write("{:8.4f}", edge(e1, e2).distance());
         }
       }
-      //out.write("\n");
     }
   }
   return out.str();
@@ -212,55 +179,50 @@ const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
   ///                        '''
   return m_edges.find(Edge::makeKey(id1, id2))->second;
 }
-  std::string PFBlock::info() const {
-      
-      fmt::MemoryWriter out;
-      out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}",
-              shortName(), Id::pretty(m_uniqueId), countEcal(), countHcal(), countTracks());
-      return out.str();
-      
-    }
+std::string PFBlock::info() const {
+  fmt::MemoryWriter out;
+  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}",
+            shortName(), Id::pretty(m_uniqueId), countEcal(), countHcal(), countTracks());
+  return out.str();
+}
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   if (block.isActive())
     os << "block:";
   else
     os << "deactivated block:";
-  
-  os << block.info()<<std::endl;
+  os << block.info() << std::endl;
   os << block.elementsString();
   os << block.edgeMatrixString();
-
-  //    return descrip
   return os;
 }
 
-} // end namespace papas
+}  // end namespace papas
 
 int test_blocks() {
   using namespace papas;
   Id::Type id1 = Id::makeEcalId();
   Id::Type id2 = Id::makeHcalId();
   Id::Type id3 = Id::makeTrackId();
-  
+
   Id::Type id4 = Id::makeEcalId();
   Id::Type id5 = Id::makeHcalId();
   Id::Type id6 = Id::makeTrackId();
-  
+
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
-  
+
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
   Edge edge2 = Edge(id2, id3, true, 0.00005);
-  
+
   Edge edge4 = Edge(id4, id5, false, 3.1234);
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
-  
+
   Edges edges;
   edges.reserve(100);
-  
+
   // edges.emplace(10000.0,  std::move(edge));
   edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
@@ -268,54 +230,13 @@ int test_blocks() {
   edges.emplace(edge4.key(), std::move(edge4));
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
-  
+
   PFBlock block(ids, edges);
   PFBlock block2(ids2, edges);
-  
+
   std::cout << block;
   std::cout << block2;
   std::cout << edges.size();
   return 0;
 }
 
-/*
-
-def __str__(self):
-Block description which includes list of elements and a matrix of distances
-Example:
-block: E1H1T1       id=  39 :uid= 6601693505424: ecals = 1 hcals = 1 tracks = 1
-elements: {
-E0:1104134446736:SmearedCluster : ecal_in       0.57  0.33 -2.78
-H1:2203643940048:SmearedCluster : hcal_in       6.78  0.35 -2.86
-T2:3303155568016:SmearedTrack   :    5.23    4.92  0.34 -2.63
-}
-distances:
-E0       H1       T2
-E0       .
-H1  0.0796        .
-T2  0.0210   0.0000        .
-}
-*/
-/*
- if (self.is_active):
- descrip= "\nblock:"
- else:
- descrip= "\ndeactivated block:"
-
- descrip += str('{shortName:<12} id={blockid:4.0f} :uid= {uid}: ecals = {count_ecal} hcals = {count_hcal} tracks =
- {count_tracks}'.format(
- shortName    = self.short_name(),
- blockid      = self.block_count,
- uid          = self.uniqueid,
- count_ecal   = self.count_ecal(),
- count_hcal   = self.count_hcal(),
- count_tracks = self.count_tracks() )
- )
- descrip += self.elements_string()
- descrip += self.edge_matrix_string()
- return descrip
-
- def __repr__(self):
- return self.__str__()
-
- */

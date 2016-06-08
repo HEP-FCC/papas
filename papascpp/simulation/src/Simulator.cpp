@@ -39,9 +39,9 @@ Simulator::Simulator(const Detector& d) :
 void  Simulator::simulatePhoton(PFParticle& ptc)
 {
   PDebug::write("Simulating Photon");
-  auto ecal_sp=m_detector.ecal();
+  auto ecal_sp = m_detector.ecal(); //ECAL detector element
   
-  //find where it meets the Ecal inner cylinder
+  //find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
   propagate(ptc, ecal_sp->volumeCylinder().inner());
   Id::Type ecalId = addEcalCluster(ptc);
@@ -76,7 +76,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().Contains(pointDecay)) {
       fracEcal = randomgen::RandUniform(0., 0.7).next();
-      Id::Type ecalId = addEcalCluster(ptc, ptc.id(), fracEcal);
+      Id::Type ecalId = addEcalCluster(ptc, fracEcal);
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
       addSmearedCluster(ecalId, papas::Layer::kHcal, papas::Layer::kEcal );
@@ -85,7 +85,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 
   // now find where it reaches into HCAL
   propagate(ptc, hcal_sp->volumeCylinder().inner());
-  Id::Type hcalId = addHcalCluster(ptc, ptc.id(), 1 - fracEcal);
+  Id::Type hcalId = addHcalCluster(ptc, 1 - fracEcal);
   addSmearedCluster(hcalId);
   
   
@@ -150,13 +150,6 @@ PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 verte
 
 PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex)
 {
-  TLorentzVector tlv = makeTLorentzVector(pdgid, theta, phi, energy);
-  return addParticle(pdgid, tlv, vertex);
-}
-
-
-TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi, double energy)
-{
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
@@ -167,57 +160,39 @@ TLorentzVector Simulator::makeTLorentzVector(int pdgid, double theta, double phi
                     momentum * sintheta * sinphi,
                     momentum * costheta,
                     energy);
-  /*std::cout << "TLV " << p4.X() << " " << p4.Y() << " " << p4.Z() << " " <<
-   p4.Et() << " ";
-   std::cout << "energy " << energy << " mom " << momentum << " " << costheta <<
-   " " << cosphi <<
-   " " << sintheta << " ";*/
-  return p4;
+  return addParticle(pdgid, p4, vertex);
 }
-  
 
-Id::Type Simulator::addEcalCluster(PFParticle& ptc, Id::Type parentid,double fraction, double csize)
+
+
+Id::Type Simulator::addEcalCluster(PFParticle& ptc, double fraction, double csize)
 {
-  Cluster cluster = makeCluster(ptc, parentid, papas::Layer::kEcal, fraction, csize);
+  Cluster cluster = makeCluster(ptc,  papas::Layer::kEcal, fraction, csize);
   m_ecalClusters.emplace(cluster.id(), std::move(cluster));
   return cluster.id();
 }
 
-Id::Type Simulator::addHcalCluster(PFParticle& ptc,Id::Type parentid,double fraction, double csize)
+Id::Type Simulator::addHcalCluster(PFParticle& ptc, double fraction, double csize)
 {
-  Cluster cluster = makeCluster(ptc, parentid, papas::Layer::kHcal, fraction, csize);
+  Cluster cluster = makeCluster(ptc,  papas::Layer::kHcal, fraction, csize);
   m_hcalClusters.emplace(cluster.id(), std::move(cluster));
   return cluster.id();
 }
 
 
-Cluster Simulator::makeCluster(PFParticle& ptc, Id::Type parentid,papas::Layer layer, double fraction, double csize)
+Cluster Simulator::makeCluster(PFParticle& ptc, papas::Layer layer, double fraction, double csize)
 {
-  
-  if (!parentid) {
-    parentid = ptc.id();
-  }
-  Id::Type clusterid;
-  if (layer==papas::Layer::kEcal) {
-    clusterid = Id::makeEcalId();
-  } else {
-    clusterid = Id::makeHcalId();
-  }
   double energy = ptc.p4().E() * fraction;
-  
-  //TODO change string to ENUM
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();
-  TVector3 pos = ptc.pathPosition(clayer); //assume path already set in particle
-  
-  if (csize == 0) { //or could make the defalt value -1?? check Colin
+  TVector3 pos = ptc.pathPosition(clayer);
+  if (csize == -1.) { //is value not provided
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
   
-  //const Cluster& cluster{energy, pos, csize, clusterid};
-  Cluster cluster{energy, pos, csize, clusterid};
-  addNode(clusterid, parentid); //a track may be the parent of a cluster
+  Cluster cluster{energy, pos, csize, Id::itemType(layer)} ;
+  addNode(cluster.id(), ptc.id());
   PDebug::write("Made {}", cluster);
-  return cluster; //check this defaults OK
+  return cluster;
 }
 
 Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer,  papas::Layer acceptlayer, bool accept)
@@ -226,6 +201,8 @@ Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer det
   Cluster smeared=makeSmearedCluster(parentClusterId,  detlayer);
   PDebug::write("Made Smeared{}", smeared);
   
+  //Determine if this smeared cluster will be detected and, if so, add it into the
+  //smeared cluster collections (Ecal or Hcal)
   if (detlayer == papas::Layer::kNone)
     detlayer = Id::layer(parentClusterId);
   if (acceptlayer == papas::Layer::kNone)
@@ -243,60 +220,60 @@ Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer det
   }
   else {
     PDebug::write("Rejected Smeared{}", smeared);
-    //cluster.erase(smeared.id());
     return parentClusterId;
   }
 }
 
 
-Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer  detlayer)
+Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer)
 {
-  //create a new id
-  auto itemType = Id::itemType(parentClusterId);
-  Id::Type newclusterid = Id::makeId(itemType);
-  const Cluster& parent = cluster(parentClusterId);
   
-  if (Id::pretty(parentClusterId).compare(0,5, "h3498")==0)
-    std::cout <<"e106";
-  
+  //detlayer will be used to choose which detector layer is used for energy resolution etc.
+  // NB It is not always the same layer as the new smeared cluster
   if(detlayer==papas::Layer::kNone)
     detlayer = Id::layer(parentClusterId);
-  
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detlayer);
   
+  //now do the smearing
+  const Cluster& parent = cluster(parentClusterId); //find the cluster in the Clusters collections
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
  
-  Cluster cluster = Cluster{ energy, parent.position(), parent.size(), newclusterid};
+  //if (Id::pretty(parentClusterId).compare(0,5, "h3498")==0)
+  //  std::cout <<"e106";
+  
+  //create smeared cluster
+  Cluster cluster = Cluster{ energy, parent.position(), parent.size(), Id::itemType(parentClusterId)};
   return cluster;
 }
 
 const Track& Simulator::addTrack(PFParticle& ptc)
 {
-  Id::Type trackid = Id::makeTrackId();
-  m_tracks.emplace(trackid, Track{ ptc.p3(), ptc.charge(), ptc.path(), trackid});
-  addNode(trackid, ptc.id());
-  PDebug::write("Made {}", m_tracks.at(trackid));
-  return m_tracks.at(trackid); //check this defaults OK
-}
+  Track track = Track{ ptc.p3(), ptc.charge(), ptc.path()};
+  m_tracks.emplace(track.id(), track);
+  addNode(track.id(), ptc.id());
+  PDebug::write("Made {}", track);
+  return m_tracks.at(track.id()); }
 
 
 Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
-  Id::Type smearedTrackId = Id::makeTrackId();
+  
   double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
   
-  Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path(), smearedTrackId};
+  Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path()};
   PDebug::write("Made Smeared{}", smeared);
+  
+  //decide whether the smearedTrack is detected
   if (m_detector.tracker()->acceptance(smeared) || accept ) {
-    addNode(smearedTrackId, track.id());
-    m_smearedTracks.emplace(smearedTrackId, std::move(smeared));
+    addNode(smeared.id(), track.id());
+    m_smearedTracks.emplace(smeared.id(), std::move(smeared));
   }
   else {
       PDebug::write("Rejected Smeared{}", smeared);
   }
-  return smearedTrackId;
+  return smeared.id();
 }
 
 void Simulator::addNode(Id::Type newid, const Id::Type parentid)

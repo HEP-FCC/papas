@@ -18,13 +18,21 @@ namespace papas {
 
 class Cluster{
 public:
-
-  Cluster(double energy, TVector3 position, double size_m, IdType id);
-  Cluster(const Cluster& cluster, IdType id);
+  /** Constructor
+   @param[in]  double energy: Cluster energy
+   @param[in]  TVector3 position: location of Cluster
+   @param[in]  double size_m: size of cluster (units?)
+   @param[in]  Id::ItemType type of cluster eg kEcalCluster or kHcalCluster
+    */
+  Cluster(double energy, TVector3 position, double size_m, Id::ItemType id);
+  /** Constructor: makes a complete copy of the original cluster and sets a new unique id
+   @param[in]  const Cluster& cluster
+   */
+  Cluster(const Cluster& cluster, Id::Type id);
   Cluster() = default;
   Cluster(Cluster&& c)    = default;
-  Cluster(const Cluster&) = default;
-  Cluster& operator=(const Cluster&)= default;;//=default {std::cout<< "copy" ;} ;
+  Cluster(const Cluster& cluster) = default;
+  Cluster& operator=(const Cluster&)= default;// {std::cout<< "copy" ;} ;
   Cluster& operator+=(const Cluster& rhs);
   double angularSize() const {return m_angularSize;}
   double size() const     {return m_size;}

@@ -41,7 +41,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
   GraphBuilder grBuilder{uniqueids, edges};
   for (auto ids : grBuilder.subGraphs()) {
     auto id = ids[0];
-    Cluster mergedCluster{clusters.at(id),Id::makeId(Id::itemType(id))};  // create a new cluster based on old one
+    Cluster mergedCluster{clusters.at(id), Id::makeId(Id::itemType(id))};  // create a new cluster based on old one
     PDebug::write("Made Merged{}", mergedCluster);
     m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
     PFNode snode {mergedCluster.id()};

@@ -275,7 +275,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
    self.log.info( hcal )
    self.log.info( '\tT {tracks}'.format(tracks=tracks) )
    self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
-  const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);  
+  const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
   double trackEnergy = 0.;
@@ -358,12 +358,7 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
   Id::Type newid = Id::makeRecParticleId();
-  // TODO check field and charge match?????
   PFParticle particle{newid, pdgId, p4, vertex};
-  // TODO figure out if this is needed
-  // Path path{p4, vertex}; //default is strightline path
-
-  // TODO make addpoint use layer also??
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());  // alice: Colin this may be a bit strange
                                                                             // because we can make a photon with a
                                                                             // path where the point is actually that
@@ -372,40 +367,24 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   // particle.setPath(path);
   // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
-  // if self.debugprint:
-  PDebug::write("Made Reconstructed{} from Merged{}", particle, cluster); //TODO make more flexible and able to detect what type cluster has
-
-  std::cout << "made particle pdgid: " << pdgId << " from cluster: " << cluster;  // TODO << particle;
+  // TODO make more flexible and able to detect what type of cluster
+  PDebug::write("Made Reconstructed{} from Merged{}", particle, cluster);
   return particle;
 }
 
-PFParticle PFReconstructor::reconstructTrack(
-    const Track& track) {  // Cclusters = None): # cluster argument does not ever seem to be used at present
-                           /*construct a charged hadron from the track
-                            */
-  
+PFParticle PFReconstructor::reconstructTrack(const Track& track) {
+  // Cclusters = None): cluster argument does not ever seem to be used at present
+  /*construct a charged hadron from the track
+   */
   Id::Type newid = Id::makeRecParticleId();
   int pdgId = 211 * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
   PFParticle particle{newid, pdgId, p4, track};
-  // particle.setPath(track.path());
-  // particle.clusters = clusters
+
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
   std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
   return particle;
 }
 }  // end namespace papas
-
-/*
- def __str__(self):
- theStr = ['New Rec Particles:']
- theStr.extend( map(str, self.particles))
- theStr.append('Unused:')
- if len(self.unused)==0:
- theStr.append('None')
- else:
- theStr.extend( map(str, self.unused))
- return '\n'.join( theStr )
- */

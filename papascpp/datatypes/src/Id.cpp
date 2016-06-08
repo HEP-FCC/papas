@@ -24,41 +24,14 @@
 
 
 namespace papas {
-  
-  /** A Particle Flow Block stores a set of element ids that are connected to each other
-   together with the edge data (distances) for each possible edge combination
-   
-   class attributes:
-   
-   uniqueid : the block's unique id generated from Id class
-   element_uniqueids : list of uniqueids of its elements
-   pfevent : contains the tracks and clusters and a get_object method to allow access to the
-   underlying objects given their uniqueid
-   edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
-   use  get_edge(id1,id2) to find an edge
-   is_active : bool true/false, set to false if the block is subsequently subdivided
-   
-   Usage:
-   block = PFBlock(element_ids,  edges, pfevent)
-   for uid in block.element_uniqueids:
-   print pfevent.get_object(uid).__str__() + "\n"
-   
-   */
-
 
   
   unsigned int Id::s_counter = 1; /// static which will be used to create a unique long
-                                  //const unsigned int Id::bitshift =32;
-  /*void Id::setCounter(int startid) /// allows user to start counter at another point
-  {
-    s_counter = startid;
-  }*/
   
-  //TODO rename as OBJECTTYpe not PFObjectType
   Id::Type Id::makeId(ItemType type, unsigned int uniqueid)
   {
 
-    if (type>6) { //TODO error cghecking on type
+    if (type>6) { //TODO error checking on type
       std::cout <<"TOO big" << std::endl;
     }
     //NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
@@ -67,10 +40,6 @@ namespace papas {
     s_counter++;
 
     //std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
-       
-    /*std::cout<< "size type "<< sizeof(unsigned long)<<std::endl;
-    std::cout<< "size type "<< sizeof(unsigned long long)<<std::endl;
-    std::cout<< "size unsigned int "<< sizeof(unsigned int)<<std::endl;*/
     return id;
   }
   
@@ -93,6 +62,17 @@ namespace papas {
       return papas::Layer::kTracker;
     else
       return papas::Layer::kNone;
+  }
+  
+  Id::ItemType Id::itemType(papas::Layer layer) {
+    if(layer == papas::Layer::kEcal )
+      return ItemType::kEcalCluster;
+    else if(layer == papas::Layer::kHcal )
+      return ItemType::kHcalCluster;
+    else if(layer == papas::Layer::kTracker)
+      return ItemType::kTrack;
+    else
+      return ItemType::kNone;
   }
   
   char Id::typeShortCode(Id::Type id)
