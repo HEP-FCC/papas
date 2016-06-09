@@ -46,7 +46,9 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   m_energy = m_energy + rhs.energy();
   double denom = 1. / m_energy;
   m_p3 *= denom;
-  if (rhs.subClusters().size() != 1) std::cout << "can only add in a cluster which is not already merged";
+  if (rhs.subClusters().size() > 1) {
+     std::cout << "can only add in a cluster which is not already merged";
+  }
   if (m_subClusters.size() == 0) m_subClusters.push_back(m_uniqueId);
   m_subClusters.insert(m_subClusters.end(), rhs.subClusters().begin(), rhs.subClusters().end());
 

@@ -19,10 +19,15 @@ m_key(Edge::makeKey(id1, id2))
 Edge::EdgeKey Edge::makeKey(Id::Type id1, Id::Type id2) {
 
   EdgeKey key;
+  Id::Type uid1 =Id::uniqueId(id1);
+  Id::Type uid2 =Id::uniqueId(id2);
+ 
   if (id1 > id2) //ensure that the order of the ids does not matter
-    key= (id1 << 32) | id2;
+    key= (((uint64_t)uid1) << Id::bitshift) | ((uint64_t)uid2);
   else
-    key= (id2 << 32) | id1;
+    key= (((uint64_t)uid2) << Id::bitshift) | ((uint64_t)uid1);
+  
+
   return key;
 }
 

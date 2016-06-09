@@ -279,7 +279,8 @@ Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
 void Simulator::addNode(Id::Type newid, const Id::Type parentid)
 {
   //add the new node into the set of all nodes
-  m_nodes[newid] = {newid};
+  PFNode node{newid};
+  m_nodes.emplace(newid, std::move(node));
   if (parentid) {
     PFNode& parent = m_nodes[parentid];
     PFNode& child = m_nodes[newid];

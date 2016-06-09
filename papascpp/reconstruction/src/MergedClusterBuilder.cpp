@@ -45,7 +45,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
     PDebug::write("Made Merged{}", mergedCluster);
     m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
     PFNode snode {mergedCluster.id()};
-    m_historyNodes.emplace(mergedCluster.id(), snode);
+    m_historyNodes.emplace(mergedCluster.id(), std::move(snode));
     m_historyNodes.at(id).addChild(snode);
       if (ids.size() > 1) {
         for (auto elemid : ids) {

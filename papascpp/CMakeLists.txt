@@ -33,6 +33,27 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+
+
+# Make sure we find the Find*.cmake functions distributed with this package
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_PREFIX_PATH $ENV{PODIO} $ENV{FCCEDM})
+
+find_package(podio REQUIRED HINTS $ENV{PODIO})
+message(STATUS "Found podio: ${podio_DIR}")
+# Make sure the library is found.
+# Not the case if LD_LIBRARY_PATH is wrong
+find_library(PODIOLIB podio)
+if (NOT PODIOLIB)
+message(FATAL_ERROR "libpodio.so(dylib) cannot be found dynamically. Make sure you have sourced PODIO init*.sh file to set up your environment to use PODIO")
+endif()
+link_directories(${podio_LIBRARY_DIR})
+
+find_package(fccedm REQUIRED HINTS $ENV{FCCEDM})
+message(STATUS "Found fcc-edm: ${fccedm_DIR}")
+
+
+
 MESSAGE( STATUS "Doxygen engaging " )
 FIND_PACKAGE( Doxygen )
 IF( DOXYGEN_FOUND )
@@ -80,17 +101,6 @@ ${MAINDIR}/reconstruction/test/*.cpp
 
 )
 
-include_directories(
-
-${MAINDIR}/datatypes/datatypes/
-${MAINDIR}/display/display/
-${MAINDIR}/detectors/detectors/
-${MAINDIR}/simulation/simulation/
-${MAINDIR}/graphtools/graphtools/
-${MAINDIR}/utility/utility/
-${MAINDIR}/reconstruction/reconstruction/
-${MAINDIR}/spdlog
-)
 
 file(GLOB_RECURSE headers 
 ${MAINDIR}/datatypes/datatypes/*.h
@@ -116,29 +126,42 @@ find_package(ROOT REQUIRED )
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE}  )
 
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+include_directories(
+
+"${podio_INCLUDE_DIRS}"
+"${FCCEDM_INCLUDE_DIRS}"
+)
+message(status, "${podio_INCLUDE_DIRS}")
+message(status, "${FCCEDM_INCLUDE_DIRS}")
+message(status $ENV{ROOT_INCLUDE_PATH})
+message(status $ENV{DYLD_LIBRARY_PATH})
+
+include_directories(
+
+"${ROOT_INCLUDE_DIRS}"
+)
+include_directories(
+${MAINDIR}/datatypes/datatypes/
+${MAINDIR}/display/display/
+${MAINDIR}/detectors/detectors/
+${MAINDIR}/simulation/simulation/
+${MAINDIR}/graphtools/graphtools/
+${MAINDIR}/utility/utility/
+${MAINDIR}/reconstruction/reconstruction/
+${MAINDIR}/spdlog )
+#${CMAKE_SOURCE_DIR} )
+
 add_definitions(${ROOT_CXX_FLAGS})
 
 find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-#message(STATUS ${headers})
-
-#get_cmake_property(_variableNames VARIABLES)
-#foreach (_variableName ${_variableNames})
-#message(STATUS "${_variableName}=${${_variableName}}")
-#endforeach()
 
 
-
-include_directories(
-  "${ROOT_INCLUDE_DIRS}"
-  )
 
 REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
-
 
 add_library(papascpp SHARED ${sources} 
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
@@ -146,14 +169,6 @@ ${MAINDIR}/utility/src/random.cpp
 ${MAINDIR}/utility/utility/random.h ) # papascppDict.cxx)
 target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
 
-#install(TARGETS papascpp DESTINATION lib)
-
-### Install the dictionary
-#if (${ROOT_VERSION} GREATER 6)
-#install(FILES
-#"${PROJECT_BINARY_DIR}/papascppDict_rdict.pcm"
-#DESTINATION lib COMPONENT dev)
-#endif()
 
 
 

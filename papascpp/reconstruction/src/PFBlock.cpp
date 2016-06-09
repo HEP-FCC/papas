@@ -222,6 +222,13 @@ int test_blocks() {
 
   Edges edges;
   edges.reserve(100);
+  std::cout <<"ee " <<":"<<Id::pretty(id1)<<":"<<edge.key()<<edge<<std::endl;
+  std::cout <<":"<<Id::pretty(id2)<<":"<<edge1.key()<<edge1<<std::endl;
+  std::cout <<":"<<Id::pretty(id3)<<":"<<edge2.key()<<edge2<<std::endl;
+  std::cout <<":"<<Id::pretty(id4)<<":"<<edge4.key()<<edge4<<std::endl;
+  std::cout <<":"<<Id::pretty(id5)<<":"<<edge5.key()<<edge5<<std::endl;
+  std::cout <<":"<<Id::pretty(id6)<<":"<<edge6.key()<<edge6<<std::endl;
+  
 
   // edges.emplace(10000.0,  std::move(edge));
   edges.emplace(edge.key(), std::move(edge));

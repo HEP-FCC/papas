@@ -129,7 +129,7 @@ void testGraphs()
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
    
    TVector3 vpos(1.,.5,.3);
-   Cluster cluster =  Cluster(10., vpos, 1.,Id::makeEcalId() );
+   Cluster cluster =  Cluster(10., vpos, 1. ,Id::ItemType::kEcalCluster);
    std::vector<TVector3> tvec;
    tvec.push_back(TVector3(0.,0.,0.));
    tvec.push_back(TVector3(1.,1.,1.));
@@ -210,7 +210,7 @@ self.assertEqual( zs, sorted(zs))*/
 TEST(fastsim, ClusterPT){
    
    ///Test that pT is correctly set
-   Cluster    cluster = Cluster(10., TVector3(1,0,0), 1, 1);
+  Cluster    cluster = Cluster(10., TVector3(1,0,0), 1,  Id::ItemType::kEcalCluster);
    EXPECT_NEAR(cluster.pt(),10.000, 1e-6);
    
    cluster.setEnergy(5.);
@@ -428,7 +428,7 @@ void test_graphs()
   //Display display = Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi ,papas::ViewPane::Projection::HCAL_thetaphi });
   
   TVector3 vpos(1.,.5,.3);
-  Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
+  Cluster cluster=  Cluster(10., vpos, 1.,Id::ItemType::kEcalCluster );
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0.,0.,0.));
   tvec.push_back(TVector3(1.,1.,1.));

@@ -44,10 +44,11 @@ namespace papas {
     static unsigned int uniqueId(Type id); ///< normally starts at one and incremented by one for each new id
     static char typeShortCode(Type id); ///<One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
     static std::string pretty(Id::Type id);
+    static const unsigned int bitshift = 32;
     //TODO add a checkValid function
   private:
     static unsigned int s_counter;
-    static const unsigned int bitshift = 32;
+    
   
   
   };

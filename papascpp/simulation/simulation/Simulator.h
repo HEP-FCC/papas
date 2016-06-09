@@ -46,7 +46,15 @@ public:
   void simulatePhoton(PFParticle& ptc); ///< Simulates cluster from Photon
   void simulateHadron(PFParticle& ptc); ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(PFParticle& ptc); ///Simulates neutrino
-
+  /**
+   Makes a new PFParticle and adds this into collection of particles
+   @param[in] int pdgid: particle id (eg 22 for a photon)
+   @param[in] TLorentzVector tlv: particle momentum
+   @param[in] TVector3 vertex: start point of particle
+   @return PFParticle& the newly created particle
+   */
+  PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  
   /**
    Makes a new PFParticle and adds this into collection of particles
    @param[in] int pdgid: particle id (eg 22 for a photon)
@@ -91,7 +99,7 @@ public:
 
 
 private:
-  PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  
   Id::Type addEcalCluster(PFParticle& ptc, double fraction = 1., double csize = -1);
   Id::Type addHcalCluster(PFParticle& ptc, double fraction = 1., double csize = -1);
   Id::Type addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer = papas::Layer::kNone,
