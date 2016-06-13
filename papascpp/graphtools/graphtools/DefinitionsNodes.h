@@ -9,14 +9,14 @@
 #ifndef DefinitionsNodes_h
 #define DefinitionsNodes_h
 
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include "directedacyclicgraph.h"
 #include "Id.h"
 namespace papas {
 
 typedef DAG::Node<Id::Type> PFNode;
-typedef std::unordered_map<Id::Type, PFNode> Nodes;
+typedef std::map<Id::Type, PFNode> Nodes;
 extern Nodes emptyNodes; //TODO check
 extern const Nodes emptyconstNodes; //TODO check
 

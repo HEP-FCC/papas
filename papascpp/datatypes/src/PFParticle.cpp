@@ -21,7 +21,7 @@ namespace papas {
   
 
 
-  PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+  /*PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
   Particle(uniqueid, pdgid, ParticlePData::particleCharge(pdgid), tlv),
   m_vertex(vertex),
   m_isHelix(fabs(charge())>0.5)
@@ -32,11 +32,25 @@ namespace papas {
     m_path = std::make_shared<Path>(tlv, vertex, field);
   
   
-}
+}*/
   
-  PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, const Track& track) : //calla above constructor
+  PFParticle::PFParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field) :
+  Particle(uniqueid, pdgid, charge, tlv),
+  m_vertex(vertex),
+  m_isHelix(fabs(charge)>0.5)
+  {
+    if (m_isHelix)
+      m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
+    else
+      m_path = std::make_shared<Path>(tlv, vertex, field);
+    
+    
+  }
+  
+  PFParticle::PFParticle(IdType uniqueid, unsigned int pdgid, double charge,  TLorentzVector tlv, const Track& track) : //calla above constructor
   PFParticle(uniqueid,
              pdgid,
+             charge,
              tlv,
              track.path()->namedPoint(papas::Position::kVertex),
              track.path()->field()) {

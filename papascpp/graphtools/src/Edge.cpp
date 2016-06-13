@@ -37,7 +37,7 @@ Id::Type Edge::otherid(Id::Type id) const
     return m_id2;
   else if (m_id2==id)
     return m_id1;
-  return -1;
+  return 0;
 }
 
 Edge::EdgeType Edge::makeEdgeType() const {

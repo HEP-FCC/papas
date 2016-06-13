@@ -36,6 +36,7 @@ void PFReconstructor::reconstruct() {
   // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
 
+  
   for (auto& block : m_blocks) {
     // std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
     Blocks newBlocks = simplifyBlock(block.second);
@@ -49,7 +50,7 @@ void PFReconstructor::reconstruct() {
   for (auto& block : m_blocks) {
     if (block.second.isActive()) {  // when blocks are split the original gets deactivated
       std::cout << "Reconstructing block: " << block.second.shortName() << std::endl;
-
+      PDebug::write("Processing {}", block.second);
       reconstructBlock(block.second);
     }
   }
@@ -81,7 +82,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    */
   Blocks splitBlocks;
   Ids ids = block.elementIds();
-
+  std::cout<<block<<std::endl;
   if (ids.size() <= 1) {  // no links to remove
     return splitBlocks;
   }
@@ -330,7 +331,7 @@ PFParticle
 PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy, TVector3 vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
-  int pdgId = -1;
+  unsigned int pdgId = 0;
   if (energy < 0) {
     energy = cluster.energy();
   }
@@ -358,7 +359,7 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
   Id::Type newid = Id::makeRecParticleId();
-  PFParticle particle{newid, pdgId, p4, vertex};
+  PFParticle particle{newid, pdgId, 0.,  p4, vertex};
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());  // alice: Colin this may be a bit strange
                                                                             // because we can make a photon with a
                                                                             // path where the point is actually that
@@ -377,10 +378,10 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {
   /*construct a charged hadron from the track
    */
   Id::Type newid = Id::makeRecParticleId();
-  int pdgId = 211 * track.charge();
+  unsigned int pdgId = 211 ;
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  PFParticle particle{newid, pdgId, p4, track};
+  PFParticle particle{newid, pdgId, track.charge(), p4, track};
 
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);

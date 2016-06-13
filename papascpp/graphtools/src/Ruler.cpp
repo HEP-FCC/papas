@@ -81,12 +81,13 @@ Distance Ruler::clusterTrackDistance(Id::Type clustId , Id::Type trackId)  const
 {
   const Cluster& cluster = m_pfEvent.cluster(clustId);
   const Track& track = m_pfEvent.track(trackId);
+  //std::cout <<track;
   return clusterTrackDistance(cluster, track);
 }
   
   Distance Ruler::clusterTrackDistance(const Cluster& cluster , const Track& track) const
   {
-    std::cout << cluster.subClusters().empty();
+    //std::cout << cluster.subClusters().empty();
     if (cluster.subClusters().size() > 1) {
       std::vector<double> distances;
       std::vector<double> linkedDistances;

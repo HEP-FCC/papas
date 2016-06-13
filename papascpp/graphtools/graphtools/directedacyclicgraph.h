@@ -59,7 +59,8 @@
 
 
 #include <iostream>
-#include <unordered_set>
+//#include <unordered_set>
+#include <set>
 #include <list>
 #include <queue>
 
@@ -74,7 +75,7 @@ namespace DAG {
    template <typename N> //N is the templated Node
    class Visitor {
    public:
-      typedef std::unordered_set<const N*> Nodeset; ///<allows find and just one of each node - used for traversals
+      typedef std::set<const N*> Nodeset; ///<allows find and just one of each node - used for traversals
       typedef std::vector<const N*> Nodevector; ///<used to return results
       Visitor(); ///<Constructor
       /// Key function for visitor pattern
@@ -94,7 +95,7 @@ namespace DAG {
    class Node {
    public:
       typedef Node<T> TNode;
-      typedef std::unordered_set<Node*> Nodeset; //Allows find with no repeat nodes
+      typedef std::set<Node*> Nodeset; //Allows find with no repeat nodes
       /// Constructor
       Node(T v);
       /// Needed for putting a Node inside a unordered_map
@@ -134,7 +135,7 @@ namespace DAG {
    public:
       
       ///used for traversals
-      typedef std::unordered_set<const N*> Nodeset; //internal use of pointer (supports the Nodes being concrete objects)
+      typedef std::set<const N*> Nodeset; //internal use of pointer (supports the Nodes being concrete objects)
       ///used for returning results
       typedef std::vector<const N*> Nodevector ;
 

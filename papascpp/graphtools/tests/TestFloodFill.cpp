@@ -15,7 +15,7 @@ namespace papas {
 
 TEST(floodfill, one) {
   typedef DAG::Node<long long> PFNode;
-  typedef std::unordered_map<long long, PFNode> Nodes;
+  typedef std::map<long long, PFNode> Nodes;
   
   Nodes myNodes;
   long long id1, id2;

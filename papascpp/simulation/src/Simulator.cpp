@@ -33,7 +33,7 @@ Simulator::Simulator(const Detector& d) :
   m_particles.reserve(isize);
   m_tracks.reserve(isize);
   m_smearedTracks.reserve(isize);
-  m_nodes.reserve(isize);
+  //m_nodes.reserve(isize);
 }
 
 void  Simulator::simulatePhoton(PFParticle& ptc)
@@ -112,19 +112,19 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
   //TODO or throw error
 }
 
-PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex)
+PFParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex)
 {
   
   double field = m_detector.field()->getMagnitude();
   Id::Type uniqueid = Id::makeParticleId();
-  m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, tlv, vertex, field});
+  m_particles.emplace(uniqueid, PFParticle{uniqueid, pdgid, charge, tlv, vertex, field});
   addNode(uniqueid); //add node to history graph
                      //PDebug::write()<<  ;
                      //PDebug::write("Made Simulation Particle {}", m_particles[uniqueid].info());
   return m_particles[uniqueid];
 }
   
-  PFParticle& Simulator::addGunParticle(int pdgid, double thetamin,double thetamax, double ptmin, double ptmax, TVector3 vertex)
+  PFParticle& Simulator::addGunParticle(unsigned int pdgid, double charge, double thetamin,double thetamax, double ptmin, double ptmax, TVector3 vertex)
   {
     double theta = randomgen::RandUniform(thetamin, thetamax).next();
     double phi = randomgen::RandUniform(-M_PI, M_PI).next();
@@ -142,13 +142,13 @@ PFParticle& Simulator::addParticle(int pdgid, TLorentzVector tlv, TVector3 verte
                       momentum * sintheta * sinphi,
                       momentum * costheta,
                       energy);
-    return addParticle(pdgid, p4, vertex);
+    return addParticle(pdgid,charge, p4, vertex);
   }
 
   
 
 
-PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex)
+PFParticle& Simulator::addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy, TVector3 vertex)
 {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -160,7 +160,7 @@ PFParticle& Simulator::addParticle(int pdgid, double theta, double phi, double e
                     momentum * sintheta * sinphi,
                     momentum * costheta,
                     energy);
-  return addParticle(pdgid, p4, vertex);
+  return addParticle(pdgid, charge, p4, vertex);
 }
 
 
@@ -261,8 +261,12 @@ Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
   
   double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
-  
+  if (Id::pretty(track.id())=="t29      ")
+    std::cout<<track;
+
   Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path()};
+  if (Id::pretty(smeared.id())=="t30      ")
+      std::cout<<smeared;
   PDebug::write("Made Smeared{}", smeared);
   
   //decide whether the smearedTrack is detected

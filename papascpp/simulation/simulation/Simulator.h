@@ -48,27 +48,29 @@ public:
   void simulateNeutrino(PFParticle& ptc); ///Simulates neutrino
   /**
    Makes a new PFParticle and adds this into collection of particles
-   @param[in] int pdgid: particle id (eg 22 for a photon)
+   @param[in] unsigned int pdgid: particle id (eg 22 for a photon)
    @param[in] TLorentzVector tlv: particle momentum
    @param[in] TVector3 vertex: start point of particle
    @return PFParticle& the newly created particle
    */
-  PFParticle& addParticle(int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  PFParticle& addParticle(unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   
   /**
    Makes a new PFParticle and adds this into collection of particles
-   @param[in] int pdgid: particle id (eg 22 for a photon)
+   @param[in] unsigned int pdgid: particle id (eg 22 for a photon)
+   @param[in] double charge: charge of particle eg -1
    @param[in] double theta: initial direction of particle
    @param[in] double phi: initial direction of particle
    @param[in] double energy: energy of particle
    @param[in] TVector3 vertex: start point of particle
    @return PFParticle& the newly created particle
    */
-  PFParticle& addParticle(int pdgid, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
+  PFParticle& addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy, TVector3 vertex = TVector3(0., 0., 0.));
   
   /**
    Makes a new PFParticle using random uniform distribution for theta, phi (-pi to +pi), energy
-   @param[in] int pdgid: particle id (eg 22 for a photon)
+   @param[in] unsgined int pdgid: particle id (eg 22 for a photon)
+   @param[in] double charge: charge of particle eg -1
    @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
    @param[in] double thetamax: maximum theta
    @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
@@ -76,7 +78,7 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return PFParticle& the newly created particle
    */
-  PFParticle& addGunParticle(int pdgid, double thetamin, double thetamax, double ptmin, double ptmax,
+  PFParticle& addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                              TVector3 vertex = TVector3(0., 0., 0.)); //perhaps should live elsewhere?
 
   const Cluster& cluster(Id::Type clusterId) const; ///< retreive a cluster with this unique id

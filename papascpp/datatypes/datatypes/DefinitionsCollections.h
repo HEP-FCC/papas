@@ -10,6 +10,7 @@
 #define DefinitionsCollections_h
 
 #include <unordered_map>
+#include <map>
 #include <vector>
 #include "Id.h"
 namespace papas {
@@ -19,10 +20,10 @@ class Track;
 class Edge;
 class PFParticle;
 typedef std::unordered_map<Id::Type, PFParticle> Particles;
-typedef std::unordered_map<unsigned long long, class Edge> Edges;
+  typedef std::map<unsigned long long, class Edge> Edges; //changed from unordered_map to map for python comparison
 typedef std::vector<Id::Type> Ids;
 typedef std::unordered_map<Id::Type, Track> Tracks;
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;
+typedef std::map<Id::Type, PFBlock> Blocks; //changed from unordered_map to map for python comparison
 typedef std::unordered_map<Id::Type, Cluster> Clusters;
 }
 #endif /* DefinitionsCollections_h */

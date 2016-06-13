@@ -2,7 +2,7 @@
 #include "GraphBuilder.h"
 #include "Id.h"
 #include "Edge.h"
-
+#include "Definitions.h"
 
 namespace papas {
 
@@ -26,7 +26,7 @@ TEST(GraphBuilder, one) {
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
   
-  std::unordered_map<unsigned long long, class Edge> edges;
+  Edges edges;
   
   edges.emplace(edge.key(),  std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));

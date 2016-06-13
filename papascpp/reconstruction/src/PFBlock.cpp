@@ -82,6 +82,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::Edge
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   for (auto edge : m_edges) {
     // if this is an edge that includes uniqueid
+    std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
@@ -117,7 +118,7 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9}\n", Id::typeShortCode(id), count, Id::pretty(id));
+    out.write("{:>7}{} = {:9} ({})\n", Id::typeShortCode(id), count, Id::pretty(id), id);
     count = count + 1;
   }
   return out.str();
@@ -221,7 +222,7 @@ int test_blocks() {
   Edge edge6 = Edge(id5, id6, true, 123.0);
 
   Edges edges;
-  edges.reserve(100);
+  //edges.reserve(100);
   std::cout <<"ee " <<":"<<Id::pretty(id1)<<":"<<edge.key()<<edge<<std::endl;
   std::cout <<":"<<Id::pretty(id2)<<":"<<edge1.key()<<edge1<<std::endl;
   std::cout <<":"<<Id::pretty(id3)<<":"<<edge2.key()<<edge2<<std::endl;

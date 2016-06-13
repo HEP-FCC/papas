@@ -20,10 +20,10 @@ class Particle {
 public:
   Particle();
   Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle(int pdgid, double charge);
-  Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle(IdType id, int pdgid, double charge);
+  Particle(unsigned int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(unsigned int pdgid, double charge);
+  Particle(IdType id,unsigned  int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(IdType id,unsigned  int pdgid, double charge);
   std::string stringDescription() const;              ///< String to describe the particle
   const TLorentzVector p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   const TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz
@@ -44,7 +44,7 @@ protected:
   IdType m_uniqueId;  // to be used by virtual classes
 private:
   TLorentzVector m_tlv;
-  int m_particleId; //TODO make unsigned int
+  unsigned  m_particleId; 
   double m_charge;
   double m_status;
   TVector3 m_startVertex;

@@ -2,7 +2,7 @@
 #include "Edge.h"
 #include "FloodFill.h"
 #include "GraphBuilder.h"
-
+#include "Log.h"
 namespace papas {
 
 // Allow optional parameters where construction arguments are references
@@ -13,8 +13,10 @@ GraphBuilder::GraphBuilder(Ids ids, Edges& edges) :
   m_edges(edges), m_elementIds(ids) {
 
   // create local nodes ready to use to make the blocks
-  for (auto id : ids)
+    for (auto id : ids) {
+      PDebug::write("Node {}", Id::pretty(id));
     m_localNodes.emplace(id, PFNode(id));
+    }
 
   // use the edge information to say what is linked and add this into the local blocks
   for (const auto& edge : m_edges) {
@@ -22,16 +24,28 @@ GraphBuilder::GraphBuilder(Ids ids, Edges& edges) :
     if (e.isLinked())  // note this is an undirected link - OK for undirected searches
       m_localNodes[e.id1()].addChild(m_localNodes[e.id2()]);
   }
+    
+    for (auto&  node : m_localNodes) {
+      PDebug::write("Node {:9}",Id::pretty(node.second.value()));
+      for (auto& c : node.second.children()) {
+        PDebug::write("      Children Node {:9}",Id::pretty(c->value()));
+      }
+      for (auto& p : node.second.parents()) {
+        PDebug::write("      Parent Node {:9}",Id::pretty(p->value()));
+      }
+    }
+        
 
   DAG::FloodFill<Id::Type> FFill;
 
   // traverse does the work and returns a vector of connected node groups
   for (auto& group : FFill.traverse(m_localNodes)) {
-
+    PDebug::write("Group");
     // each of the nodevectors is about to become a separate block
     // we need the vector of ids and the map of edges in order to make the block
     Ids subgraph;
     for (auto& node : group) {
+      PDebug::write("inside Node {}", Id::pretty(node->value()));
       subgraph.push_back(node->value());
     }
     m_subGraphs.push_back(subgraph);
