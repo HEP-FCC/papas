@@ -115,39 +115,20 @@ void GBlob::Draw(const std::string&   projection, const std::string& opt) const
  */
 
 
-GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
+void GTrajectory::initGraphs(const  std::vector<double>& X, const  std::vector<double>& Y,
+                         const  std::vector<double>& Z,const  std::vector<double>& tX,
+                         const  std::vector<double>& tY, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
-:  m_DrawSmearedClusters(true)
 {
-   int npoints = points.size();
-   std::vector<double> X;
-   std::vector<double> Y;
-   std::vector<double> Z;
-   std::vector<double> tX; // for thetaphi graphs
-   std::vector<double> tY; // for thetaphi graphs
-   
-   //Extract vectors of x, y and z values
-   for (int i = 0 ; i < npoints; i++) {
-      X.push_back(points[i].X());
-      Y.push_back(points[i].Y());
-      Z.push_back(points[i].Z());
-      
-      //first point is wrong and should be tppoint = description.p4().Vect()
-      tX.push_back(M_PI_2 - points[i].Theta());
-      tY.push_back(points[i].Phi());
-      //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
-   }
-   
-   //pass the vectors to the various projections
+  int npoints=X.size();
+  //pass the vectors to the various projections
    m_graphs["xy"] = std::unique_ptr<TGraph> {new TGraph(npoints, &X[0], &Y[0])};
    m_graphs["yz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &Y[0])};
    m_graphs["xz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &X[0])};
    
    m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
    m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
-   
-   
-   
+  
    //AJRTODO add in other projections
    
    //set graph styles
@@ -159,7 +140,7 @@ GTrajectory::GTrajectory(const  std::vector<TVector3>& points, int linestyle,
    }
 }
 
-
+/*
 GTrajectory::GTrajectory(const  PFParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
@@ -195,33 +176,14 @@ GTrajectory::GTrajectory(const  PFParticle& particle, int linestyle,
         //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
    }
 
-   //pass the vectors to the various projections
-   m_graphs["xy"] = std::unique_ptr<TGraph> {new TGraph(npoints, &X[0], &Y[0])};
-   m_graphs["yz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &Y[0])};
-   m_graphs["xz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &X[0])};
-
-   m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
-   m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
-
-
-
-   //AJRTODO add in other projections
-
-   //set graph styles
-   for (auto const& graph : m_graphs) {
-      graph.second->SetMarkerStyle(2);
-      graph.second->SetMarkerSize(0.7);
-      graph.second->SetLineStyle(linestyle);
-      graph.second->SetLineColor(linecolor);
-   }
-}
-
-GTrajectory::GTrajectory(const  Track& track, int linestyle,
-                         int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
-{
+   InitGraph(X, Y, Z, tX, tY, linestyle, linecolor)*/
   
-  //TODO implement a helix curve here somewhere
-  const Path::Points& points=track.path()->points();
+  GTrajectory::GTrajectory(const  Path::Points& points, TVector3 tvec, int linestyle,
+                           int linecolor)
+  :  m_DrawSmearedClusters(true) //AJRTODo generalise argumtnet to be a list of things with points
+  {
+
+    //const Path::Points& points=track.path()->points();
   int npoints = points.size();
   std::vector<double> X;
   std::vector<double> Y;
@@ -240,38 +202,16 @@ GTrajectory::GTrajectory(const  Track& track, int linestyle,
       tX.push_back(M_PI_2 - p.second.Theta());
       tY.push_back(p.second.Phi());
     }
-    else
-    {
-      TVector3 vec = track.p3();
-      tX.push_back(M_PI_2 - vec.Theta());
-      tY.push_back(vec.Phi());
+    else {
+    
+      tX.push_back(M_PI_2 - tvec.Theta());
+      tY.push_back(tvec.Phi());
       
     }
     i += 1;
     //first point is wrong and should be tppoint = description.p4().Vect()
-    
-    //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
   }
-  
-  //pass the vectors to the various projections
-  m_graphs["xy"] = std::unique_ptr<TGraph> {new TGraph(npoints, &X[0], &Y[0])};
-  m_graphs["yz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &Y[0])};
-  m_graphs["xz"] = std::unique_ptr<TGraph> {new TGraph(npoints, &Z[0], &X[0])};
-  
-  m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
-  m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph> {new TGraph(npoints, &tX[0], &tY[0])};
-  
-  
-  
-  //AJRTODO add in other projections
-  
-  //set graph styles
-  for (auto const& graph : m_graphs) {
-    graph.second->SetMarkerStyle(2);
-    graph.second->SetMarkerSize(0.7);
-    graph.second->SetLineStyle(linestyle);
-    graph.second->SetLineColor(linecolor);
-  }
+  initGraphs(X, Y, Z, tX, tY, linestyle, linecolor);
 }
 
 
@@ -295,14 +235,14 @@ void GTrajectory::Draw(const std::string&   projection /*,
 
 };
 
-
+/*
 ///Constructor for showing tracks
 GTrajectories::GTrajectories(const std::vector<TVector3>& points)
 //AJRTODO const std::list<Particle>& particles)
 {
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
    m_gTrajectories.push_back(GTrajectory(points));
-}
+}*/
 
 GTrajectories::GTrajectories(const PFParticle& particle)
 //AJRTODO const std::list<Particle>& particles)
@@ -311,7 +251,7 @@ GTrajectories::GTrajectories(const PFParticle& particle)
    
    //std::vector<TVector3>& points= track.get
    //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
-   m_gTrajectories.push_back(GTrajectory(particle));
+   m_gTrajectories.push_back(GTrajectory(particle.path()->points(),particle.p4().Vect()));
 }
 
 GTrajectories::GTrajectories(const Track& track)
@@ -321,7 +261,7 @@ GTrajectories::GTrajectories(const Track& track)
   
   //std::vector<TVector3>& points= track.get
   //TrajClass = GTrajectory ; //AJRTODO GStraightTrajectoryif is_neutral else GHelixTrajectory
-  m_gTrajectories.push_back(GTrajectory(track));
+  m_gTrajectories.push_back(GTrajectory(track.path()->points(),track.p3()));
 }
 
 ///Constructor for showing clusters

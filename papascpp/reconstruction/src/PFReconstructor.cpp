@@ -6,21 +6,25 @@
 //
 //
 
+#include "PFReconstructor.h"
+
+#include <algorithm>
+#include <math.h>
+#include <vector>
+
 #include "BlockSplitter.h"
 #include "Cluster.h"
 #include "Edge.h"
+#include "pTrack.h"
 #include "Log.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
 #include "PFParticle.h"
-#include "PFReconstructor.h"
 #include "ParticlePData.h"
 #include "Path.h"
 #include "TLorentzVector.h"
-#include "pTrack.h"
-#include <algorithm>
-#include <math.h>
-#include <vector>
+
+
 
 namespace papas {
 
@@ -41,15 +45,14 @@ void PFReconstructor::reconstruct() {
     // std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
     Blocks newBlocks = simplifyBlock(block.second);
     if (newBlocks.size() > 0) {
-      for (auto& b : newBlocks)
-        PDebug::write("Made {}", b.second);
+      //for (auto& b : newBlocks)
+        //PDebug::write("Made {}", b.second);
       m_blocks.insert(newBlocks.begin(), newBlocks.end());
     }
   }
 
   for (auto& block : m_blocks) {
     if (block.second.isActive()) {  // when blocks are split the original gets deactivated
-      std::cout << "Reconstructing block: " << block.second.shortName() << std::endl;
       PDebug::write("Processing {}", block.second);
       reconstructBlock(block.second);
     }
@@ -82,7 +85,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    */
   Blocks splitBlocks;
   Ids ids = block.elementIds();
-  std::cout<<block<<std::endl;
+  //std::cout<<block<<std::endl;
   if (ids.size() <= 1) {  // no links to remove
     return splitBlocks;
   }
@@ -93,20 +96,27 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
   Edges toUnlink;  // TODO think about copy
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   bool firstHCAL;
-  double firstDist = -1;
+  double minDist = -1;
 
   for (auto id : ids) {
     if (Id::isTrack(id)) {
-      linkedEdgeKeys = block.linkedEdgeKeys(
-          id, Edge::EdgeType::kHcalTrack);  // TODO ensurealready sorted from small to large distance
+      linkedEdgeKeys = block.linkedEdgeKeys( id, Edge::EdgeType::kHcalTrack);
+      
       if (linkedEdgeKeys.size() > 0) {
         firstHCAL = true;
+        //find minimum distance
         for (auto elem : linkedEdgeKeys) {
           if (firstHCAL) {
-            firstDist = block.Edge(elem).distance();
+            minDist = block.Edge(elem).distance();
             firstHCAL = false;
-          } else if (block.Edge(elem).distance() ==
-                     firstDist) {  // link this track to the closest HCALs (could be more than one at zero distance)
+          } else {
+            minDist=fmin(minDist,block.Edge(elem).distance());
+          }
+        }
+        //unlink anything that is greater than minimum distance
+        for (auto elem : linkedEdgeKeys) {
+
+            if (block.Edge(elem).distance() > minDist) {  // (could be more than one at zero distance)
             toUnlink[elem] = block.Edge(elem);
           }
         }
@@ -286,11 +296,10 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
       const Track& track = m_pfEvent.tracks().at(id);
       insertParticle(block, reconstructTrack(track));
       trackEnergy += track.energy();
-      for (auto id : ecalIds) {
-        ecalEnergy += m_pfEvent.ECALCluster(id).energy();
-      }
     }
-
+    for (auto id : ecalIds) {
+      ecalEnergy += m_pfEvent.ECALCluster(id).energy();
+    }
     double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
     double caloERes = neutralHadronEnergyResolution(hcal);
     /*self.log.info( 'dE/p, res = {derel}, {res} '.format(
@@ -385,7 +394,7 @@ PFParticle PFReconstructor::reconstructTrack(const Track& track) {
 
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
-  std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
+  //std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
   return particle;
 }
 }  // end namespace papas

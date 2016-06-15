@@ -86,7 +86,7 @@ find_package(GTest)
 include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
 
 add_executable(mainexe ../main.cpp)
-target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES} ${GTEST_LIBRARIES}  datamodel datamodelDict podio utilities)
+target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES} ${GTEST_LIBRARIES}  datamodel datamodelDict podio utilities)
 
 
 

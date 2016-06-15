@@ -20,7 +20,7 @@ void Log::init(){
   //auto console = spdlog::stdout_logger_mt("console", true );
   
 
-  m_sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_st>());
+  //m_sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_st>());
   m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("logfile",true));
   auto combined_logger = std::make_shared<spdlog::logger>("papas_logger", begin(m_sinks), end(m_sinks));
   //register it if you need to access it globally
@@ -59,8 +59,8 @@ std::shared_ptr<spdlog::logger> Log::log() {
   
   std::shared_ptr<spdlog::logger> PDebug::log() {
     if (!logInitialized) {
-      //PDebug::consoleinit();
-      PDebug::init();
+      PDebug::consoleinit();
+      //PDebug::init();
     }
     return spdlog::get("pdebug");
   }

@@ -82,7 +82,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::Edge
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   for (auto edge : m_edges) {
     // if this is an edge that includes uniqueid
-    std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
+    //std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())

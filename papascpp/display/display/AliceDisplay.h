@@ -51,7 +51,6 @@ void PFApp::display(const PFEvent& pfEvent, const Detector& det) {
   m_gdetector =  std::make_shared<GDetector>(GDetector(det));
   m_display->addToRegister(m_gdetector, 0);
   m_display->drawPFEvent(pfEvent);
-  std::cout <<"Hello";
 }
 } // end namespace papas
 

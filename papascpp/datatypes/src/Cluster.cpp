@@ -38,8 +38,8 @@ void Cluster::setEnergy(double energy) {
 // TODO need to change this so that the merged cluster has its ownID and the cluster from which it is made is
 // put into subClusters its not rght just yet
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  if(Id::pretty(m_uniqueId)=="e299     ")
-    std::cout<<*this;
+  //if(Id::pretty(m_uniqueId)=="e299     ")
+  //  std::cout<<*this;
   if (Id::itemType(m_uniqueId) != Id::itemType(rhs.id())) {
     std::cout << "can only add a cluster from the same layer";
   }
@@ -68,7 +68,7 @@ std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", en
       m_subClusters() {
   m_p3 = c.m_p3;
   // std::cout << m_subClusters.size();
-        std::cout << Id::pretty(c.id())<< ": "<< Id::pretty(m_uniqueId);
+  //      std::cout << Id::pretty(c.id())<< ": "<< Id::pretty(m_uniqueId);
   m_subClusters.push_back(c.id());
 }
 

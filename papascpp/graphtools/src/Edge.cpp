@@ -49,11 +49,9 @@ Edge::EdgeType Edge::makeEdgeType() const {
   auto shortid1 = Id::typeShortCode(m_id1);
   auto shortid2 = Id::typeShortCode(m_id2);
   
-  
-  if (Id::pretty(m_id1).compare(0,4, "h829")==0)
+  /*if (Id::pretty(m_id1).compare(0,4, "h829")==0)
     std::cout <<"id1";
-  if (Id::pretty(m_id2).compare(0,4, "h829")==0)
-    std::cout <<"id2";
+  */
   if (shortid1==shortid2) {
     if (shortid1== 'h')
       return EdgeType::kHcalHcal;

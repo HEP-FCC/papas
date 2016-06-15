@@ -32,7 +32,7 @@ namespace papas {
   }
   
   Particle::Particle() :
-  m_uniqueId(Id::makeParticleId()),
+  m_uniqueId(0),
   m_particleId(0), m_charge(0), m_status(0)
   {
   }

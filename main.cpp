@@ -53,56 +53,18 @@
 #include "podio/EventStore.h"
 #include "podio/ROOTReader.h"
 
-void processEvent(podio::EventStore& store) {
-
-  // read event information
-  // const fcc::EventInfoCollection* evinfocoll(nullptr);
-  // bool evinfo_available = store.get("EventInfo", evinfocoll);
-  /*if(evinfo_available) {
-   auto evinfo = evinfocoll->at(0);
-
-   if(verbose)
-   std::cout << "event number " << evinfo.Number() << std::endl;
-   }*/
-
-  // read particles
-  const fcc::ParticleCollection* ptcs(nullptr);
-  bool particles_available = store.get("GenParticle", ptcs);
-  if (particles_available) {
-    std::vector<fcc::Particle> muons;
-    // there is probably a smarter way to get a vector from collection?
-    bool verbose = true;
-    if (verbose) std::cout << "particle collection:" << std::endl;
-    for (const auto& ptc : *ptcs) {
-      if (verbose) std::cout << "\t" << ptc << std::endl;
-      if (ptc.Core().Type == 4) {
-        muons.push_back(ptc);
-      }
-    }
-  }
-}
-
-void dosomerandom();
-
-// extern int run_tests(int argc, char* argv[]);
 using namespace papas;
-int main(int argc, char* argv[]) {
 
-  auto reader = podio::ROOTReader();
-  auto store = podio::EventStore();
+void processEvent(podio::EventStore& store, Simulator& sim) {
 
-  // Create CMS detector and simulator
-  CMS CMSDetector;
-  Simulator sim = Simulator{CMSDetector};
-
-  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
-  store.setReader(&reader);
+  
+  
   const fcc::ParticleCollection* ptcs(nullptr);
   int count = 0;
   bool particles_available = store.get("GenParticle", ptcs);
-
+  
   std::vector<papas::Particle> particles;
-
+  
   for (const auto& ptc : *ptcs) {
     count += 1;
     if (ptc.Core().Status == 1) {
@@ -114,7 +76,7 @@ int main(int argc, char* argv[]) {
       }
     }
   }
-
+  
   sort(particles.begin(), particles.end(),
        [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
   count = 0;
@@ -123,9 +85,9 @@ int main(int argc, char* argv[]) {
     
     PFParticle& pfptc = sim.addParticle(ptc.pdgId(), ptc.charge(),ptc.p4(), TVector3{0, 0, 0});
     PDebug::write("Made {}", pfptc);
-    std::cout << "\t" << pfptc << std::endl;
+    //std::cout << "\t" << pfptc << std::endl;
     if (pfptc.pdgId() == 22) {
-
+      
       sim.simulatePhoton(pfptc);
     } else if (pfptc.pdgId() == 11) {
       // TODO self.propagate_electron(ptc)
@@ -144,7 +106,7 @@ int main(int argc, char* argv[]) {
         sim.simulateHadron(pfptc);
     }
   }
-
+  
   PFEvent pfEvent{sim};  // for python test
   pfEvent.mergeClusters();
   Ids ids = pfEvent.mergedElementIds();
@@ -153,27 +115,92 @@ int main(int argc, char* argv[]) {
   PFReconstructor pfReconstructor{pfEvent};
   pfReconstructor.reconstruct();
   store.clear();
-  // reader.endOfEvent();
+}
 
-  randomgen::setEngineSeed(0xdeadbeef);
+void dosomerandom();
 
-  // Make Some Photons
-  for (int i = 1; i < 0; i++) {
+// extern int run_tests(int argc, char* argv[]);
+
+int main(int argc, char* argv[]) {
+  
+  auto reader = podio::ROOTReader();
+  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
+  int eventNo = 0;
+  
+  // Check the number of parameters
+  /*if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << "Filename [eventno=0]" << std::endl;
+    return 1;
+  }*/
+  // Print the user's name:
+  if (argc ==2) {
+    eventNo=(atoi)(argv[1]);
+    
+  }
+    // Create CMS detector and simulator
+  CMS CMSDetector;
+  Simulator sim = Simulator{CMSDetector};
+    //randomgen::setEngineSeed(0xdeadbeef);
+  
+  auto store = podio::EventStore();
+
+  bool verbose=true;
+  
+  
+
+  
+  store.setReader(&reader);
+  reader.goToEvent(eventNo);
+  
+  unsigned nEvents = reader.getEntries();
+  nEvents=1;
+  for(unsigned i=0; i<nEvents; ++i) {
+    PDebug::write("Event: {}",eventNo+i);
+    //Simulator siml = Simulator{CMSDetector};
+
+    if(i%1000==0) {
+      std::cout<<"reading event "<<eventNo+i<<std::endl;
+    }
+    if(i>10) {
+      verbose = false;
+    }
+    processEvent(store, sim);
+    store.clear();
+    reader.endOfEvent();
+    
+    
+    bool doDisplay =true;
+    if (doDisplay) {
+      PFEvent pfEvent{sim};
+      Log::log()->flush();
+      PFApp myApp{};
+      myApp.display(pfEvent, CMSDetector);
+      myApp.run();
+    }
+
+  }
+
+  
+  
+
+  
+  int nParticles=0;
+  for (int i = 1; i < nParticles; i++) {
     PFParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
     PDebug::write("Made {}", photon);
     sim.simulatePhoton(photon);
   }
 
-  // Make Some Hadrons
-  for (int i = 1; i < 0; i++) {
+  //  Hadrons
+  nParticles=0;
+  for (int i = 1; i < nParticles; i++) {
     PFParticle& hadron = sim.addParticle(211, 1, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
     PDebug::write("Made {}", hadron);
     sim.simulateHadron(hadron);
   }
 
-  // Python comparison step 0.1
-  // PFParticle& hadron = sim.addParticle(211, 0.9, -0.19, 47.2);
-  for (int i = 0; i < 0 /*1000*/; i++) {
+  //particle Gun
+  for (int i = 0; i < nParticles; i++) {
     Simulator siml = Simulator{CMSDetector};
     PFParticle& ptc = siml.addGunParticle(211, 1, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
@@ -207,14 +234,9 @@ int main(int argc, char* argv[]) {
   // and using a reference to the history nodes
   // PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
   // PFEvent pfEvent{sim}; //for python test
+    return 0;
 
-  Log::log()->flush();
-
-  PFApp myApp{};
-  myApp.display(pfEvent, CMSDetector);
-  myApp.run();
-  return 0;
-
+#if 0
   // ROOT App to allow graphs to be plotted
   TApplication theApp("App", &argc, argv);
   if (gROOT->IsBatch()) {
@@ -232,6 +254,7 @@ int main(int argc, char* argv[]) {
 
   // TODO uncomment for commandline
   theApp.Run();
+#endif
 
   // sim.testing(); //Write lists of connected items
 

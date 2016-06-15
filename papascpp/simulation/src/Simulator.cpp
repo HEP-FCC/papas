@@ -261,12 +261,9 @@ Id::Type Simulator::addSmearedTrack( const Track& track, bool accept) {
   
   double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
-  if (Id::pretty(track.id())=="t29      ")
-    std::cout<<track;
+
 
   Track smeared = Track{ track.p3() * scale_factor, track.charge(), track.path()};
-  if (Id::pretty(smeared.id())=="t30      ")
-      std::cout<<smeared;
   PDebug::write("Made Smeared{}", smeared);
   
   //decide whether the smearedTrack is detected

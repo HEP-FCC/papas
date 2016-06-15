@@ -33,22 +33,24 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
   Edges edges;
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
-      if (Id::pretty(id1).compare(0,4, "e310")==0 || Id::pretty(id2).compare(0,4, "e310")==0){
+      /*if (Id::pretty(id1).compare(0,4, "e310")==0 || Id::pretty(id2).compare(0,4, "e310")==0){
         std::cout << Id::pretty(id2)<<std::endl;
       }
       if (Id::pretty(id1)=="e310     "|| Id::pretty(id2)=="e310     "){
         std::cout << Id::pretty(id2)<<std::endl;
-      }
+      }*/
       if (id1 < id2) {
        
         auto dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
+        //PDebug::write("      Add Edge {:9} - {:9}",Id::pretty(id1),Id::pretty(id2));
         edges.emplace(edge.key(), std::move(edge));
       }
     }
   }
   GraphBuilder grBuilder{uniqueids, edges};
   for (auto ids : grBuilder.subGraphs()) {
+    std::sort(ids.begin(), ids.end());
     auto id = ids[0];
     if (ids.size() > 1) {
       for (const auto& c : ids) {

@@ -37,12 +37,6 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids) :
   for (auto id1 : m_uniqueIds) {
     for (auto id2 : m_uniqueIds) {
       if (id1 < id2) {
-        if (Id::pretty(id1)=="e299     " && Id::pretty(id2).compare(0,4, "t30 ")==0) {
-          std::cout<<"none";
-          //std::cout <<Id::pretty(id1) << " : " << Id::pretty(id2);
-          std::cout << Id::pretty(id1)<<" : " << Id::pretty(id2);
-          std::cout <<std::endl;
-        }
         Distance dist = ruler.distance(id1,id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
         //the edge object is added into the edges dictionary
@@ -51,9 +45,9 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids) :
     }
   }
   m_blocks = std::move(BlockBuilder(m_uniqueIds, edges, m_historyNodes).blocks());
-  for (auto & b : m_blocks) {
+  /*for (auto & b : m_blocks) {
     std::cout << b.second;
-  }
+  }*/
  
 }
 
