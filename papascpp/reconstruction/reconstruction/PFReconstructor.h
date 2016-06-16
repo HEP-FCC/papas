@@ -21,7 +21,7 @@ class PFReconstructor {
 public:
   PFReconstructor(PFEvent& pfEvent);
   void reconstruct();
-  
+  Particles& particles() { return m_particles;}
 private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);

@@ -27,6 +27,8 @@
 
 
 namespace papas {
+  
+Particles emptyParticles;
 
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent),
@@ -369,7 +371,13 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
 
   Id::Type newid = Id::makeRecParticleId();
   PFParticle particle{newid, pdgId, 0.,  p4, vertex};
-  particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());  // alice: Colin this may be a bit strange
+  //TODO discuss with Colin
+  particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
+  if (layer == papas::Layer::kHcal) { //alice not sure
+    particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
+  }
+  
+  // alice: Colin this may be a bit strange
                                                                             // because we can make a photon with a
                                                                             // path where the point is actually that
                                                                             // of the hcal?

@@ -43,7 +43,8 @@ std::shared_ptr<spdlog::logger> Log::log() {
     m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("/Users/alice/work/Outputs/physicsoutput.log",true));
     auto plogger = std::make_shared<spdlog::logger>("pdebug", begin(m_sinks), end(m_sinks));
     //auto plogger = spdlog::sinks::simple_file_sink_st("pdebug","/Users/alice/work/Outputs/physicsoutput");
-    plogger->set_level(spdlog::level::info);
+    //plogger->set_level(spdlog::level::info);
+    plogger->set_level(spdlog::level::err); //   ::info);
     plogger->set_pattern("%v");
     spdlog::register_logger(plogger);
   
@@ -59,8 +60,8 @@ std::shared_ptr<spdlog::logger> Log::log() {
   
   std::shared_ptr<spdlog::logger> PDebug::log() {
     if (!logInitialized) {
-      PDebug::consoleinit();
-      //PDebug::init();
+      //PDebug::consoleinit();
+      PDebug::init();
     }
     return spdlog::get("pdebug");
   }

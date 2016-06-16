@@ -55,13 +55,11 @@
 
 using namespace papas;
 
-void processEvent(podio::EventStore& store, Simulator& sim) {
+void processEvent(podio::EventStore& store, const fcc::ParticleCollection* ptcs, Simulator& sim) {
 
-  
-  
-  const fcc::ParticleCollection* ptcs(nullptr);
+  //temp for mem leak const fcc::ParticleCollection* ptcs(nullptr);
   int count = 0;
-  bool particles_available = store.get("GenParticle", ptcs);
+  //temp for mem leak bool particles_available = store.get("GenParticle", ptcs);
   
   std::vector<papas::Particle> particles;
   
@@ -106,84 +104,79 @@ void processEvent(podio::EventStore& store, Simulator& sim) {
         sim.simulateHadron(pfptc);
     }
   }
-  
-  PFEvent pfEvent{sim};  // for python test
+  // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
+  // and using a reference to the history nodes
+  PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
+  //PFEvent pfEvent{sim};  // for python test
   pfEvent.mergeClusters();
   Ids ids = pfEvent.mergedElementIds();
   PFBlockBuilder bBuilder{pfEvent, ids};
   pfEvent.setBlocks(bBuilder);  // for python
   PFReconstructor pfReconstructor{pfEvent};
   pfReconstructor.reconstruct();
+  pfEvent.setReconstructedParticles(pfReconstructor.particles());
   store.clear();
 }
-
-void dosomerandom();
 
 // extern int run_tests(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
   
   auto reader = podio::ROOTReader();
+  //reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
   reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
-  int eventNo = 0;
+
+  unsigned int eventNo = 0;
+  unsigned int  nEvents=1;
   
-  // Check the number of parameters
-  /*if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << "Filename [eventno=0]" << std::endl;
-    return 1;
-  }*/
-  // Print the user's name:
   if (argc ==2) {
     eventNo=(atoi)(argv[1]);
-    
   }
+  if (argc ==3) {  //defaults to running 1 event
+    nEvents=(atoi)(argv[2]);
+  }
+
     // Create CMS detector and simulator
   CMS CMSDetector;
   Simulator sim = Simulator{CMSDetector};
-    //randomgen::setEngineSeed(0xdeadbeef);
-  
   auto store = podio::EventStore();
-
   bool verbose=true;
-  
-  
-
-  
   store.setReader(&reader);
   reader.goToEvent(eventNo);
+ 
+  const fcc::ParticleCollection* ptcs(nullptr);
+  int count = 0;
+  bool particles_available = store.get("GenParticle", ptcs);
   
-  unsigned nEvents = reader.getEntries();
-  nEvents=1;
-  for(unsigned i=0; i<nEvents; ++i) {
+  
+  for(unsigned i=0; i<1; ++i) {
     PDebug::write("Event: {}",eventNo+i);
-    //Simulator siml = Simulator{CMSDetector};
-
+    Simulator siml = Simulator{CMSDetector};
     if(i%1000==0) {
       std::cout<<"reading event "<<eventNo+i<<std::endl;
     }
     if(i>10) {
       verbose = false;
     }
-    processEvent(store, sim);
-    store.clear();
-    reader.endOfEvent();
+    processEvent(store, ptcs, siml);
+    //temp for mem leak store.clear();
+    //temp for mem leak reader.endOfEvent();
     
     
+    //bool doDisplay =false;
     bool doDisplay =true;
     if (doDisplay) {
-      PFEvent pfEvent{sim};
+      PFEvent pfEvent{siml};
       Log::log()->flush();
       PFApp myApp{};
       myApp.display(pfEvent, CMSDetector);
       myApp.run();
+      std::cout <<"plotted";
     }
 
   }
 
-  
-  
-
-  
+  /*
   int nParticles=0;
   for (int i = 1; i < nParticles; i++) {
     PFParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
@@ -213,7 +206,7 @@ int main(int argc, char* argv[]) {
     PFReconstructor pfReconstructor{pfEvent};
     pfReconstructor.reconstruct();
   }
-  /* for (int i = 0; i < 1000; i++) {
+   for (int i = 0; i < 1000; i++) {
    PFParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
    PDebug::write("Made {}", ptc);
    if (ptc.charge() && ptc.pt()<0.2)
@@ -230,10 +223,7 @@ int main(int argc, char* argv[]) {
 
    }*/
 
-  // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
-  // and using a reference to the history nodes
-  // PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
-  // PFEvent pfEvent{sim}; //for python test
+
     return 0;
 
 #if 0
@@ -261,30 +251,3 @@ int main(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
-void dosomerandom() {
-  randomgen::RandUniform runi1{0, 1};
-  randomgen::RandUniform runi2{0, 1};
-  randomgen::RandExponential rexp1{3};
-  randomgen::RandExponential rexp2{4};
-
-  runi1.setSeed(0xdeadbeef);
-
-  std::cout << runi1.next() << std::endl;
-  std::cout << runi2.next() << std::endl;
-  std::cout << rexp1.next() << std::endl;
-  std::cout << rexp2.next() << std::endl;
-  runi1.setSeed(0xdeadbeef);
-  std::cout << runi1.next() << std::endl;
-  std::cout << runi2.next() << std::endl;
-  std::cout << rexp1.next() << std::endl;
-  std::cout << rexp2.next() << std::endl;
-
-  runi1.setSeed(0xdeadbeef);
-  for (int i = 0; i < 6; i++)
-    std::cout << runi2.next() << std::endl;
-
-  randomgen::RandExponential rexp{49.3};
-  rexp.setSeed(100);
-  std::cout << rexp.next() << rexp.next() << std::endl;
-  ;
-}

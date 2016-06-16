@@ -54,6 +54,10 @@ namespace papas {
              tlv,
              track.path()->namedPoint(papas::Position::kVertex),
              track.path()->field()) {
+    for (const auto & p : track.path()->points() ) { //not sure if this is a good idea but it helps with plotting??
+      if (p.first!=papas::Position::kVertex)
+        m_path->addPoint(p.first, p.second);
+    }
   }
 /*
 void PFParticle::setHelix(const Path& path) {

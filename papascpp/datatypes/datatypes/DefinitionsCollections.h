@@ -25,5 +25,8 @@ typedef std::vector<Id::Type> Ids;
 typedef std::unordered_map<Id::Type, Track> Tracks;
 typedef std::map<Id::Type, PFBlock> Blocks; //changed from unordered_map to map for python comparison
 typedef std::unordered_map<Id::Type, Cluster> Clusters;
+  
+  
+extern Particles emptyParticles; //TODO check
 }
 #endif /* DefinitionsCollections_h */

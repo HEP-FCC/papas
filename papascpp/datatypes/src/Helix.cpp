@@ -6,8 +6,8 @@
 //
 //
 
-#include "Helix.h"
 #include "Definitions.h"
+#include "Helix.h"
 #include "deltar.h"
 
 namespace papas {
@@ -15,7 +15,7 @@ extern double gconstc;
 
 Helix::Helix() {}
 
-  Helix::Helix(TLorentzVector p4, TVector3 origin, double field, double charge)
+Helix::Helix(TLorentzVector p4, TVector3 origin, double field, double charge)
     : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
   m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
   m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
@@ -76,10 +76,26 @@ TVector3 Helix::pointAtPhi(double phi) const {
   return pointAtTime(time);
 }
 
+double Helix::maxTime() const {
+  double maxz = 0;
+  double minz = 0;
+  for (const auto& p : m_points) {
+    if (p.second.Z() > 0)
+      maxz = fmax(maxz, p.second.Z());
+    else
+      minz = fmin(minz, p.second.Z());
+  }
+  if (maxz>0)
+    return timeAtZ(maxz);
+  else
+    return timeAtZ(minz);
+}
+
+
 double Helix::pathLength(double deltat) const {
   // std::cout << m_omega << " rho " << m_rho << " vz " << vZ() << " deltat " <<
   //          deltat;
   return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat;
 }
 
-} // end namespace papas
+}  // end namespace papas

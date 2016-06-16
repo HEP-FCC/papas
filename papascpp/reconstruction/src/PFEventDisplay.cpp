@@ -36,6 +36,10 @@ void PFEventDisplay::drawPFEvent(const PFEvent& pfEvent) {
     std::shared_ptr<GTrajectories> gtrack(new GTrajectories(tr.second));
     addToRegister(gtrack,2);
   }
+  for (auto& pr : pfEvent.reconstructedParticles()) {
+    std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second));
+    addToRegister(gparticle,2);
+  }
   draw();
 }
 } // end namespace papas

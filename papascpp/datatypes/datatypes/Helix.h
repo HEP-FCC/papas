@@ -30,7 +30,7 @@ public:
   TVector3 pointAtPhi(double phi) const;
   TVector3 extremePointXY() const { return m_extremePointXY; }
   TVector3 centerXY() const { return m_centerXY; }
-
+  double maxTime() const ;
 private:
   double m_rho;  /// Radius of Helix
   double m_omega;

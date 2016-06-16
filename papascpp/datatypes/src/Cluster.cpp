@@ -20,7 +20,6 @@ Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType i
   setSize(size_m);
   setEnergy(energy);
 }
-  
 
 void Cluster::setSize(double value) {
   m_size = value;
@@ -35,10 +34,9 @@ void Cluster::setEnergy(double energy) {
   m_pt = energy * m_p3.Unit().Perp();
 }
 
-// TODO need to change this so that the merged cluster has its ownID and the cluster from which it is made is
-// put into subClusters its not rght just yet
+
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  //if(Id::pretty(m_uniqueId)=="e299     ")
+  // if(Id::pretty(m_uniqueId)=="e299     ")
   //  std::cout<<*this;
   if (Id::itemType(m_uniqueId) != Id::itemType(rhs.id())) {
     std::cout << "can only add a cluster from the same layer";
@@ -48,27 +46,26 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   double denom = 1. / m_energy;
   m_p3 *= denom;
   if (rhs.subClusters().size() > 1) {
-     std::cout << "can only add in a cluster which is not already merged";
+    std::cout << "can only add in a cluster which is not already merged";
   }
-  //if (m_subClusters.size() == 0) m_subClusters.push_back(m_uniqueId);
+  // if (m_subClusters.size() == 0) m_subClusters.push_back(m_uniqueId);
   m_subClusters.push_back(rhs.id());
-  //m_subClusters.insert(m_subClusters.end(), rhs.subClusters().begin(), rhs.subClusters().end());
+  // m_subClusters.insert(m_subClusters.end(), rhs.subClusters().begin(), rhs.subClusters().end());
 
   return *this;
 }
 
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
-  Cluster::Cluster(const Cluster& c, Id::Type id) :
-      m_uniqueId(id),
+Cluster::Cluster(const Cluster& c, Id::Type id)
+    : m_uniqueId(id),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
       m_energy(c.m_energy),
       m_subClusters() {
   m_p3 = c.m_p3;
-  // std::cout << m_subClusters.size();
-  //      std::cout << Id::pretty(c.id())<< ": "<< Id::pretty(m_uniqueId);
+
   m_subClusters.push_back(c.id());
 }
 

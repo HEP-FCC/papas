@@ -43,13 +43,14 @@ double PFEvent::energy(Id::Type id1) const //TODO check direction of sort
 }*/
 //check this be a move here
 PFEvent::PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes) :
-m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)), m_historyNodes(historyNodes)
+m_ecals(std::move(ecals)), m_hcals(std::move(hcals)), m_tracks(std::move(tracks)), m_historyNodes(historyNodes),m_reconstructedParticles((emptyParticles))
 {
   
 }
   
   PFEvent::PFEvent(Simulator& sim) :
-  m_ecals(sim.smearedEcalClusters()), m_hcals(sim.smearedHcalClusters()), m_tracks(sim.smearedTracks()), m_historyNodes(sim.historyNodes())
+  m_ecals(sim.smearedEcalClusters()), m_hcals(sim.smearedHcalClusters()), m_tracks(sim.smearedTracks()), m_historyNodes(sim.historyNodes()),m_reconstructedParticles((emptyParticles))
+
   {
    
   }
@@ -104,6 +105,7 @@ Ids PFEvent::elementIds() const {
   
   Ids PFEvent::mergedElementIds() const {
     Ids ids;
+  
     ids.reserve(m_mergedEcals.size() + m_mergedHcals.size() + m_tracks.size());
     for(auto it = m_mergedEcals.begin(); it != m_mergedEcals.end(); ++it) {
       ids.push_back(it->first);
