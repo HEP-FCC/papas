@@ -39,8 +39,8 @@ std::shared_ptr<spdlog::logger> Log::log() {
   
   void PDebug::init(){
     logInitialized=true;
-    std::remove("/Users/alice/work/Outputs/physicsoutput.log"); // delete file
-    m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("/Users/alice/work/Outputs/physicsoutput.log",true));
+    std::remove("cppphysicsoutput.log"); // delete file
+    m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("cppphysicsoutput.log",true));
     auto plogger = std::make_shared<spdlog::logger>("pdebug", begin(m_sinks), end(m_sinks));
     //auto plogger = spdlog::sinks::simple_file_sink_st("pdebug","/Users/alice/work/Outputs/physicsoutput");
     //plogger->set_level(spdlog::level::info);

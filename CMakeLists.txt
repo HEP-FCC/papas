@@ -40,7 +40,7 @@ add_definitions(${ROOT_CXX_FLAGS})
 add_subdirectory(papaslib)
 add_subdirectory(papascpp)
 
-add_subdirectory(papascpp/graphtools)
+#add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+

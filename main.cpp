@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
   
   auto reader = podio::ROOTReader();
   //reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
-  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
+  reader.openFile("/afs/cern.ch/user/a/alrobson/Pythia/ee_ZH_Zmumu_Hbb.root");
 
   unsigned int eventNo = 0;
   unsigned int  nEvents=1;
