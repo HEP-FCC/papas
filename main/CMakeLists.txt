@@ -82,11 +82,11 @@ include(${ROOT_USE_FILE})
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-find_package(GTest)
-include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
+#find_package(GTest)
+#include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
 
 add_executable(mainexe ../main.cpp)
-target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES} ${GTEST_LIBRARIES}  datamodel datamodelDict podio utilities)
+target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
 
 
 

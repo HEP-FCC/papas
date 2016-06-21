@@ -90,14 +90,7 @@ ${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/display/*.h
 ${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/detectors/*.h
 ${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/simulation/*.h
 ${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/reconstruction/*.h
-${MAINDIR}/datatypes/tests/*.cpp 
-${MAINDIR}/graphtools/tests/*.cpp
-${MAINDIR}/fastsim/tests/*.cpp 
-${MAINDIR}/utility/test/*.cpp 
-${MAINDIR}/display/test/*.cpp 
-${MAINDIR}/detectors/test/*.cpp 
-${MAINDIR}/simulation/test/*.cpp 
-${MAINDIR}/reconstruction/test/*.cpp
+
 
 )
 
@@ -153,8 +146,8 @@ ${MAINDIR}/spdlog )
 
 add_definitions(${ROOT_CXX_FLAGS})
 
-find_package(GTest)
-include_directories(${GTEST_INCLUDE_DIRS})
+#find_package(GTest)
+#include_directories(${GTEST_INCLUDE_DIRS})
 
 
 
@@ -167,7 +160,7 @@ add_library(papascpp SHARED ${sources}
 ${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
 ${MAINDIR}/utility/utility/random.h ) # papascppDict.cxx)
-target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} ${GTEST_LIBRARIES})
+target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} )
 
 
 

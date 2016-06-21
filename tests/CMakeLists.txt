@@ -37,12 +37,13 @@ SET(Boost_USE_STATIC_RUNTIME OFF)
 Message(STATUS  "here1")
 FIND_PACKAGE(Boost 1.59.0 COMPONENTS python)
 
-find_package(GTest)
-include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include /usr/local/lib  ${Boost_INCLUDE_DIRS}  "/usr/include/python2.7" ${CMAKE_SOURCE_DIR}/papascpp/utility/src)
+#find_package(GTest)
+#include_directories(${GTEST_INCLUDE_DIRS}
+include_directories( /usr/local/include /usr/local/lib  ${Boost_INCLUDE_DIRS}  "/usr/include/python2.7" ${CMAKE_SOURCE_DIR}/papascpp/utility/src)
 
 
 add_executable(othertests tests.cpp ${CMAKE_SOURCE_DIR}/papascpp/utility/src/random.cpp)
-target_link_libraries(othertests  papascpp ${ROOT_LIBRARIES} ${GTEST_LIBRARIES})
+target_link_libraries(othertests  papascpp ${ROOT_LIBRARIES} ) #${GTEST_LIBRARIES})
 
 
 
