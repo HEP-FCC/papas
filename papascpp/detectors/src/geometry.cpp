@@ -45,7 +45,7 @@ bool VolumeCylinder::Contains(const TVector3& point) const
 {
    double_t perp = point.Perp();
    if (std::abs(point.Z()) < m_inner.Z()) {
-      return perp >= m_inner.getRadius() & perp < m_outer.getRadius();
+      return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
    } else if (std::abs(point.Z()) < m_outer.Z()) {
       return perp < m_outer.getRadius();
    } else

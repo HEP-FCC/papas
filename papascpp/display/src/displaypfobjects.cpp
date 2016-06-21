@@ -162,7 +162,7 @@ void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, in
 
 void GTrajectories::addPoints(const std::vector<TVector3>& points, TVector3 tvec, int linestyle, int linecolor,
                               int linewidth) {
-  int npoints = points.size();
+ 
   std::vector<double> X;
   std::vector<double> Y;
   std::vector<double> Z;
@@ -191,7 +191,7 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, TVector3 tvec
 
 void GTrajectories::addNamedPoints(const Path::Points& points, TVector3 tvec, int linestyle, int linecolor,
                                    int linewidth) {
-  int npoints = points.size();
+
   std::vector<double> X;
   std::vector<double> Y;
   std::vector<double> Z;
@@ -232,8 +232,8 @@ void GTrajectories::addHelix(Path::Ptr path, TVector3 tvec, int linestyle, int l
   double maxTime = sp_helix->maxTime();
   std::vector<TVector3> points;
 
-  for (int i = 0; i < 100; i++) {
-    double time = (maxTime / 100) * (i);
+  for (int i = 0; i < npoints; i++) {
+    double time = (maxTime / npoints) * (i);
     points.push_back(sp_helix->pointAtTime(time));
   }
 

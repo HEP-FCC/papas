@@ -23,7 +23,7 @@ Display::Display(std::list<ViewPane::Projection> views)
    }
    ///Creates viewpanes //AJRTODO use an ENUM instead
    for (auto view : views) {
-      if (view == ViewPane::Projection::xy | view == ViewPane::Projection::yz | view == ViewPane::Projection::xz) {
+      if ((view == ViewPane::Projection::xy) | (view == ViewPane::Projection::yz) | (view == ViewPane::Projection::xz)) {
         m_views[ViewPane::ProjectionStrings[view]] = std::unique_ptr<ViewPane> {
             new ViewPane(view,
             100, -4, 4, 100, -4, 4)

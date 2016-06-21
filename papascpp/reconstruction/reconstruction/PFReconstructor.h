@@ -12,9 +12,9 @@
 #include "TVector3.h"
 #include "DefinitionsNodes.h"
 #include "DefinitionsCollections.h"
+#include "PFEvent.h"
 
 namespace papas {
-class PFEvent;
 
 class PFReconstructor {
   

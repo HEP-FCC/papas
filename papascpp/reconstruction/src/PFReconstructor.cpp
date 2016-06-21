@@ -109,17 +109,17 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
         //find minimum distance
         for (auto elem : linkedEdgeKeys) {
           if (firstHCAL) {
-            minDist = block.Edge(elem).distance();
+            minDist = block.getEdge(elem).distance();
             firstHCAL = false;
           } else {
-            minDist=fmin(minDist,block.Edge(elem).distance());
+            minDist=fmin(minDist,block.getEdge(elem).distance());
           }
         }
         //unlink anything that is greater than minimum distance
         for (auto elem : linkedEdgeKeys) {
 
-            if (block.Edge(elem).distance() > minDist) {  // (could be more than one at zero distance)
-            toUnlink[elem] = block.Edge(elem);
+            if (block.getEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
+            toUnlink[elem] = block.getEdge(elem);
           }
         }
       }
@@ -128,7 +128,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
       // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
       linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
       for (auto elem : linkedEdgeKeys) {
-        toUnlink[elem] = block.Edge(elem);
+        toUnlink[elem] = block.getEdge(elem);
       }
     }
   }

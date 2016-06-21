@@ -29,7 +29,7 @@ IF("${isSystemDir}" STREQUAL "-1")
 ENDIF("${isSystemDir}" STREQUAL "-1")
 
 ### add CERN ROOT
-find_package(ROOT REQUIRED COMPONENTS Core Hist Gpad MathCore Physics  Geom GRAF GRAF3D  RIO Hist Tree Net   )
+find_package(ROOT REQUIRED   )
 
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 #include(${ROOT_USE_FILE})

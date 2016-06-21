@@ -11,11 +11,11 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "propagator.h"
+#include "Cluster.h"
+#include "pTrack.h"
+#include "PFParticle.h"
 
 namespace papas {
-class PFParticle;
-class Cluster;
-class Track;
 class Detector;
 class DetectorElement;
 class SurfaceCylinder;

@@ -11,11 +11,11 @@
 
 #include <stdio.h>
 #include "Id.h"
+#include "Cluster.h"
+#include "pTrack.h"
 
 namespace papas {
   
-class Cluster;
-class Track;
 class Distance;
 class PFEvent;
 

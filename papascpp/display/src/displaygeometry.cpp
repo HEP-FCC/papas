@@ -28,7 +28,7 @@ void GDetectorElement::Draw(const std::string& projection) const
       for (auto const& circle : m_circles)
          circle->Draw("same");
    }
-   else if (projection == "yz" |  projection == "xz") {
+   else if ( (projection == "yz") |  (projection == "xz")) {
       for (auto const& box : m_boxes) {
          box->Draw("samel");
       }

@@ -52,8 +52,8 @@ public:
   PFBlock(const Ids& elementIds, Edges& edges);
   PFBlock();
   const Ids elementIds() const { return m_elementIds; } ///< returns vector of all ids in the block
-  Edge Edge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
-  const class Edge& Edge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
+  Edge getEdge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
+  const Edge& getEdge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
 
   /**
   Returns list of all edges of a given edge type that are connected to a given id.

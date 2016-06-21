@@ -281,8 +281,8 @@ namespace DAG {
          // One this is done the head Node can be removed (popped)
          // from the queue and processing proceeds to the
          // next item in the queue
-         if (visittype == pt::CHILDREN | visittype ==
-               pt::UNDIRECTED) { //use the children
+         if ( (visittype == pt::CHILDREN) | (visittype ==
+               pt::UNDIRECTED) ) { //use the children
             for (auto node : nodeQueue.front()->children()) {
                if (m_visited.find(node) ==
                      m_visited.end()) { //check node is not already being visited
@@ -291,7 +291,7 @@ namespace DAG {
                }
             }
          }
-         if (visittype == pt::PARENTS | visittype == pt::UNDIRECTED) { //use the parents
+         if ((visittype == pt::PARENTS) | (visittype == pt::UNDIRECTED)) { //use the parents
             for (auto node : nodeQueue.front()->parents()) {
                if (m_visited.find(node) ==
                      m_visited.end()) { //check node is not already being visited

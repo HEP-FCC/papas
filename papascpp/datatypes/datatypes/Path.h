@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <memory>
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "Definitions.h"

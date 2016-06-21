@@ -65,7 +65,7 @@ CMSECAL::CMSECAL(const VolumeCylinder&& volume, const Material&& material, doubl
 double CMSECAL::clusterSize(const Particle& ptc) const {
 
   int pdgid = abs(ptc.pdgId());
-  if (pdgid == 22 | pdgid == 11)
+  if ( (pdgid == 22) | (pdgid == 11) )
     return 0.04;
   else
     return 0.07;
@@ -78,7 +78,7 @@ bool CMSECAL::acceptance(const Cluster& cluster) const {
   if (eta < m_etaCrack)
     return energy > m_emin[kBarrel];
   else if (eta < 2.93)
-    return (energy > m_emin[kEndCap] & cluster.pt() > 0.2);
+    return ( (energy > m_emin[kEndCap]) & (cluster.pt() > 0.2));
   else
     return false;
 }

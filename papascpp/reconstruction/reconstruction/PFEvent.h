@@ -15,10 +15,11 @@
 #include "DefinitionsCollections.h"
 #include "PFBlock.h"
 #include "PFParticle.h"
+#include "pTrack.h"
+#include "Cluster.h"
 
 namespace papas {
-class Track;
-class Cluster;
+
 class Simulator;
 class PFBlockBuilder;
 

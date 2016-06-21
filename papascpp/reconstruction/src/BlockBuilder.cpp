@@ -7,7 +7,7 @@
 //
 
 #include "BlockBuilder.h"
-#include "PFEvent.h"
+//#include "PFEvent.h"
 #include "PFBlock.h"
 #include "directedacyclicgraph.h"
 #include "FloodFill.h"
@@ -114,7 +114,7 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder)
 
 
 } // end namespace papas
-
+/*
 //TODO make into gtest and move
 int test_BlockBuilder()
 {
@@ -158,6 +158,6 @@ int test_BlockBuilder()
   
   std::cout << blockbuilder;
   return 0;
-}
+}*/
 
 
