@@ -27,7 +27,7 @@ double Material::pathLength(bool is_em) const
   
    else{
      
-     return randomgen::RandExponential(freepath).next();
+     return randomgen::RandExponential(1./freepath).next();
    }
  
 }

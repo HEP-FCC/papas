@@ -37,11 +37,12 @@ find_package(ROOT REQUIRED   )
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-add_subdirectory(papaslib)
+
 add_subdirectory(papascpp)
 
-add_subdirectory(papascpp/graphtools)
+#add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
+add_subdirectory(papaslib)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+
 #note there are a lot of R related warnings (originating from R)

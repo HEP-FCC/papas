@@ -15,19 +15,17 @@
 #include "BlockSplitter.h"
 #include "Cluster.h"
 #include "Edge.h"
-#include "pTrack.h"
 #include "Log.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include "ParticlePData.h"
 #include "Path.h"
 #include "TLorentzVector.h"
-
-
+#include "pTrack.h"
 
 namespace papas {
-  
+
 Particles emptyParticles;
 
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
@@ -42,13 +40,12 @@ void PFReconstructor::reconstruct() {
   // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
 
-  
   for (auto& block : m_blocks) {
     // std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
     Blocks newBlocks = simplifyBlock(block.second);
     if (newBlocks.size() > 0) {
-      //for (auto& b : newBlocks)
-        //PDebug::write("Made {}", b.second);
+      // for (auto& b : newBlocks)
+      // PDebug::write("Made {}", b.second);
       m_blocks.insert(newBlocks.begin(), newBlocks.end());
     }
   }
@@ -87,7 +84,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    */
   Blocks splitBlocks;
   Ids ids = block.elementIds();
-  //std::cout<<block<<std::endl;
+  // std::cout<<block<<std::endl;
   if (ids.size() <= 1) {  // no links to remove
     return splitBlocks;
   }
@@ -102,23 +99,23 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
 
   for (auto id : ids) {
     if (Id::isTrack(id)) {
-      linkedEdgeKeys = block.linkedEdgeKeys( id, Edge::EdgeType::kHcalTrack);
-      
+      linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kHcalTrack);
+
       if (linkedEdgeKeys.size() > 0) {
         firstHCAL = true;
-        //find minimum distance
+        // find minimum distance
         for (auto elem : linkedEdgeKeys) {
           if (firstHCAL) {
             minDist = block.getEdge(elem).distance();
             firstHCAL = false;
           } else {
-            minDist=fmin(minDist,block.getEdge(elem).distance());
+            minDist = fmin(minDist, block.getEdge(elem).distance());
           }
         }
-        //unlink anything that is greater than minimum distance
+        // unlink anything that is greater than minimum distance
         for (auto elem : linkedEdgeKeys) {
 
-            if (block.getEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
+          if (block.getEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
             toUnlink[elem] = block.getEdge(elem);
           }
         }
@@ -134,7 +131,6 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
   }
 
   // if there is something to unlink then use the BlockSplitter
-
   if (toUnlink.size() > 0) {
     splitBlocks = BlockSplitter(toUnlink, block, m_historyNodes).blocks();
   }
@@ -190,7 +186,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
 }
 
-void PFReconstructor::insertParticle(const PFBlock& block, PFParticle&& newparticle) {
+void PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
    It will have as its parents the block and all the elements of the block.
@@ -338,8 +334,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
   m_locked[hcalId] = true;
 }
 
-PFParticle
-PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy, TVector3 vertex) {
+SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy,
+                                               TVector3 vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
   unsigned int pdgId = 0;
@@ -357,7 +353,7 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   double mass = ParticlePData::particleMass(pdgId);
   // double charge = ParticlePData::particleCharge(pdgId);
   if (energy < mass)  // null particle
-    return PFParticle();
+    return SimParticle();
 
   double momentum;
   if (mass == 0) {
@@ -370,17 +366,17 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
   Id::Type newid = Id::makeRecParticleId();
-  PFParticle particle{newid, pdgId, 0.,  p4, vertex};
-  //TODO discuss with Colin
+  SimParticle particle{newid, pdgId, 0., p4, vertex};
+  // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
-  if (layer == papas::Layer::kHcal) { //alice not sure
+  if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
   }
-  
+
   // alice: Colin this may be a bit strange
-                                                                            // because we can make a photon with a
-                                                                            // path where the point is actually that
-                                                                            // of the hcal?
+  // because we can make a photon with a
+  // path where the point is actually that
+  // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
   // particle.setPath(path);
   // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
@@ -390,19 +386,19 @@ PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, 
   return particle;
 }
 
-PFParticle PFReconstructor::reconstructTrack(const Track& track) {
-  // Cclusters = None): cluster argument does not ever seem to be used at present
+SimParticle PFReconstructor::reconstructTrack(const Track& track) {
+  // , Clusters = None): cluster argument does not ever seem to be used at present
   /*construct a charged hadron from the track
    */
   Id::Type newid = Id::makeRecParticleId();
-  unsigned int pdgId = 211 ;
+  unsigned int pdgId = 211;
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  PFParticle particle{newid, pdgId, track.charge(), p4, track};
+  SimParticle particle{newid, pdgId, track.charge(), p4, track};
 
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
-  //std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
+  // std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
   return particle;
 }
 }  // end namespace papas

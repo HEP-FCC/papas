@@ -43,6 +43,10 @@ namespace papas {
     return id;
   }
   
+  void Id::reset() {
+    s_counter=1;
+  }
+  
   
   Id::ItemType Id::itemType(Type id)
   {

@@ -8,7 +8,7 @@
  */
 #include "CMS.h"
 #include "Cluster.h"
-#include "BaseParticle.h"
+#include "PParticle.h"
 #include "pTrack.h"
 #include "geometry.h"
 #include "material.h"

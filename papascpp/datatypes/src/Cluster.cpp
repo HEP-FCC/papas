@@ -16,9 +16,10 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType idtype)
-    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters() {
+  : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters{m_uniqueId} {
   setSize(size_m);
   setEnergy(energy);
+
 }
 
 void Cluster::setSize(double value) {
@@ -65,13 +66,13 @@ Cluster::Cluster(const Cluster& c, Id::Type id)
       m_energy(c.m_energy),
       m_subClusters() {
   m_p3 = c.m_p3;
-
   m_subClusters.push_back(c.id());
 }
 
+
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
 
-  os << "Cluster :" << Id::pretty(cluster.id()) << ": " << cluster.info();
+  os << "Cluster :" << Id::pretty(cluster.id()) << ": "<<cluster.id()<<" " << cluster.info();
   return os;
 }
 

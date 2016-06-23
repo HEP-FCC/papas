@@ -26,10 +26,10 @@ private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);
   void reconstructHcal(const PFBlock& block, Id::Type hcalId);
-  PFParticle reconstructTrack(const Track& track);
-  PFParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
+  SimParticle reconstructTrack(const Track& track);
+  SimParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
                                  TVector3 vertex= TVector3());
-  void insertParticle(const PFBlock& block, PFParticle&& particle);
+  void insertParticle(const PFBlock& block, SimParticle&& particle);
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
   

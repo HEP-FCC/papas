@@ -6,7 +6,7 @@
 #include "Cluster.h"
 #include "Helix.h"
 #include "Id.h"
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include "Path.h"
 #include "displaypfobjects.h"
 #include "pTrack.h"
@@ -119,7 +119,7 @@ GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>
 }
 
 /*
-GTrajectory::GTrajectory(const  PFParticle& particle, int linestyle,
+GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
                          int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
 {
   const Path::Points& points = particle.path()->points();
@@ -273,7 +273,7 @@ GTrajectories::GTrajectories(const std::vector<TVector3>& points)
    m_gTrajectories.push_back(GTrajectory(points));
 }*/
 
-GTrajectories::GTrajectories(const PFParticle& particle)
+GTrajectories::GTrajectories(const SimParticle& particle)
 // AJRTODO const std::list<Particle>& particles)
 {
   // Path& path= sp.path();

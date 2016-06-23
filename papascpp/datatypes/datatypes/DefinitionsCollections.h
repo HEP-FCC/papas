@@ -18,9 +18,12 @@ class Cluster;
 class PFBlock;
 class Track;
 class Edge;
-class PFParticle;
-typedef std::unordered_map<Id::Type, PFParticle> Particles;
-  typedef std::map<unsigned long long, class Edge> Edges; //changed from unordered_map to map for python comparison
+class SimParticle;
+class Particle;
+
+typedef std::unordered_map<Id::Type, SimParticle> SimParticles;
+typedef std::unordered_map<Id::Type, Particle> Particles;
+typedef std::map<unsigned long long, class Edge> Edges; //changed from unordered_map to map for python comparison
 typedef std::vector<Id::Type> Ids;
 typedef std::unordered_map<Id::Type, Track> Tracks;
 typedef std::map<Id::Type, PFBlock> Blocks; //changed from unordered_map to map for python comparison

@@ -20,7 +20,7 @@
 namespace papas {
 
 // class Cluster;
-class PFParticle;
+class SimParticle;
 
 /// Used to display Clusters on output graphs
 class GBlob {
@@ -61,7 +61,7 @@ public:
   /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
   GTrajectories(const Cluster& cluster);
   GTrajectories(const Track& track);
-  GTrajectories(const PFParticle& particle);
+  GTrajectories(const SimParticle& particle);
   void Draw(const std::string& projection) const override;
   void addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor,int linewidth);
   void addHelix(Path::Ptr  path, TVector3 tvec, int linestyle, int linecolor);

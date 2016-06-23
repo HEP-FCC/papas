@@ -3,7 +3,7 @@
 //
 //
 
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include <cmath>
 #include <iostream>
 #include <utility>
@@ -11,7 +11,7 @@
 #include "Cluster.h"
 #include "pTrack.h"
 
-#include "BaseParticle.h"
+#include "PParticle.h"
 #include "ParticlePData.h"
 #include "Path.h"
 #include "Helix.h"
@@ -21,7 +21,7 @@ namespace papas {
   
 
 
-  /*PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+  /*SimParticle::SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
   Particle(uniqueid, pdgid, ParticlePData::particleCharge(pdgid), tlv),
   m_vertex(vertex),
   m_isHelix(fabs(charge())>0.5)
@@ -34,7 +34,7 @@ namespace papas {
   
 }*/
   
-  PFParticle::PFParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field) :
+  SimParticle::SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field) :
   Particle(uniqueid, pdgid, charge, tlv),
   m_vertex(vertex),
   m_isHelix(fabs(charge)>0.5)
@@ -47,8 +47,8 @@ namespace papas {
     
   }
   
-  PFParticle::PFParticle(IdType uniqueid, unsigned int pdgid, double charge,  TLorentzVector tlv, const Track& track) : //calla above constructor
-  PFParticle(uniqueid,
+  SimParticle::SimParticle(IdType uniqueid, unsigned int pdgid, double charge,  TLorentzVector tlv, const Track& track) : //for when particle is created via reconstruct track - it calls the above constructor
+  SimParticle(uniqueid,
              pdgid,
              charge,
              tlv,
@@ -60,16 +60,16 @@ namespace papas {
     }
   }
 /*
-void PFParticle::setHelix(const Path& path) {
+void SimParticle::setHelix(const Path& path) {
   m_helix = path; //copy??
   }
 
-void PFParticle::setPath(const Path& path) {
+void SimParticle::setPath(const Path& path) {
   m_path = path;
 }*/
 
 
-TVector3 PFParticle::pathPosition(papas::Position layer) const
+TVector3 SimParticle::pathPosition(papas::Position layer) const
 {
   return m_path->namedPoint(layer);
 }
@@ -77,7 +77,7 @@ TVector3 PFParticle::pathPosition(papas::Position layer) const
 
 
 
-/*PFParticle::PFParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
+/*SimParticle::SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
  Particle(pdgid, charge, tlv), m_vertex(vertex) {
  self.path = None
  self.clusters = dict()
@@ -86,7 +86,7 @@ TVector3 PFParticle::pathPosition(papas::Position layer) const
  self.track_smeared = None
  }*/
 
-bool PFParticle::isElectroMagnetic() const
+bool SimParticle::isElectroMagnetic() const
 {
   unsigned int kind = abs(pdgId());
   if (kind == 11 || kind == 22) {

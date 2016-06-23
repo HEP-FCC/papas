@@ -19,7 +19,7 @@
 #include "PFBlockBuilder.h"
 #include "PFEvent.h"
 #include "PFEventDisplay.h"
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include "PFReconstructor.h"
 #include "Path.h"
 #include "Ruler.h"
@@ -27,6 +27,7 @@
 #include "displaypfobjects.h"
 #include "pTrack.h"
 #include "random.h"
+#include "PapasManager.h"
 
 #include "AliceDisplay.h"
 #include "Id.h"
@@ -53,133 +54,106 @@
 #include "podio/EventStore.h"
 #include "podio/ROOTReader.h"
 
+#include <chrono>
+
 using namespace papas;
 
-void processEvent(podio::EventStore& store, const fcc::ParticleCollection* ptcs, Simulator& sim) {
+Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);
 
-  //temp for mem leak const fcc::ParticleCollection* ptcs(nullptr);
-  int count = 0;
-  //temp for mem leak bool particles_available = store.get("GenParticle", ptcs);
+void processEvent( podio::EventStore& store, PapasManager& papasManager) {
   
-  std::vector<papas::Particle> particles;
-  
-  for (const auto& ptc : *ptcs) {
-    count += 1;
-    if (ptc.Core().Status == 1) {
-      TLorentzVector tlv;
-      auto p4 = ptc.Core().P4;
-      tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
-      if (tlv.Pt() > 1e-5 && (ptc.Core().Type == 22 | abs(ptc.Core().Type) > 100)) {
-        particles.push_back(papas::Particle(-1, abs(ptc.Core().Type), ptc.Core().Charge, tlv, 1));
-      }
-    }
-  }
-  
-  sort(particles.begin(), particles.end(),
-       [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
-  count = 0;
-  for (const auto& ptc : particles) {
-    count += 1;
-    
-    PFParticle& pfptc = sim.addParticle(ptc.pdgId(), ptc.charge(),ptc.p4(), TVector3{0, 0, 0});
-    PDebug::write("Made {}", pfptc);
-    //std::cout << "\t" << pfptc << std::endl;
-    if (pfptc.pdgId() == 22) {
-      
-      sim.simulatePhoton(pfptc);
-    } else if (pfptc.pdgId() == 11) {
-      // TODO self.propagate_electron(ptc)
-      // smeared_ptc = self.smear_electron(ptc)
-    } else if (pfptc.pdgId() == 13) {
-      // TDOO self.propagate_muon(ptc)
-      // smeared_ptc = self.smear_muon(ptc)
-    }
-    // else if (pfptc.pdgid() == [ 12, 14, 16 ])
-    // TODO self.simulate_neutrino(ptc)
-    else if (abs(pfptc.pdgId()) >= 100) {  // TODO make sure this is ok
-      if (pfptc.charge() && pfptc.pt() < 0.2)
-        // to avoid numerical problems in propagation
-        continue;
-      else
-        sim.simulateHadron(pfptc);
-    }
-  }
-  // setup a PFEvent by copying the simulation tracks and cluster (retaining same identifiers)
-  // and using a reference to the history nodes
-  PFEvent pfEvent{sim.smearedEcalClusters(), sim.smearedHcalClusters(), sim.smearedTracks(), sim.historyNodes()};
-  //PFEvent pfEvent{sim};  // for python test
-  pfEvent.mergeClusters();
-  Ids ids = pfEvent.mergedElementIds();
-  PFBlockBuilder bBuilder{pfEvent, ids};
-  pfEvent.setBlocks(bBuilder);  // for python
-  PFReconstructor pfReconstructor{pfEvent};
-  pfReconstructor.reconstruct();
-  pfEvent.setReconstructedParticles(pfReconstructor.particles());
+  const fcc::ParticleCollection* ptcs(nullptr);
+  bool particles_available = store.get("GenParticle", ptcs);
+ 
+  Particles papasparticles= makePapasParticlesFromGeneratedParticles(ptcs);
+  papasManager.simulateEvent(std::move(papasparticles));
+  papasManager.reconstructEvent();
   store.clear();
+
+  /*
+  sort(genStableParticles.begin(), genStableParticles.end(),
+       [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+ */
+  
+  
+ 
 }
 
 // extern int run_tests(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
+  //physics debug output
+  PDebug::On();
   
   auto reader = podio::ROOTReader();
-  //reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
-  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
+  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
 
   unsigned int eventNo = 0;
-  unsigned int  nEvents=1;
+  unsigned int nEvents = 50000;
   
-  if (argc ==2) {
-    eventNo=(atoi)(argv[1]);
-  }
-  if (argc ==3) {  //defaults to running 1 event
-    nEvents=(atoi)(argv[2]);
-  }
-
-    // Create CMS detector and simulator
-  CMS CMSDetector;
-  Simulator sim = Simulator{CMSDetector};
+  bool doDisplay =false;
+  if (nEvents==1)
+    doDisplay =true;
+  
   auto store = podio::EventStore();
-  bool verbose=true;
   store.setReader(&reader);
   reader.goToEvent(eventNo);
- 
-  const fcc::ParticleCollection* ptcs(nullptr);
-  int count = 0;
-  bool particles_available = store.get("GenParticle", ptcs);
   
-  
-  for(unsigned i=0; i<1; ++i) {
-    PDebug::write("Event: {}",eventNo+i);
-    Simulator siml = Simulator{CMSDetector};
-    if(i%1000==0) {
-      std::cout<<"reading event "<<eventNo+i<<std::endl;
-    }
-    if(i>10) {
-      verbose = false;
-    }
-    processEvent(store, ptcs, siml);
-    //temp for mem leak store.clear();
-    //temp for mem leak reader.endOfEvent();
-    
-    
-    //bool doDisplay =false;
-    bool doDisplay =true;
-    if (doDisplay) {
-      PFEvent pfEvent{siml};
-      Log::log()->flush();
-      PFApp myApp{};
-      myApp.display(pfEvent, CMSDetector);
-      myApp.run();
-      std::cout <<"plotted";
-    }
+  // Create CMS detector and PapasManager
+  CMS CMSDetector;
+  auto start = std::chrono::steady_clock::now();
+  //auto papasManager = PapasManager(CMSDetector) ;
 
+  for(unsigned i=0; i<nEvents; ++i) {
+    //papasManager.clear();
+    auto papasManager = PapasManager(CMSDetector) ;
+     papasManager.clear();
+    PDebug::write("Event: {}",eventNo+i);
+    
+    //if(i%1000==0) {
+      std::cout<<"reading event "<<eventNo+i<<std::endl;
+    //}
+
+    processEvent(store, papasManager);
+    reader.endOfEvent();
+    
+    if (doDisplay) {
+      papasManager.display();
+    }
+  }
+  auto end = std::chrono::steady_clock::now();
+  auto diff = end - start;
+  auto times=std::chrono::duration <double, std::milli>(diff).count();
+  std::cout << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;
+  std::cout << 1000*nEvents/times << " Evs/s" << std::endl;
+  return EXIT_SUCCESS;
+
+}
+  
+  Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
+    // turns pythia particles into Papas particles and lodges them in the history
+    TLorentzVector tlv;
+    Particles particles;
+    for (const auto& ptc : *ptcs) {
+      if (ptc.Core().Status == 1) {  // only stable ones
+        
+        auto p4 = ptc.Core().P4;
+        tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
+        // TODO allow more particles through once implemented
+        if (tlv.Pt() > 1e-5 && (ptc.Core().Type == 22 | abs(ptc.Core().Type) > 100)) {
+          IdType id = Id::makeParticleId();
+          particles.emplace(id, papas::Particle(id, abs(ptc.Core().Type), ptc.Core().Charge, tlv, 1));
+          PDebug::write("Made Papas{}", particles[id]);
+        }
+      }
+    }
+    return std::move(particles);
   }
 
   /*
   int nParticles=0;
   for (int i = 1; i < nParticles; i++) {
-    PFParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
+    SimParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
     PDebug::write("Made {}", photon);
     sim.simulatePhoton(photon);
   }
@@ -187,7 +161,7 @@ int main(int argc, char* argv[]) {
   //  Hadrons
   nParticles=0;
   for (int i = 1; i < nParticles; i++) {
-    PFParticle& hadron = sim.addParticle(211, 1, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
+    SimParticle& hadron = sim.addParticle(211, 1, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
     PDebug::write("Made {}", hadron);
     sim.simulateHadron(hadron);
   }
@@ -195,7 +169,7 @@ int main(int argc, char* argv[]) {
   //particle Gun
   for (int i = 0; i < nParticles; i++) {
     Simulator siml = Simulator{CMSDetector};
-    PFParticle& ptc = siml.addGunParticle(211, 1, -1.5, 1.5, 0.1, 10);
+    SimParticle& ptc = siml.addGunParticle(211, 1, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
     if (!(ptc.charge() && ptc.pt() < 0.2)) siml.simulateHadron(ptc);
     PFEvent pfEvent{siml};  // for python test
@@ -207,7 +181,7 @@ int main(int argc, char* argv[]) {
     pfReconstructor.reconstruct();
   }
    for (int i = 0; i < 1000; i++) {
-   PFParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
+   SimParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
    PDebug::write("Made {}", ptc);
    if (ptc.charge() && ptc.pt()<0.2)
    continue;
@@ -215,7 +189,7 @@ int main(int argc, char* argv[]) {
 
    }
    for (int i = 0; i < 1000; i++) {
-   PFParticle& ptc = sim.addGunParticle(130, -1.5, 1.5, 0.1, 10);
+   SimParticle& ptc = sim.addGunParticle(130, -1.5, 1.5, 0.1, 10);
    PDebug::write("Made {}", ptc);
    if (ptc.charge() && ptc.pt()<0.2)
    continue;
@@ -224,7 +198,7 @@ int main(int argc, char* argv[]) {
    }*/
 
 
-    return 0;
+
 
 #if 0
   // ROOT App to allow graphs to be plotted
@@ -248,6 +222,5 @@ int main(int argc, char* argv[]) {
 
   // sim.testing(); //Write lists of connected items
 
-  return EXIT_SUCCESS;
-}
+
 

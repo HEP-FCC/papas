@@ -14,7 +14,7 @@
 #include "DefinitionsNodes.h"
 #include "DefinitionsCollections.h"
 #include "PFBlock.h"
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include "pTrack.h"
 #include "Cluster.h"
 
@@ -27,8 +27,8 @@ class PFBlockBuilder;
 
 class PFEvent {
 public:
-  PFEvent(Clusters&& ecals, Clusters&& hcals, Tracks&& tracks, Nodes& historyNodes);
-  PFEvent(Simulator& sim); // temporary for Python testing
+  PFEvent(const Clusters& ecals,const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes);
+  PFEvent(Simulator& sim); 
   bool compare(Id::Type id1, Id::Type id2) const;
   double energy(Id::Type id1) const;
   const Track& track(Id::Type id ) const;
@@ -49,19 +49,22 @@ public:
   void setReconstructedParticles(Particles& particles) {m_reconstructedParticles = particles;}
 
   void mergeClusters();
+  void clear();
   friend std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent); //TODO move to helper class??
   
 private:
-  Clusters m_ecals; //should these be references instead of owned?
-  Clusters m_hcals;
+  
+  const Clusters& m_ecals;
+  const Clusters& m_hcals;
   Clusters m_mergedEcals;
   Clusters m_mergedHcals;
-  Tracks m_tracks;
+  const Tracks& m_tracks;
   Nodes& m_historyNodes; //should this be owned?
   Blocks m_blocks;
   Particles& m_reconstructedParticles; //should this be owned?
 };
 
+ 
 } // end namespace papas
 
 #endif /* PFEvent_h */

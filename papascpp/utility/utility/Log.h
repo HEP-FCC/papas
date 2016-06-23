@@ -32,12 +32,10 @@ namespace papas {
   
   class PDebug {
   public:
-    PDebug() {};
+    PDebug()  {};
+    static void On() {level=spdlog::level::info;};
     static spdlog::details::line_logger info()  {return log()->info();}
     static spdlog::details::line_logger write()  {return log()->info();}
-    
-    //
-    
     static spdlog::details::line_logger warn()  {return log()->warn();}
     static spdlog::details::line_logger error() {return log()->error();}
     static spdlog::details::line_logger debug() {return log()->debug();}
@@ -48,6 +46,7 @@ namespace papas {
     template <typename T> static spdlog::details::line_logger write(const T& t) {return log()->info(t);};
     template <typename... Args> static spdlog::details::line_logger write(const char* fmt, const Args&... args) { return log()->info(fmt,args...);};
     static std::vector<spdlog::sink_ptr> m_sinks;
+    static spdlog::level::level_enum level; //err or info
   };
   
 }

@@ -4,7 +4,7 @@
 #include "Path.h"
 #include "propagator.h"
 #include "geotools.h"
-#include "PFParticle.h"
+#include "SimParticle.h"
 #include "Helix.h"
 
 
@@ -19,7 +19,7 @@ StraightLinePropagator::StraightLinePropagator()
 {
 }
 
-void StraightLinePropagator::propagateOne(PFParticle& ptc,
+void StraightLinePropagator::propagateOne(SimParticle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius)
@@ -64,7 +64,7 @@ void StraightLinePropagator::propagateOne(PFParticle& ptc,
 }
 
 
-void StraightLinePropagator::propagateOne(PFParticle& ptc,
+void StraightLinePropagator::propagateOne(SimParticle& ptc,
                                           const SurfaceCylinder & cyl)
 {
    propagateOne(ptc, cyl.Layer(), cyl.Z(), cyl.getRadius());
@@ -78,7 +78,7 @@ HelixPropagator::HelixPropagator(double field) :
 }
 
 
-void HelixPropagator::propagateOne(PFParticle& ptc,
+void HelixPropagator::propagateOne(SimParticle& ptc,
                                    const SurfaceCylinder & cyl)
 {
    auto helix = std::static_pointer_cast<Helix>(ptc.path());

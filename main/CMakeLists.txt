@@ -86,6 +86,7 @@ add_definitions(${ROOT_CXX_FLAGS})
 #include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
 
 add_executable(mainexe ../main.cpp)
+#target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
 target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
 
 
