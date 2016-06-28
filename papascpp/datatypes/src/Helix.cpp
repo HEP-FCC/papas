@@ -79,6 +79,13 @@ TVector3 Helix::pointAtPhi(double phi) const {
 double Helix::maxTime() const {
   double maxz = 0;
   double minz = 0;
+  
+  //don't go further than HCalIn (if it exists)
+  if (hasNamedPoint(kHcalIn)) {
+    return timeAtZ(namedPoint(kHcalIn).Z());
+  }
+    
+  
   for (const auto& p : m_points) {
     if (p.second.Z() > 0)
       maxz = fmax(maxz, p.second.Z());
