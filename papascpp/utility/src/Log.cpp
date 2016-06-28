@@ -60,9 +60,5 @@ std::shared_ptr<spdlog::logger> Log::log() {
     }
     return spdlog::get("pdebug");
   }
-
-<<<<<<< HEAD
 } //namespace papas
-=======
-} //namesapce papas
->>>>>>> origin/linux
+

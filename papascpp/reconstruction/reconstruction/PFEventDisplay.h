@@ -10,16 +10,18 @@
 #define PFEventDisplay_h
 
 #include "displaycore.h"
-
+#include "DefinitionsCollections.h"
 
 namespace papas {
   
 class PFEvent;
+class Simulator;
 
 class PFEventDisplay: public Display {
 public:
   PFEventDisplay(std::list<ViewPane::Projection> views = {});
-  void drawPFEvent(const PFEvent& pfevent);
+  void drawEvent(const Simulator& simulator, const PFEvent& pfevent);
+  void drawComparison( const PFEvent& pfEvent, const Particles& particles);
 private:
 };
   

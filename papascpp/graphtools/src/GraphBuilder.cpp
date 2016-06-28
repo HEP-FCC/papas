@@ -7,7 +7,7 @@ namespace papas {
 
 // Allow optional parameters where construction arguments are references
 
-Edges emptyEdges;
+
 
 GraphBuilder::GraphBuilder(Ids ids, Edges& edges) :
   m_edges(edges), m_elementIds(ids) {
@@ -54,12 +54,7 @@ GraphBuilder::GraphBuilder(Ids ids, Edges& edges) :
   }
 }
 
-/*GraphBuilder::GraphBuilder() :
-m_edges(emptyEdges),
-m_localNodes(emptyNodes)
-{
 
-}*/
 
 GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b) {
   m_elementIds = b.m_elementIds;

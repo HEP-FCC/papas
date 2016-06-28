@@ -43,11 +43,11 @@ public:
   const Tracks& tracks() const { return m_tracks;}
   const Blocks& blocks() const { return m_blocks;}
   const Particles& reconstructedParticles() const { return m_reconstructedParticles;}
-
+  
   void setBlocks(Blocks&& blocks) {m_blocks = blocks;}
   void setBlocks(PFBlockBuilder& builder);  //temp for python
-  void setReconstructedParticles(Particles& particles) {m_reconstructedParticles = particles;}
-
+  void setReconstructedParticles(Particles&& particles) {m_reconstructedParticles = particles;}
+  
   void mergeClusters();
   void clear();
   friend std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent); //TODO move to helper class??
@@ -61,7 +61,8 @@ private:
   const Tracks& m_tracks;
   Nodes& m_historyNodes; //should this be owned?
   Blocks m_blocks;
-  Particles& m_reconstructedParticles; //should this be owned?
+  Particles m_reconstructedParticles; //should this be owned?
+  
 };
 
  

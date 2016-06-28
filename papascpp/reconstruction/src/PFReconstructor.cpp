@@ -26,7 +26,6 @@
 
 namespace papas {
 
-Particles emptyParticles;
 
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent),

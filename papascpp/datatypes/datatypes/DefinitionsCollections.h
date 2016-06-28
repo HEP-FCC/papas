@@ -22,14 +22,12 @@ class SimParticle;
 class Particle;
 
 typedef std::unordered_map<Id::Type, SimParticle> SimParticles;
-typedef std::unordered_map<Id::Type, Particle> Particles;
+typedef std::unordered_map<Id::Type, Particle> Particles; //changed from unordered_map to map for python comparison
 typedef std::map<unsigned long long, class Edge> Edges; //changed from unordered_map to map for python comparison
 typedef std::vector<Id::Type> Ids;
 typedef std::unordered_map<Id::Type, Track> Tracks;
 typedef std::map<Id::Type, PFBlock> Blocks; //changed from unordered_map to map for python comparison
 typedef std::unordered_map<Id::Type, Cluster> Clusters;
   
-  
-extern Particles emptyParticles; //TODO check
 }
 #endif /* DefinitionsCollections_h */

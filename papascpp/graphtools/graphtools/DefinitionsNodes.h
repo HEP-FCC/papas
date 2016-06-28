@@ -17,8 +17,7 @@ namespace papas {
 
 typedef DAG::Node<Id::Type> PFNode;
 typedef std::map<Id::Type, PFNode> Nodes;
-extern Nodes emptyNodes; //TODO check
-extern const Nodes emptyconstNodes; //TODO check
+
 
 } // end namespace papas
 

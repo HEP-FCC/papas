@@ -24,7 +24,7 @@ Detector::Detector()
 const std::list<SurfaceCylinder>& Detector::sortedCylinders()
 {
    //Return list of surface cylinders sorted by increasing radius.'''
-
+  
    return m_cylinders;
    /* for element in self.elements.values():
     if element.volume.inner is not None:

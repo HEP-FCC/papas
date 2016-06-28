@@ -94,13 +94,13 @@ int test_BlockSplitter() {
   for (auto id : ids)
     historyNodes.emplace(id, std::move(PFNode(id)));
   
-  
+  Nodes emptyNodes;
   auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
   
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
   for (auto & block : blockbuilder.blocks()) {
-    auto blocksplitter = BlockSplitter( to_unlink, block.second);
+    auto blocksplitter = BlockSplitter( to_unlink, block.second, emptyNodes);
     std::cout <<  block.second;
     std::cout << blocksplitter;
   }

@@ -41,7 +41,7 @@ public:
    */
   BlockBuilder(Ids ids,
                Edges& edges,
-               Nodes& historynodes = emptyNodes );
+               Nodes& historynodes);
   Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
                                        //TODO should this be move
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class

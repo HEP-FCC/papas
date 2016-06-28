@@ -46,7 +46,8 @@ public:
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
   void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
-  void smearElectron(SimParticle& ptc);
+  void smearElectron(SimParticle& ptc); ///< Does not smear so far as I can see
+  void smearMuon(SimParticle& ptc); ///< Does not smear so far as I can see
 
   /**
    Makes a new SimParticle and adds this into collection of particles
@@ -113,6 +114,8 @@ private:
   const Track& addTrack(SimParticle& ptc);
   Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed
+  void propagateAllLayers(SimParticle& ptc);  // more args needed
+  
   void addNode(const Id::Type newid, const Id::Type parentid = 0);
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 

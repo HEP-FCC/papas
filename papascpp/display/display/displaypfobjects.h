@@ -40,12 +40,13 @@ private:
 class GTrajectory {
 public:
   GTrajectory(const std::vector<double>& X, const std::vector<double>& Y, const std::vector<double>& Z,
-              const std::vector<double>& tX, const std::vector<double>& tY,int markerstyle, double markersize,
+              const std::vector<double>& tX, const std::vector<double>& tY, int markerstyle, double markersize,
               int linestyle, int linecolor, int linewidth);
   void setColor(int color);
   void Draw(const std::string& projection) const;
+
 private:
-  std::unordered_map<std::string, std::unique_ptr<TGraph>> m_graphs; ///< the line/curves for a track on each proj
+  std::unordered_map<std::string, std::unique_ptr<TGraph>> m_graphs;  ///< the line/curves for a track on each proj
 };
 
 /*class GHelixTrajectory : public GTrajectory {
@@ -62,11 +63,14 @@ public:
   GTrajectories(const Cluster& cluster);
   GTrajectories(const Track& track);
   GTrajectories(const SimParticle& particle);
+  GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
   void Draw(const std::string& projection) const override;
-  void addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor,int linewidth);
-  void addHelix(Path::Ptr  path, TVector3 tvec, int linestyle, int linecolor);
-  void addNamedPoints(const Path::Points& path, TVector3 tvec, int linestyle, int linecolor,int linewidth);
-  void addPoints(const std::vector<TVector3>&  points, TVector3 tvec, int linestyle, int linecolor,int linewidth);
+  void addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth);
+  void addHelix(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor);
+  void addNamedPoints(const Path::Points& path, TVector3 tvec, int linestyle, int linecolor, int linewidth);
+  void addPoints(const std::vector<TVector3>& points, TVector3 tvec, int linestyle, int linecolor, int linewidth);
+  void addPoints(const std::vector<TVector3>& points, double scale, int linestyle, int linecolor, int linewidth);
+
 private:
   std::list<GTrajectory> m_gTrajectories;  ///<all the tracks
   std::list<GBlob> m_gBlobs;               ///<All the clusters

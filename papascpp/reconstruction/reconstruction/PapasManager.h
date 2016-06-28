@@ -20,8 +20,10 @@ public:
   void simulateEvent(Particles&& particles);
   void reconstructEvent();
   const Particles& reconstructedParticles() {return m_pfEvent.reconstructedParticles();}
+  const Particles& rawParticles() {return m_particles;}
   void clear();
   void display();  ///< relocate?
+  
   
 private:
   const Detector& m_detector;

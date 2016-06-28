@@ -16,6 +16,7 @@
 
 #include "displaypfobjects.h"
 #include "PFEventDisplay.h"
+#include "DefinitionsCollections.h"
 
 
 
@@ -30,7 +31,10 @@ class Detector;
 class PFApp {
 public:
   PFApp();
-  void display(const PFEvent& pfevent, const Detector& det);
+  void display(const Simulator& simulator,const PFEvent& pfevent, const Particles& particles, const Detector& det);
+  void display2(const Simulator& simulator, const PFEvent& pfEvent,const Particles& particles, const Detector& det); //under development
+    
+  
   void run(){ m_theApp.Run();}
 private:
   Int_t m_argc; //dummy arguments

@@ -8,6 +8,7 @@
 
 #include "Cluster.h"
 #include "Id.h"
+#include "Log.h"
 #include "MergedClusterBuilder.h"
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
@@ -16,7 +17,6 @@
 #include "PrettyPrinter.h"
 #include "Simulator.h"  //temp
 #include "pTrack.h"
-#include "Log.h"
 namespace papas {
 
 /*
@@ -42,20 +42,21 @@ double PFEvent::energy(Id::Type id1) const //TODO check direction of sort
   return 12.5; //TODO
 }*/
 // check this be a move here
+
 PFEvent::PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes)
     : m_ecals(ecals),
       m_hcals(hcals),
       m_tracks(tracks),
       m_historyNodes(historyNodes),
-      m_reconstructedParticles((emptyParticles)) {}
+      m_reconstructedParticles()
+{}
 
 PFEvent::PFEvent(Simulator& sim)
     : m_ecals(sim.smearedEcalClusters()),
       m_hcals(sim.smearedHcalClusters()),
       m_tracks(sim.smearedTracks()),
       m_historyNodes(sim.historyNodes()),
-      m_reconstructedParticles((emptyParticles))
-
+      m_reconstructedParticles()
 {}
 
 void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = builder.blocks(); }
@@ -73,8 +74,8 @@ const Track& PFEvent::track(Id::Type id) const {
     return m_tracks.at(id);
   } else {
     class Track t;
-    
-     PDebug::write("problem with track not found :{}", id);
+
+    PDebug::write("problem with track not found :{}", id);
     PDebug::log()->flush();
     return std::move(t);  // TODO produce error
   };
@@ -161,20 +162,19 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
   } else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
-  std::cout<<Id::pretty(id);
+  std::cout << Id::pretty(id);
   // TODO throw error
   class Cluster c;
   PDebug::write("problem with cluster not found :{}", id);
-   PDebug::log()->flush();
+  PDebug::log()->flush();
   return std::move(c);  // TODO produce error
 }
-  
-void PFEvent::clear() {
-    m_blocks.clear();
-    m_mergedEcals.clear();
-    m_mergedEcals.clear();
-  m_blocks.clear();
 
-  }
+void PFEvent::clear() {
+  m_blocks.clear();
+  m_mergedEcals.clear();
+  m_mergedEcals.clear();
+  m_reconstructedParticles.clear();
+}
 
 }  // end namespace papas

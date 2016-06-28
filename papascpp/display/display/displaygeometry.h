@@ -31,14 +31,11 @@ private:
 class GDetectorElement : public Drawable {
 public:
    GDetectorElement(std::shared_ptr<const DetectorElement> de);
+   GDetectorElement(double radius, double dz);
   // ~GDetectorElement();
    //GDetectorElement(const DetectorElement& de);
    void Draw(const std::string& projection) const override;
 private:
-   ///Shared_ptr to the detector element
-   std::shared_ptr<const DetectorElement> m_detElem;
-   //const DetectorElement & m_detElem;
-
    ///lists of shared_pointer  to circles to be used to plot the detector element
    std::list<std::unique_ptr<TEllipse>> m_circles;
 
@@ -52,6 +49,7 @@ public:
    GDetector(const Detector& detector);
   //~GDetector();
    void Draw(const std::string& projection) const override;
+  void DrawSimple(const std::string& projection) const; // testing
 private:
    ///ECAL graphical detector element
    GDetectorElement m_gEcal;

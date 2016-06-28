@@ -16,9 +16,6 @@
 
 namespace papas {
 
-//Allow optional parameters where construction arguments are references
-Nodes emptyNodes;
-extern Edges emptyEdges;
 
 BlockBuilder::BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes) :
   GraphBuilder(ids, edges),
@@ -28,14 +25,7 @@ BlockBuilder::BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes) :
   makeBlocks();
 }
   
-/*
-BlockBuilder::BlockBuilder() :
-GraphBuilder(),
-m_historyNodes(emptyNodes),
-m_blocks()
-{;
-  std::cout<<"when is this used";
-}*/
+
 
 /*BlockBuilder& BlockBuilder::operator=(const BlockBuilder& b)
 {
