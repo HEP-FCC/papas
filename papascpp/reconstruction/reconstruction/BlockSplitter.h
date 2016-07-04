@@ -6,15 +6,9 @@
 
 class PFEvent;
 
-/** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
+/** @class   rec::BlockSplitter Reconstruction/Reconstruction/Blocksplitter.h BlockSplitter.h
  *
- * BlockBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link info
- * It uses the distances/links between elements to construct a set of connected blocks
- * Each element will end up in one (and only one) block
- * Blocks retain information of the elements and the distances between elements
- * The blocks can be used for future particle reconstruction
- * The ids must be unique and are expected to come from the Id class
- ''' BlockSplitter takes an exisiting block of particle flow element ids (clusters,tracks etc)
+ * BlockSplitter takes an exisiting block of particle flow element ids (clusters,tracks etc)
  and unlinks any specified edges. It then recalculates a new set of sub-blocks
  using the underlying BlockBuilder class
 
@@ -29,13 +23,7 @@ class PFEvent;
  as it will effectively be replaced by the new blocks after the split.
  ** explain how old block fits into history node **
  '''
-
-
- Usage example:
-
- BlockBuilder builder {ids, edges, history_nodes, pfevent};
- for (b in builder.blocks()) {
- ...
+...
  }
  *
  *  @author  Alice Robson

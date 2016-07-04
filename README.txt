@@ -1,22 +1,38 @@
 
 
-Installationnof PAPAS_CC
+Installation of PAPAS
 
-download from github
+Instructions still under development.
+
+(1) Download from github
 
 
-mkdir build
-cd build
-cmake ../papas_cc/
-make
-./mainexe
+Lxplus:
 
-For Xcode project use: 
-mkdir xbuild
-cd xbuild
-cmake -G Xcode ../papas_cc
-make
+(2) Need to set up EDM/PODIO 
+      
+      source ./init_stack_fcc
 
 
 
-Should install even without Boost but this has not been tested
+(3) Build it
+		mkdir build
+		cd build
+		cmake ../
+		cmake -DCMAKE_INSTALL_PREFIX=../install ../
+		make -j 4
+		make install
+
+(4) Run example
+   		./mainexe "filepath/filename of pythia.root file"
+
+
+For Mac Xcode project use: 
+
+	mkdir xbuild
+	cd xbuild
+	cmake -G Xcode ../
+	make
+
+
+
