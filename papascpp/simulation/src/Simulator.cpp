@@ -30,7 +30,7 @@ Simulator::Simulator(const Detector& d, Nodes& nodes)
   m_hcalClusters.reserve(isize);
   m_smearedEcalClusters.reserve(isize);
   m_smearedHcalClusters.reserve(isize);
-  m_particles.reserve(isize);
+      //m_particles.reserve(isize);
   m_tracks.reserve(isize);
   m_smearedTracks.reserve(isize);
   // m_nodes.reserve(isize);
