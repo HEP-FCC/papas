@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
 int example(int argc, char* argv[]) {
   // open up Pythia file
   auto reader = podio::ROOTReader();
-  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
+  reader.openFile("ee_ZH_Zmumu_Hbb.root");
 
   // read an event
   unsigned int eventNo = 0;

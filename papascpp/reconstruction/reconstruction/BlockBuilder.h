@@ -2,6 +2,7 @@
 #define RECONSTRUCTION_BLOCKBUILDER_H
 
 #include "GraphBuilder.h"
+#include "PFBlock.h"
 
 /** @class   rec::BlockBuilder Reconstruction/Reconstruction/BlockBuilder.h BlockBuilder.h
  *

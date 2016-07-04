@@ -12,7 +12,7 @@ namespace papas {
 
 bool Log::logInitialized = false;
 bool PDebug::logInitialized = false;
-auto PDebug::level = spdlog::level::err;
+spdlog::level::level_enum  PDebug::slevel = spdlog::level::err;
 std::vector<spdlog::sink_ptr> Log::m_sinks;
 std::vector<spdlog::sink_ptr> PDebug::m_sinks;
 
@@ -35,11 +35,11 @@ std::shared_ptr<spdlog::logger> Log::log() {
 
 void PDebug::init() {
   logInitialized = true;
-  if (PDebug::level == spdlog::level::info) std::remove("cpppapasphysicsoutput.txt");  // delete file
+  if (PDebug::slevel == spdlog::level::info) std::remove("cpppapasphysicsoutput.txt");  // delete file
   m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("cpppapasphysicsoutput.txt", true));
 
   auto plogger = std::make_shared<spdlog::logger>("pdebug", begin(m_sinks), end(m_sinks));
-  plogger->set_level(PDebug::level);  //   ::info);
+  plogger->set_level(PDebug::slevel);  //   ::info);
   plogger->set_pattern("%v");
   spdlog::register_logger(plogger);
 }

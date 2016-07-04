@@ -5,13 +5,12 @@
 //  Created by Alice Robson on 07/04/16.
 //
 //
-
+#include "PFBlock.h"
 #include "BlockBuilder.h"
 //#include "PFEvent.h"
 #include "Definitions.h"
 #include "FloodFill.h"
 #include "Log.h"
-#include "PFBlock.h"
 #include "directedacyclicgraph.h"
 
 namespace papas {

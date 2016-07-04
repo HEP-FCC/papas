@@ -32,7 +32,7 @@ class PDebug {
   // TODO allow output file to be set from here
 public:
   PDebug(){};
-  static void On() { level = spdlog::level::info; };
+  static void On() { slevel = spdlog::level::info; };
   static spdlog::details::line_logger info() { return log()->info(); }
   static spdlog::details::line_logger write() { return log()->info(); }
   static spdlog::details::line_logger warn() { return log()->warn(); }
@@ -51,7 +51,7 @@ public:
     return log()->info(fmt, args...);
   };
   static std::vector<spdlog::sink_ptr> m_sinks;
-  static spdlog::level::level_enum level;  // err or info
+  static spdlog::level::level_enum slevel;  // err or info
 };
 }
 

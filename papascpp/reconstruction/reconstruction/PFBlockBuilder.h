@@ -11,6 +11,7 @@
 
 #include "DefinitionsCollections.h"
 #include "DefinitionsNodes.h"
+#include "PFBlock.h"
 #include <iostream>
 
 namespace papas {
