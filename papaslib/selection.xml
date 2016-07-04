@@ -1,0 +1,41 @@
+<lcgdict>
+  <selection>
+    <class name="papas::Alice"/>
+    <class name="papas::Display"/>
+    <class name="papas::ViewPane"/>
+    <class name="papas::PFEventDisplay"/>
+    <class name="papas::GDetector" />
+    <class name="papas::PFApp"/>
+    <class name="papas::Simulator"/>
+    <class name="papas::PFEvent"/>
+    <class name="papas::PFBlockBuilder"/>
+    <class name="papas::PFReconstructor"/>
+    <class name="papas::Id"/>
+    <class name="papas::Cluster" >
+    </class>
+    <class name="randomgen::RandUniform" >
+    </class>
+    <class name="randomgen::RandNormal" >
+    </class>
+    <class name="randomgen::RandExponential">
+    </class>
+    <class name="papas::Path">
+    </class>
+    <class name="papas::Track">
+    </class>
+    <class name="papas::ParticlePData">
+    </class>
+    <class name="papas::Helix">
+    </class>
+    <class name="papas::Particle">
+    </class>
+    <class name="papas::PFParticle">
+    </class>
+    <class name="std::unordered_map&lt;int,std::vector&lt;int&gt; &gt;"/>
+    <class name="std::vector&lt;papas::Cluster&gt;"/>
+    <class name="std::unordered_map&lt;papas::Id::Type,papas::Cluster&gt;"/>
+    <class name="std::unordered_map&lt;papas::Id::Type,papas::Track&gt;"/>
+    <class name="std::unordered_map&lt;papas::Id::Type,papas::PFParticle&gt;"/>
+    <class name="std::unordered_map&lt;int,int;"/>
+  </selection>
+</lcgdict>

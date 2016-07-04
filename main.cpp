@@ -1,209 +1,243 @@
-//C++
+
+//
+//  main.cpp
+//
+//  Created by Alice Robson on 14/01/16.
+//
+//
+// C++
 #include <iostream>
-#include <cstdlib>
+#include <stdio.h>
 
-//ROOT
-#include "TROOT.h"
-#include "TVector3.h"
-#include "TLorentzVector.h"
-
-//Boost
-#include <boost/any.hpp>
-
-
-//SSD libs
-#include "fastsim/my_utilities.h"
-#include "detectors/material.h"
-#include "detectors/geometry.h"
-#include "detectors/CMS.h"
-#include "pfobjects/particle.h"
-#include "pfobjects/pfobjects.h"
-#include "simulation/simulator.h"
-//#include "supertree.h"
-#include "pfobjects/path.h"
-#include "display/displaygeometry.h"
-#include "display/displaycore.h"
-#include "display/displaypfobjects.h"
-
-#include "TAxis.h"
-#include "TGraph.h"
-#include "TMultiGraph.h"
-#include "TCanvas.h"
 #include "TApplication.h"
-#include "TStyle.h"
-#include "TPad.h"
 #include "TROOT.h"
-#include "TColor.h"
-#include "TGFrame.h"
-#include "TVirtualPad.h"
+//#include "gtest/gtest.h"
 
+#include "CMS.h"
+#include "Cluster.h"
+#include "MergedClusterBuilder.h"
+#include "PFBlockBuilder.h"
+#include "PFEvent.h"
+#include "PFEventDisplay.h"
+#include "PFReconstructor.h"
+#include "PapasManager.h"
+#include "Path.h"
+#include "Ruler.h"
+#include "SimParticle.h"
+#include "Simulator.h"
+#include "displaypfobjects.h"
+#include "pTrack.h"
+#include "random.h"
 
-#include "utility/identifier.h"
+#include "AliceDisplay.h"
+#include "Id.h"
+#include "Log.h"
+#include "StringFormatter.h"
 
-//ENUM_WITH_STRING(Proj, (xy)(yz)(xz)(ECAL_thetaphi))
+#include "datamodel/EventInfoCollection.h"
+#include "datamodel/ParticleCollection.h"
+#include "utilities/ParticleUtils.h"
 
+// ROOT
+#include "TBranch.h"
+#include "TFile.h"
+#include "TLorentzVector.h"
+#include "TROOT.h"
+#include "TTree.h"
 
-using namespace std;
+// STL
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <chrono>
 
-void testing() { //change to concrete object or unique pointer is there is an issue
-   TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
-   c1->SetFillColor(42);
-   c1->SetGrid();
-   
-   const int n = 20;
-   double x[n], y[n];
-   for (int i=0;i<n;i++) {
-      x[i] = i;
-      y[i] = 2*i;
-      cout<<x[i]<<"\t"<<y[i]<<endl;
-   }
-   
-   TGraph *gr = new TGraph(n,x,y);
-   gr->SetLineColor(2);
-   gr->SetLineWidth(4);
-   gr->SetMarkerColor(4);
-   gr->SetMarkerStyle(21);
-   gr->SetTitle("a simple graph");
-   gr->GetXaxis()->SetTitle("X title");
-   gr->GetYaxis()->SetTitle("Y title");
-   gr->Draw("ACP");
-   
-   c1->Update();
-   c1->Modified();
-   c1->Connect("Closed()", "TApplication", gApplication, "Terminate()"); //new
-}
+// podio specific includes
+#include "podio/EventStore.h"
+#include "podio/ROOTReader.h"
 
+using namespace papas;
 
+Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);
+void processEvent(podio::EventStore& store, PapasManager& papasManager);
+int example(int argc, char* argv[]);
 
-struct A
-{
-    virtual void foo() const = 0;
-    void bar();
-};
-
-struct B : A
-{
-    //void foo()  override; // Error: B::foo does not override A::foo
-    // (signature mismatch)
-    void foo() const override; // OK: B::foo overrides A::foo
-    //void bar() override; // Error: A::bar is not virtual
-};
-
-void B::foo() const
-{
-    std::cout <<"foo";
-}
-
-
-using boost::any_cast;
-typedef std::list<boost::any> many;
-
-
-void append_int(many & values, int value)
-{
-   boost::any to_append = value;
-   values.push_back(to_append);
-}
-
-int main(int argc, char* argv[]){
-   //identifier
-   
-   
-   long id =Identifier::makeAnotherIdentifier(0);
-   long id1 =Identifier::makeAnotherIdentifier(0);
-   many values;
-   int x=3;
-   values.push_back(x);
-
-   
-  B b;
-    b.foo();
-   
-   // all new
-   TApplication theApp("App", &argc, argv);
-   if (gROOT->IsBatch()) {
-      fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-      return 1;
-   }
-   //testing();
-   //theApp.Run();
-   
-   
-   
-    std::cout << "Try base classes\n";
-    
-    Material M("test",1,1);
-    SurfaceCylinder S("empty");
-    VolumeCylinder V("new", 4, 6, 3, 6);
-    
-    CMS CMSDetector;
-    TLorentzVector tlv(1.,1. , 1., .7);
-    Particle ppp(22,.5,tlv,1);
-    
-    std::cout<<ppp.StringDescription()<<"\n";
-    
-   
-   //dispay tests
-   
-   
-  /*
-   Projection A=Projection::xy;
-   cout<<A;
-   cout<<to_str(A);
-   */
-   
-   
-   
-   TLorentzVector p4 = TLorentzVector();
-   p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-   //std::shared_ptr<TVector3> tvect = std::shared_ptr<TVector3>{new TVector3(0,0,0)};
-   //Helix helix(3.8, 1, p4,tvect );
-   Helix helix(3.8, 1, p4,TVector3(0,0,0));
-   double length = helix.getPathLength(1.0e-9);
-   
-   
-   TVector3 junk = helix.getPointAtTime(1e-9);
-   std::cout<<"HElix point: " <<junk.X() << " " << junk.Y() << " " << junk.Z()<<" ";
-   std::cout<< "\nlength"<<length<< " " << helix.getDeltaT(length)<<std::endl;
-   
-       // test from pfobjects
-   
-    TVector3 vpos(1.,.5,.3);
-    Cluster cluster=  Cluster(10., vpos, 1., "ecaltest");
-    std::cout <<"cluster "<< cluster.getPt()<<"\n";
-    
-    //cluster.setEnergy(5.);
-    //std::cout << cluster.getPt()<<"\n";
-    
-   //Simulator sim{CMSDetector};
-    //SimParticle photon(22,  M_PI/2., M_PI/2.+0.0, 10.);
-    
-    //ptc = pfsimparticle()
-    TLorentzVector tlvphoton=MakeParticleLorentzVector(22,  M_PI/2., M_PI/2.+0.0, 10.);
-   // SimParticle photon(22, tlvphoton);
-   // sim.simulatePhoton(photon);
-   
-   
-   std::vector<TVector3> tvec;
-   tvec.push_back(TVector3(0.,0.,0.));
-   tvec.push_back(TVector3(1.,1.,1.));
-   tvec.push_back(TVector3(2.,2.,2.));
-   
-
-   Display display = Display({enumProjection::xy,enumProjection::yz});
-   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-   
-   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-   
-   display.Register(gdetector, 0);
-
-   std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.Register(gtrajectories,1);
-   display.Register(gcluster,2);
-   display.Draw();
+int main(int argc, char* argv[]) {
   
+  return example(argc,argv);
+  //return longrun(argc,argv);
+}
 
-   
+int example(int argc, char* argv[]) {
+  //open up Pythia file
+  auto reader = podio::ROOTReader();
+  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
+
+  //read an event
+  unsigned int eventNo = 0;
+  auto store = podio::EventStore();
+  store.setReader(&reader);
+  reader.goToEvent(eventNo);
+
+  // Create CMS detector and PapasManager
+  CMS CMSDetector;
+  auto papasManager = PapasManager(CMSDetector);
+  
+  //process event
+  processEvent(store, papasManager);
+  reader.endOfEvent();
+
+  //outputs
+  std::cout << "Generated Stable Particles" << std::endl;
+  for (auto& p : papasManager.rawParticles()) {
+    std::cout << "  " << p.second << std::endl;
+  }
+  std::cout << "Reconstucted Particles" << std::endl;
+  for (auto& p : papasManager.reconstructedParticles()) {
+    std::cout << "  " << p.second << std::endl;
+  }
+
+  papasManager.display();
   return EXIT_SUCCESS;
 }
+
+
+int longrun(int argc, char* argv[]) {
+  
+  //PDebug::On();  // physics debug output
+  auto reader = podio::ROOTReader();
+  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
+ 
+  unsigned int eventNo = 0;
+  unsigned int nEvents = 1000;
+  
+  bool doDisplay = false;
+  if (nEvents == 1) doDisplay = true;
+  
+  auto store = podio::EventStore();
+  store.setReader(&reader);
+  reader.goToEvent(eventNo);
+  
+  // Create CMS detector and PapasManager
+  CMS CMSDetector;
+  auto start = std::chrono::steady_clock::now();
+  //auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
+  
+  for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
+    //papasManager.clear();
+    auto papasManager = PapasManager(CMSDetector); //temporary needs fixing
+    PDebug::write("Event: {}", i);
+    if (i % 1000 == 0) {
+      std::cout << "reading event " << i << std::endl;
+    }
+    if (i == eventNo) start = std::chrono::steady_clock::now();
+    
+    processEvent(store, papasManager);
+    reader.endOfEvent();
+    
+    if (nEvents == 1) {
+      std::cout << "Generated Stable Particles" << std::endl;
+      for (auto& p : papasManager.rawParticles()) {
+        std::cout << "  " << p.second << std::endl;
+      }
+      std::cout << "Reconstucted Particles" << std::endl;
+      for (auto& p : papasManager.reconstructedParticles()) {
+        std::cout << "  " << p.second << std::endl;
+      }
+      if (doDisplay) {
+        papasManager.display();
+      }
+    }
+  }
+  auto end = std::chrono::steady_clock::now();
+  auto diff = end - start;
+  auto times = std::chrono::duration<double, std::milli>(diff).count();
+  std::cout << std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
+  std::cout << 1000 * nEvents / times << " Evs/s" << std::endl;
+  return EXIT_SUCCESS;
+}
+
+
+
+//TODO put this in papasmanager perhaps?
+Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
+  // turns pythia particles into Papas particles and lodges them in the history
+  TLorentzVector tlv;
+  Particles particles;
+  for (const auto& ptc : *ptcs) {
+    if (ptc.Core().Status == 1) {  // only stable ones
+
+      auto p4 = ptc.Core().P4;
+      tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
+      int pdgid = abs(ptc.Core().Type);
+
+      if (tlv.Pt() > 1e-5 && (pdgid != 12) && (pdgid != 14) && (pdgid != 16)) {
+        IdType id = Id::makeParticleId();
+        particles.emplace(id, papas::Particle(id, pdgid, ptc.Core().Charge, tlv, 1));
+        PDebug::write("Made Papas{}", particles[id]);
+      }
+    }
+  }
+  // sort(particles.begin(), particles.end(),
+  //     [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+  return std::move(particles);
+}
+
+void processEvent(podio::EventStore& store, PapasManager& papasManager) {
+  // make a papas particle collection from the next event
+  // then run simulate and reconstruct
+  const fcc::ParticleCollection* ptcs(nullptr);
+  if (store.get("GenParticle", ptcs)) {
+    Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
+    papasManager.simulateEvent(std::move(papasparticles));
+    papasManager.reconstructEvent();
+    store.clear();
+  }
+}
+/*
+ //TODO make a gunparticles example out of the following
+int nParticles=0;
+for (int i = 1; i < nParticles; i++) {
+  SimParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
+  PDebug::write("Made {}", photon);
+  sim.simulatePhoton(photon);
+}
+
+//  Hadrons
+nParticles=0;
+for (int i = 1; i < nParticles; i++) {
+  SimParticle& hadron = sim.addParticle(211, 1, M_PI / 2. + 0.5 * (i + 1), 0, 40. * (i + 1));
+  PDebug::write("Made {}", hadron);
+  sim.simulateHadron(hadron);
+}
+
+//particle Gun
+for (int i = 0; i < nParticles; i++) {
+  Simulator siml = Simulator{CMSDetector};
+  SimParticle& ptc = siml.addGunParticle(211, 1, -1.5, 1.5, 0.1, 10);
+  PDebug::write("Made {}", ptc);
+  if (!(ptc.charge() && ptc.pt() < 0.2)) siml.simulateHadron(ptc);
+  PFEvent pfEvent{siml};  // for python test
+  pfEvent.mergeClusters();
+  Ids ids = pfEvent.mergedElementIds();
+  PFBlockBuilder bBuilder{pfEvent, ids};
+  pfEvent.setBlocks(bBuilder);  // for python
+  PFReconstructor pfReconstructor{pfEvent};
+  pfReconstructor.reconstruct();
+}
+ for (int i = 0; i < 1000; i++) {
+ SimParticle& ptc = sim.addGunParticle(22, -1.5, 1.5, 0.1, 10);
+ PDebug::write("Made {}", ptc);
+ if (ptc.charge() && ptc.pt()<0.2)
+ continue;
+ sim.simulatePhoton(ptc);
+
+ }
+ for (int i = 0; i < 1000; i++) {
+ SimParticle& ptc = sim.addGunParticle(130, -1.5, 1.5, 0.1, 10);
+ PDebug::write("Made {}", ptc);
+ if (ptc.charge() && ptc.pt()<0.2)
+ continue;
+ sim.simulateHadron(ptc);
+
+ }*/
+
