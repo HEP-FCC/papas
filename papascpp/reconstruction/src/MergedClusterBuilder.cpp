@@ -5,6 +5,7 @@
 //  Created by Alice Robson on 07/06/16.
 //
 //
+#include "MergedClusterBuilder.h"
 #include "Cluster.h"
 #include "Definitions.h"
 #include "DefinitionsCollections.h"
@@ -13,7 +14,6 @@
 #include "GraphBuilder.h"
 #include "Id.h"
 #include "Log.h"
-#include "MergedClusterBuilder.h"
 #include "Ruler.h"
 
 namespace papas {
@@ -26,7 +26,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
   Ids uniqueids;
   uniqueids.reserve(clusters.size());
   for (auto cluster : clusters) {
-    //if (cluster.first==8589934920)
+    // if (cluster.first==8589934920)
     //  std::cout<<"STOPE HERE";
     uniqueids.push_back(cluster.first);
   }
@@ -37,10 +37,10 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
     for (auto id2 : uniqueids) {
 
       if (id1 < id2) {
-       
+
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        PDebug::write("      Add Edge {:9} - {:9}",Id::pretty(id1),Id::pretty(id2));
+        PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
         edges.emplace(edge.key(), std::move(edge));
       }
     }
@@ -54,11 +54,11 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
         PDebug::write("Merged Cluster from Smeared{}", clusters.at(c));
       }
     }
-    //if (id==8589934920)
+    // if (id==8589934920)
     //  std::cout<<"STOPE HERE";
-    auto mergedCluster = Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
+    auto mergedCluster =
+        Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
 
-   
     PFNode snode{mergedCluster.id()};
     m_historyNodes.emplace(mergedCluster.id(), std::move(snode));
     m_historyNodes.at(id).addChild(snode);

@@ -1,8 +1,8 @@
 #ifndef RECONSTRUCTION_BLOCKSPLITTER_H
 #define RECONSTRUCTION_BLOCKSPLITTER_H
 
-#include <iostream>
 #include "BlockBuilder.h"
+#include <iostream>
 
 class PFEvent;
 
@@ -42,7 +42,6 @@ class PFEvent;
  *  @date    2016-04-06
  */
 
-
 namespace papas {
 class PFEvent;
 
@@ -55,12 +54,12 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes );
+  BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes);
   Blocks blocks() { return m_blocks; };  ///<return the unordered map of the resulting blocks;
   friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);  // todo move to helper class?
 
 private:
   Blocks m_blocks;
 };
-} // end namespace papas
+}  // end namespace papas
 #endif /* BlockSplitter_h */

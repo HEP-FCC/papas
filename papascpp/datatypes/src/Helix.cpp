@@ -6,8 +6,8 @@
 //
 //
 
-#include "Definitions.h"
 #include "Helix.h"
+#include "Definitions.h"
 #include "deltar.h"
 
 namespace papas {
@@ -36,7 +36,6 @@ Helix::Helix(TLorentzVector p4, TVector3 origin, double field, double charge)
 
 std::vector<double> Helix::polarAtTime(double time) const {
   double z = vZ() * time + m_origin.Z();
-
   double phi = -m_omega * time + m_phi0;
   return std::vector<double>{m_rho, z, phi};
 }
@@ -79,25 +78,23 @@ TVector3 Helix::pointAtPhi(double phi) const {
 double Helix::maxTime() const {
   double maxz = 0;
   double minz = 0;
-  
-  //don't go further than HCalIn (if it exists)
+
+  // don't go further than HCalIn (if it exists)
   if (hasNamedPoint(kHcalIn)) {
     return timeAtZ(namedPoint(kHcalIn).Z());
   }
-    
-  
+
   for (const auto& p : m_points) {
     if (p.second.Z() > 0)
       maxz = fmax(maxz, p.second.Z());
     else
       minz = fmin(minz, p.second.Z());
   }
-  if (maxz>0)
+  if (maxz > 0)
     return timeAtZ(maxz);
   else
     return timeAtZ(minz);
 }
-
 
 double Helix::pathLength(double deltat) const {
   // std::cout << m_omega << " rho " << m_rho << " vz " << vZ() << " deltat " <<

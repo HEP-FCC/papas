@@ -8,24 +8,20 @@
 #ifndef simpleidentifier_h
 #define simpleidentifier_h
 
-
-
-enum class enumDataType {PARTICLE, TRACK, CLUSTER};
-enum class enumSubType {RAW, MERGED, SMEARED};
+enum class enumDataType { PARTICLE, TRACK, CLUSTER };
+enum class enumSubType { RAW, MERGED, SMEARED };
 
 class Id {
 public:
-   Id() {};
-   static long makeId(enumDataType datatype, enumSubType subtype);
-   //Access stored Identifier information
-   static enumDataType        dataType(long id);
-   static enumSubType         subType(long id);
-   static int uniqueId(long id);
+  Id(){};
+  static long makeId(enumDataType datatype, enumSubType subtype);
+  // Access stored Identifier information
+  static enumDataType dataType(long id);
+  static enumSubType subType(long id);
+  static int uniqueId(long id);
+
 private:
-   static int s_counter;
+  static int s_counter;
 };
-
-
-
 
 #endif /* simpleidentifier_h */

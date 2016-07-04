@@ -41,7 +41,7 @@ Distance Ruler::clusterClusterDistance(Id::Type id1, Id::Type id2) const {
 }
 
 Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const {
- 
+
   if (cluster1.subClusters().size() <= 1 && cluster2.subClusters().size() <= 1) {
     return Distance(cluster1, cluster2);
   } else {  // merged cluster

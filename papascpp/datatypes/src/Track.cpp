@@ -7,7 +7,7 @@ namespace papas {
 
 Track::Track(const TVector3 p3, double charge, Path::Ptr path)
     : m_uniqueId(Id::makeTrackId()), m_p3(p3), m_charge(charge), m_path(path) {}
-  
+
 std::string Track::info() const {
   return string_format("%7.2f %7.2f %5.2f %5.2f", energy(), pt(), theta(), p3().Phi());
 }

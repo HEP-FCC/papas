@@ -6,13 +6,13 @@
 //
 //
 
+#include "PFEvent.h"
 #include "Cluster.h"
 #include "Id.h"
 #include "Log.h"
 #include "MergedClusterBuilder.h"
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
-#include "PFEvent.h"
 #include "Path.h"
 #include "PrettyPrinter.h"
 #include "Simulator.h"  //temp
@@ -44,20 +44,14 @@ double PFEvent::energy(Id::Type id1) const //TODO check direction of sort
 // check this be a move here
 
 PFEvent::PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes)
-    : m_ecals(ecals),
-      m_hcals(hcals),
-      m_tracks(tracks),
-      m_historyNodes(historyNodes),
-      m_reconstructedParticles()
-{}
+    : m_ecals(ecals), m_hcals(hcals), m_tracks(tracks), m_historyNodes(historyNodes), m_reconstructedParticles() {}
 
 PFEvent::PFEvent(Simulator& sim)
     : m_ecals(sim.smearedEcalClusters()),
       m_hcals(sim.smearedHcalClusters()),
       m_tracks(sim.smearedTracks()),
       m_historyNodes(sim.historyNodes()),
-      m_reconstructedParticles()
-{}
+      m_reconstructedParticles() {}
 
 void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = builder.blocks(); }
 

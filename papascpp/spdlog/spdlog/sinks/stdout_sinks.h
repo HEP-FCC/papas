@@ -11,61 +11,48 @@
 #include <memory>
 #include <mutex>
 
-namespace spdlog
-{
-namespace sinks
-{
+namespace spdlog {
+namespace sinks {
 
 template <class Mutex>
-class stdout_sink : public base_sink<Mutex>
-{
-    using MyType = stdout_sink<Mutex>;
+class stdout_sink : public base_sink<Mutex> {
+  using MyType = stdout_sink<Mutex>;
+
 public:
-    stdout_sink() {}
-    static std::shared_ptr<MyType> instance()
-    {
-        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
-        return instance;
-    }
+  stdout_sink() {}
+  static std::shared_ptr<MyType> instance() {
+    static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
+    return instance;
+  }
 
-    void _sink_it(const details::log_msg& msg) override
-    {
-        fwrite(msg.formatted.data(), sizeof(char), msg.formatted.size(), stdout);
-        flush();
-    }
+  void _sink_it(const details::log_msg& msg) override {
+    fwrite(msg.formatted.data(), sizeof(char), msg.formatted.size(), stdout);
+    flush();
+  }
 
-    void flush() override
-    {
-        fflush(stdout);
-    }
+  void flush() override { fflush(stdout); }
 };
 
 typedef stdout_sink<details::null_mutex> stdout_sink_st;
 typedef stdout_sink<std::mutex> stdout_sink_mt;
 
-
 template <class Mutex>
-class stderr_sink : public base_sink<Mutex>
-{
-    using MyType = stderr_sink<Mutex>;
+class stderr_sink : public base_sink<Mutex> {
+  using MyType = stderr_sink<Mutex>;
+
 public:
-    stderr_sink() {}
-    static std::shared_ptr<MyType> instance()
-    {
-        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
-        return instance;
-    }
+  stderr_sink() {}
+  static std::shared_ptr<MyType> instance() {
+    static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
+    return instance;
+  }
 
-    void _sink_it(const details::log_msg& msg) override
-    {
-        fwrite(msg.formatted.data(), sizeof(char), msg.formatted.size(), stderr);
-        flush();
-    }
+  void _sink_it(const details::log_msg& msg) override {
+    fwrite(msg.formatted.data(), sizeof(char), msg.formatted.size(), stderr);
+    flush();
+  }
 
-    void flush() override
-    {
-        fflush(stderr);
-    }
+  void flush() override { fflush(stderr); }
 };
 
 typedef stderr_sink<std::mutex> stderr_sink_mt;

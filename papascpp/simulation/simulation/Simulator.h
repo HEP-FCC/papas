@@ -38,14 +38,14 @@ public:
    * @param[in] const Detector& : Detector to be used as basis for simulation
    */
   Simulator(const Detector&, Nodes& nodes);
-  void SimulateParticle(const Particle& ptc, IdType parentid =0);
+  void SimulateParticle(const Particle& ptc, IdType parentid = 0);
 
   // TODO consider whether the following should be private
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
   void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
-  void smearElectron(SimParticle& ptc); ///< Does not smear so far as I can see
-  void smearMuon(SimParticle& ptc); ///< Does not smear so far as I can see
+  void smearElectron(SimParticle& ptc);     ///< Does not smear so far as I can see
+  void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
 
   /**
    Makes a new SimParticle and adds this into collection of particles
@@ -82,7 +82,8 @@ public:
    @return SimParticle& the newly created particle
    */
   SimParticle& addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                              double ptmax, TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
+                              double ptmax,
+                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
 
   const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
   const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
@@ -102,6 +103,7 @@ public:
   Ids linkedSmearedTrackIds(Id::Type nodeid) const;        // TODO move to helper/history class?
   Ids linkedIds(Id::Type nodeid) const;                    // TODO move to helper/history class?
   void clear();
+
 private:
   Id::Type addEcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
   Id::Type addHcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
@@ -112,8 +114,8 @@ private:
   const Track& addTrack(SimParticle& ptc);
   Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed
-  void propagateAllLayers(SimParticle& ptc);  // more args needed
-  
+  void propagateAllLayers(SimParticle& ptc);                 // more args needed
+
   void addNode(const Id::Type newid, const Id::Type parentid = 0);
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
@@ -130,9 +132,6 @@ private:
   StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
   HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
 };
-  
-  
-  
 
 }  // end namespace papas
 #endif

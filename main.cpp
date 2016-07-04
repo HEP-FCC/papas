@@ -47,9 +47,9 @@
 
 // STL
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <vector>
-#include <chrono>
 
 // podio specific includes
 #include "podio/EventStore.h"
@@ -62,17 +62,17 @@ void processEvent(podio::EventStore& store, PapasManager& papasManager);
 int example(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
-  
-  return example(argc,argv);
-  //return longrun(argc,argv);
+
+  return example(argc, argv);
+  // return longrun(argc,argv);
 }
 
 int example(int argc, char* argv[]) {
-  //open up Pythia file
+  // open up Pythia file
   auto reader = podio::ROOTReader();
   reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
 
-  //read an event
+  // read an event
   unsigned int eventNo = 0;
   auto store = podio::EventStore();
   store.setReader(&reader);
@@ -81,12 +81,12 @@ int example(int argc, char* argv[]) {
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   auto papasManager = PapasManager(CMSDetector);
-  
-  //process event
+
+  // process event
   processEvent(store, papasManager);
   reader.endOfEvent();
 
-  //outputs
+  // outputs
   std::cout << "Generated Stable Particles" << std::endl;
   for (auto& p : papasManager.rawParticles()) {
     std::cout << "  " << p.second << std::endl;
@@ -100,40 +100,39 @@ int example(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
-
 int longrun(int argc, char* argv[]) {
-  
-  //PDebug::On();  // physics debug output
+
+  // PDebug::On();  // physics debug output
   auto reader = podio::ROOTReader();
   reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
- 
+
   unsigned int eventNo = 0;
   unsigned int nEvents = 1000;
-  
+
   bool doDisplay = false;
   if (nEvents == 1) doDisplay = true;
-  
+
   auto store = podio::EventStore();
   store.setReader(&reader);
   reader.goToEvent(eventNo);
-  
+
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   auto start = std::chrono::steady_clock::now();
-  //auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
-  
+  // auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
+
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
-    //papasManager.clear();
-    auto papasManager = PapasManager(CMSDetector); //temporary needs fixing
+    // papasManager.clear();
+    auto papasManager = PapasManager(CMSDetector);  // temporary needs fixing
     PDebug::write("Event: {}", i);
     if (i % 1000 == 0) {
       std::cout << "reading event " << i << std::endl;
     }
     if (i == eventNo) start = std::chrono::steady_clock::now();
-    
+
     processEvent(store, papasManager);
     reader.endOfEvent();
-    
+
     if (nEvents == 1) {
       std::cout << "Generated Stable Particles" << std::endl;
       for (auto& p : papasManager.rawParticles()) {
@@ -156,9 +155,7 @@ int longrun(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
-
-
-//TODO put this in papasmanager perhaps?
+// TODO put this in papasmanager perhaps?
 Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
@@ -240,4 +237,3 @@ for (int i = 0; i < nParticles; i++) {
  sim.simulateHadron(ptc);
 
  }*/
-

@@ -27,5 +27,5 @@ public:
   static std::pair<double, unsigned int>& particleData(unsigned int pid) { return m_datamap[pid]; };
   static std::unordered_map<unsigned int, std::pair<double, unsigned int>> m_datamap;
 };
-} //end namespace papas
+}  // end namespace papas
 #endif /* particledata_h */

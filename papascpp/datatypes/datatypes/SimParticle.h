@@ -7,7 +7,6 @@
 #include "PParticle.h"
 #include "Path.h"
 
-
 namespace papas {
 
 class Track;
@@ -16,8 +15,10 @@ class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
   SimParticle() = default;
-  //SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
-  SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
+  // SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field =
+  // 0.);
+  SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv,
+              TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
   SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, const Track& track);
   Path::Ptr path() const { return m_path; }
   TVector3 pathPosition(papas::Position layer) const;
@@ -29,9 +30,6 @@ private:
   Path::Ptr m_path;
   bool m_isHelix;
 };
-  
-  
 
-} // end namespace papas
+}  // end namespace papas
 #endif  // SimParticle_H
-

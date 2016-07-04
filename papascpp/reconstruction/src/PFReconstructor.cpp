@@ -18,14 +18,13 @@
 #include "Log.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
-#include "SimParticle.h"
 #include "ParticlePData.h"
 #include "Path.h"
+#include "SimParticle.h"
 #include "TLorentzVector.h"
 #include "pTrack.h"
 
 namespace papas {
-
 
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent),
@@ -334,7 +333,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
 }
 
 SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy,
-                                               TVector3 vertex) {
+                                                TVector3 vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
   unsigned int pdgId = 0;

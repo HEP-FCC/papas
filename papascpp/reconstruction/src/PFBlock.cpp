@@ -74,7 +74,7 @@ int PFBlock::size() const { return m_elementIds.size(); }
 std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
-   
+
    Arguments:
    uniqueid : is the id of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
@@ -82,14 +82,14 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::Edge
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   for (auto edge : m_edges) {
     // if this is an edge that includes uniqueid
-    //std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
+    // std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
         linkedEdgeKeys.push_back(edge.first);
     }
   }
-  //TODO consider sorting
+  // TODO consider sorting
   return linkedEdgeKeys;
 }
 
@@ -136,12 +136,12 @@ std::string PFBlock::edgeMatrixString() const {
   T2  0.0000   0.0000        .
   T3  0.0287   0.0825      ---        .
   */
-  
+
   int count = 0;
   fmt::MemoryWriter out;
   std::string shortid;
 
-  if (m_elementIds.size() > 1) { // make the header line for the matrix
+  if (m_elementIds.size() > 1) {  // make the header line for the matrix
     out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
@@ -159,13 +159,13 @@ std::string PFBlock::edgeMatrixString() const {
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
         if (e1 == e2) {
-          out.write("       ."); //diagonal
+          out.write("       .");  // diagonal
           break;
         } else if (edge(e1, e2).distance() < 0)
-          out.write("     ---"); //-ve distance
+          out.write("     ---");  //-ve distance
         else if (edge(e1, e2).isLinked() == false)
-          out.write("     xxx"); // not linked
-        else { //linked and has distance
+          out.write("     xxx");  // not linked
+        else {                    // linked and has distance
           out.write("{:8.4f}", edge(e1, e2).distance());
         }
       }
@@ -182,8 +182,8 @@ const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
 }
 std::string PFBlock::info() const {
   fmt::MemoryWriter out;
-  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}",
-            shortName(), Id::pretty(m_uniqueId), countEcal(), countHcal(), countTracks());
+  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}", shortName(), Id::pretty(m_uniqueId), countEcal(),
+            countHcal(), countTracks());
   return out.str();
 }
 
@@ -222,14 +222,14 @@ int test_blocks() {
   Edge edge6 = Edge(id5, id6, true, 123.0);
 
   Edges edges;
-  //edges.reserve(100);
-  std::cout <<"ee " <<":"<<Id::pretty(id1)<<":"<<edge.key()<<edge<<std::endl;
-  std::cout <<":"<<Id::pretty(id2)<<":"<<edge1.key()<<edge1<<std::endl;
-  std::cout <<":"<<Id::pretty(id3)<<":"<<edge2.key()<<edge2<<std::endl;
-  std::cout <<":"<<Id::pretty(id4)<<":"<<edge4.key()<<edge4<<std::endl;
-  std::cout <<":"<<Id::pretty(id5)<<":"<<edge5.key()<<edge5<<std::endl;
-  std::cout <<":"<<Id::pretty(id6)<<":"<<edge6.key()<<edge6<<std::endl;
-  
+  // edges.reserve(100);
+  std::cout << "ee "
+            << ":" << Id::pretty(id1) << ":" << edge.key() << edge << std::endl;
+  std::cout << ":" << Id::pretty(id2) << ":" << edge1.key() << edge1 << std::endl;
+  std::cout << ":" << Id::pretty(id3) << ":" << edge2.key() << edge2 << std::endl;
+  std::cout << ":" << Id::pretty(id4) << ":" << edge4.key() << edge4 << std::endl;
+  std::cout << ":" << Id::pretty(id5) << ":" << edge5.key() << edge5 << std::endl;
+  std::cout << ":" << Id::pretty(id6) << ":" << edge6.key() << edge6 << std::endl;
 
   // edges.emplace(10000.0,  std::move(edge));
   edges.emplace(edge.key(), std::move(edge));
@@ -247,4 +247,3 @@ int test_blocks() {
   std::cout << edges.size();
   return 0;
 }
-

@@ -15,10 +15,9 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType idtype)
-  : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters{m_uniqueId} {
+    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters{m_uniqueId} {
   setSize(size_m);
   setEnergy(energy);
-
 }
 
 void Cluster::setSize(double value) {
@@ -33,7 +32,6 @@ void Cluster::setEnergy(double energy) {
   m_pt = energy * m_p3.Unit().Perp();
 }
 
-
 Cluster& Cluster::operator+=(const Cluster& rhs) {
   // if(Id::pretty(m_uniqueId)=="e299     ")
   //  std::cout<<*this;
@@ -47,7 +45,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   if (rhs.subClusters().size() > 1) {
     std::cout << "can only add in a cluster which is not already merged";
   }
- 
+
   m_subClusters.push_back(rhs.id());
   return *this;
 }
@@ -65,10 +63,8 @@ Cluster::Cluster(const Cluster& c, Id::Type id)
   m_subClusters.push_back(c.id());
 }
 
-
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-
-  os << "Cluster :" << Id::pretty(cluster.id()) << ": "<<cluster.id()<<" " << cluster.info();
+  os << "Cluster :" << Id::pretty(cluster.id()) << ": " << cluster.id() << " " << cluster.info();
   return os;
 }
 

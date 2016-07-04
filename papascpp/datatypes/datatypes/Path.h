@@ -5,13 +5,12 @@
 #ifndef path_h
 #define path_h
 
-#include <unordered_map>
-#include <vector>
-#include <memory>
+#include "Definitions.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
-#include "Definitions.h"
-
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
 namespace papas {
 
@@ -29,7 +28,7 @@ public:
   Path();
   virtual ~Path() = default;
 
-  //void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
+  // void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
   void addPoint(papas::Position layer, TVector3 vec) { m_points[layer] = vec; }
   double timeAtZ(double z) const;
   double deltaT(double path_length) const;
@@ -52,6 +51,6 @@ protected:
   double m_field;  // set to 0 for a straightline
 private:
 };
-} // end namespace papas
+}  // end namespace papas
 
 #endif /* path_h */

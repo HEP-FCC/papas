@@ -3,10 +3,11 @@
 #include "StringFormatter.h"
 #include <cmath>
 #include <inttypes.h>
-#include <iostream>  //temp
-                     //  Created by Alice Robson on 05/01/16.
-                     //
-                     // Encode information into a unique identifier
+#include <iostream>
+// temp
+//  Created by Alice Robson on 05/01/16.
+//
+// Encode information into a unique identifier
 //
 // accessible intro to use of bitwise operations can be found here
 // http://stackoverflow.com/questions/6556961/use-of-the-bitwise-operators-to-pack-multiple-values-in-one-int

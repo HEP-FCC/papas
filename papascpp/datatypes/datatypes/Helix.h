@@ -11,7 +11,6 @@
 
 #include "Path.h"
 
-
 namespace papas {
 
 class Helix : public Path {
@@ -30,7 +29,8 @@ public:
   TVector3 pointAtPhi(double phi) const;
   TVector3 extremePointXY() const { return m_extremePointXY; }
   TVector3 centerXY() const { return m_centerXY; }
-  double maxTime() const ;
+  double maxTime() const;
+
 private:
   double m_rho;  /// Radius of Helix
   double m_omega;
@@ -41,7 +41,7 @@ private:
   TVector3 m_centerXY;
   TVector3 m_extremePointXY;
 };
-  
-} // end namespace papas
+
+}  // end namespace papas
 
 #endif /* Helix_h */

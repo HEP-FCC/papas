@@ -57,7 +57,7 @@ void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
     smearElectron(pfptc);
   } else if (pdgid == 13) {
     smearMuon(pfptc);
-  } else if ((pdgid ==  12) |  (pdgid ==  14)| (pdgid ==  16)) {
+  } else if ((pdgid == 12) | (pdgid == 14) | (pdgid == 16)) {
     simulateNeutrino(pfptc);
   } else if (abs(pdgid) >= 100) {
     simulateHadron(pfptc);
@@ -85,7 +85,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   // make a track if it is charged
   if (ptc.charge() != 0) {
     const Track& track = addTrack(ptc);
-    addSmearedTrack(track); //smear it
+    addSmearedTrack(track);  // smear it
   }
   // find where it meets the inner Ecal cyclinder
   propagate(ptc, ecal_sp->volumeCylinder().inner());
@@ -169,8 +169,8 @@ SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzV
   return m_particles[uniqueid];
 }
 
-SimParticle& Simulator::addGunParticle(
-    unsigned int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax, TVector3 vertex) {
+SimParticle& Simulator::addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax,
+                                       double ptmin, double ptmax, TVector3 vertex) {
   double theta = randomgen::RandUniform(thetamin, thetamax).next();
   double phi = randomgen::RandUniform(-M_PI, M_PI).next();
   double energy = randomgen::RandUniform(ptmin, ptmax).next();
@@ -187,8 +187,8 @@ SimParticle& Simulator::addGunParticle(
   return addParticle(pdgid, charge, p4, vertex);
 }
 
-SimParticle&
-Simulator::addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy, TVector3 vertex) {
+SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy,
+                                    TVector3 vertex) {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
@@ -225,8 +225,8 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
   return cluster;
 }
 
-Id::Type
-Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer, papas::Layer acceptlayer, bool accept)
+Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer, papas::Layer acceptlayer,
+                                      bool accept)
 
 {
   Cluster smeared = makeSmearedCluster(parentClusterId, detlayer);

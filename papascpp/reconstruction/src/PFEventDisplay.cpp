@@ -6,8 +6,8 @@
 //
 //
 
-#include "Cluster.h"
 #include "PFEvent.h"
+#include "Cluster.h"
 #include "PFEventDisplay.h"
 #include "Simulator.h"
 #include "displaypfobjects.h"
@@ -39,7 +39,7 @@ void PFEventDisplay::drawEvent(const Simulator& simulator, const PFEvent& pfEven
 }
 
 void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
-  
+
   /*for (auto& pr : pfEvent.reconstructedParticles()) {
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 3, 1));
     addToRegister(gparticle, 2);

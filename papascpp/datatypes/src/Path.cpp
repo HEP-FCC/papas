@@ -15,14 +15,13 @@ double gconstc = 299792458.0;  // TODO constants.c)
 
 Path::Path() {}
 
-  Path::Path(TLorentzVector p4, TVector3 origin, double field)
+Path::Path(TLorentzVector p4, TVector3 origin, double field)
     : m_unitDirection(p4.Vect().Unit()),
       m_speed(p4.Beta() * gconstc),
       m_origin(origin.X(), origin.Y(), origin.Z()),
       m_field(field) {
-      m_points[papas::Position::kVertex] = m_origin;
+  m_points[papas::Position::kVertex] = m_origin;
 }
-  
 
 /*!
  * @discussion Find the time taken to reach a position on z axis
@@ -55,9 +54,7 @@ double Path::vPerp() const {
   return m_speed * m_unitDirection.Perp();
 }
 
-bool Path::hasNamedPoint(papas::Position layer) const {
-  return (m_points.find(layer) != m_points.end());
-}
+bool Path::hasNamedPoint(papas::Position layer) const { return (m_points.find(layer) != m_points.end()); }
 
 TVector3 Path::namedPoint(papas::Position layer) const {
   if (hasNamedPoint(layer)) {
@@ -66,4 +63,4 @@ TVector3 Path::namedPoint(papas::Position layer) const {
     return TVector3(0, 0, 0);  // todo consider if this is sufficient for missing value case
 }
 
-} // end namespace papas
+}  // end namespace papas

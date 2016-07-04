@@ -12,32 +12,31 @@
 
 namespace papas {
 
-//TODO handle centrally
-  const int c_vecsize = 10000; //remove this
-const double c_exp_lambda = 3.5; //AJR where does this come from
+// TODO handle centrally
+const int c_vecsize = 10000;      // remove this
+const double c_exp_lambda = 3.5;  // AJR where does this come from
 
-///Material
+/// Material
 /**
   Users need to define material properties for their detectors
 */
 class Material {
 public:
-   Material( double x0, double lambda);
-   virtual double pathLength(bool is_em) const;
+  Material(double x0, double lambda);
+  virtual double pathLength(bool is_em) const;
+
 private:
-   double m_x0;
-   double m_lambdaI;
-  };
-
-
-//Temporary
-class TestMaterial: public Material {
-public:
-   TestMaterial( double x0, double lambda);
-   double PathLength();
-private:
-
+  double m_x0;
+  double m_lambdaI;
 };
-} // end namespace papas
-#endif
 
+// Temporary
+class TestMaterial : public Material {
+public:
+  TestMaterial(double x0, double lambda);
+  double PathLength();
+
+private:
+};
+}  // end namespace papas
+#endif

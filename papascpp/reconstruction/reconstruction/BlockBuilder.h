@@ -11,10 +11,10 @@
  * Blocks retain information of the elements and the distances between elements
  * The blocks can be used for future particle reconstruction
  * The ids must be unique and are expected to come from the Id class
- 
- 
+
+
  Usage example:
- 
+
  BlockBuilder builder {ids, edges, history_nodes, pfevent};
  for (b in builder.blocks()) {
  ...
@@ -24,14 +24,13 @@
  *  @date    2016-04-06
  */
 
-
 namespace papas {
-  class PFEvent;
+class PFEvent;
 
-class BlockBuilder: public GraphBuilder {
+class BlockBuilder : public GraphBuilder {
 public:
   /** Constructor
-   
+
    * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
@@ -39,22 +38,19 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  BlockBuilder(Ids ids,
-               Edges& edges,
-               Nodes& historynodes);
-  Blocks& blocks() {return m_blocks;}; ///<return the unordered map of the resulting blocks;
-                                       //TODO should this be move
-  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder); //TODO move to helper class?
-  
+  BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes);
+  Blocks& blocks() { return m_blocks; };  ///<return the unordered map of the resulting blocks;
+                                          // TODO should this be move
+  friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?
+
 private:
-  void makeBlocks(); // does the main work
-  Nodes& m_historyNodes; ///<optional, allows history to be updated
-  Blocks m_blocks;///< the blocks made by blockbuilder
-  
-  //bool compareEdges( long long key1, long long key2, Id::Type uniqueid) const; //todo move to helper class
-  //void sortIds(Ids& ids); //sorts elements by type
-  
+  void makeBlocks();      // does the main work
+  Nodes& m_historyNodes;  ///<optional, allows history to be updated
+  Blocks m_blocks;        ///< the blocks made by blockbuilder
+
+  // bool compareEdges( long long key1, long long key2, Id::Type uniqueid) const; //todo move to helper class
+  // void sortIds(Ids& ids); //sorts elements by type
 };
 
-} // end namespace papas
+}  // end namespace papas
 #endif /* BlockBuilder_h */

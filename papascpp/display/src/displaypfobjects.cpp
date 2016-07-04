@@ -3,12 +3,12 @@
 //
 //
 
+#include "displaypfobjects.h"
 #include "Cluster.h"
 #include "Helix.h"
 #include "Id.h"
 #include "Path.h"
 #include "SimParticle.h"
-#include "displaypfobjects.h"
 #include "pTrack.h"
 #include <iostream>
 //#include "Id.h"
@@ -94,7 +94,6 @@ GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>
     graph.second->SetLineWidth(linewidth);
   }
 }
-
 
 void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
