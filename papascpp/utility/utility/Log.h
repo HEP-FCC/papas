@@ -12,7 +12,7 @@
 #include <iostream>
 #include "spdlog/spdlog.h"
 #include "StringFormatter.h"
-
+//TODOO split into separate files
 namespace papas {
 
 
@@ -31,6 +31,7 @@ namespace papas {
   
   
   class PDebug {
+    //TODO allow output file to be set from here
   public:
     PDebug()  {};
     static void On() {level=spdlog::level::info;};

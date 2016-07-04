@@ -30,7 +30,7 @@ class VolumeCylinder;
 
       It is intended to be replaced by users to match the required detector characteristics
  
-   CMSECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution methods
+   CMSECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution etc methods
 
  */
 //

@@ -23,8 +23,6 @@ namespace papas {
 class Simulator;
 class PFBlockBuilder;
 
-//TODO home for typedefs
-
 class PFEvent {
 public:
   PFEvent(const Clusters& ecals,const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes);

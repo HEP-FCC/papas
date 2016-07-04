@@ -11,7 +11,7 @@
  * @brief Implementation of Directed Acyclic Graph 
  *
  * Supports traversal of a DirectedAcyclicGraph (also know here as DAG or a polytree)
- * implemented using a templated Node alongside a visitor pattern
+ * implemented using a templated Node alongside alogorithms to visit linked nodes
  *
  *  Directed Acyclic Graph:
  *  Nodes may have multiple children and /or multiple parents.

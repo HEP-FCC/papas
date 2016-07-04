@@ -15,17 +15,6 @@ else()
 message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-##ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
-#SET(Boost_USE_STATIC_LIBS ON)
-#find_package(Boost 1.59.0 REQUIRED)
-#message("Boost searched for")
-#if (Boost_FOUND)
-#message("Boost Found")
-#include_directories(
-#${Boost_INCLUDE_DIRS}
-#${CMAKE_SOURCE_DIR}/graphtools)
-#sendif()
-
 
 
 # Make sure we find the Find*.cmake functions distributed with this package

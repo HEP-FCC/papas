@@ -40,8 +40,7 @@ std::vector<std::pair<double,double>> circleIntersection(double x1,double  y1, d
       mpair ={ym,xm};
       ppair={yp,xp};
    }
-   //return {mpair,ppair};
-   
+  
    return std::vector<std::pair<double,double>>{mpair,ppair};
 }
 

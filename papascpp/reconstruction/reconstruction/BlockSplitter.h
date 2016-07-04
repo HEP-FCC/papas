@@ -57,7 +57,7 @@ public:
    */
   BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes );
   Blocks blocks() { return m_blocks; };  ///<return the unordered map of the resulting blocks;
-  friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);  // todo move to helper class
+  friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);  // todo move to helper class?
 
 private:
   Blocks m_blocks;

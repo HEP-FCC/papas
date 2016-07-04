@@ -22,7 +22,7 @@ namespace papas {
 // using papas::Layer;
 
 Simulator::Simulator(const Detector& d, Nodes& nodes)
-    : m_detector(d), m_nodes(nodes), m_propStraight(), m_propHelix(d.field()->getMagnitude()) {
+    : m_nodes(nodes), m_detector(d), m_propStraight(), m_propHelix(d.field()->getMagnitude()) {
   // TODO think about sizing though note remark from Stroustrup which say its super hard to beat
   // automated and best not to bother
   int isize = 1000;
@@ -85,7 +85,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   // make a track if it is charged
   if (ptc.charge() != 0) {
     const Track& track = addTrack(ptc);
-    addSmearedTrack(track);
+    addSmearedTrack(track); //smear it
   }
   // find where it meets the inner Ecal cyclinder
   propagate(ptc, ecal_sp->volumeCylinder().inner());
@@ -128,14 +128,12 @@ void Simulator::propagateAllLayers(SimParticle& ptc) {
 void Simulator::simulateNeutrino(SimParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
   propagateAllLayers(ptc);
-  //(void)ptc;
 }
 
 void Simulator::smearElectron(SimParticle& ptc) {
   PDebug::write("Smearing Electron");
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ptc, ecal_sp->volumeCylinder().inner());
-
   // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
 }
 
@@ -157,7 +155,7 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
     return m_ecalClusters.at(clusterId);
   else if (Id::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
-  // TODO or throw error
+  // TODO make this throw an error
 }
 
 SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
@@ -393,7 +391,6 @@ papas::enumSource source) const
 {
 DAG::BFSVisitor<PFNode> bfs;
 Ids foundids;
-//foundids.reserve(1000); //TODO set sizes sensible.... how
 auto res =bfs.traverseUndirected(m_nodes.at(nodeid));
 for (auto r : res)
 {

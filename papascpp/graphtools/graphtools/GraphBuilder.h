@@ -39,7 +39,7 @@ public:
    */
   GraphBuilder(Ids ids, Edges& edges);
   GraphBuilder& operator=(const GraphBuilder&);
-  ///TODO add comment re arguments below what is IDs
+  ///TODO add comment re arguments below what is Ids
   const std::vector<Ids> subGraphs() const {
     return m_subGraphs;
   };                             ///<return the vector of Ids of the resulting subgraphs;

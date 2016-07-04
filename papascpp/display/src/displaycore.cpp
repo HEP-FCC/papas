@@ -21,7 +21,7 @@ Display::Display(std::list<ViewPane::Projection> views)
    if (views.size() == 0) {
      views = {ViewPane::Projection::xy, ViewPane::Projection::yz, ViewPane::Projection::xz};
    }
-   ///Creates viewpanes //AJRTODO use an ENUM instead
+   ///Creates viewpanes
    for (auto view : views) {
       if ((view == ViewPane::Projection::xy) | (view == ViewPane::Projection::yz) | (view == ViewPane::Projection::xz)) {
         m_views[ViewPane::ProjectionStrings[view]] = std::unique_ptr<ViewPane> {
@@ -160,15 +160,4 @@ void ViewPane::unZoom()
   
 } // end namespace papas
 
-/**
- * \param[in]  name  Name to show at top of viewpane
- * \param[in]  projection Which projections (usually same as name)
- * \param[in]  nx Number of points on x axis
- * \param[in]  xmin Minimum value for x axis
- * \param[in]  xmax Maximum value for x axis
- * \param[in]  ny Number of points on y axis
- * \param[in]  ymin Minimum value for y axis
- * \param[in]  ymax Maximum value for y axis
- * \param[in]  dx ?
- * \param[in]  dy ?
- */
+

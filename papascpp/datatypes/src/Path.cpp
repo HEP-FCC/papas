@@ -20,7 +20,7 @@ Path::Path() {}
       m_speed(p4.Beta() * gconstc),
       m_origin(origin.X(), origin.Y(), origin.Z()),
       m_field(field) {
-        m_points[papas::Position::kVertex] = m_origin;
+      m_points[papas::Position::kVertex] = m_origin;
 }
   
 
@@ -55,11 +55,11 @@ double Path::vPerp() const {
   return m_speed * m_unitDirection.Perp();
 }
 
-bool Path::hasNamedPoint(papas::Position layer) const {  // TODO change to enum {
+bool Path::hasNamedPoint(papas::Position layer) const {
   return (m_points.find(layer) != m_points.end());
 }
 
-TVector3 Path::namedPoint(papas::Position layer) const {  // const //TODO change to enum
+TVector3 Path::namedPoint(papas::Position layer) const {
   if (hasNamedPoint(layer)) {
     return m_points.at(layer);
   } else

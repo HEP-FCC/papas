@@ -70,13 +70,6 @@ void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
 
 }  // end namespace papas
 
-/*std::ostream& operator<<(std::ostream& os, const GraphBuilder& builder) {
-  //TODO move to helper
-  for (auto graph : builder.m_subGraphs) {
-    os  << graph << std::endl;
-  }
-  return os;
-}*/
 
 /*void GraphBuilder::sortIds(std::vector<Id::Type>& ids) // sorts by type and energy
  {//TODO move to helper

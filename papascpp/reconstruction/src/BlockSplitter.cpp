@@ -35,7 +35,7 @@ m_blocks()
 
 
 std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
-  //TODO move to helper
+  //TODO move to helper?
   for (auto block : builder.m_blocks) {
     os  << block.second << std::endl;
   }

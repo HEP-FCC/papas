@@ -60,7 +60,7 @@ void PapasManager::display() {
 
   PFApp myApp{};
   myApp.display(m_simulator, m_pfEvent, m_particles, m_detector);
-  myApp.display2(m_simulator, m_pfEvent, m_particles, m_detector);
+  //myApp.display2(m_simulator, m_pfEvent, m_particles, m_detector);
   
   myApp.run();
 }

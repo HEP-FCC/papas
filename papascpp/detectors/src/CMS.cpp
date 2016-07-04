@@ -188,8 +188,6 @@ bool CMSTracker::acceptance(const Track& track) const {
 }
   
  
-  
-
 
 double CMSTracker::ptResolution(const Track& track) const {
   double pt = track.pt();  // TODO inherited from Colin: depends on the field
@@ -204,69 +202,4 @@ CMSField::CMSField(const VolumeCylinder&& volume, double magnitude)
     : Field(volume, Material(0, 0), magnitude) {}
 
 } // end namespace papas
-// def space_resolution(self, ptc):
-// pass
 
-/*
-
-
- Tracker::Tracker()
- :
- DetectorElement("tracker", "tracker", 1.29, 1.99,"void", 0, 0)
- {}
-
-
- DField::DField(double magnitude):
- DetectorElement("tracker","field",  2.9, 3.6,"void",0.,0.),
- m_magnitude(magnitude)
- {
- }
- */
-
-/*  // m_elements["tracker"]= new Tracker();
- string name="ECAL";
- std::vector<double> cms_eres{.073,.1,.005};
- VolumeCylinder vol(name, 1.55, 2.1, 1.30, 2);
- Material mat(name,8.9e-3, 0.275);
- m_elements["ecal"]= new ECAL(name, vol,mat,0.15, 0.4,cms_eres);
- */
-
-// m_elements["hcal"]= new HCAL();
-// m_elements["field"]= new DField(3.8);
-
-//}
-
-/*bool Tracker::acceptance(const Track& track){
- {
- double pt = track->pt;
- double eta = abs(track->p3.Eta());
- if (eta < 2.5&  pt>0.5)
- return true; //AJRTODO  ame this =random.uniform(0,1)<1.; //# CMS without tracker material effects
- else
- return false;
- }
-
- double Tracker::pt_resolution(const Track& track){
- # TODO: depends on the field
- pt = track.pt;
- return 5e-3;
- }
-
-
-
-
-
-
- bool ECAL::acceptance(self, cluster):
- energy = cluster.energy
- eta = abs(cluster.position.Eta())
- if eta < self.eta_crack:
- return energy>self.emin
- elif eta < 3.:
- return energy>self.emin and cluster.pt>0.5
- else:
- return False
-
- def ECAL::space_resolution(self, ptc):
- pass
- */

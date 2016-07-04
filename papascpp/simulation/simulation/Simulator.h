@@ -26,8 +26,6 @@ class Simulator {
    The Tracks and Clusters are created and then smeared (and stored separately). Clusters are separated into
    Ecal and Hcal collections.
    Simulator supports simulation of neutral and charged Hadrons and Photons.
-   //TODO Electrons and muons are simply smeared
-   //TODO neutrino
 
    Usage:
    Simulator sim = Simulator{CMSDetector};
@@ -84,7 +82,7 @@ public:
    @return SimParticle& the newly created particle
    */
   SimParticle& addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                              double ptmax, TVector3 vertex = TVector3(0., 0., 0.));  // probably should live elsewhere
+                              double ptmax, TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
 
   const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
   const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
@@ -97,12 +95,12 @@ public:
   const SimParticles& particles() const { return m_particles; }  ///< Return copy of  particles collection
 
   void testing();                                          // temp
-  Ids linkedEcalSmearedClusterIds(Id::Type nodeid) const;  // TODO move to helper/history class
-  Ids linkedParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class
-  Ids parentParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class
-  Ids linkedRawTrackIds(Id::Type nodeid) const;            // TODO move to helper/history class
-  Ids linkedSmearedTrackIds(Id::Type nodeid) const;        // TODO move to helper/history class
-  Ids linkedIds(Id::Type nodeid) const;                    // TODO move to helper/history class
+  Ids linkedEcalSmearedClusterIds(Id::Type nodeid) const;  // TODO move to helper/history class?
+  Ids linkedParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class?
+  Ids parentParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class?
+  Ids linkedRawTrackIds(Id::Type nodeid) const;            // TODO move to helper/history class?
+  Ids linkedSmearedTrackIds(Id::Type nodeid) const;        // TODO move to helper/history class?
+  Ids linkedIds(Id::Type nodeid) const;                    // TODO move to helper/history class?
   void clear();
 private:
   Id::Type addEcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);

@@ -20,8 +20,7 @@ class Distance;
 class PFEvent;
 
 
-
-//TODO template on Distance class
+//TODO template on Distance class?
 class Ruler {
   
 public:
@@ -31,8 +30,7 @@ private:
   Distance clusterClusterDistance(Id::Type id1, Id::Type id2) const;
   Distance clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const;
   Distance clusterTrackDistance(Id::Type id1, Id::Type id2) const;
-  Distance clusterTrackDistance(const Cluster& cluster, const Track& track)  const;
-  
+  Distance clusterTrackDistance(const Cluster& cluster, const Track& track)  const;  
   Distance distance() const;
   
   const PFEvent& m_pfEvent;

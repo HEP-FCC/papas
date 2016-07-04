@@ -59,43 +59,81 @@ using namespace papas;
 
 Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);
 void processEvent(podio::EventStore& store, PapasManager& papasManager);
+int example(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
+  
+  return example(argc,argv);
+  //return longrun(argc,argv);
+}
 
-  //PDebug::On();  // physics debug output
-
+int example(int argc, char* argv[]) {
+  //open up Pythia file
   auto reader = podio::ROOTReader();
   reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
-  //reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb.root");
-  // reader.openFile("/afs/cern.ch/user/a/alrobson/Pythia/ee_ZH_Zmumu_Hbb.root");
 
+  //read an event
   unsigned int eventNo = 0;
-  unsigned int nEvents = 1;
-
-  bool doDisplay = false;
-  if (nEvents == 1) doDisplay = true;
-
   auto store = podio::EventStore();
   store.setReader(&reader);
   reader.goToEvent(eventNo);
 
   // Create CMS detector and PapasManager
   CMS CMSDetector;
-  auto start = std::chrono::steady_clock::now();
-  auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
+  auto papasManager = PapasManager(CMSDetector);
+  
+  //process event
+  processEvent(store, papasManager);
+  reader.endOfEvent();
 
+  //outputs
+  std::cout << "Generated Stable Particles" << std::endl;
+  for (auto& p : papasManager.rawParticles()) {
+    std::cout << "  " << p.second << std::endl;
+  }
+  std::cout << "Reconstucted Particles" << std::endl;
+  for (auto& p : papasManager.reconstructedParticles()) {
+    std::cout << "  " << p.second << std::endl;
+  }
+
+  papasManager.display();
+  return EXIT_SUCCESS;
+}
+
+
+int longrun(int argc, char* argv[]) {
+  
+  //PDebug::On();  // physics debug output
+  auto reader = podio::ROOTReader();
+  reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
+ 
+  unsigned int eventNo = 0;
+  unsigned int nEvents = 1000;
+  
+  bool doDisplay = false;
+  if (nEvents == 1) doDisplay = true;
+  
+  auto store = podio::EventStore();
+  store.setReader(&reader);
+  reader.goToEvent(eventNo);
+  
+  // Create CMS detector and PapasManager
+  CMS CMSDetector;
+  auto start = std::chrono::steady_clock::now();
+  //auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
+  
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
     //papasManager.clear();
-    auto papasManager = PapasManager(CMSDetector);
+    auto papasManager = PapasManager(CMSDetector); //temporary needs fixing
     PDebug::write("Event: {}", i);
     if (i % 1000 == 0) {
       std::cout << "reading event " << i << std::endl;
     }
     if (i == eventNo) start = std::chrono::steady_clock::now();
-
+    
     processEvent(store, papasManager);
     reader.endOfEvent();
-
+    
     if (nEvents == 1) {
       std::cout << "Generated Stable Particles" << std::endl;
       for (auto& p : papasManager.rawParticles()) {
@@ -118,6 +156,9 @@ int main(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
+
+
+//TODO put this in papasmanager perhaps?
 Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
@@ -142,7 +183,7 @@ Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection
 }
 
 void processEvent(podio::EventStore& store, PapasManager& papasManager) {
-  // make a papas particle collection from the next event read in from Pythia file
+  // make a papas particle collection from the next event
   // then run simulate and reconstruct
   const fcc::ParticleCollection* ptcs(nullptr);
   if (store.get("GenParticle", ptcs)) {
@@ -153,6 +194,7 @@ void processEvent(podio::EventStore& store, PapasManager& papasManager) {
   }
 }
 /*
+ //TODO make a gunparticles example out of the following
 int nParticles=0;
 for (int i = 1; i < nParticles; i++) {
   SimParticle& photon = sim.addParticle(22, 0, M_PI / 2. + 0.025 * i, M_PI / 2. + 0.3 * i, 100);
@@ -199,24 +241,3 @@ for (int i = 0; i < nParticles; i++) {
 
  }*/
 
-#if 0
-  // ROOT App to allow graphs to be plotted
-  TApplication theApp("App", &argc, argv);
-  if (gROOT->IsBatch()) {
-    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-    return 1;
-  }
-
-  // All displays
-  // Display display = Display({Projection::xy,Projection::yz,Projection::xz,Projection::ECAL_thetaphi
-  // ,Projection::HCAL_thetaphi });
-  auto display = PFEventDisplay({ViewPane::Projection::xy, ViewPane::Projection::yz});
-  std::shared_ptr<GDetector> gdetector(new GDetector(CMSDetector));  // TODO remove shared_ptr?
-  display.addToRegister(gdetector, 0);
-  display.drawPFEvent(pfEvent);
-
-  // TODO uncomment for commandline
-  theApp.Run();
-#endif
-
-// sim.testing(); //Write lists of connected items

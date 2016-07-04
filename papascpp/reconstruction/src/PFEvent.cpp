@@ -123,20 +123,11 @@ Ids PFEvent::mergedElementIds() const {
   return std::move(ids);
 }
 
-std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) {  // TODO move to helper class
+std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) {  // TODO move to helper class??
   os << "PFEvent:" << std::endl;
   os << " EC: " << pfevent.m_ecals << std::endl;
   os << " HC: " << pfevent.m_hcals << std::endl;
   os << " TR: " << pfevent.m_tracks << std::endl;
-  /*for(auto it = pfevent.m_tracks.begin(); it != pfevent.m_ecals.end(); ++it) {
-    os << "EC: " << it->second;
-  }
-  for(auto it = pfevent.m_hcals.begin(); it != pfevent.m_hcals.end(); ++it) {
-     os << "HC: " << it->second;
-  }
-  for(auto it = pfevent.m_tracks.begin(); it != pfevent.m_tracks.end(); ++it) {
-     os << "TR: " << it->second;
-  }*/
   return os;
 }
 
@@ -162,7 +153,7 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
   } else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
   }
-  std::cout << Id::pretty(id);
+  std::cout << "Oopps" << Id::pretty(id);
   // TODO throw error
   class Cluster c;
   PDebug::write("problem with cluster not found :{}", id);

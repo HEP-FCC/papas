@@ -6,8 +6,8 @@
 #include "Cluster.h"
 #include "Helix.h"
 #include "Id.h"
-#include "SimParticle.h"
 #include "Path.h"
+#include "SimParticle.h"
 #include "displaypfobjects.h"
 #include "pTrack.h"
 #include <iostream>
@@ -23,30 +23,7 @@ GBlob::GBlob(const Cluster& cluster) {
   double iradius = radius * cluster.energy() / max_energy;
   double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
-  // set the layer
-  // m_layer = Id::layer(cluster.id());
-
-  // set the color according to particle type
   int color = 1;
-
-  /*if (cluster.pdgid() == 22 or cluster.pdgid() == 11)
-     color = 2;
-  else if (cluster.pdgid() > 0)
-     color = 4;*/
-
-  // AJRTODO implement the other projections
-  //
-  // TEllipse m_contourYz = TEllipse(pos.Z(), pos.Y(), radius);
-  // TEllipse m_contourXz = TEllipse(pos.Z(), pos.X(), radius);
-  // TEllipse m_contourThetaphi = TEllipse(math.pi/2. - pos.Theta(), pos.Phi(),
-  //                                thetaphiradius);
-  // self.inner_xy = TEllipse(pos.X(), pos.Y(), iradius)
-  // self.inner_yz = TEllipse(pos.Z(), pos.Y(), iradius)
-  // self.inner_xz = TEllipse(pos.Z(), pos.X(), iradius)
-  // self.inner_thetaphi = TEllipse(math.pi/2. - pos.Theta(), pos.Phi(),
-  //                              ithetaphiradius)
-  // inners = [self.inner_xy, self.inner_yz, self.inner_xz,
-  //          self.inner_thetaphi]
 
   m_contours["xy"] = std::unique_ptr<TEllipse>{new TEllipse(pos.X(), pos.Y(), radius)};
   m_inners["xy"] = std::unique_ptr<TEllipse>{new TEllipse(pos.X(), pos.Y(), iradius)};
@@ -95,8 +72,8 @@ void GBlob::Draw(const std::string& projection, const std::string& opt) const {
 
 // TODO remname graph to line??
 GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>& Y, const std::vector<double>& Z,
-                         const std::vector<double>& tX, const std::vector<double>& tY, int markerstyle, double markersize,
-                         int linestyle, int linecolor, int linewidth) {
+                         const std::vector<double>& tX, const std::vector<double>& tY, int markerstyle,
+                         double markersize, int linestyle, int linecolor, int linewidth) {
   int npoints = X.size();
   // pass the vectors to the various projections
   m_graphs["xy"] = std::unique_ptr<TGraph>{new TGraph(npoints, &X[0], &Y[0])};
@@ -118,43 +95,6 @@ GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>
   }
 }
 
-/*
-GTrajectory::GTrajectory(const  SimParticle& particle, int linestyle,
-                         int linecolor) //AJRTODo generalise argumtnet to be a list of things with points
-{
-  const Path::Points& points = particle.path()->points();
-   int npoints = points.size();
-   std::vector<double> X;
-   std::vector<double> Y;
-   std::vector<double> Z;
-   std::vector<double> tX; // for thetaphi graphs
-   std::vector<double> tY; // for thetaphi graphs
-
-   //Extract vectors of x, y and z values
-  int i=0;
-      for (auto p : points) {
-
-         X.push_back(p.second.X());
-         Y.push_back(p.second.Y());
-         Z.push_back(p.second.Z());
-        if (i==1) {
-         tX.push_back(M_PI_2 - p.second.Theta());
-         tY.push_back(p.second.Phi());
-        }
-        else
-        {
-          TVector3 vec = particle.p4().Vect();
-          tX.push_back(M_PI_2 - vec.Theta());
-          tY.push_back(vec.Phi());
-
-        }
-        i += 1;
-      //first point is wrong and should be tppoint = description.p4().Vect()
-
-        //std::cout << "X " << X[i] << "Y " << Y[i]<< "Z " << Z[i];
-   }
-
-   InitGraph(X, Y, Z, tX, tY, linestyle, linecolor)*/
 
 void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
@@ -162,7 +102,7 @@ void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, in
 
 void GTrajectories::addPoints(const std::vector<TVector3>& points, TVector3 tvec, int linestyle, int linecolor,
                               int linewidth) {
- 
+
   std::vector<double> X;
   std::vector<double> Y;
   std::vector<double> Z;
@@ -189,32 +129,30 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, TVector3 tvec
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 0, 0, linestyle, linecolor, linewidth));
 }
 
-  void GTrajectories::addPoints(const std::vector<TVector3>& points, double scale, int linestyle, int linecolor,
-                                int linewidth) {
-    
-    std::vector<double> X;
-    std::vector<double> Y;
-    std::vector<double> Z;
-    std::vector<double> tX;  // for thetaphi graphs
-    std::vector<double> tY;  // for thetaphi graphs
-    
-    // Extract vectors of x, y and z values
-    int i = 0;
-    for (auto p : points) {
-      
+void GTrajectories::addPoints(const std::vector<TVector3>& points, double scale, int linestyle, int linecolor,
+                              int linewidth) {
 
-      X.push_back(p.X()*scale);
-      Y.push_back(p.Y()*scale);
-      Z.push_back(p.Z()*scale);
-    
-        tX.push_back(M_PI_2 - p.Theta());
-        tY.push_back(p.Phi());
-    }
-    i += 1;
-    m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 0, 0, linestyle, linecolor, linewidth));
-    m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.3, linestyle, linecolor, linewidth));
+  std::vector<double> X;
+  std::vector<double> Y;
+  std::vector<double> Z;
+  std::vector<double> tX;  // for thetaphi graphs
+  std::vector<double> tY;  // for thetaphi graphs
+
+  // Extract vectors of x, y and z values
+  int i = 0;
+  for (auto p : points) {
+
+    X.push_back(p.X() * scale);
+    Y.push_back(p.Y() * scale);
+    Z.push_back(p.Z() * scale);
+
+    tX.push_back(M_PI_2 - p.Theta());
+    tY.push_back(p.Phi());
   }
-
+  i += 1;
+  m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 0, 0, linestyle, linecolor, linewidth));
+  m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.3, linestyle, linecolor, linewidth));
+}
 
 void GTrajectories::addNamedPoints(const Path::Points& points, TVector3 tvec, int linestyle, int linecolor,
                                    int linewidth) {
@@ -282,37 +220,31 @@ void GTrajectory::Draw(const std::string& projection /*,
   // raise ValueError('implement drawing for projection ' + projection )
 };
 
-
-
-GTrajectories::GTrajectories(const SimParticle& particle)
-{
+GTrajectories::GTrajectories(const SimParticle& particle) {
   if (particle.charge() != 0) {
-    if (abs(particle.pdgId())>100) {
+    if (abs(particle.pdgId()) > 100) {
       addHelix(particle.path(), particle.p4().Vect(), 1, 1);
       addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 1, 0);
-    }
-    else {
+    } else {
       addHelix(particle.path(), particle.p4().Vect(), 3, 7);
       addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 5, 3);
     }
 
   } else {
-    if (particle.pdgId()==22)
+    if (particle.pdgId() == 22)
       addStraight(particle.path(), particle.p4().Vect(), 2, 2, 1);
     else
-      addStraight(particle.path(), particle.p4().Vect(), 2, 5, 1);
-      addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 5, 0);
+      addStraight(particle.path(), particle.p4().Vect(), 2, 1, 1);
+    addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 5, 0);
   }
 }
-  
-  GTrajectories::GTrajectories(const Particle& particle, int linetype, int linewidth, int linecolor)
-  {
-    addPoints(std::vector<TVector3> {TVector3(0,0,0), particle.p4().Vect().Unit()}, log(particle.e()), linetype, linewidth, linecolor);
-  }
 
+GTrajectories::GTrajectories(const Particle& particle, int linetype, int linewidth, int linecolor) {
+  addPoints(std::vector<TVector3>{TVector3(0, 0, 0), particle.p4().Vect().Unit()}, log(particle.e()), linetype,
+            linewidth, linecolor);
+}
 
-GTrajectories::GTrajectories(const Track& track)
-{
+GTrajectories::GTrajectories(const Track& track) {
   if (track.charge() != 0) {
     addHelix(track.path(), track.p3(), 1, 1);
     addStraight(track.path(), track.p3(), 0, 0, 0);
@@ -321,9 +253,7 @@ GTrajectories::GTrajectories(const Track& track)
 }
 
 /// Constructor for showing clusters
-GTrajectories::GTrajectories(const Cluster& cluster) {
-  m_gBlobs.push_back(GBlob(cluster));
-}
+GTrajectories::GTrajectories(const Cluster& cluster) { m_gBlobs.push_back(GBlob(cluster)); }
 
 void GTrajectories::Draw(const std::string& projection) const {
   // draw tracks

@@ -9,7 +9,6 @@
 #include "Cluster.h"
 #include "Id.h"
 #include "Log.h"
-#include "StringFormatter.h"
 
 namespace papas {
 
@@ -25,7 +24,6 @@ Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType i
 void Cluster::setSize(double value) {
   m_size = value;
   // AJRTODO put in exception here
-
   m_angularSize = atan(m_size / m_p3.Mag());
 }
 
@@ -49,10 +47,8 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   if (rhs.subClusters().size() > 1) {
     std::cout << "can only add in a cluster which is not already merged";
   }
-  // if (m_subClusters.size() == 0) m_subClusters.push_back(m_uniqueId);
+ 
   m_subClusters.push_back(rhs.id());
-  // m_subClusters.insert(m_subClusters.end(), rhs.subClusters().begin(), rhs.subClusters().end());
-
   return *this;
 }
 
