@@ -48,6 +48,7 @@ ${MAINDIR}/simulation/simulation
 ${MAINDIR}/reconstruction/reconstruction
 ${MAINDIR}/graphtools/graphtools
 ${MAINDIR}/spdlog
+${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 include_directories(
@@ -74,7 +75,7 @@ add_definitions(${ROOT_CXX_FLAGS})
 #find_package(GTest)
 #include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
 
-add_executable(mainexe ../main.cpp)
+add_executable(mainexe ../main.cpp pythiaconnector.cpp)
 target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
 #target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
 
