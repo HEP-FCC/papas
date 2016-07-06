@@ -36,8 +36,8 @@ public:
   Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance);
   Edge(const Edge&) {std::cout <<"copy Edge";};
   Edge(Edge&&) = default;                        
-  Edge& operator=(const Edge& other) {   std::cout<<"copy EDGE =";};
-  Edge& operator=(Edge&& other) { std::cout <<"move edge =";};
+  Edge& operator=(const Edge& other) = default;// {   std::cout<<"copy EDGE =";};
+  Edge& operator=(Edge&& other) = default; // { std::cout <<"move edge =";};
   ~Edge() = default;
 
   Id::Type id1() const { return m_id1; }

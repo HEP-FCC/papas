@@ -117,7 +117,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
         for (auto elem : linkedEdgeKeys) {
 
           if (block.findEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
-            toUnlink[elem] = block.findEdge(elem);
+            toUnlink[elem] = block.findEdge(elem); //should toUnlink be list of keys rather than edges
           }
         }
       }
