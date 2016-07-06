@@ -1,0 +1,117 @@
+//
+//  PythiaConnector.cpp
+//  papas
+//
+//  Created by Alice Robson on 06/07/16.
+//
+//
+
+#include "PFReconstructor.h"
+#include "PapasManager.h"
+#include "PythiaConnector.h"
+
+#include "datamodel/EventInfoCollection.h"
+#include "datamodel/ParticleCollection.h"
+#include "utilities/ParticleUtils.h"
+
+#include "Log.h"
+#include "PParticle.h"
+#include "Simulator.h"
+
+// ROOT
+#include "TBranch.h"
+#include "TFile.h"
+#include "TLorentzVector.h"
+#include "TROOT.h"
+#include "TTree.h"
+
+// namespace papas {
+
+PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore()), m_reader(podio::ROOTReader()) {
+
+  try {
+    m_reader.openFile(fname);
+  } catch (std::runtime_error& err) {
+    std::cerr << err.what() << ". Quitting." << std::endl;
+    exit(1);
+  }
+  m_store.setReader(&m_reader);
+}
+
+void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
+  // auto store = podio::EventStore();
+
+  podio::ROOTWriter writer(fname, &m_store);
+
+  unsigned int nevents = 1;
+  unsigned int eventno = 0;
+
+  auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
+  auto& pcoll = m_store.create<fcc::ParticleCollection>("GenParticle");
+
+  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
+  writer.registerForWrite<fcc::ParticleCollection>("GenParticle");
+
+  auto evinfo = fcc::EventInfo();  // evinfocoll.create();
+  evinfo.Number(eventno);
+  evinfocoll.push_back(evinfo);
+  for (const auto& p : particles) {
+    auto ptc = fcc::Particle();
+    ptc.Core().Type = p.second.pdgId();
+    auto& p4 = ptc.Core().P4;
+    p4.Px = p.second.p4().Px();
+    p4.Py = p.second.p4().Py();
+    p4.Pz = p.second.p4().Pz();
+    p4.Mass = p.second.p4().M();
+    ptc.Core().Status = 1;
+    ptc.Core().Charge = p.second.charge();
+    pcoll.push_back(ptc);
+  }
+  writer.writeEvent();
+  m_store.clearCollections();
+  writer.finish();
+
+  // return 0;
+}
+
+void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
+  // make a papas particle collection from the next event
+  // then run simulate and reconstruct
+  m_reader.goToEvent(eventNo);
+
+  const fcc::ParticleCollection* ptcs(nullptr);
+  if (m_store.get("GenParticle", ptcs)) {
+    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
+    papasManager.simulateEvent(std::move(papasparticles));
+    papasManager.reconstructEvent();
+    m_store.clear();
+  }
+
+  m_reader.endOfEvent();
+}
+
+papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
+  // turns pythia particles into Papas particles and lodges them in the history
+  TLorentzVector tlv;
+  papas::Particles particles;
+  for (const auto& ptc : *ptcs) {
+
+    if (ptc.Core().Status == 1) {  // only stable ones
+
+      auto p4 = ptc.Core().P4;
+      tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
+      int pdgid = abs(ptc.Core().Type);
+
+      if (tlv.Pt() > 1e-5 && (pdgid != 12) && (pdgid != 14) && (pdgid != 16)) {
+        papas::IdType id = papas::Id::makeParticleId();
+        particles.emplace(id, papas::Particle(id, pdgid, ptc.Core().Charge, tlv, 1));
+        papas::PDebug::write("Made Papas{}", particles[id]);
+      }
+    }
+  }
+  // sort(particles.begin(), particles.end(),
+  //     [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+  return std::move(particles);
+}
+
+//}  // end namespace papas
