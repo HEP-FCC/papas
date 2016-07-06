@@ -162,7 +162,8 @@ SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzV
 
   double field = m_detector.field()->getMagnitude();
   Id::Type uniqueid = Id::makeParticleId();
-  m_particles.emplace(uniqueid, SimParticle{uniqueid, pdgid, charge, tlv, vertex, field});
+  SimParticle simParticle{uniqueid, pdgid, charge, tlv, vertex, field};
+  m_particles.emplace(uniqueid, std::move(simParticle));
   addNode(uniqueid);  // add node to history graph
   // PDebug::write()<<  ;
   // PDebug::write("Made Simulation Particle {}", m_particles[uniqueid].info());
@@ -201,14 +202,16 @@ SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, double th
 
 Id::Type Simulator::addEcalCluster(SimParticle& ptc, double fraction, double csize) {
   Cluster cluster = makeCluster(ptc, papas::Layer::kEcal, fraction, csize);
-  m_ecalClusters.emplace(cluster.id(), std::move(cluster));
-  return cluster.id();
+  Id::Type id=cluster.id();
+  m_ecalClusters.emplace(id, std::move(cluster));
+  return id;
 }
 
 Id::Type Simulator::addHcalCluster(SimParticle& ptc, double fraction, double csize) {
   Cluster cluster = makeCluster(ptc, papas::Layer::kHcal, fraction, csize);
-  m_hcalClusters.emplace(cluster.id(), std::move(cluster));
-  return cluster.id();
+  Id::Type id=cluster.id();
+  m_hcalClusters.emplace(id, std::move(cluster));
+  return id;
 }
 
 Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double fraction, double csize) {
@@ -222,7 +225,7 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
   Cluster cluster{energy, pos, csize, Id::itemType(layer)};
   addNode(cluster.id(), ptc.id());
   PDebug::write("Made {}", cluster);
-  return cluster;
+  return std::move(cluster);
 }
 
 Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer, papas::Layer acceptlayer,
@@ -230,6 +233,7 @@ Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer det
 
 {
   Cluster smeared = makeSmearedCluster(parentClusterId, detlayer);
+  Id::Type id=smeared.id();
   PDebug::write("Made Smeared{}", smeared);
 
   // Determine if this smeared cluster will be detected and, if so, add it into the
@@ -238,13 +242,13 @@ Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer det
   if (acceptlayer == papas::Layer::kNone) acceptlayer = detlayer;
 
   if (m_detector.calorimeter(acceptlayer)->acceptance(smeared) || accept) {
-    addNode(smeared.id(), parentClusterId);
+    addNode(id, parentClusterId);
     if (Id::layer(parentClusterId) == papas::Layer::kEcal) {
-      m_smearedEcalClusters.emplace(smeared.id(), std::move(smeared));
+      m_smearedEcalClusters.emplace(id, std::move(smeared));
     } else
-      m_smearedHcalClusters.emplace(smeared.id(), std::move(smeared));
+      m_smearedHcalClusters.emplace(id, std::move(smeared));
 
-    return smeared.id();
+    return id;
   } else {
     PDebug::write("Rejected Smeared{}", smeared);
     // if (Id::pretty(parentClusterId).compare(0,4, "h215")==0)
@@ -272,15 +276,16 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer det
   // create smeared cluster
   Cluster cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parentClusterId)};
 
-  return cluster;
+  return std::move(cluster);
 }
 
 const Track& Simulator::addTrack(SimParticle& ptc) {
   Track track = Track{ptc.p3(), ptc.charge(), ptc.path()};
-  m_tracks.emplace(track.id(), track);
-  addNode(track.id(), ptc.id());
+  Id::Type id = track.id();
+  m_tracks.emplace(id, std::move(track));
+  addNode(id, ptc.id());
   PDebug::write("Made {}", track);
-  return m_tracks.at(track.id());
+  return m_tracks.at(id);
 }
 
 Id::Type Simulator::addSmearedTrack(const Track& track, bool accept) {

@@ -53,14 +53,14 @@ PFEvent::PFEvent(Simulator& sim)
       m_historyNodes(sim.historyNodes()),
       m_reconstructedParticles() {}
 
-void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = builder.blocks(); }
+  /*void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = std::move(builder.blocks()); }*/
 
 void PFEvent::mergeClusters() {
   Ruler ruler{*this};
   MergedClusterBuilder ecalmerger{m_ecals, ruler, m_historyNodes};
   MergedClusterBuilder hcalmerger{m_hcals, ruler, m_historyNodes};
-  m_mergedEcals = ecalmerger.mergedClusters();
-  m_mergedHcals = hcalmerger.mergedClusters();
+  m_mergedEcals = std::move(ecalmerger.mergedClusters());
+  m_mergedHcals = std::move(hcalmerger.mergedClusters());
 }
 
 const Track& PFEvent::track(Id::Type id) const {
@@ -138,15 +138,23 @@ const Cluster& PFEvent::HCALCluster(Id::Type id) const {
 }
 
 const Cluster& PFEvent::cluster(Id::Type id) const {
-  if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
-    return m_mergedHcals.at(id);
-  } else if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
-    return m_mergedEcals.at(id);
-  } else if (m_hcals.find(id) != m_hcals.end()) {
+   if (m_hcals.find(id) != m_hcals.end()) {
+     if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
+       std::cout <<"humph MH";
+     }
+     if (m_mergedEcals.find(id) != m_mergedHcals.end()) {
+       std::cout <<"humph ME";
+     }
+     if (m_ecals.find(id) != m_ecals.end()) {
+       std::cout <<"humph e";}
     return m_hcals.at(id);
   } else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
-  }
+  } else if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
+    return m_mergedHcals.at(id);
+  } else if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
+    return m_mergedEcals.at(id);
+  } 
   std::cout << "Oopps" << Id::pretty(id);
   // TODO throw error
   class Cluster c;
@@ -156,9 +164,9 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
 }
 
 void PFEvent::clear() {
-  m_blocks.clear();
+  //m_blocks.clear();
   m_mergedEcals.clear();
-  m_mergedEcals.clear();
+  m_mergedHcals.clear();
   m_reconstructedParticles.clear();
 }
 

@@ -30,6 +30,7 @@ public:
    */
   Cluster(const Cluster& cluster, Id::Type id);
   Cluster() = default;
+  ~Cluster() = default;
   Cluster(Cluster&& c) = default;
   Cluster(const Cluster& cluster) = default;
   Cluster& operator=(const Cluster&) = default;  // {std::cout<< "copy" ;} ;

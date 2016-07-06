@@ -12,7 +12,7 @@ namespace papas {
 
 bool Log::logInitialized = false;
 bool PDebug::logInitialized = false;
-spdlog::level::level_enum  PDebug::slevel = spdlog::level::err;
+spdlog::level::level_enum  PDebug::slevel = spdlog::level::info;
 std::vector<spdlog::sink_ptr> Log::m_sinks;
 std::vector<spdlog::sink_ptr> PDebug::m_sinks;
 

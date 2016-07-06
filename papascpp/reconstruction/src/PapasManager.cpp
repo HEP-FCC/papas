@@ -20,9 +20,9 @@ PapasManager::PapasManager(Detector& detector)
     : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator) {}
 
 void PapasManager::simulateEvent(Particles&& particles) {
-  m_particles = particles;
+  m_particles = std::move(particles);
 
-  for (const auto& ptc : particles) {
+  for (const auto& ptc : m_particles) {
     m_history.emplace(ptc.first, PFNode(ptc.first));  ///< insert the raw particles into the history
     m_simulator.SimulateParticle(ptc.second, ptc.first);
   }
@@ -36,11 +36,11 @@ void PapasManager::reconstructEvent() {
 
   // create the blocks of linked ids
   auto bBuilder = PFBlockBuilder(m_pfEvent, ids);
-  m_pfEvent.setBlocks(bBuilder);
+  //m_pfEvent.setBlocks(bBuilder);
 
   // do the reconstruction of the blocks
   auto pfReconstructor = PFReconstructor(m_pfEvent);
-  pfReconstructor.reconstruct();
+  pfReconstructor.reconstruct(bBuilder.blocks());
   m_pfEvent.setReconstructedParticles(std::move(pfReconstructor.particles()));
 }
 

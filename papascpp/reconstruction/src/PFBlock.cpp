@@ -18,6 +18,7 @@
 #include <sstream>
 #include <unordered_set>
 #include <vector>
+#include "Log.h"
 
 //#include "PFEvent.h"
 
@@ -43,6 +44,29 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
 }
 
 PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_elementIds() {}
+  
+/*PFBlock::~PFBlock() {
+  if(Id::pretty(m_uniqueId).compare(0,4, "b404")==0)
+     std::cout<<*this;
+  PDebug::write("Delete block {} {} with Es{} & Ids{}", Id::pretty(m_uniqueId), m_uniqueId, m_edges.size(), m_elementIds.size());
+  //std::cout<<this;
+  m_elementIds.clear();
+  m_edges.clear();
+  
+}*/
+ 
+  
+  /*PFBlock::PFBlock(PFBlock&& pfblock) {
+    
+    PDebug::write("Move block {} {} with Es{} & Ids{}", Id::pretty(pfblock.m_uniqueId), pfblock.m_uniqueId, pfblock.m_edges.size(), pfblock.m_elementIds.size());
+    m_uniqueId=pfblock.m_uniqueId;
+    m_elementIds= std::move(pfblock.m_elementIds);
+    m_edges= std::move(pfblock.m_edges);
+    m_isActive= pfblock.m_isActive;            // if a block is subsequently split it will be deactivated
+    tempBlockCount= pfblock.tempBlockCount;
+    if(Id::pretty(pfblock.m_uniqueId).compare(0,4, "b404")==0)
+      std::cout<<*this;
+  }*/
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
@@ -80,7 +104,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::Edge
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    */
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
-  for (auto edge : m_edges) {
+  for (auto const & edge : m_edges) {
     // if this is an edge that includes uniqueid
     // std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {

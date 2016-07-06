@@ -29,26 +29,29 @@ namespace papas {
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent),
       m_historyNodes(pfEvent.historyNodes()),
-      m_blocks(pfEvent.blocks()),
+  //m_blocks(pfEvent.blocks()),
       m_hasHistory(pfEvent.historyNodes().size() == 0) {}
 
-void PFReconstructor::reconstruct() {
+void PFReconstructor::reconstruct(Blocks& blocks) {
   // TODO sort m_blocks
 
   // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
 
-  for (auto& block : m_blocks) {
+  for (auto& block : blocks) {
     // std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
     Blocks newBlocks = simplifyBlock(block.second);
     if (newBlocks.size() > 0) {
-      // for (auto& b : newBlocks)
+      for (auto& b : newBlocks) {
+        Id::Type id=b.first;
+        blocks.emplace(id, std::move(b.second));
+      }
       // PDebug::write("Made {}", b.second);
-      m_blocks.insert(newBlocks.begin(), newBlocks.end());
+      //blocks.insert(newBlocks.begin(), newBlocks.end());
     }
   }
 
-  for (auto& block : m_blocks) {
+  for (auto& block : blocks) {
     if (block.second.isActive()) {  // when blocks are split the original gets deactivated
       PDebug::write("Processing {}", block.second);
       reconstructBlock(block.second);
@@ -104,17 +107,17 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
         // find minimum distance
         for (auto elem : linkedEdgeKeys) {
           if (firstHCAL) {
-            minDist = block.getEdge(elem).distance();
+            minDist = block.findEdge(elem).distance();
             firstHCAL = false;
           } else {
-            minDist = fmin(minDist, block.getEdge(elem).distance());
+            minDist = fmin(minDist, block.findEdge(elem).distance());
           }
         }
         // unlink anything that is greater than minimum distance
         for (auto elem : linkedEdgeKeys) {
 
-          if (block.getEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
-            toUnlink[elem] = block.getEdge(elem);
+          if (block.findEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
+            toUnlink[elem] = block.findEdge(elem);
           }
         }
       }
@@ -123,16 +126,16 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
       // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
       linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
       for (auto elem : linkedEdgeKeys) {
-        toUnlink[elem] = block.getEdge(elem);
+        toUnlink[elem] = block.findEdge(elem);
       }
     }
   }
 
   // if there is something to unlink then use the BlockSplitter
   if (toUnlink.size() > 0) {
-    splitBlocks = BlockSplitter(toUnlink, block, m_historyNodes).blocks();
+    splitBlocks = std::move(BlockSplitter(toUnlink, block, m_historyNodes).blocks());
   }
-  return splitBlocks;
+  return std::move(splitBlocks);
 }
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {

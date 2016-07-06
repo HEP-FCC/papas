@@ -60,32 +60,31 @@ using namespace papas;
 Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);
 void processEvent(podio::EventStore& store, PapasManager& papasManager);
 int example(int argc, char* argv[]);
+int longrun(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
 
-  return example(argc, argv);
-  // return longrun(argc,argv);
+  // return example(argc, argv);
+  return longrun(argc, argv);
 }
 
 int example(int argc, char* argv[]) {
   // open up Pythia file
   auto reader = podio::ROOTReader();
-  //reader.openFile("ee_ZH_Zmumu_Hbb.root");
+  // reader.openFile("ee_ZH_Zmumu_Hbb.root");
 
-  
-  if( argc != 2) {
-    std::cerr<<"Usage: ./mainexe filename"<<std::endl;
+  if (argc != 2) {
+    std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   try {
     reader.openFile(fname);
-  }
-  catch(std::runtime_error& err) {
-    std::cerr<<err.what()<<". Quitting."<<std::endl;
+  } catch (std::runtime_error& err) {
+    std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
   }
-  
+
   // read an event
   unsigned int eventNo = 0;
   auto store = podio::EventStore();
@@ -116,7 +115,7 @@ int example(int argc, char* argv[]) {
 
 int longrun(int argc, char* argv[]) {
 
-  // PDebug::On();  // physics debug output
+  PDebug::On();  // physics debug output
   auto reader = podio::ROOTReader();
   reader.openFile("/Users/alice/fcc/cpp/papas/papas_cc/ee_ZH_Zmumu_Hbb_50000.root");
 
@@ -133,33 +132,26 @@ int longrun(int argc, char* argv[]) {
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   auto start = std::chrono::steady_clock::now();
-  // auto papasManager = PapasManager(CMSDetector) ; //problem with .clear so removed for now
+  auto papasManager = PapasManager(CMSDetector);  // problem with .clear so removed for now
 
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
-    // papasManager.clear();
-    auto papasManager = PapasManager(CMSDetector);  // temporary needs fixing
+    
+    // auto papasManager = PapasManager(CMSDetector);  // temporary needs fixing
     PDebug::write("Event: {}", i);
-    if (i % 1000 == 0) {
+    if (i % 10 == 0) {
       std::cout << "reading event " << i << std::endl;
     }
-    if (i == eventNo) start = std::chrono::steady_clock::now();
-
+    if (i == eventNo)
+      start = std::chrono::steady_clock::now();
+    else {
+      if (Id::counter()>900) {
+      std::cout<< i<< "=" << Id::counter()<<std::endl;
+      }
+      papasManager.clear();
+    }
     processEvent(store, papasManager);
     reader.endOfEvent();
-
-    if (nEvents == 1) {
-      std::cout << "Generated Stable Particles" << std::endl;
-      for (auto& p : papasManager.rawParticles()) {
-        std::cout << "  " << p.second << std::endl;
-      }
-      std::cout << "Reconstucted Particles" << std::endl;
-      for (auto& p : papasManager.reconstructedParticles()) {
-        std::cout << "  " << p.second << std::endl;
-      }
-      if (doDisplay) {
-        papasManager.display();
-      }
-    }
+  
   }
   auto end = std::chrono::steady_clock::now();
   auto diff = end - start;

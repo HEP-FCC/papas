@@ -39,12 +39,12 @@ public:
   const Clusters& ecalClusters() const { return m_ecals; }
   const Clusters& hcalClusters() const { return m_hcals; }
   const Tracks& tracks() const { return m_tracks; }
-  const Blocks& blocks() const { return m_blocks; }
+  //const Blocks& blocks() const { return m_blocks; }
   const Particles& reconstructedParticles() const { return m_reconstructedParticles; }
 
-  void setBlocks(Blocks&& blocks) { m_blocks = blocks; }
-  void setBlocks(PFBlockBuilder& builder);  // temp for python
-  void setReconstructedParticles(Particles&& particles) { m_reconstructedParticles = particles; }
+  //void setBlocks(Blocks&& blocks) { m_blocks = std::move(blocks); }
+  //void setBlocks(PFBlockBuilder& builder);  // temp for python
+  void setReconstructedParticles(Particles&& particles) { m_reconstructedParticles = std::move(particles); }
 
   void mergeClusters();
   void clear();
@@ -57,8 +57,8 @@ private:
   Clusters m_mergedHcals;
   const Tracks& m_tracks;
   Nodes& m_historyNodes;  // should this be owned?
-  Blocks m_blocks;
-  Particles m_reconstructedParticles;  // should this be owned?
+                          //Blocks m_blocks;
+  Particles m_reconstructedParticles;
 };
 
 }  // end namespace papas

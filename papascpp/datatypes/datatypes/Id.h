@@ -46,6 +46,7 @@ public:
   static std::string pretty(Id::Type id);
   static const unsigned int bitshift = 32;
   static void reset();
+  static unsigned int counter() {return s_counter;};
   // TODO add a checkValid function
 private:
   static unsigned int s_counter;

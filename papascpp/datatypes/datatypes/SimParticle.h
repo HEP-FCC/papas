@@ -14,16 +14,21 @@ class Track;
 class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
+  ~SimParticle() = default;
   SimParticle() = default;
+  SimParticle(SimParticle&& ) = default;
+  SimParticle(SimParticle& ) = default; //{std::cout << "COPY SimParticle";};
+  SimParticle(const SimParticle& ) = default; //{std::cout << "COPY CONST SimParticle";};
   // SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field =
   // 0.);
   SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv,
               TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
   SimParticle(IdType uniqueid, unsigned int pdgid, double charge, TLorentzVector tlv, const Track& track);
-  Path::Ptr path() const { return m_path; }
+  
   TVector3 pathPosition(papas::Position layer) const;
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }
+  Path::Ptr path() const { return m_path; }
 
 private:
   TVector3 m_vertex;

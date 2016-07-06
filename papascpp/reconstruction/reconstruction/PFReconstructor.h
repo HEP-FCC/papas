@@ -20,7 +20,7 @@ class PFReconstructor {
 
 public:
   PFReconstructor(PFEvent& pfEvent);
-  void reconstruct();
+  void reconstruct(Blocks& blocks);
   Particles& particles() { return m_particles; }
 
 private:
@@ -36,7 +36,7 @@ private:
 
   PFEvent& m_pfEvent;
   Nodes& m_historyNodes;
-  Blocks m_blocks;  // TODO should this be a reference? - nb blocks will get changed (disactivated during splitting)
+  //Blocks m_blocks;  // TODO should this be a reference? - nb blocks will get changed (disactivated during splitting)
   Particles m_particles;  // owns the particles it makes
   bool m_hasHistory;
   Ids m_unused;

@@ -42,7 +42,7 @@ add_subdirectory(papascpp)
 
 #add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
-add_subdirectory(papaslib)
+#add_subdirectory(papaslib)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+
 #note there are a lot of R related warnings (originating from R)

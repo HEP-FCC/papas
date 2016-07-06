@@ -30,7 +30,7 @@ BlockSplitter::BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& hi
 
 std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
   // TODO move to helper?
-  for (auto block : builder.m_blocks) {
+  for (auto const& block : builder.m_blocks) {
     os << block.second << std::endl;
   }
   return os;

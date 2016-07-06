@@ -64,46 +64,62 @@ Cluster::Cluster(const Cluster& c, Id::Type id)
 }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Id::pretty(cluster.id()) << ": " << cluster.id() << " " << cluster.info();
+  os << "Cluster :" << Id::pretty(cluster.id()) << ": " << cluster.id() << " " << cluster.info() ;
+  os << " sub ( ";
+  for (auto id : cluster.subClusters()) {
+    os<< Id::pretty(id) << ", ";
+  }
+  os <<")";
   return os;
 }
 
-}  // end namespace papas
 
-/* KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
+
+  /*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
  Cluster::Cluster( Cluster && c) :
  m_size(c.m_size),
- m_angularsize(c.m_angularsize),
+ m_angularSize(c.m_angularSize),
  m_pt(c.m_pt),
- m_uniqueid(c.m_uniqueid),
- m_energy(c.m_energy)
+ m_uniqueId(c.m_uniqueId),
+ m_energy(c.m_energy),
+  m_subClusters(std::move(c.m_subClusters))
+
  {
  m_p3=c.m_p3;
- }
+      PDebug::write("Move cluster {}" , *this);
+   std::cout<< "Move Cluster" <<std::endl;
+ }*/
 
 
- Cluster& Cluster::operator=(Cluster&& c) {
+/* Cluster& Cluster::operator=(Cluster&& c) {
  m_energy=c.m_energy;
  m_p3=c.m_p3;
  m_size=c.m_size;
  m_pt=c.m_pt;
- m_uniqueid=c.m_uniqueid;
+ m_uniqueId=c.m_uniqueId;
  std::cout<< "move assign cluster" <<std::endl;
  return *this;
- };
+ };*/
 
- Cluster& Cluster::operator=(const Cluster& c) {
+ /*Cluster& Cluster::operator=(const Cluster& c) {
  m_energy=c.m_energy;
  m_p3=c.m_p3;
  m_size=c.m_size;
  m_pt=c.m_pt;
- m_uniqueid=c.m_uniqueid;
- std::cout<< "copy cluster" <<std::endl;
+ m_uniqueId=c.m_uniqueId;
+ std::cout<< "copy cluster=" <<std::endl;
  return *this;
  };
 
  Cluster::Cluster(const Cluster&) {
+   PDebug::write("copy cluster {}" , Id::pretty(m_uniqueId));
+ std::cout<< "copy cluster" ;
+ } ;*/
+  
+  /*Cluster::~Cluster() {
+    PDebug::write("delete cluster {}" , Id::pretty(m_uniqueId));
+    std::cout<< "delete cluster" ;
+  } ;*/
 
- std::cout<< "copy" ;
- } ;
-*/
+}  // end namespace papas
+ 

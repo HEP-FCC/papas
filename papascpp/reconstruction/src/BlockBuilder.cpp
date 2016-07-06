@@ -41,7 +41,9 @@ void BlockBuilder::makeBlocks() {
     PFBlock block{elementIds, m_edges};
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
-    m_blocks.emplace(block.uniqueId(), std::move(block));
+    Id::Type id=block.uniqueId();
+    m_blocks.emplace(id, std::move(block));
+    //std::cout << m_blocks.size() << " " << m_blocks.empty() ;
 
     // update the history nodes (if they exist)
     if (m_historyNodes.size() > 0) {

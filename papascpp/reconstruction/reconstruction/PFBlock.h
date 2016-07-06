@@ -27,7 +27,7 @@ namespace papas {
  Ids m_elementIds : list of uniqueids of its elements
 
  Edges m_edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
-          use  getEdge(id1,id2) to find an edge
+          use  findEdge(id1,id2) to find an edge
  bool m_isActive : bool true/false, set to false if the block is subsequently subdivided
  static int tempBlockCount: sequential numbering of blocks (useful for debugging/tracing etc)
 
@@ -50,9 +50,12 @@ public:
    */
   PFBlock(const Ids& elementIds, Edges& edges);
   PFBlock();
+  ~PFBlock() = default ;
+  PFBlock(PFBlock&& pfblock)=default;
+
   const Ids elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-  Edge getEdge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
-  const Edge& getEdge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
+  Edge& findEdge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
+  const Edge& findEdge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
 
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
@@ -87,6 +90,11 @@ public:
   const class Edge& edge(Id::Type id1, Id::Type id2) const;
 
 private:
+  PFBlock(PFBlock& pfblock) =default; //{std::cout << "COPY BLOCK";};
+  PFBlock(const PFBlock& pfblock)=default; //{std::cout << "COPY CONST BLOCK";};
+  PFBlock& operator=(const PFBlock& ) = default; //{std::cout << "= BLOCK"; };//return PFBlock(c);};
+
+  
   Id::Type m_uniqueId;        //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy
