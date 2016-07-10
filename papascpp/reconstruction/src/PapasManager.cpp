@@ -16,15 +16,28 @@
 
 namespace papas {
 
+  
 PapasManager::PapasManager(Detector& detector)
     : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator) {}
 
 void PapasManager::simulateEvent(Particles&& particles) {
   m_particles = std::move(particles);
 
-  for (const auto& ptc : m_particles) {
-    m_history.emplace(ptc.first, PFNode(ptc.first));  ///< insert the raw particles into the history
-    m_simulator.SimulateParticle(ptc.second, ptc.first);
+  //order the particles according to id
+  std::vector<Id::Type> ids;
+  
+  ids.reserve(m_particles.size());
+  for(auto kv : m_particles) {
+    ids.push_back(kv.first);
+  }
+  
+  std::sort(ids.begin(), ids.end(), [&] (IdType i, IdType j) {
+    return (m_particles.at(i).e() > m_particles.at(j).e());});
+
+  for (const auto& id : ids) {
+    std::cout << id<< m_particles.at(id)<<std::endl;
+    m_history.emplace(id, std::move(PFNode(id)));  ///< insert the raw particle ids into the history
+    m_simulator.SimulateParticle(m_particles.at(id), id);
   }
   m_pfEvent.mergeClusters();
 }

@@ -94,18 +94,24 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
   papas::Particles particles;
+  int countp=0;
   for (const auto& ptc : *ptcs) {
+    countp+=1;
+    auto p4 = ptc.Core().P4;
+    tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
+    int pdgid = ptc.Core().Type;
 
+    papas::IdType id = papas::Id::makeParticleId();
+    papas::Particle particle{id, pdgid, (double)ptc.Core().Charge, tlv, 1}; //make every single one into a particle
+                                                                            //so as to match python approach (for now)
+                                                                            //otherwise ids do not align
+                                                                            //papas::PDebug::write("Made Pythia {}", particle);
     if (ptc.Core().Status == 1) {  // only stable ones
-
-      auto p4 = ptc.Core().P4;
-      tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
-      int pdgid = abs(ptc.Core().Type);
-
-      if (tlv.Pt() > 1e-5 && (pdgid != 12) && (pdgid != 14) && (pdgid != 16)) {
-        papas::IdType id = papas::Id::makeParticleId();
-        particles.emplace(id, papas::Particle(id, pdgid, ptc.Core().Charge, tlv, 1));
-        papas::PDebug::write("Made Papas{}", particles[id]);
+      
+        if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
+        
+        particles.emplace(id, std::move(particle));
+        papas::PDebug::write("Selected Papas{}", particles.at(id));
       }
     }
   }

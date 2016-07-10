@@ -25,6 +25,7 @@ public:
   void display();  ///< relocate?
 
 private:
+  bool  operator()(IdType i, IdType j);
   const Detector& m_detector;
   Simulator m_simulator;
   PFEvent m_pfEvent;

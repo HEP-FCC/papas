@@ -49,17 +49,17 @@ public:
 
   /**
    Makes a new SimParticle and adds this into collection of particles
-   @param[in] unsigned int pdgid: particle id (eg 22 for a photon)
+   @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] TLorentzVector tlv: particle momentum
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(unsigned int pdgid, double charge, TLorentzVector tlv,
+  SimParticle& addParticle( int pdgid, double charge, TLorentzVector tlv,
                            TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
    Makes a new SimParticle and adds this into collection of particles
-   @param[in] unsigned int pdgid: particle id (eg 22 for a photon)
+   @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
    @param[in] double theta: initial direction of particle
    @param[in] double phi: initial direction of particle
@@ -67,12 +67,12 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy,
+  SimParticle& addParticle( int pdgid, double charge, double theta, double phi, double energy,
                            TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
    Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
-   @param[in] unsgined int pdgid: particle id (eg 22 for a photon)
+   @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
    @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
    @param[in] double thetamax: maximum theta
@@ -81,7 +81,7 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax, double ptmin,
+  SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
                               double ptmax,
                               TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
 

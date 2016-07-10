@@ -41,7 +41,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& rule
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
+        //PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
         Edge::EdgeKey key =edge.key();
         edges.emplace(key, std::move(edge));
       }

@@ -44,14 +44,18 @@ int example(int argc, char* argv[]) {
     return 1;
   }
   const char* fname = argv[1];
+  //open the Pythia file fname
   auto pythiaConnector = PythiaConnector(fname);
   
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   
+  //read and process an event
   unsigned int eventNo = 0;
   pythiaConnector.processEvent(eventNo, papasManager);
+  
+  //write out the reconstructed particles to a root file
   pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
 
   // outputs
@@ -85,7 +89,16 @@ int example2(int argc, char* argv[]) {
 
 int longrun(int argc, char* argv[]) {
 
-  //PDebug::On();  // physics debug output
+  PDebug::On();  // physics debug output
+  randomgen::setEngineSeed(0xdeadbeef);
+  
+ 
+  
+  /*std::cout << randomgen::RandUniform(0, 1).next()<<std::endl;
+  std::cout << randomgen::RandUniform(0, 1).next() <<std::endl;
+  std::cout << randomgen::RandExponential(3).next()<<std::endl;
+  */
+  
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -97,10 +110,8 @@ int longrun(int argc, char* argv[]) {
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 1000;
+  unsigned int nEvents = 10;
 
-  bool doDisplay = false;
-  if (nEvents == 1) doDisplay = true;
 
   auto start = std::chrono::steady_clock::now();
   
@@ -118,8 +129,9 @@ int longrun(int argc, char* argv[]) {
       }*/
       papasManager.clear();
     }
-    pythiaConnector.processEvent(eventNo, papasManager);
+    pythiaConnector.processEvent(i, papasManager);
   }
+  papasManager.display();
   auto end = std::chrono::steady_clock::now();
   auto diff = end - start;
   auto times = std::chrono::duration<double, std::milli>(diff).count();

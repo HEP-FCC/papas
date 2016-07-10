@@ -64,8 +64,8 @@ Cluster::Cluster(const Cluster& c, Id::Type id)
 }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Id::pretty(cluster.id()) << ": " << cluster.id() << " " << cluster.info() ;
-  os << " sub ( ";
+  os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info() ;
+  os << " sub(";
   for (auto id : cluster.subClusters()) {
     os<< Id::pretty(id) << ", ";
   }

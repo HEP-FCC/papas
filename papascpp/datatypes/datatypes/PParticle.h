@@ -22,10 +22,10 @@ class Particle {
 public:
   Particle();
   //Particle& operator=(const Particle& P) = default;
-  Particle(unsigned int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle(unsigned int pdgid, double charge);
-  Particle(IdType id, unsigned int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle(IdType id, unsigned int pdgid, double charge);
+  Particle( int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle( int pdgid, double charge);
+  Particle(IdType id,  int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(IdType id,  int pdgid, double charge);
   ~Particle() =default; //{ PDebug::write(" Delete particle {}", *this);};
   Particle(Particle&&) = default;
   Particle& operator=(const Particle& )= default;// {std::cout << "= Particle"; };
@@ -55,7 +55,7 @@ protected:
 private:
 
   TLorentzVector m_tlv;
-  unsigned m_particleId;
+  int m_particleId;
   double m_charge;
   double m_status;
   TVector3 m_startVertex;

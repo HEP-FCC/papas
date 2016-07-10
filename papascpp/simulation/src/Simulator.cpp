@@ -39,10 +39,7 @@ Simulator::Simulator(const Detector& d, Nodes& nodes)
 void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
 
   int pdgid = ptc.pdgId();
-  if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
-    // to avoid numerical problems in propagation
-    return;
-  }
+ 
   SimParticle& pfptc = addParticle(pdgid, ptc.charge(), ptc.p4(), TVector3{0, 0, 0});
   if (parentid) {
     PFNode& parent = m_nodes[parentid];
@@ -51,15 +48,23 @@ void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
   }
   PDebug::write("Made {}", pfptc);
 
+  if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
+    // to avoid numerical problems in propagation
+    return;
+  }
+  
   if (pdgid == 22) {
     simulatePhoton(pfptc);
-  } else if (pdgid == 11) {
+  } else if (abs(pdgid) == 11) {
     smearElectron(pfptc);
-  } else if (pdgid == 13) {
+  } else if (abs(pdgid) == 13) {
     smearMuon(pfptc);
-  } else if ((pdgid == 12) | (pdgid == 14) | (pdgid == 16)) {
+  } else if ((abs(pdgid) == 12) | (abs(pdgid) == 14) | (abs(pdgid) == 16)) {
     simulateNeutrino(pfptc);
   } else if (abs(pdgid) >= 100) {
+    if (pdgid==-2112) {
+      std::cout<<pfptc;
+    }
     simulateHadron(pfptc);
   }
 }
@@ -132,14 +137,21 @@ void Simulator::simulateNeutrino(SimParticle& ptc) {
 
 void Simulator::smearElectron(SimParticle& ptc) {
   PDebug::write("Smearing Electron");
+  const Track& track = addTrack(ptc);
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ptc, ecal_sp->volumeCylinder().inner());
+  //SimParticle smeared{ptc}; //this line to match deepcopy on python
+  //PDebug::write("Made Smeared{}", smeared);
+
   // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
 }
 
 void Simulator::smearMuon(SimParticle& ptc) {
   PDebug::write("Smearing Muon");
+  const Track& track = addTrack(ptc);
   propagateAllLayers(ptc);
+  //PDebug::write("Made Smeared{}", smeared);
+
 }
 
 void Simulator::propagate(SimParticle& ptc, const SurfaceCylinder& cylinder) {
@@ -158,7 +170,7 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
   // TODO make this throw an error
 }
 
-SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
+SimParticle& Simulator::addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
 
   double field = m_detector.field()->getMagnitude();
   Id::Type uniqueid = Id::makeParticleId();
@@ -170,7 +182,7 @@ SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, TLorentzV
   return m_particles[uniqueid];
 }
 
-SimParticle& Simulator::addGunParticle(unsigned int pdgid, double charge, double thetamin, double thetamax,
+SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax,
                                        double ptmin, double ptmax, TVector3 vertex) {
   double theta = randomgen::RandUniform(thetamin, thetamax).next();
   double phi = randomgen::RandUniform(-M_PI, M_PI).next();
@@ -188,7 +200,7 @@ SimParticle& Simulator::addGunParticle(unsigned int pdgid, double charge, double
   return addParticle(pdgid, charge, p4, vertex);
 }
 
-SimParticle& Simulator::addParticle(unsigned int pdgid, double charge, double theta, double phi, double energy,
+SimParticle& Simulator::addParticle(int pdgid, double charge, double theta, double phi, double energy,
                                     TVector3 vertex) {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -275,7 +287,6 @@ Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer det
 
   // create smeared cluster
   Cluster cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parentClusterId)};
-
   return std::move(cluster);
 }
 

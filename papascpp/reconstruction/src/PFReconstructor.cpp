@@ -29,7 +29,6 @@ namespace papas {
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent),
       m_historyNodes(pfEvent.historyNodes()),
-  //m_blocks(pfEvent.blocks()),
       m_hasHistory(pfEvent.historyNodes().size() == 0) {}
 
 void PFReconstructor::reconstruct(Blocks& blocks) {
@@ -37,39 +36,46 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
 
   // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
+  
+  
+  //sort the blocks by id to ensure match with python
+  std::vector<IdType> blockids;
+  blockids.reserve(blocks.size());
+  for (const auto& b: blocks)
+    blockids.push_back(b.first);
+  
+  std::sort(blockids.begin(), blockids.end());
+  
 
-  for (auto& block : blocks) {
-    // std::cout << "Reconstrblock: " << block.second.shortName()<<std::endl;
-    Blocks newBlocks = simplifyBlock(block.second);
+  //go through each block and see if it can be simplified
+  //in some cases it will end up being split into smaller blocks
+  //Note that the old block will be marked as disactivated
+  for (auto& bid: blockids) {
+    Blocks newBlocks = simplifyBlock(blocks.at(bid));
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
         Id::Type id=b.first;
         blocks.emplace(id, std::move(b.second));
+        blockids.push_back(b.first);
       }
-      // PDebug::write("Made {}", b.second);
-      //blocks.insert(newBlocks.begin(), newBlocks.end());
     }
   }
 
-  for (auto& block : blocks) {
-    if (block.second.isActive()) {  // when blocks are split the original gets deactivated
-      PDebug::write("Processing {}", block.second);
-      reconstructBlock(block.second);
+  for (auto& bid: blockids) {
+    PFBlock& block =blocks.at(bid);
+    if (block.isActive()) {  // when blocks are split the original gets deactivated
+      PDebug::write("Processing {}", block);
+      reconstructBlock(block);
     }
   }
   if (m_unused.size() > 0) {
-    std::cout << "unused elements";
-    // TODO ouput warning message
+    PDebug::write("unused elements ");
+                  for (auto u: m_unused)
+                  PDebug::write("{},", u);
+    //TODO warning message
   }
 }
 
-/*def _sorted_block_keys(self) :
- #sort blocks (1) by number of elements (2) by mix of ecal, hcal , tracks (the shortname will look like "H1T2" for a
- block
- #with one cluster and two tracks)
- return sorted(self.blocks.keys(), key=lambda k: (len(self.blocks[k].element_uniqueids),
- self.blocks[k].short_name()),reverse =True)
- */
 
 Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
   /* Block: a block which contains list of element ids and set of edges that connect them
@@ -85,8 +91,8 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    */
   Blocks splitBlocks;
   Ids ids = block.elementIds();
-  // std::cout<<block<<std::endl;
-  if (ids.size() <= 1) {  // no links to remove
+  
+  if (ids.size() <= 1) {  // if block is just one element therer are no links to remove
     return splitBlocks;
   }
 
@@ -115,7 +121,6 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
         }
         // unlink anything that is greater than minimum distance
         for (auto elem : linkedEdgeKeys) {
-
           if (block.findEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
             toUnlink[elem] = block.findEdge(elem); //should toUnlink be list of keys rather than edges
           }
@@ -142,12 +147,10 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   /// see class description for summary of reconstruction approach
 
   Ids ids = block.elementIds();
+  std::sort(ids.begin(), ids.end());
   for (auto id : ids) {
     m_locked[id] = false;
   }
-  /*self.debugprint = False
-   if (self.debugprint  and len(block.element_uniqueids)> 4):
-   print  block*/
 
   if (ids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     Id::Type id = ids[0];
@@ -267,6 +270,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
 
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
+  std::sort(trackIds.begin(), trackIds.end());
   for (auto trackId : trackIds) {
     for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
       /*the ecals get all grouped together for all tracks in the block
@@ -279,12 +283,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
       }
     }
   }
-  /*# hcal should be the only remaining linked hcal cluster (closest one)
-   #thcals = [th for th in elem.linked if th.layer=='hcal_in']
-   #assert(thcals[0]==hcal)
-   self.log.info( hcal )
-   self.log.info( '\tT {tracks}'.format(tracks=tracks) )
-   self.log.info( '\tE {ecals}'.format(ecals=ecals) )*/
+  std::sort(trackIds.begin(), trackIds.end());
+  std::sort(ecalIds.begin(), ecalIds.end());
+  //hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
@@ -339,10 +340,11 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::L
                                                 TVector3 vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
-  unsigned int pdgId = 0;
+  int pdgId = 0;
   if (energy < 0) {
     energy = cluster.energy();
   }
+  double charge = ParticlePData::particleCharge(pdgId);
   if (layer == papas::Layer::kEcal) {
     pdgId = 22;  // photon
   } else if (layer == papas::Layer::kHcal) {
@@ -352,7 +354,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::L
   }
   // assert(pdg_id)
   double mass = ParticlePData::particleMass(pdgId);
-  // double charge = ParticlePData::particleCharge(pdgId);
+  
   if (energy < mass)  // null particle
     return SimParticle();
 
@@ -392,7 +394,7 @@ SimParticle PFReconstructor::reconstructTrack(const Track& track) {
   /*construct a charged hadron from the track
    */
   Id::Type newid = Id::makeRecParticleId();
-  unsigned int pdgId = 211;
+  int pdgId = 211 * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
   SimParticle particle{newid, pdgId, track.charge(), p4, track};
