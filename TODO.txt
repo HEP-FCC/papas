@@ -67,8 +67,8 @@ Add in error handling
 Implement logging messages. Logging structure is available but not used except for PDebug which handles the physics debug output).
 Separate out PDebug from Logging. Make PDebug more configurable.
 
-Bug fix
-There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
+DONE Bug fix
+DONE There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
 
 Unit testing
 Probably convert to Catch (check)
@@ -81,9 +81,9 @@ Physics
 Check with Colin about smeared electrons and muons and their duplicate particles in python
 Take a look at some of the particle reconstructions to understand differences relative to raw particles.
 
-Python matching
-Adjust particles in Python to match latest C++ modifications and get matching working once more
-Add sorting routine to reinstate matching with Python
+DONE Python matching
+DONE Adjust particles in Python to match latest C++ modifications and get matching working once more
+DONE Add sorting routine to reinstate matching with Python
 
 Others
 Attend to TODOs and comments in the existing code
