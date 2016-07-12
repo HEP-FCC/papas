@@ -88,7 +88,7 @@ add_subdirectory(papaslib)
 #note there are a lot of R related warnings (originating from R)
 #add_subdirectory(tests/rtest)
 
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 
 
