@@ -40,17 +40,23 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   
   //sort the blocks by id to ensure match with python
   std::vector<IdType> blockids;
-  blockids.reserve(blocks.size());
-  for (const auto& b: blocks)
+  //blockids.reserve(blocks.size());
+  //std::cout <<"NEXT";
+  for (const auto& b: blocks) {
     blockids.push_back(b.first);
-  
+    //std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
+  }
+  //std::cout <<"sorted";
   std::sort(blockids.begin(), blockids.end());
-  
-
+  //for (const auto& b: blockids) {
+  //  std::cout<<Id::pretty(b)<< ":" << b <<std::endl;
+  //}
+  //std::cout <<"end sorted";
   //go through each block and see if it can be simplified
   //in some cases it will end up being split into smaller blocks
   //Note that the old block will be marked as disactivated
   for (auto& bid: blockids) {
+    //std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
     Blocks newBlocks = simplifyBlock(blocks.at(bid));
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {

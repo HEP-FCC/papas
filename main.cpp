@@ -32,9 +32,9 @@ int longrun(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
 
-  //return example(argc, argv);
+  return example(argc, argv);
   //return example2(argc, argv);
- return longrun(argc, argv);
+  //return longrun(argc, argv);
 }
 
 int example(int argc, char* argv[]) {
@@ -45,6 +45,7 @@ int example(int argc, char* argv[]) {
   }
   const char* fname = argv[1];
   //open the Pythia file fname
+  try {
   auto pythiaConnector = PythiaConnector(fname);
   
   // Create CMS detector and PapasManager
@@ -70,6 +71,11 @@ int example(int argc, char* argv[]) {
   
   papasManager.display();
   return EXIT_SUCCESS;
+  } catch (std::runtime_error& err) {
+    std::cerr << err.what() << ". Quitting." << std::endl;
+    exit(1);
+  }
+
 }
 
 int example2(int argc, char* argv[]) {
@@ -89,15 +95,9 @@ int example2(int argc, char* argv[]) {
 
 int longrun(int argc, char* argv[]) {
 
-  PDebug::On();  // physics debug output
+  //PDebug::On();  // physics debug output
   randomgen::setEngineSeed(0xdeadbeef);
   
- 
-  
-  /*std::cout << randomgen::RandUniform(0, 1).next()<<std::endl;
-  std::cout << randomgen::RandUniform(0, 1).next() <<std::endl;
-  std::cout << randomgen::RandExponential(3).next()<<std::endl;
-  */
   
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
@@ -124,9 +124,6 @@ int longrun(int argc, char* argv[]) {
     if (i == eventNo)
       start = std::chrono::steady_clock::now();
     else {
-      /*if (Id::counter() > 900) {
-        std::cout << i << "=" << Id::counter() << std::endl;
-      }*/
       papasManager.clear();
     }
     pythiaConnector.processEvent(i, papasManager);

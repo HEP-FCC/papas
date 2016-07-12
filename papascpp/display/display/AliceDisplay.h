@@ -36,7 +36,7 @@ private:
   Int_t m_argc;  // dummy arguments
   char* m_str[1];
   TApplication m_theApp;
-  PFEventDisplay* m_display;
+  PFEventDisplay* m_display; //make shared
   std::shared_ptr<GDetector> m_gdetector;
 };
 

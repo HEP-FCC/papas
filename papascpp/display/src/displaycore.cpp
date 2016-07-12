@@ -37,13 +37,6 @@ void Display::addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clear
   for (auto const& view : m_views) {
     view.second->addToRegister(obj, layer, clearable);
   }
-
-  /*elems = [obj];
-   if hasattr(obj, '__iter__'):
-   elems = obj
-   for elem in elems:
-   for view in m_views.values():
-   view.addToRegister(elem, layer, clearable)*/
 };
 
 void Display::clear() {

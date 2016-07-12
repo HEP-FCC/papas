@@ -70,7 +70,6 @@ const Track& PFEvent::track(Id::Type id) const {
     class Track t;
 
     PDebug::write("problem with track not found :{}", id);
-    PDebug::log()->flush();
     return std::move(t);  // TODO produce error
   };
 }
@@ -133,7 +132,7 @@ const Cluster& PFEvent::HCALCluster(Id::Type id) const {
   }
   class Cluster c;
   PDebug::write("problem with cluster not found :{}", id);
-  PDebug::log()->flush();
+  PDebug::flush();
   return std::move(c);  // TODO produce error
 }
 
@@ -159,7 +158,7 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
   // TODO throw error
   class Cluster c;
   PDebug::write("problem with cluster not found :{}", id);
-  PDebug::log()->flush();
+  PDebug::flush();
   return std::move(c);  // TODO produce error
 }
 

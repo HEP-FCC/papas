@@ -62,9 +62,6 @@ void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
   } else if ((abs(pdgid) == 12) | (abs(pdgid) == 14) | (abs(pdgid) == 16)) {
     simulateNeutrino(pfptc);
   } else if (abs(pdgid) >= 100) {
-    if (pdgid==-2112) {
-      std::cout<<pfptc;
-    }
     simulateHadron(pfptc);
   }
 }

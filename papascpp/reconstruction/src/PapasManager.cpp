@@ -35,7 +35,7 @@ void PapasManager::simulateEvent(Particles&& particles) {
     return (m_particles.at(i).e() > m_particles.at(j).e());});
 
   for (const auto& id : ids) {
-    std::cout << id<< m_particles.at(id)<<std::endl;
+    //std::cout << id<< m_particles.at(id)<<std::endl;
     m_history.emplace(id, std::move(PFNode(id)));  ///< insert the raw particle ids into the history
     m_simulator.SimulateParticle(m_particles.at(id), id);
   }
@@ -74,6 +74,7 @@ void PapasManager::display() {
   // myApp.display2(m_simulator, m_pfEvent, m_particles, m_detector);
 
   myApp.run();
+  std::cout<<"finish";
 }
 
 }  // end namespace papas
