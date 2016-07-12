@@ -10,7 +10,7 @@
 #include "Cluster.h"
 #include "Definitions.h"
 #include "Id.h"
-#include "Log.h"
+#include "PDebug.h"
 #include "ParticlePData.h"
 #include "Path.h"
 #include "SimParticle.h"
@@ -23,17 +23,7 @@ namespace papas {
 
 Simulator::Simulator(const Detector& d, Nodes& nodes)
     : m_nodes(nodes), m_detector(d), m_propStraight(), m_propHelix(d.field()->getMagnitude()) {
-  // TODO think about sizing though note remark from Stroustrup which say its super hard to beat
-  // automated and best not to bother
-  int isize = 1000;
-  m_ecalClusters.reserve(isize);
-  m_hcalClusters.reserve(isize);
-  m_smearedEcalClusters.reserve(isize);
-  m_smearedHcalClusters.reserve(isize);
-      //m_particles.reserve(isize);
-  m_tracks.reserve(isize);
-  m_smearedTracks.reserve(isize);
-  // m_nodes.reserve(isize);
+
 }
 
 void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
@@ -147,12 +137,10 @@ void Simulator::smearMuon(SimParticle& ptc) {
   PDebug::write("Smearing Muon");
   const Track& track = addTrack(ptc);
   propagateAllLayers(ptc);
-  //PDebug::write("Made Smeared{}", smeared);
-
 }
 
 void Simulator::propagate(SimParticle& ptc, const SurfaceCylinder& cylinder) {
-  bool isNeutral = fabs(ptc.charge()) < 0.5;  // TODO ask colin why not zero
+  bool isNeutral = fabs(ptc.charge()) < 0.5;
   if (isNeutral)
     m_propStraight.propagateOne(ptc, cylinder);
   else
@@ -164,7 +152,7 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
     return m_ecalClusters.at(clusterId);
   else if (Id::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
-  // TODO make this throw an error
+  throw std::out_of_range( "Cluster not found" );
 }
 
 SimParticle& Simulator::addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
@@ -174,7 +162,6 @@ SimParticle& Simulator::addParticle(int pdgid, double charge, TLorentzVector tlv
   SimParticle simParticle{uniqueid, pdgid, charge, tlv, vertex, field};
   m_particles.emplace(uniqueid, std::move(simParticle));
   addNode(uniqueid);  // add node to history graph
-  // PDebug::write()<<  ;
   // PDebug::write("Made Simulation Particle {}", m_particles[uniqueid].info());
   return m_particles[uniqueid];
 }

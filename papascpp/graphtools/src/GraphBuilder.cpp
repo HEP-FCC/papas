@@ -2,7 +2,7 @@
 #include "GraphBuilder.h"
 #include "Edge.h"
 #include "FloodFill.h"
-#include "Log.h"
+#include "PDebug.h"
 namespace papas {
 
 // Allow optional parameters where construction arguments are references

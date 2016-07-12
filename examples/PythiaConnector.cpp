@@ -14,7 +14,7 @@
 #include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
 
-#include "Log.h"
+#include "PDebug.h"
 #include "PParticle.h"
 #include "Simulator.h"
 

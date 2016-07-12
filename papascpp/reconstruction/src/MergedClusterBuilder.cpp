@@ -13,7 +13,7 @@
 #include "Edge.h"
 #include "GraphBuilder.h"
 #include "Id.h"
-#include "Log.h"
+#include "PDebug.h"
 #include "Ruler.h"
 
 namespace papas {

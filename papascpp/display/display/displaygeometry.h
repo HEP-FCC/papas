@@ -20,8 +20,8 @@ namespace papas {
 class Drawable {
 public:
   Drawable();
-  // virtual ~Drawable() = 0;
-  virtual void Draw(const std::string& projection) const = 0;
+  virtual ~Drawable() = default;
+  virtual void Draw(const std::string& projection)  = 0;
 
 private:
 };
@@ -31,33 +31,30 @@ class GDetectorElement : public Drawable {
 public:
   GDetectorElement(std::shared_ptr<const DetectorElement> de);
   GDetectorElement(double radius, double dz);
-  // ~GDetectorElement();
+  ~GDetectorElement() override = default;
   // GDetectorElement(const DetectorElement& de);
-  void Draw(const std::string& projection) const override;
+  void Draw(const std::string& projection)  override;
 
 private:
   /// lists of shared_pointer  to circles to be used to plot the detector element
-  std::list<std::unique_ptr<TEllipse>> m_circles;
+  std::list<TEllipse> m_circles;
 
   /// lists of shared_pointer  to boxes to be used to plot the detector element
-  std::list<std::unique_ptr<TBox>> m_boxes;
+  std::list<TBox> m_boxes;
 };
 
 /// Graphical representation of the detector - holds all the GDetectorElements together
 class GDetector : public Drawable {
 public:
   GDetector(const Detector& detector);
-  //~GDetector();
-  void Draw(const std::string& projection) const override;
+  ~GDetector() override = default;
+  void Draw(const std::string& projection)  override;
   void DrawSimple(const std::string& projection) const;  // testing
 private:
-  /// ECAL graphical detector element
-  GDetectorElement m_gEcal;
+  GDetectorElement m_gEcal; ///< ECAL graphical detector element
+  GDetectorElement m_gHcal;///< HCAL graphical detector element
 
-  /// HCAL graphical detector element
-  GDetectorElement m_gHcal;
   /// will contain shared_ptrs to GDetectorElements and GTrajectories to be plotted
-
   std::list<std::shared_ptr<Drawable>> m_drawElems;
 };
 }  // end namespace papas

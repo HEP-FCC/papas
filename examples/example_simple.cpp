@@ -10,15 +10,10 @@
 #include <stdio.h>
 
 #include "CMS.h"
-#include "PFReconstructor.h"
 #include "PapasManager.h"
-#include "Simulator.h"
 #include "PythiaConnector.h"
-#include "AliceDisplay.h"
-#include "Log.h"
+#include "PDebug.h"
 
-// STL
-#include <chrono>
 #include <iostream>
 
 
@@ -56,7 +51,6 @@ int main(int argc, char* argv[]) {
     for (const auto& p : papasManager.reconstructedParticles()) {
       std::cout << "  " << p.second << std::endl;
     }
-    
     //produce papas display
     papasManager.display();
     return EXIT_SUCCESS;

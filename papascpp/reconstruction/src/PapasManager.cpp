@@ -11,7 +11,7 @@
 #include "Id.h"
 #include "PFBlockBuilder.h"
 
-#include "Log.h"
+#include "PDebug.h"
 #include "PFReconstructor.h"
 
 namespace papas {
@@ -49,8 +49,7 @@ void PapasManager::reconstructEvent() {
 
   // create the blocks of linked ids
   auto bBuilder = PFBlockBuilder(m_pfEvent, ids);
-  //m_pfEvent.setBlocks(bBuilder);
-
+  
   // do the reconstruction of the blocks
   auto pfReconstructor = PFReconstructor(m_pfEvent);
   pfReconstructor.reconstruct(bBuilder.blocks());
@@ -58,9 +57,7 @@ void PapasManager::reconstructEvent() {
 }
 
 void PapasManager::clear() {
-  // this does not work! Something is wrong and corrupts something
-
-  m_pfEvent.clear();
+   m_pfEvent.clear();
   m_history.clear();
   m_particles.clear();
   m_simulator.clear();

@@ -64,7 +64,7 @@ public:
   GTrajectories(const Track& track);
   GTrajectories(const SimParticle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
-  void Draw(const std::string& projection) const override;
+  void Draw(const std::string& projection)  override;
   void addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth);
   void addHelix(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor);
   void addNamedPoints(const Path::Points& path, TVector3 tvec, int linestyle, int linecolor, int linewidth);

@@ -1,6 +1,5 @@
 <lcgdict>
   <selection>
-    <class name="papas::Alice"/>
     <class name="papas::Display"/>
     <class name="papas::ViewPane"/>
     <class name="papas::PFEventDisplay"/>
@@ -29,13 +28,12 @@
     </class>
     <class name="papas::Particle">
     </class>
-    <class name="papas::PFParticle">
+    <class name="papas::SimParticle">
     </class>
     <class name="std::unordered_map&lt;int,std::vector&lt;int&gt; &gt;"/>
     <class name="std::vector&lt;papas::Cluster&gt;"/>
     <class name="std::unordered_map&lt;papas::Id::Type,papas::Cluster&gt;"/>
     <class name="std::unordered_map&lt;papas::Id::Type,papas::Track&gt;"/>
-    <class name="std::unordered_map&lt;papas::Id::Type,papas::PFParticle&gt;"/>
-    <class name="std::unordered_map&lt;int,int;"/>
+    <class name="std::unordered_map&lt;papas::Id::Type,papas::SimParticle&gt;"/>
   </selection>
 </lcgdict>

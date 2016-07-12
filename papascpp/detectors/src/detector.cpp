@@ -37,8 +37,7 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
     return m_hcal;
     break;
   default:
-    // throw error
-    return m_ecal;
+      throw std::range_error( "Cluster not found" );
   }
 }
 
@@ -52,13 +51,12 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
     return m_hcal;
     break;
   default:
-    return m_ecal;  // TODO throw error
-    break;
+      throw std::range_error( "Cluster not found" );
     // TODO add track and field
   }
 
   // TODO is this the best route or should it throw
-  return nullptr;
+  //return nullptr;
 }
 
 Field::Field(const VolumeCylinder& volume, const Material& material, double magnitude)

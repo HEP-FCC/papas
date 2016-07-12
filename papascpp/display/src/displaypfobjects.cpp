@@ -254,7 +254,7 @@ GTrajectories::GTrajectories(const Track& track) {
 /// Constructor for showing clusters
 GTrajectories::GTrajectories(const Cluster& cluster) { m_gBlobs.push_back(GBlob(cluster)); }
 
-void GTrajectories::Draw(const std::string& projection) const {
+void GTrajectories::Draw(const std::string& projection) {
   // draw tracks
   for (auto const& traj : m_gTrajectories) {
     traj.Draw(projection);

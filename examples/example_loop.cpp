@@ -8,20 +8,18 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "AliceDisplay.h"
 #include "CMS.h"
-#include "Log.h"
-#include "PFReconstructor.h"
+#include "PDebug.h"
 #include "PapasManager.h"
 #include "PythiaConnector.h"
-#include "Simulator.h"
+
 
 // STL
 #include <chrono>
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  papas::PDebug::On("physics.txt");
+  //papas::PDebug::On("physics.txt");
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
 
   if (argc != 2) {

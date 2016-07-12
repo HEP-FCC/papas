@@ -10,7 +10,7 @@
 //#include "PFEvent.h"
 #include "Definitions.h"
 #include "FloodFill.h"
-#include "Log.h"
+#include "PDebug.h"
 #include "directedacyclicgraph.h"
 
 namespace papas {

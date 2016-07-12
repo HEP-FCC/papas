@@ -15,7 +15,7 @@
 #include "BlockSplitter.h"
 #include "Cluster.h"
 #include "Edge.h"
-#include "Log.h"
+#include "PDebug.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
 #include "ParticlePData.h"

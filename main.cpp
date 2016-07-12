@@ -10,18 +10,13 @@
 #include <stdio.h>
 
 #include "CMS.h"
-#include "PFReconstructor.h"
 #include "PapasManager.h"
-#include "Simulator.h"
 #include "PythiaConnector.h"
-#include "AliceDisplay.h"
-#include "Log.h"
+#include "PDebug.h"
 
 // STL
 #include <chrono>
 #include <iostream>
-
-
 
 
 using namespace papas;
