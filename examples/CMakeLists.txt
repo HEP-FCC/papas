@@ -13,18 +13,14 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable(example_simple example_simple.cpp pythiaconnector.cpp)
-target_link_libraries(example_simple papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) 
+target_link_libraries(example_simple papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
 
 add_executable(example_loop example_loop.cpp pythiaconnector.cpp)
-target_link_libraries(example_loop papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) 
+target_link_libraries(example_loop papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
 
-#install(TARGETS example_simple DESTINATION bin)
+install(TARGETS example_simple DESTINATION bin)
 install(TARGETS example_loop DESTINATION bin)
 
-#install(TARGETS example_simple example_loop
-#  # IMPORTANT: Add the write executable to the "export-set"
-#  EXPORT papasTargets
-#  DESTINATION bin)
 
 
 # --- adding tests for examples ------------------------------

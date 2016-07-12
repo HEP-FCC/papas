@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     papas::PapasManager papasManager{CMSDetector};
     
     unsigned int eventNo = 0;
-    unsigned int nEvents = 1000;
+    unsigned int nEvents = 100;
 
     
     auto start = std::chrono::steady_clock::now();
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
 
       papas::PDebug::write("Event: {}", i);
-      if (i % 100 == 0) {
+      if (i % 10 == 0) {
         std::cout << "reading event " << i << std::endl;
       }
       if (i == eventNo)
