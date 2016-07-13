@@ -36,9 +36,11 @@ You need to install:
 
 --
 
-Before installing and everytime you want to use this software, set up your environment:
+Before installing and everytime you want to use this software on lxplus, set up your environment:
 
     source /afs/cern.ch/exp/fcc/sw/0.7/init_fcc_stack.sh
+    
+On other systems make sure you have PODIO, FFCEDM and ROOT environment variables set up.
 
 
 Compilation
