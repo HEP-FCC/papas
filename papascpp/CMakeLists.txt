@@ -3,29 +3,28 @@
 
 
 
-#FIND_PACKAGE( Doxygen )
-IF( DOXYGEN_FOUND )
-MESSAGE( STATUS "Doxygen engaging " )
+#FIND_PACKAGE( Doxygen HINTS env{$DOXYGEN})
+#IF( DOXYGEN_FOUND )
+#MESSAGE( STATUS "Doxygen engaging " )
 # Add doc target
-ADD_CUSTOM_TARGET( doc )
-ADD_CUSTOM_COMMAND( TARGET doc
-COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-"${PROJECT_SOURCE_DIR}/../README.md" "${PROJECT_SOURCE_DIR}/../doc/README.md"
-COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile"
-WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/../doc"
-COMMENT "Building API Documentation in ${PROJECT_SOURCE_DIR}/../doc... "
-VERBATIM )
+#ADD_CUSTOM_TARGET( doc )
+#ADD_CUSTOM_COMMAND( TARGET doc
+#COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+#"${PROJECT_SOURCE_DIR}/../README.md" "${PROJECT_SOURCE_DIR}/../doc/README.md"
+#COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile"
+#WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/../doc"
+#COMMENT "Building API Documentation in ${PROJECT_SOURCE_DIR}/../doc... "
+#VERBATIM )
 
-ELSE()
-MESSAGE( STATUS "Doxygen not found in your system!!" )
-IF( INSTALL_DOC )
-MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
-SET( INSTALL_DOC OFF )
-ENDIF()
-ENDIF()
+#ELSE()
+#MESSAGE( STATUS "Doxygen not found in your system!!" )
+#IF( INSTALL_DOC )
+#MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
+#SET( INSTALL_DOC OFF )
+#ENDIF()
+#ENDIF()
 
-MESSAGE ("ALICE")
-MESSAGE( STATUS "${CMAKE_SOURCE_DIR}" )
+
 SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/install")
 Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 

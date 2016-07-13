@@ -10,13 +10,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-
     #tell mac to use RPATH
 	set(CMAKE_MACOSX_RPATH 1)
 endif(APPLE)
 
 #--- Declare options -----------------------------------------------------------
-option(papas_documentation "Whether or not to create doxygen doc target.")
+option(papas_documentation "Whether or not to create doxygen doc target." ON)
 
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
@@ -61,6 +60,8 @@ include(CTest)
 if(papas_documentation)
     include(cmake/papasDoxygen.cmake)
 endif()
+
+include(cmake/papasDoxygen.cmake)
 
 #--- add version files ---------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/papasVersion.h
