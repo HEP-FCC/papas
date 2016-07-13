@@ -11,14 +11,14 @@ ${MAINDIR}/graphtools/graphtools )
 
 
 add_executable(utests unittest.cpp )
-target_link_libraries(utests  papascppstuff ${ROOT_LIBRARIES} )
+target_link_libraries(utests  papascpp ${ROOT_LIBRARIES} )
 
 
 install(TARGETS utests DESTINATION bin)
 
 
 # --- adding tests for examples ------------------------------
-add_test(NAME utests COMMAND tests)
+add_test(NAME utests COMMAND utests)
 
 
 

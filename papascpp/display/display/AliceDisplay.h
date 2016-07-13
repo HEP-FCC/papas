@@ -18,7 +18,7 @@
 #include "PFEventDisplay.h"
 #include "displaypfobjects.h"
 #include "TSystem.h"
-#include "Tpad.h"
+
 namespace papas {
 
 class PFEvent;
