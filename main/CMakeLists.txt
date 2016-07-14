@@ -1,15 +1,15 @@
 message(status, "building main")
 
-set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
+set (MAINDIR "${CMAKE_SOURCE_DIR}")
 
 include_directories(
-${MAINDIR}/utility/utility
-${MAINDIR}/detectors/detectors
-${MAINDIR}/display/display
-${MAINDIR}/datatypes/datatypes/
-${MAINDIR}/simulation/simulation
-${MAINDIR}/reconstruction/reconstruction
-${MAINDIR}/graphtools/graphtools
+${MAINDIR}/utility/papas
+${MAINDIR}/detectors/papas
+${MAINDIR}/display/papas
+${MAINDIR}/datatypes/papas/
+${MAINDIR}/simulation/papas
+${MAINDIR}/reconstruction/papas
+${MAINDIR}/graphtools/papas
 ${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )

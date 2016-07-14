@@ -2,39 +2,39 @@
 
 
 #make this automated
-set (MAINDIR ${CMAKE_CURRENT_SOURCE_DIR})
+set (MAINDIR ${CMAKE_SOURCE_DIR})
 file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/datatypes/*.h
-${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/graphtools/*.h
-${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/fastsim/*.h
-${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/utility/*.h
-${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/display/*.h
-${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/detectors/*.h
-${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/simulation/*.h
-${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/papas/*.h
+${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/papas/*.h
+${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/papas/*.h
+${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/papas/*.h
+${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/papas/*.h
+${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/papas/*.h
+${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/papas/*.h
+${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/papas/*.h
 )
 
 file(GLOB_RECURSE headers 
-${MAINDIR}/datatypes/datatypes/*.h
-${MAINDIR}/display/display/*.h
-${MAINDIR}/detectors/detectors/*.h
-${MAINDIR}/simulation/simulation/*.h
-${MAINDIR}/graphtools/graphtools/*.h
-${MAINDIR}/utility/utility/*.h
-${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/datatypes/papas/*.h
+${MAINDIR}/display/papas/*.h
+${MAINDIR}/detectors/papas/*.h
+${MAINDIR}/simulation/papas/*.h
+${MAINDIR}/graphtools/papas/*.h
+${MAINDIR}/utility/papas/*.h
+${MAINDIR}/reconstruction/papas/*.h
 )
 
 project(papaslibrary)
 
 include_directories(
-${MAINDIR}/datatypes/datatypes/
-${MAINDIR}/display/display/
-${MAINDIR}/detectors/detectors/
-${MAINDIR}/simulation/simulation/
-${MAINDIR}/graphtools/graphtools/
-${MAINDIR}/utility/utility/
-${MAINDIR}/reconstruction/reconstruction/
-${MAINDIR}/spdlog )
+${MAINDIR}/datatypes/papas/
+${MAINDIR}/display/papas/
+${MAINDIR}/detectors/papas/
+${MAINDIR}/simulation/papas/
+${MAINDIR}/graphtools/papas/
+${MAINDIR}/utility/papas/
+${MAINDIR}/reconstruction/papas/
+${MAINDIR}/spdlog)
 
 message(status, "building papascpp library")
 
