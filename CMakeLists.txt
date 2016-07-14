@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
     #tell mac to use RPATH
-	set(CMAKE_MACOSX_RPATH 1)
+
 endif(APPLE)
 
 #--- Declare options -----------------------------------------------------------
@@ -21,15 +21,17 @@ option(papas_documentation "Whether or not to create doxygen doc target." ON)
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 
 #--- Declare ROOT dependency ---------------------------------------------------
-#NB on the mac I think we need to find the ROOT CMake not the local one which I therefore commented out in the cmake directory
-#need to understand what is the problem
+if(APPLE)
+	set(CMAKE_MACOSX_RPATH 1)
+set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
+find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
+add_definitions(${ROOT_CXX_FLAGS})
+include("${ROOT_USE_FILE}")
+else()
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(ROOT REQUIRED )
-add_definitions(${ROOT_CXX_FLAGS}) 
-if (APPLE)
-include("${ROOT_USE_FILE}") #important for Mac Xcode
+find_package(ROOT REQUIRED COMPONENTS RIO Tree)
+include_directories(${ROOT_INCLUDE_DIR})
 endif(APPLE)
-include_directories("${ROOT_INCLUDE_DIR}")
 
 
 #---PODIO and FCC-EDM-----------------------------------------------------------
@@ -55,7 +57,7 @@ include_directories(
 
 add_definitions(-Wno-unused-variable -Wno-unused-parameter -pthread)
 #--temporary fix of inconsistency in ROOT CMake macros
-set(ROOT_genreflex_cmd ${ROOT_genreflex_CMD})
+#set(ROOT_genreflex_cmd ${ROOT_genreflex_CMD})
 
 
 #--- enable unit testing capabilities ------------------------------------------
