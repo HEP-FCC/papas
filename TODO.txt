@@ -11,9 +11,10 @@ DONE: make PDEBUG turn on and off properly
 
 Examples
 In PROGRESS: Document and test Mac and lxplus.
-Make example use papas library rather than compiling all together
-make example suitable for Nicolo to try out.
-Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
+? Make example use papas library rather than compiling all together
+?? make example suitable for Nicolo to try out.
+
+Look into TWidget. Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
 
 FCCSW Guidelines & Code Formatting
 Files which start with lower case letter are in the queue &  need to be reformatted according to FCCSW guidelines
@@ -22,7 +23,7 @@ Rename class variables and functions where needed
 Have just run a global reformat using FCCSW Clang format file through all code. Need to check for any glitches in this.
 DONE: Address remaining code warnings
 Revisit use of && in code and whether this is a good idea
-Clear out debugging stuff and commented out section
+Clear out debugging stuff and commented out sections 
 
 Commenting
 Commenting is very variable. Try CMS.h, detector.h, PFBlock for examples of more complete commenting
@@ -31,11 +32,11 @@ Add doxygen comments to header files which have not yet been done
 Update existing comments which are outdated.
 
 Makefiles
-Underway: Embarrassingly horrible at present. Completely Revamp the CMakefiles using PODIO make file as example. 
+NEARLY THERE: Embarrassingly horrible at present. Completely Revamp the CMakefiles using PODIO make file as example. 
 Figure out how to get DYLD_LIBRARY_PATH properly sorted for Mac - need advise.
 Make the Makefiles use package structure more formally 
-Take advice about how to separate out library, examples etc
-Looks like am building library twice (slow).
+DONE: Take advice about how to separate out library, examples etc
+REMOVED FOR NOW: Looks like am building library twice (slow).
 
 Package Structure
 Review package structure as some parts are not quite right. PFEventdisplay may need to be moved. 
@@ -58,22 +59,22 @@ Profiling and memory leaks
 History: make a  class to provide user friendly front end
 
 Display: display reconstucted particles somehow
-        Revisit the display code and have more concrete objects and less shared_ptrs
+        STARTED: Revisit the display code and have more concrete objects and less shared_ptrs
 	investigate oddities that have observed and understand what is happening (occurs Python and C++)
 Check the other viewpanes
 make map of views use enum not string
 
 Logging etc
-Add in error handling
+STARTED: Add in error handling
 Implement logging messages. Logging structure is available but not used except for PDebug which handles the physics debug output).
-Separate out PDebug from Logging. Make PDebug more configurable.
+DONE: Separate out PDebug from Logging. Make PDebug more configurable.
 
 DONE Bug fix
 DONE There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
 
 Unit testing
-STARTED Probably convert to Catch (check) 
-Implement the rest of the python tests
+DONE: Probably convert to Catch (check) 
+Implement the rest of the python & gtest tests
 STARTED Sort out where to store the tests and set up a separate test build
 REMOVING Gtest is not working on lxplus and has been commented out of cmake for now.
 
@@ -88,17 +89,17 @@ DONE Add sorting routine to reinstate matching with Python
 
 Others
 Attend to TODOs and comments in the existing code
-Add in new Id:type for simulated particle
-Header file for constants
+*** Add in new Id:type for simulated particle
+**** Header file for constants
 DONE: makes it slower? Work on sorting
 Consider making helper classes for outputs??
 remove attempts to reserve for vectors (Stroustrup says its not worthwhile)
 SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
-Issue with naming of Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. Need advice!
+DISCUSSED: Issue with naming of Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. Need advice!
 
 Ctest
 DONE example Catch
 
 New queries:
-Python library check still works
+see if Python library check still works
 Investigate reduction  in speed following unordered_maps and sorting - make optional?
