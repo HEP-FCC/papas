@@ -1,4 +1,4 @@
-
+message(status, "building main")
 
 set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
 
@@ -14,33 +14,22 @@ ${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-#include_directories(
-#"${podio_INCLUDE_DIRS}"
-#"${FCCEDM_INCLUDE_DIRS}"
-#)
 
 include_directories(/usr/local/lib ${CMAKE_SOURCE_DIR}/install/lib)
 
-message(status "${podio_INCLUDE_DIRS}")
-message(status "ffccedm"  "${FCCEDM_INCLUDE_DIRS}")
-message(status $ENV{ROOT_INCLUDE_PATH})
-message(status $ENV{DYLD_LIBRARY_PATH})
-
-#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
-#find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
-
-#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-#include(${ROOT_USE_FILE})
-
-#include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_CXX_FLAGS})
 
-#find_package(GTest)
-#include_directories(${GTEST_INCLUDE_DIRS} /usr/local/include  )
-message(status, "Alice main")
-add_executable(mainexe ../main.cpp PythiaConnector.cpp)
-target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
-#target_link_libraries(mainexe papascppstuff ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) #${GTEST_LIBRARIES}
+
+add_executable(mainexe ../main.cpp pythiaconnector.cpp)
+target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) 
+
+
+install(TARGETS mainexe DESTINATION bin)
+
+#add_test(NAME fcc-gen COMMAND $ENV{FCCPHYSICS}/bin/fcc-pythia8-generate $ENV{FCCPHYSICS}/share/ee_ZH_Zmumu_Hbb.txt WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+#add_test(NAME read    COMMAND mainexe ee_ZH_Zmumu_Hbb.root WORKING_DIRECTORY WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+#set_property(TEST read PROPERTY ENVIRONMENT LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:$ENV{LD_LIBRARY_PATH})
+#set_property(TEST read PROPERTY DEPENDS fcc_gen)
 
 
 

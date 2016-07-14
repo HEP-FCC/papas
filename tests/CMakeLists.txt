@@ -1,4 +1,4 @@
-
+message(status, "building unittests")
 
 set (MAINDIR "${CMAKE_SOURCE_DIR}/papascpp")
 include_directories(

@@ -6,7 +6,6 @@ DONE Throw out several unused headers
 DONE Separate out into example(s)
 DONE Make it write results out to Pythia
 DONE Use command line arguments to feed in parameters (filename, initialevent, #No events)
-
 Get Gun example to run
 DONE: make PDEBUG turn on and off properly
 
@@ -27,7 +26,7 @@ Clear out debugging stuff and commented out section
 
 Commenting
 Commenting is very variable. Try CMS.h, detector.h, PFBlock for examples of more complete commenting
-Reinstate Doxygen documentation again on Max
+DONE: Reinstate Doxygen documentation again on Max
 Add doxygen comments to header files which have not yet been done
 Update existing comments which are outdated.
 
@@ -73,10 +72,10 @@ DONE Bug fix
 DONE There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
 
 Unit testing
-Probably convert to Catch (check)
+STARTED Probably convert to Catch (check) 
 Implement the rest of the python tests
-Sort out where to store the tests and set up a separate test build
-Gtest is not working on lxplus and has been commented out of cmake for now.
+STARTED Sort out where to store the tests and set up a separate test build
+REMOVING Gtest is not working on lxplus and has been commented out of cmake for now.
 
 
 Physics
@@ -94,10 +93,12 @@ Header file for constants
 DONE: makes it slower? Work on sorting
 Consider making helper classes for outputs??
 remove attempts to reserve for vectors (Stroustrup says its not worthwhile)
-Revisit edges, distance, blocks and recheck ownership
+SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
 Issue with naming of Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. Need advice!
 
 Ctest
-Catch
+DONE example Catch
 
-
+New queries:
+Python library check still works
+Investigate reduction  in speed following unordered_maps and sorting - make optional?

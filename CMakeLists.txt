@@ -24,9 +24,11 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 #NB on the mac I think we need to find the ROOT CMake not the local one which I therefore commented out in the cmake directory
 #need to understand what is the problem
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(ROOT REQUIRED)
+find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
 add_definitions(${ROOT_CXX_FLAGS}) 
 include("${ROOT_USE_FILE}") #important for Mac Xcode
+
+
 
 #---PODIO and FCC-EDM-----------------------------------------------------------
 find_package(podio REQUIRED HINTS $ENV{PODIO})
@@ -41,6 +43,7 @@ link_directories(${podio_LIBRARY_DIR})
 
 find_package(fccedm REQUIRED HINTS $ENV{FCCEDM})
 message(STATUS "Found fcc-edm: ${fccedm_DIR}")
+link_directories(${fccedm_DIR})
 
 include_directories(
 "${podio_INCLUDE_DIRS}"
@@ -79,9 +82,9 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 
 
 add_subdirectory(papascpp)
-#add_subdirectory(papascpp/graphtools)
 add_subdirectory(main)
 add_subdirectory(examples)
+#add_subdirectory(dageg)
 #add_subdirectory(papaslib)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+

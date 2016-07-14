@@ -39,6 +39,7 @@ You need to install:
 Before installing and everytime you want to use this software on lxplus, set up your environment:
 
     source /afs/cern.ch/exp/fcc/sw/0.7/init_fcc_stack.sh
+    source init.sh
     
 On other systems make sure you have PODIO, FFCEDM and ROOT environment variables set up.
 
@@ -68,7 +69,7 @@ To run example_simple:
 
 example_simple examples/ee_ZH_Zmumu_Hbb.root
 
-This should produce a display (to exit choose file/quit ROOT).
+This should produce a display (NB to exit choose file/quit ROOT).
 
 You should also get a printout like:
 
