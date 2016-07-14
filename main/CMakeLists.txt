@@ -20,7 +20,7 @@ include_directories(/usr/local/lib ${CMAKE_SOURCE_DIR}/install/lib)
 add_definitions(${ROOT_CXX_FLAGS})
 
 
-add_executable(mainexe ../main.cpp pythiaconnector.cpp)
+add_executable(mainexe ../main.cpp PythiaConnector.cpp)
 target_link_libraries(mainexe papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities) 
 
 

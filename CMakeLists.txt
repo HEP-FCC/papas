@@ -24,10 +24,12 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 #NB on the mac I think we need to find the ROOT CMake not the local one which I therefore commented out in the cmake directory
 #need to understand what is the problem
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
+find_package(ROOT REQUIRED )
 add_definitions(${ROOT_CXX_FLAGS}) 
+if (APPLE)
 include("${ROOT_USE_FILE}") #important for Mac Xcode
-
+endif(APPLE)
+include_directories("${ROOT_INCLUDE_DIR}")
 
 
 #---PODIO and FCC-EDM-----------------------------------------------------------
