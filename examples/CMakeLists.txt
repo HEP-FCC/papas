@@ -19,6 +19,9 @@ target_link_libraries(example_simple papascpp ${ROOT_LIBRARIES}   datamodel data
 add_executable(example_loop example_loop.cpp PythiaConnector.cpp)
 target_link_libraries(example_loop papascpp ${ROOT_LIBRARIES}  datamodel datamodelDict podio utilities)
 
+add_executable(example_pair example_dag_pair.cpp)
+target_link_libraries(example_pair papascpp ${ROOT_LIBRARIES} )
+
 #${podio_LIBRARY_DIR}/libpodio.so  ${podio_LIBRARY_DIR}/libpodioDict.so 
 #/Users/alice/fccwork/fcc-edm/install/lib/libdatamodel.so  /Users/alice/fccwork/fcc-edm/install/lib/libdatamodelDict.so )
 
@@ -29,4 +32,5 @@ install(TARGETS example_loop DESTINATION bin)
 # --- adding tests for examples ------------------------------
 add_test(NAME fcc-generate COMMAND $ENV{FCCPHYSICS}/bin/fcc-pythia8-generate $ENV{FCCPHYSICS}/share/ee_ZH_Zmumu_Hbb.txt WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_test(NAME example_loop  COMMAND $ENV{FCCPAPASCPP}/bin/example_loop ee_ZH_Zmumu_Hbb.root  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
+
 #set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)

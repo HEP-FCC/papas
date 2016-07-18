@@ -12,10 +12,6 @@
 
 namespace papas {
 
-// TODO handle centrally
-const int c_vecsize = 10000;      // remove this
-const double c_exp_lambda = 3.5;  // AJR where does this come from
-
 /// Material
 /**
   Users need to define material properties for their detectors
@@ -23,14 +19,14 @@ const double c_exp_lambda = 3.5;  // AJR where does this come from
 class Material {
 public:
   Material(double x0, double lambda);
-  virtual double pathLength(bool is_em) const;
+  virtual double pathLength(bool isEm) const;
 
 private:
   double m_x0;
   double m_lambdaI;
 };
 
-// Temporary
+  // Temporary //TODO
 class TestMaterial : public Material {
 public:
   TestMaterial(double x0, double lambda);

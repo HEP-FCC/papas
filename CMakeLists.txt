@@ -23,6 +23,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 #--- Declare ROOT dependency ---------------------------------------------------
 if(APPLE)
 	set(CMAKE_MACOSX_RPATH 1)
+	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
 set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
 add_definitions(${ROOT_CXX_FLAGS})
@@ -89,7 +90,7 @@ add_subdirectory(papascpp)
 add_subdirectory(main)
 add_subdirectory(examples)
 #add_subdirectory(dageg)
-#add_subdirectory(papaslib)
+add_subdirectory(papaslib)
 #
 #this test only if R/Rcpp/Rinside are installed version 3.2+
 #note there are a lot of R related warnings (originating from R)

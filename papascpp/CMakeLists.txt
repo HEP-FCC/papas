@@ -39,7 +39,7 @@ ${MAINDIR}/spdlog)
 message(status, "building papascpp library")
 
 REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
-add_library(papascpp SHARED ${sources}  ${headers} papascppDict )
+add_library(papascpp SHARED ${sources}  ${headers} papascppDict.cxx )
 add_dependencies(papascpp papascppDict-dictgen )
 
 target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} )

@@ -23,55 +23,55 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 
 
-SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../install")
+SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/install")
 Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 
 #make this automated
-set (MAINDIR ${CMAKE_SOURCE_DIR}/papascpp)
+set (MAINDIR ${CMAKE_SOURCE_DIR})
 file(GLOB_RECURSE sources     
 ${MAINDIR}/datatypes/src/*.cpp 
-${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/graphtools/*.h
-${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/fastsim/*.h
-${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/utility/*.h
-${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/display/*.h
-${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/detectors/*.h
-${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/simulation/*.h
-${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/papas/*.h
+${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/papas/*.h
+${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/papas/*.h
+${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/papas/*.h
+${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/papas/*.h
+${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/papas/*.h
+${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/papas/*.h
 
 
 )
 
 file(GLOB_RECURSE headers 
-${MAINDIR}/datatypes/datatypes/*.h
-${MAINDIR}/display/display/*.h
-${MAINDIR}/detectors/detectors/*.h
-${MAINDIR}/simulation/simulation/*.h
-${MAINDIR}/graphtools/graphtools/*.h
-${MAINDIR}/utility/utility/*.h
-${MAINDIR}/reconstruction/reconstruction/*.h
+${MAINDIR}/datatypes/papas/*.h
+${MAINDIR}/display/papas/*.h
+${MAINDIR}/detectors/papas/*.h
+${MAINDIR}/simulation/papas/*.h
+${MAINDIR}/graphtools/papas/*.h
+${MAINDIR}/utility/papas/*.h
+${MAINDIR}/reconstruction/papas/*.h
 ${MAINDIR}/spdlog
 )
-#message(${headers})
+
 include_directories(
-${MAINDIR}/datatypes/datatypes
-${MAINDIR}/display/display
-${MAINDIR}/detectors/detectors
-${MAINDIR}/simulation/simulation
-${MAINDIR}/graphtools/graphtools
-${MAINDIR}/utility/utility
-${MAINDIR}/reconstruction/reconstruction
+${MAINDIR}/datatypes/papas
+${MAINDIR}/display/papas
+${MAINDIR}/detectors/papas
+${MAINDIR}/simulation/papas
+${MAINDIR}/graphtools/papas
+${MAINDIR}/utility/papas
+${MAINDIR}/reconstruction/papas
 ${MAINDIR}/spdlog
 )
 
 
 project(event)
 
-# You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
-#   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
-#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} )
+## You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
+##   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmak#e
+##   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
+#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} )
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+#set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 #---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
 #find_package(ROOT REQUIRED )
 
@@ -84,12 +84,7 @@ add_definitions(${ROOT_CXX_FLAGS})
 #find_package(GTest)
 #include_directories(${GTEST_INCLUDE_DIRS})
 
-#message(STATUS ${headers})
 
-#get_cmake_property(_variableNames VARIABLES)
-#foreach (_variableName ${_variableNames})
-#message(STATUS "${_variableName}=${${_variableName}}")
-#endforeach()
 
 
 
@@ -103,10 +98,10 @@ message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
 
 add_library(papascppstuff SHARED ${sources} 
-${MAINDIR}/graphtools/graphtools/directedacyclicgraph.h
+${MAINDIR}/graphtools/papas/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/utility/random.h papascppstuffDict.cxx)
-target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES}) # ${GTEST_LIBRARIES})
+${MAINDIR}/utility/papas/random.h papascppstuffDict.cxx)
+target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES}) 
 
 install(TARGETS papascppstuff DESTINATION lib)
 

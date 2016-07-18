@@ -18,4 +18,4 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
     export DYLD_LIBRARY_PATH=$FCCPAPASCPP/lib:$DYLD_LIBRARY_PATH
 fi
 echo platform detected: $platform
-
+export PYTHONPATH=$FCCPAPASCPP/python:$PYTHONPATH
