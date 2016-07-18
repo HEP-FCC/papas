@@ -15,7 +15,7 @@
 #include "Path.h"
 #include "SimParticle.h"
 #include "pTrack.h"
-#include "random.h"
+#include "Random.h"
 
 namespace papas {
 

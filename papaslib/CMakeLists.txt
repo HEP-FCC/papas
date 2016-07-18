@@ -100,7 +100,7 @@ message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 add_library(papascppstuff SHARED ${sources} 
 ${MAINDIR}/graphtools/papas/directedacyclicgraph.h
 ${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/papas/random.h papascppstuffDict.cxx)
+${MAINDIR}/utility/papas/Random.h papascppstuffDict.cxx)
 target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES}) 
 
 install(TARGETS papascppstuff DESTINATION lib)

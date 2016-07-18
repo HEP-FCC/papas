@@ -13,7 +13,8 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "pTrack.h"
-#include "propagator.h"
+#include "HelixPropagator.h"
+#include "StraightLinePropagator.h"
 
 namespace papas {
 class Detector;

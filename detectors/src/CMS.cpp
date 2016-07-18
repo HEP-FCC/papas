@@ -13,7 +13,7 @@
 #include "geometry.h"
 #include "material.h"
 #include "pTrack.h"
-#include "random.h"
+#include "Random.h"
 #include <cmath>
 #include <vector>
 
