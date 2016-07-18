@@ -6,7 +6,7 @@
 #define DETECTOR_H
 
 #include "geometry.h"
-#include "material.h"
+#include "Material.h"
 #include <list>
 
 namespace papas {

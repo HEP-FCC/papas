@@ -2,9 +2,9 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "detector.h"
+#include "Detector.h"
 #include "geometry.h"
-#include "material.h"
+#include "Material.h"
 #include <list>
 #include <vector>
 

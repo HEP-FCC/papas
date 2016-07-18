@@ -8,7 +8,7 @@
 #include "TBox.h"
 #include "TColor.h"
 #include "TEllipse.h"
-#include "detector.h"
+#include "Detector.h"
 #include <map>
 #include <memory>
 #include <string>

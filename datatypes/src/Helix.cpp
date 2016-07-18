@@ -8,7 +8,7 @@
 
 #include "Helix.h"
 #include "Definitions.h"
-#include "deltar.h"
+#include "DeltaR.h"
 
 namespace papas {
 extern double gconstc;

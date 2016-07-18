@@ -11,7 +11,7 @@
 #include "PParticle.h"
 #include "Path.h"
 #include "geometry.h"
-#include "material.h"
+#include "Material.h"
 #include "pTrack.h"
 #include "Random.h"
 #include <cmath>

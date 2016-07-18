@@ -6,7 +6,7 @@
 #define CMS_H
 
 #include "Definitions.h"
-#include "detector.h"
+#include "Detector.h"
 #include <string>
 #include <vector>
 

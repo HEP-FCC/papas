@@ -1,7 +1,7 @@
 
 #ifndef propogator_h
 #define propogator_h
-#include "detector.h"
+#include "Detector.h"
 
 namespace papas {
 class SimParticle;

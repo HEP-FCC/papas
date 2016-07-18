@@ -1,4 +1,4 @@
-#include "geotools.h"
+#include "GeoTools.h"
 #include <math.h>
 
 namespace papas {

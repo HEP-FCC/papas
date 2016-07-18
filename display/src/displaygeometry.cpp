@@ -32,7 +32,7 @@ void GDetectorElement::Draw(const std::string& projection)  {
 Drawable::Drawable() {}
 
 
-GDetector::GDetector(const Detector& detector) : m_gEcal(detector.ecal()), m_gHcal(detector.hcal()) {}
+GDetector::GDetector(const Detector& detector) : m_gEcal(detector.ecal()), m_gHcal(Detector.hcal()) {}
 
 
 void GDetector::Draw(const std::string& projection) {

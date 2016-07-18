@@ -1,4 +1,4 @@
-#include "deltar.h"
+#include "DeltaR.h"
 #include "TLorentzVector.h"
 #include <cmath>
 
@@ -19,10 +19,5 @@ double deltaR(double e1, double p1, double e2, double p2) {
   double dp = deltaPhi(p1, p2);
   return sqrt(de * de + dp * dp);
 }
-
-/*double deltaR( TLorentzVector e1,TLorentzVector  p1){
-///takes two objects that have 'eta', 'phi' methods)"
-    return deltaR(e1.eta(),e1.phi(), p1.eta(), p1.phi()) ;
-}*/
 
 }  // end namespace papas
