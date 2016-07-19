@@ -2,22 +2,17 @@
 //  Created by Alice Robson on 29/11/15.
 //
 //
-#ifndef DISPLAY_DISPLAYPFOBJECTS_H
-#define DISPLAY_DISPLAYPFOBJECTS_H
+#ifndef PAPAS_GTRAJECTORIES_H
+#define PAPAS_GTRAJECTORIES_H
 
-#include <string>
-#include <unordered_map>
 #include <utility>
 #include <list>
 
 #include "Path.h"
-#include "TArc.h"
-#include "TColor.h"
-#include "TEllipse.h"
-#include "TGraph.h"
-#include "TPolyLine.h"
 #include "TVector3.h"
 #include "Drawable.h"
+#include "GBlob.h"
+#include "GTrajectory.h"
 
 
 namespace papas {
@@ -26,35 +21,6 @@ class Cluster;
   class Track;
   class Particle;
 class SimParticle;
-
-/// Used to display Clusters on output graphs
-class GBlob {
-public:
-  GBlob(const Cluster& cluster);
-  void Draw(const std::string& projection, const std::string& opt = "") const;
-
-private:
-  std::string m_layer;  ///<which layer to plot at
-  // outside circle of cluster
-  std::unordered_map<std::string, std::unique_ptr<TEllipse>> m_contours;
-  // inside circle of cluster
-  std::unordered_map<std::string, std::unique_ptr<TEllipse>> m_inners;
-};
-
-/// Used to display a track on output graphs
-class GTrajectory {
-public:
-  GTrajectory(const std::vector<double>& X, const std::vector<double>& Y, const std::vector<double>& Z,
-              const std::vector<double>& tX, const std::vector<double>& tY, int markerstyle, double markersize,
-              int linestyle, int linecolor, int linewidth);
-  void setColor(int color);
-  void Draw(const std::string& projection) const;
-
-private:
-  std::unordered_map<std::string, std::unique_ptr<TGraph>> m_graphs;  ///< the line/curves for a track on each proj
-};
-
-
 
 /// Used to display the tracks and clusters on output graphs
 class GTrajectories : public Drawable {

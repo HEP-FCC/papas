@@ -4,7 +4,7 @@
 //
 #include "ViewPane.h"
 #include "Drawable.h"
-#include "displaypfobjects.h"
+//#include "displaypfobjects.h"
 #include <cmath>
 #include <iostream>  //temp
 

@@ -16,15 +16,15 @@
 
 #include "DefinitionsCollections.h"
 #include "PFEventDisplay.h"
-//#include "GDetector.h"
-#include "displaypfobjects.h"
+#include "GDetector.h"
+
 #include "TSystem.h"
 
 namespace papas {
 
 class PFEvent;
 class Detector;
-  class GDetector;
+class GDetector;
 
 // Experimental Wrapper for Python to allow graphs to be plotted
 class PFApp {

@@ -7,13 +7,11 @@
 //
 
 #include "PFEvent.h"
-#include "Cluster.h"
 #include "PFEventDisplay.h"
 #include "Simulator.h"
-#include "displaypfobjects.h"
-#include "pTrack.h"
+#include "ViewPane.h"
+#include "GTrajectories.h"
 #include <iostream>
-#include <stdio.h>
 #include "Drawable.h"
 
 namespace papas {
