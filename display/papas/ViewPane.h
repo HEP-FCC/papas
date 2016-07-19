@@ -2,8 +2,8 @@
 //  Created by Alice Robson on 29/11/15.
 //
 //
-#ifndef DISPLAY_COREDISPLAY_H
-#define DISPLAY_COREDISPLAY_H
+#ifndef PAPAS_VIEWPANE_H
+#define PAPAS_VIEWPANE_H
 
 #include <list>
 #include <string>
@@ -13,18 +13,12 @@
 #include "TCanvas.h"
 #include "TH1.h"
 #include "TH2F.h"
-//#include "Enummanager.h"
+
 
 namespace papas {
 
 class Drawable;
 
-/// Display Class
-/** Class to manage the  different display projections
-
- It contains several viewpanes each of which is a different projection
-
- */
 /// ViewPane Class
 /**
  * Class to manage provide a window in which to display graphs
@@ -66,25 +60,6 @@ private:
   Projection m_projection;
 };
 
-class Display {
-public:
-  /// Constructor using a list of projections names
-
-  Display(std::list<ViewPane::Projection> views = {});
-
-  /// Which things to draw (and which are locked  ie clearable=false)
-  void addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clearable = true);
-
-  /// Clear all drawable elements except those that are locked
-  void clear();
-  // AJRTODO does this need Zoom?
-  void unZoom();
-  void draw() const;
-
-private:
-  /// Map containing the views //TODO make enum
-  std::unordered_map<std::string, std::unique_ptr<ViewPane>> m_views;
-};
 
 }  // end namespace papas
 

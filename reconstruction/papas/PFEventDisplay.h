@@ -10,7 +10,8 @@
 #define PFEventDisplay_h
 
 #include "DefinitionsCollections.h"
-#include "displaycore.h"
+#include "ViewPane.h"
+#include "Display.h"
 
 namespace papas {
 

@@ -10,7 +10,7 @@
 #define AliceDisplay_hpp
 
 #include "TApplication.h"
-#include "displaycore.h"
+#include "Display.h"
 #include <iostream>
 #include <stdio.h>
 
