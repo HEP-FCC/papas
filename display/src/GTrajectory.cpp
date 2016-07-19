@@ -4,14 +4,6 @@
 //
 
 #include "GTrajectory.h"
-#include "Cluster.h"
-#include "Helix.h"
-#include "Id.h"
-#include "Path.h"
-#include "SimParticle.h"
-#include "pTrack.h"
-#include <iostream>
-//#include "Id.h"
 
 namespace papas {
 

@@ -3,7 +3,6 @@
 //
 //
 #include "GDetector.h"
-#include <memory>
 
 namespace papas {
 

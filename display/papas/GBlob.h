@@ -10,8 +10,6 @@
 #include <utility>
 
 #include "TEllipse.h"
-#include "Drawable.h"
-
 
 namespace papas {
 

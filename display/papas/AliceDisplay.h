@@ -11,13 +11,10 @@
 
 #include "TApplication.h"
 #include "Display.h"
-#include <iostream>
-#include <stdio.h>
 
 #include "DefinitionsCollections.h"
 #include "PFEventDisplay.h"
 #include "GDetector.h"
-
 #include "TSystem.h"
 
 namespace papas {

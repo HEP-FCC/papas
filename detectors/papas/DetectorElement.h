@@ -11,12 +11,6 @@
 
 namespace papas {
 
-class Particle;
-class Material;
-class VolumeCylinder;
-class Cluster;
-class Track;
-
 /**
  Detector Element is the  base for Calorimeter, Tracker and Field
 */

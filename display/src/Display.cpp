@@ -4,7 +4,6 @@
 //
 #include "Display.h"
 #include "ViewPane.h"
-#include "Drawable.h"
 #include <iostream>  //temp
 
 namespace papas {

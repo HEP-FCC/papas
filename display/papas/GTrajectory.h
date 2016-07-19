@@ -11,16 +11,7 @@
 
 #include "TGraph.h"
 
-
-
 namespace papas {
-
-
-class Track;
-class Particle;
-class SimParticle;
-
-
 
 /// Used to display a track on output graphs
 class GTrajectory {

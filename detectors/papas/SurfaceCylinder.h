@@ -6,9 +6,6 @@
 #define SURFACECYLINDER_H
 
 #include "Definitions.h"
-#include "TVector3.h"
-#include <memory>
-#include <string>
 
 namespace papas {
 /**

@@ -7,17 +7,13 @@
 
 #include <list>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include "Drawable.h"
 #include "TCanvas.h"
-#include "TH1.h"
 #include "TH2F.h"
 
 
 namespace papas {
-
-class Drawable;
 
 /// ViewPane Class
 /**

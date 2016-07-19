@@ -5,16 +5,11 @@
 #ifndef PAPAS_DISPLAY_H
 #define PAPAS_DISPLAY_H
 
-#include <list>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
-#include "TCanvas.h"
-#include "TH1.h"
-#include "TH2F.h"
 #include "ViewPane.h"
-#include "Drawable.h"
+
 
 namespace papas {
 

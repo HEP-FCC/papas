@@ -8,8 +8,6 @@
 #include "Definitions.h"
 #include "SurfaceCylinder.h"
 #include "TVector3.h"
-#include <memory>
-#include <string>
 
 namespace papas {
 

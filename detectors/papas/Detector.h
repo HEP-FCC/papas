@@ -6,22 +6,13 @@
 #define DETECTOR_H
 
 #include "SurfaceCylinder.h"
-#include "VolumeCylinder.h"
-
-#include "Material.h"
 #include "Calorimeter.h"
 #include "Tracker.h"
 #include "Field.h"
 #include "DetectorElement.h"
-#include <list>
+
 
 namespace papas {
-
-class Particle;
-class Material;
-class VolumeCylinder;
-class Cluster;
-class Track;
 
 /// Detector
 /**

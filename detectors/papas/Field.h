@@ -7,7 +7,6 @@
 #include "DetectorElement.h"
 #include "VolumeCylinder.h"
 #include "Material.h"
-#include <list>
 
 namespace papas {
 
