@@ -10,7 +10,7 @@
 #include "Cluster.h"
 #include "PParticle.h"
 #include "Path.h"
-#include "geometry.h"
+#include "Detector.h"
 #include "Material.h"
 #include "pTrack.h"
 #include "Random.h"

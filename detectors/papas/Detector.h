@@ -5,7 +5,9 @@
 #ifndef DETECTOR_H
 #define DETECTOR_H
 
-#include "geometry.h"
+#include "SurfaceCylinder.h"
+#include "VolumeCylinder.h"
+
 #include "Material.h"
 #include "Calorimeter.h"
 #include "Tracker.h"

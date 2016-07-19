@@ -3,15 +3,12 @@
 //
 //
 #include "Detector.h"
-#include "geometry.h"
+#include "SurfaceCylinder.h"
 #include "Material.h"
 #include <list>
 #include <vector>
 
 namespace papas {
-
-DetectorElement::DetectorElement(papas::Layer layer, const VolumeCylinder& volume, const Material& material)
-    : m_volume(volume), m_material(material), m_layer(layer) {}
 
 Detector::Detector() {}
 
@@ -59,7 +56,5 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
   //return nullptr;
 }
 
-Field::Field(const VolumeCylinder& volume, const Material& material, double magnitude)
-    : DetectorElement(Layer::kField, volume, material), m_magnitude(magnitude) {}
 
 }  // end namespace papas

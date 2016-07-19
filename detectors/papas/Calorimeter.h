@@ -2,12 +2,11 @@
 //  Created by Alice Robson on 29/11/15.
 //
 //
-#ifndef CALORIMETOR_H
-#define CALORIMETOR_H
+#ifndef CALORIMETER_H
+#define CALORIMETER_H
 
-#include "geometry.h"
-#include "Material.h"
-#include <list>
+#include "DetectorElement.h"
+
 
 namespace papas {
 

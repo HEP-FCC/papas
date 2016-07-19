@@ -9,6 +9,7 @@
 #include "TColor.h"
 #include "TEllipse.h"
 #include "Detector.h"
+#include "DetectorElement.h"
 #include <map>
 #include <memory>
 #include <string>

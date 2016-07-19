@@ -70,7 +70,7 @@ void Simulator::simulatePhoton(SimParticle& ptc) {
 void Simulator::simulateHadron(SimParticle& ptc) {
   PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
-  auto hcal_sp = m_Detector.hcal();
+  auto hcal_sp = m_detector.hcal();
   auto field_sp = m_detector.field();
   double fracEcal = 0.;  // TODO ask Colin
 
@@ -110,7 +110,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
 
 void Simulator::propagateAllLayers(SimParticle& ptc) {
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
-  auto hcal_sp = m_Detector.hcal();  // HCAL detector element
+  auto hcal_sp = m_detector.hcal();  // HCAL detector element
   propagate(ptc, ecal_sp->volumeCylinder().inner());
   propagate(ptc, ecal_sp->volumeCylinder().outer());
   propagate(ptc, hcal_sp->volumeCylinder().inner());

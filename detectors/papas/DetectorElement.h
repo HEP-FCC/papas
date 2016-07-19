@@ -5,7 +5,7 @@
 #ifndef DETECTORELEMENT_H
 #define DETECTORELEMENT_H
 
-#include "geometry.h"
+#include "VolumeCylinder.h"
 #include "Material.h"
 #include <list>
 

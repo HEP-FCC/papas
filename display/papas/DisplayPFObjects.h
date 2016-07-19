@@ -49,10 +49,7 @@ private:
   std::unordered_map<std::string, std::unique_ptr<TGraph>> m_graphs;  ///< the line/curves for a track on each proj
 };
 
-/*class GHelixTrajectory : public GTrajectory {
-public:
-  GHelixTrajectory(const Path::Points& points, TVector3 tvec, int linestyle = 1, int linecolor = 1);
-};*/
+
 
 /// Used to display the tracks and clusters on output graphs
 class GTrajectories : public Drawable {

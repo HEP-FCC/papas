@@ -2,14 +2,14 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "geometry.h"
+#include "VolumeCylinder.h"
 #include "TVector3.h"
 #include <cmath>
 #include <iostream>
 
 namespace papas {
 
-SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {}
+
 
 VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad, double innerz)
     : m_outer(papas::Position::kHcalOut, outerrad, outerz), m_inner(papas::Position::kHcalIn, innerrad, innerz) {
@@ -26,17 +26,17 @@ VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outer
   }
   // AJRTODO define what happens if inner is empty
 }
-
-VolumeCylinder::~VolumeCylinder() {}
-
-bool VolumeCylinder::Contains(const TVector3& point) const {
-  double_t perp = point.Perp();
-  if (std::abs(point.Z()) < m_inner.Z()) {
-    return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
-  } else if (std::abs(point.Z()) < m_outer.Z()) {
-    return perp < m_outer.getRadius();
-  } else
-    return false;
-}
+  
+  VolumeCylinder::~VolumeCylinder() {}
+  
+  bool VolumeCylinder::Contains(const TVector3& point) const {
+    double_t perp = point.Perp();
+    if (std::abs(point.Z()) < m_inner.Z()) {
+      return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
+    } else if (std::abs(point.Z()) < m_outer.Z()) {
+      return perp < m_outer.getRadius();
+    } else
+      return false;
+  }
 
 }  // end namespace papas
