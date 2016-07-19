@@ -10,6 +10,7 @@ ${MAINDIR}/datatypes/papas/
 ${MAINDIR}/simulation/papas
 ${MAINDIR}/reconstruction/papas
 ${MAINDIR}/graphtools/papas
+${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

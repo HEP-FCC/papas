@@ -86,6 +86,8 @@ public:
                               double ptmax,
                               TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
 
+  Cluster smearCluster(const Cluster& cluster, papas::Layer  =  papas::Layer::kNone);
+  
   const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
   const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
   const Clusters& hcalClusters() const { return m_hcalClusters; }  ///<return Hcal clusters collection
@@ -108,10 +110,9 @@ public:
 private:
   Id::Type addEcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
   Id::Type addHcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
-  Id::Type addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer = papas::Layer::kNone,
+  Id::Type addSmearedCluster(const Cluster& parent,papas::Layer detlayer = papas::Layer::kNone,
                              papas::Layer acceptlayer = papas::Layer::kNone, bool accept = false);
   Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
-  Cluster makeSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer = papas::Layer::kNone);
   const Track& addTrack(SimParticle& ptc);
   Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed
