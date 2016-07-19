@@ -4,7 +4,8 @@
 //
 #include "Display.h"
 
-#include "displaygeometry.h"
+#include "ViewPane.h"
+#include "Drawable.h"
 #include "displaypfobjects.h"
 #include <cmath>
 #include <iostream>  //temp

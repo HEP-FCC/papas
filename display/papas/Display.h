@@ -14,6 +14,7 @@
 #include "TH1.h"
 #include "TH2F.h"
 #include "ViewPane.h"
+#include "Drawable.h"
 
 namespace papas {
 

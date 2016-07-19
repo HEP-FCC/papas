@@ -2,8 +2,9 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "displaygeometry.h"
+#include "GDetectorElement.h"
 #include <memory>
+#include <map>
 
 namespace papas {
 
@@ -29,21 +30,6 @@ void GDetectorElement::Draw(const std::string& projection)  {
   // AJRTODO throw error
 };
 
-Drawable::Drawable() {}
-
-
-GDetector::GDetector(const Detector& detector) : m_gEcal(detector.ecal()), m_gHcal(detector.hcal()) {}
-
-
-void GDetector::Draw(const std::string& projection) {
-  m_gHcal.Draw(projection);
-  m_gEcal.Draw(projection);
-}
-
-void GDetector::DrawSimple(const std::string& projection) const {
-  auto gelem = GDetectorElement(3., 2);
-  gelem.Draw(projection);
-}
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detElem) {  // For each inner and outer
                                                                                       // cyclinder create a cyclinder

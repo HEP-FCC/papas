@@ -6,6 +6,9 @@
 //
 //
 #include "AliceDisplay.h"
+#include "GDetector.h"
+#include "ViewPane.h"
+
 #include <stdio.h>
 // ROOT App to allow graphs to be plotted
 

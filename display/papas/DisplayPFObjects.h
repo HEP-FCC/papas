@@ -5,6 +5,11 @@
 #ifndef DISPLAY_DISPLAYPFOBJECTS_H
 #define DISPLAY_DISPLAYPFOBJECTS_H
 
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <list>
+
 #include "Path.h"
 #include "TArc.h"
 #include "TColor.h"
@@ -12,14 +17,14 @@
 #include "TGraph.h"
 #include "TPolyLine.h"
 #include "TVector3.h"
-#include "displaygeometry.h"
-#include <string>
-#include <unordered_map>
-#include <utility>
+#include "Drawable.h"
+
 
 namespace papas {
 
-// class Cluster;
+class Cluster;
+  class Track;
+  class Particle;
 class SimParticle;
 
 /// Used to display Clusters on output graphs
