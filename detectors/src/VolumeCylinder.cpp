@@ -29,11 +29,11 @@ VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outer
   
   VolumeCylinder::~VolumeCylinder() {}
   
-  bool VolumeCylinder::Contains(const TVector3& point) const {
+  bool VolumeCylinder::contains(const TVector3& point) const {
     double_t perp = point.Perp();
-    if (std::abs(point.Z()) < m_inner.Z()) {
+    if (std::abs(point.Z()) < m_inner.z()) {
       return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
-    } else if (std::abs(point.Z()) < m_outer.Z()) {
+    } else if (std::abs(point.Z()) < m_outer.z()) {
       return perp < m_outer.getRadius();
     } else
       return false;

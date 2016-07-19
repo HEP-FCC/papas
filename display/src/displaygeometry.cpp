@@ -54,7 +54,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detEle
   for (auto const& elem :
        {detElem->volumeCylinder().outer(), detElem->volumeCylinder().inner()}) {  // AJRTODO should be if inner ......
     double radius = elem.getRadius();
-    double dz = elem.Z();
+    double dz = elem.z();
 
     m_circles.push_back(std::move(TEllipse(0., 0., radius, radius)));
     m_boxes.push_back(std::move(TBox(-dz, -radius, dz, radius)));

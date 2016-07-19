@@ -93,7 +93,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
     double timeDecay = timeEcalInner + deltaT;
     TVector3 pointDecay = path->pointAtTime(timeDecay);
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
-    if (ecal_sp->volumeCylinder().Contains(pointDecay)) {
+    if (ecal_sp->volumeCylinder().contains(pointDecay)) {
       fracEcal = randomgen::RandUniform(0., 0.7).next();
       Id::Type ecalId = addEcalCluster(ptc, fracEcal);
       // For now, using the hcal resolution and acceptance for hadronic cluster

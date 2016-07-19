@@ -12,9 +12,6 @@
 #include <string>
 
 namespace papas {
-/**
-  Component of Volume which is used to define a detector element
- */
 
 /**
   Defines inner and outer cyclinders of a detector element
@@ -22,15 +19,13 @@ namespace papas {
 class VolumeCylinder {
 public:
   VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad = 0., double innerz = 0.);
-  bool Contains(const TVector3& point) const;
+  bool contains(const TVector3& point) const;
   const SurfaceCylinder& inner() const { return m_inner; }
   const SurfaceCylinder& outer() const { return m_outer; }
-  papas::Position innerLayer() const { return m_inner.Layer(); }
+  papas::Position innerLayer() const { return m_inner.layer(); }
   ~VolumeCylinder();
 
 private:
-  // const std::string m_name;
-  // papas::Layer m_layer;
   SurfaceCylinder m_outer;
   SurfaceCylinder m_inner;
 };

@@ -28,16 +28,16 @@ void HelixPropagator::propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl)
       destination = helix->pointAtPhi(phi_m);
     }
 
-    if (fabs(destination.Z()) < cyl.Z()) {
-      helix->addPoint(cyl.Layer(), destination);
+    if (fabs(destination.Z()) < cyl.z()) {
+      helix->addPoint(cyl.layer(), destination);
     } else
       is_looper = true;
   }
   if (is_looper) {
-    double destz = cyl.Z();
+    double destz = cyl.z();
     if (udir_z < 0.) destz = -destz;
     TVector3 destination = helix->pointAtZ(destz);
-    helix->addPoint(cyl.Layer(), destination);
+    helix->addPoint(cyl.layer(), destination);
   }
 }
 

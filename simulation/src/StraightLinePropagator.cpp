@@ -54,7 +54,7 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
 }
 
 void StraightLinePropagator::propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl) {
-  propagateOne(ptc, cyl.Layer(), cyl.Z(), cyl.getRadius());
+  propagateOne(ptc, cyl.layer(), cyl.z(), cyl.getRadius());
 }
 
 }  // end namespace papas
