@@ -35,8 +35,11 @@ else
 SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field)
     : Particle(uniqueid, pdgid, charge, tlv), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
       
-  if (m_isHelix)
-    m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
+  if (m_isHelix )
+    if (field > 0)
+      m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
+    else
+      throw "Non zero field required for Charged particle";
   else
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }

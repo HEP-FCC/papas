@@ -24,7 +24,7 @@ public:
   typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
-  Path(TLorentzVector p4, TVector3 origin, double field);
+  Path(TLorentzVector p4, TVector3 origin, double field=0.);
   Path();
   virtual ~Path() = default;
 
@@ -51,6 +51,11 @@ protected:
   double m_field;  // set to 0 for a straightline
 private:
 };
+  
+  
+  class StraightLine: public Path {
+    using Path::Path;
+  };
 }  // end namespace papas
 
 #endif /* path_h */

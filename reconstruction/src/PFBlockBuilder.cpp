@@ -30,7 +30,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
   // TODO thhink hard about best way to deal with distance /ruler / edges etc
   // compute edges between each pair of nodes
   Edges edges;
-  Ruler ruler(pfevent);
+  EventRuler ruler(pfevent);
   for (auto id1 : m_uniqueIds) {
     for (auto id2 : m_uniqueIds) {
       if (id1 < id2) {

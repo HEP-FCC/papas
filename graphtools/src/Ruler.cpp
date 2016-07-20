@@ -16,9 +16,9 @@
 
 namespace papas {
 
-Ruler::Ruler(const PFEvent& pfevent) : m_pfEvent(pfevent) {}
+  EventRuler::EventRuler(const PFEvent& pfevent) : m_ruler(), m_pfEvent(pfevent) {}
 
-Distance Ruler::distance(Id::Type id1, Id::Type id2) const {
+Distance EventRuler::distance(Id::Type id1, Id::Type id2) const {
   if (Id::isCluster(id1) && Id::isCluster(id2))
     if (Id::itemType(id1) == Id::itemType(id2))
       return clusterClusterDistance(id1, id2);
@@ -30,14 +30,14 @@ Distance Ruler::distance(Id::Type id1, Id::Type id2) const {
     return clusterTrackDistance(id2, id1);
   else if (Id::isTrack(id1) && Id::isTrack(id2))
     return Distance();
-  // TODO error
+  throw "Distance between ids could not be computed";
   return Distance();
 }
 
-Distance Ruler::clusterClusterDistance(Id::Type id1, Id::Type id2) const {
+Distance EventRuler::clusterClusterDistance(Id::Type id1, Id::Type id2) const {
   const Cluster& cluster1 = m_pfEvent.cluster(id1);
   const Cluster& cluster2 = m_pfEvent.cluster(id2);
-  return clusterClusterDistance(cluster1, cluster2);
+  return m_ruler.clusterClusterDistance(cluster1, cluster2);
 }
 
 Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const {
@@ -49,9 +49,9 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
     std::vector<double> linkedDistances;
     bool isLinked = false;
 
-    for (const auto& c1 : cluster1.subClusters()) {
-      for (const auto& c2 : cluster2.subClusters()) {
-        Distance d = clusterClusterDistance(c1, c2);
+    for (const auto c1 : cluster1.subClusters()) {
+      for (const auto c2 : cluster2.subClusters()) {
+        Distance d = clusterClusterDistance(*c1, *c2);
         allDistances.push_back(d.distance());
         if (d.isLinked()) {
           linkedDistances.push_back(d.distance());
@@ -68,21 +68,19 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
   }
 }
 
-Distance Ruler::clusterTrackDistance(Id::Type clustId, Id::Type trackId) const {
+Distance EventRuler::clusterTrackDistance(Id::Type clustId, Id::Type trackId) const {
   const Cluster& cluster = m_pfEvent.cluster(clustId);
   const Track& track = m_pfEvent.track(trackId);
-  // std::cout <<track;
-  return clusterTrackDistance(cluster, track);
+  return m_ruler.clusterTrackDistance(cluster, track);
 }
 
 Distance Ruler::clusterTrackDistance(const Cluster& cluster, const Track& track) const {
-  // std::cout << cluster.subClusters().empty();
   if (cluster.subClusters().size() > 1) {
     std::vector<double> distances;
     std::vector<double> linkedDistances;
     bool isLinked = false;
-    for (auto id : cluster.subClusters()) {
-      Distance d = clusterTrackDistance(id, track.id());
+    for (const auto c : cluster.subClusters()) {
+      Distance d = clusterTrackDistance(*c, track);
       distances.push_back(d.distance());
       if (d.isLinked()) {
         linkedDistances.push_back(d.distance());

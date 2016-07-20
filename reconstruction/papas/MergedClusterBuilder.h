@@ -27,7 +27,7 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history
    */
-  MergedClusterBuilder(const Clusters& clusters, Ruler& ruler, Nodes& historyNodes);
+  MergedClusterBuilder(const Clusters& clusters, EventRuler& ruler, Nodes& historyNodes);
   // const Ids elementIds() const { return m_elementIds;};///< return the blockbuilders element ids
   Clusters& mergedClusters() { return m_merged; }
   Nodes& historyNodes() { return m_historyNodes; }

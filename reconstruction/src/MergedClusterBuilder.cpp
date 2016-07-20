@@ -18,7 +18,7 @@
 
 namespace papas {
 
-MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, Ruler& ruler, Nodes& historyNodes)
+MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler& ruler, Nodes& historyNodes)
     : m_merged(), m_historyNodes(historyNodes) {
   if (m_historyNodes.empty()) {
     // throw error

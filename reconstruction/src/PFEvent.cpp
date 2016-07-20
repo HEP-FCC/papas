@@ -56,7 +56,7 @@ PFEvent::PFEvent(Simulator& sim)
   /*void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = std::move(builder.blocks()); }*/
 
 void PFEvent::mergeClusters() {
-  Ruler ruler{*this};
+  EventRuler ruler{*this};
   MergedClusterBuilder ecalmerger{m_ecals, ruler, m_historyNodes};
   MergedClusterBuilder hcalmerger{m_hcals, ruler, m_historyNodes};
   m_mergedEcals = std::move(ecalmerger.mergedClusters());

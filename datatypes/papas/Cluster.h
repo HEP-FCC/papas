@@ -15,8 +15,7 @@
 #include <stdio.h>
 
 namespace papas {
-
-class Cluster {
+  class Cluster {
 public:
   /** Constructor
    @param[in]  double energy: Cluster energy
@@ -45,7 +44,7 @@ public:
   TVector3 position() const { return m_p3; }
   void setEnergy(double energy);
   void setSize(double value);
-  const std::vector<IdType>& subClusters() const { return m_subClusters; };
+  const std::vector<const Cluster*>& subClusters() const { return m_subClusters; };
   static double s_maxEnergy;  // AJR is this in the right place
   std::string info() const;
 
@@ -56,7 +55,7 @@ protected:
   double m_pt;
   TVector3 m_p3;
   double m_energy;
-  std::vector<IdType> m_subClusters;
+  std::vector<const Cluster*> m_subClusters;
 };
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster);
