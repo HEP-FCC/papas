@@ -7,11 +7,11 @@
 //
 
 /**
- * @file directedacyclicgraph.h
+ * @file DirectedAcyclicGraph.h
  * @brief Implementation of Directed Acyclic Graph
  *
- * Supports traversal of a DirectedAcyclicGraph (also know here as DAG or a polytree)
- * implemented using a templated Node alongside alogorithms to visit linked nodes
+ * Supports traversal of a DirectedAcyclicGraph (also known here as DAG or a polytree)
+ * implemented using a templated Node alongside algorithms to visit linked nodes
  *
  *  Directed Acyclic Graph:
  *  Nodes may have multiple children and /or multiple parents.
@@ -31,7 +31,7 @@
  *
  *  The Node class is templated Node<T>
  *  where T is intended to be either an identifier or the item of interest.
- *  The Node class may not be const, but the think it contains (T) may be set to be a const object
+ *  The Node class may not be const, but the thing it contains (T) may be set to be a const object
  *
  *  Examples are provided for the following cases
  *  (i) Long identifier
@@ -58,13 +58,18 @@
 #define DirectedAcyclicGraph_h
 
 #include <iostream>
-//#include <unordered_set>
 #include <list>
 #include <queue>
-#include <set>
+#include <unordered_set>
 
 /// DirectedAcyclicGraph Namespace
 namespace DAG {
+
+//note internal use of pointer to N (supports the Nodes being concrete objects)
+template <typename N>
+  using Nodeset = std::unordered_set<const N*>; ///<allows find and just one of each node
+template <typename N>
+  using Nodevector = std::vector<const N*>; ///<typically used to return results
 
 /// Visitor interface
 /**Defines the visitor class interface for the DirectedAcyclicGraph
@@ -73,17 +78,15 @@ namespace DAG {
 template <typename N>  // N is the templated Node
 class Visitor {
 public:
-  typedef std::set<const N*> Nodeset;        ///<allows find and just one of each node - used for traversals
-  typedef std::vector<const N*> Nodevector;  ///<used to return results
-  Visitor();                                 ///<Constructor
+  Visitor();  ///<Constructor
   /// Key function for visitor pattern
   virtual void visit(const N* node) = 0;
   /// returns vector of all child nodes (including the start node and all children of children)
-  virtual const Nodevector& traverseChildren(const N& startnode) = 0;
+  virtual const Nodevector<N>& traverseChildren(const N& startnode) = 0;
   /// returns vector of all parent nodes (including the start node and all parents of parents)
-  virtual const Nodevector& traverseParents(const N& startnode) = 0;
+  virtual const Nodevector<N>& traverseParents(const N& startnode) = 0;
   /// returns everything linked to the start node
-  virtual const Nodevector& traverseUndirected(const N& startnode) = 0;
+  virtual const Nodevector<N>& traverseUndirected(const N& startnode) = 0;
 
 protected:
 };
@@ -93,35 +96,28 @@ template <typename T>  // T is the item of interest inside the Node
 class Node {
 public:
   typedef Node<T> TNode;
-  typedef std::set<Node*> Nodeset;  // Allows find with no repeat nodes
-  /// Constructor
-  Node(T v);
-  /// Needed for putting a Node inside a unordered_map
-  Node();
+  Node(const T& v);///< Constructor
+  Node(); ///< Needed for putting a Node inside a unordered_set
   // ideally no copying because it means nodes are no longer unique
   TNode& operator=(TNode&) = delete;
   TNode& operator=(const TNode&) = delete;
-  // However, unordered_map requires these to be available
-  // TODO make this more formal
-  Node(TNode&) { std::cout << "Unexpected Node copy"; };
-  Node(const TNode&) { std::cout << "Unexpected Node copy ="; };
+  // unordered_set requires these to be available
+  Node(TNode&) = default;
+  Node(const TNode&) = default;
   // Move is good
   TNode& operator=(TNode&& other) = default;
   Node(TNode&& other) = default;
-
-  /// Key function for visitor pattern
-  void accept(Visitor<TNode>& visitor) const;
-  /// Add in a link (this will set the reverse parent link in the other node)
-  void addChild(Node& node);
-  /// return the node item
-  const T& value() const { return m_val; };
-  const Nodeset& children() const { return m_children; }
-  const Nodeset& parents() const { return m_parents; }
+  
+  void accept(Visitor<TNode>& visitor) const; ///< Key function for visitor pattern
+  void addChild(Node& node); ///< Add in a link (this will set the reverse parent link in the other node)
+  const T& value() const { return m_val; }; ///< return the node item
+  const Nodeset<TNode>& children() const { return m_children; }
+  const Nodeset<TNode>& parents() const { return m_parents; }
 
 protected:
   T m_val;                                                 ///< thing that the node is encapsulating (eg identifier )
-  Nodeset m_children;                                      ///< direct child nodes
-  Nodeset m_parents;                                       ///< direct parent nodes
+  Nodeset<TNode> m_children;                               ///< direct child nodes
+  Nodeset<TNode> m_parents;                                ///< direct parent nodes
   void addParent(Node& node) { m_parents.insert(&node); }  // private as only available via addChild
 };
 
@@ -129,28 +125,21 @@ protected:
 template <typename N>  /// N is the Node
 class BFSVisitor : public Visitor<N> {
 public:
-  /// used for traversals
-  typedef std::set<const N*> Nodeset;  // internal use of pointer (supports the Nodes being concrete objects)
-  /// used for returning results
-  typedef std::vector<const N*> Nodevector;
-
   BFSVisitor();
   void visit(const N* node) override;  ///< key to visitor pattern
-
-  const Nodevector& traverseChildren(const N& node) override;
-  const Nodevector& traverseParents(const N& node) override;
-  const Nodevector& traverseUndirected(const N& node) override;
-  bool alreadyVisited(N* node) const;
-
+  const Nodevector<N>& traverseChildren(const N& node) override;
+  const Nodevector<N>& traverseParents(const N& node) override;
+  const Nodevector<N>& traverseUndirected(const N& node) override;
 protected:
-  /// which nodes have been visited (reset each time a traversal is made)
-  Nodeset m_visited;
-  /// the list of nodes that are linked and that will be returned
-  Nodevector m_result;
-  /// internal enumeration
-  enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };
+  
+  Nodeset<N> m_visited; ///< which nodes have been visited (reset each time a traversal is made)
+  Nodevector<N> m_result;///< the list of nodes that are linked and that will be returned
+  enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED }; ///< internal enumeration
+
   /// core traversal code uses by all of the public traversals
-  virtual void traverse(const Nodeset& nodes, BFSVisitor<N>::enumVisitType visittype);  // the iterative method
+  virtual void traverse(const Nodeset<N>& nodes, BFSVisitor<N>::enumVisitType visittype);  // the iterative method
+private:
+  bool alreadyVisited(N* node) const;
 };
 
 /// Breadth First Search alternative implementation using recursion
@@ -165,7 +154,7 @@ private:
 
 /// Constructor
 template <typename T>
-Node<T>::Node(T v) : m_val(v) {}
+Node<T>::Node(const T& v) : m_val(v) {}
 
 /// Constructor
 template <typename T>
@@ -221,7 +210,7 @@ bool BFSVisitor<N>::alreadyVisited(N* node) const {
  @return void
  */
 template <typename N>
-void BFSVisitor<N>::traverse(const Nodeset& nodes, typename BFSVisitor<N>::enumVisitType visittype) {
+void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::enumVisitType visittype) {
   typedef typename BFSVisitor<N>::enumVisitType pt;
 
   // Create a queue for the Breadth First Search
@@ -309,8 +298,8 @@ void BFSRecurseVisitor<N>::traverse(const typename BFSVisitor<N>::Nodeset& nodes
  */
 template <typename N>
 const std::vector<const N*>& BFSVisitor<N>::traverseChildren(const N& startnode) {
-  m_result = {};             // reset the list of results:
-  Nodeset root{&startnode};  // create an initial nodeset containing the root node
+  m_result = {};                // reset the list of results:
+  Nodeset<N> root{&startnode};  // create an initial nodeset containing the root node
   traverse(root, BFSVisitor<N>::enumVisitType::CHILDREN);
   m_visited = {};  // reset the list of visited nodes
   return m_result;
@@ -323,8 +312,8 @@ const std::vector<const N*>& BFSVisitor<N>::traverseChildren(const N& startnode)
  */
 template <typename N>
 const std::vector<const N*>& BFSVisitor<N>::traverseParents(const N& startnode) {
-  m_result = {};             // reset the list of results
-  Nodeset root{&startnode};  // create an initial nodeset containing the root node
+  m_result = {};                // reset the list of results
+  Nodeset<N> root{&startnode};  // create an initial nodeset containing the root node
   traverse(root, BFSVisitor<N>::enumVisitType::PARENTS);
   m_visited = {};  // reset the list of visited nodes
   return m_result;
@@ -337,8 +326,8 @@ const std::vector<const N*>& BFSVisitor<N>::traverseParents(const N& startnode) 
  */
 template <typename N>
 const std::vector<const N*>& BFSVisitor<N>::traverseUndirected(const N& startnode) {
-  m_result = {};             // reset the list of results
-  Nodeset root{&startnode};  // create an initial nodeset containing the root node
+  m_result = {};                // reset the list of results
+  Nodeset<N> root{&startnode};  // create an initial nodeset containing the root node
   traverse(root, BFSVisitor<N>::enumVisitType::UNDIRECTED);
   m_visited = {};  // reset the list of visited nodes
   return m_result;

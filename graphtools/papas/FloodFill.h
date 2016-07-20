@@ -35,7 +35,6 @@
  */
 
 #include "directedacyclicgraph.h"
-//#include <unordered_map>
 #include <map>
 
 namespace DAG {
@@ -45,7 +44,7 @@ class FloodFill {
 
   typedef Node<T> TNode;
   typedef std::map<T, TNode> Nodemap;
-  typedef std::set<const TNode*> Nodeset;
+  typedef std::unordered_set<const TNode*> Nodeset;
   typedef std::vector<const TNode*> Nodevector;
 
 public:
