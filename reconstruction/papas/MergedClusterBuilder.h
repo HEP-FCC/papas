@@ -11,7 +11,7 @@
 
 #include "DefinitionsCollections.h"
 #include "DefinitionsNodes.h"
-#include "Ruler.h"
+#include "EventRuler.h"
 #include <iostream>
 
 namespace papas {

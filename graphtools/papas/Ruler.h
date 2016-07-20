@@ -10,14 +10,12 @@
 #define Ruler_h
 
 #include "Cluster.h"
-#include "Id.h"
 #include "pTrack.h"
-#include <stdio.h>
+
 
 namespace papas {
 
 class Distance;
-class PFEvent;
 
 // TODO template on Distance class?
 class Ruler {
@@ -26,23 +24,9 @@ public:
   Ruler() {};
   Distance clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const;
   Distance clusterTrackDistance(const Cluster& cluster, const Track& track) const;
-private:
-  Distance distance() const;
+
 
 };
-  class EventRuler {
-    
-  public:
-    EventRuler(const PFEvent& pfevent);
-    Distance distance(Id::Type id1, Id::Type id2) const;
-    
-  private:
-    Distance clusterClusterDistance(Id::Type id1, Id::Type id2) const;
-    Distance clusterTrackDistance(Id::Type id1, Id::Type id2) const;
-    
-    Ruler m_ruler;
-    const PFEvent& m_pfEvent;
-  };
 }  // end namespace papas
 
 #endif /* Ruler_hpp */

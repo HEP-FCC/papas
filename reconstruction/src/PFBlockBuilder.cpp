@@ -11,7 +11,7 @@
 #include "Distance.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
-#include "Ruler.h"
+#include "EventRuler.h"
 
 // temp
 #include "Id.h"

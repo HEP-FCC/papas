@@ -14,7 +14,7 @@
 #include "GraphBuilder.h"
 #include "Id.h"
 #include "PDebug.h"
-#include "Ruler.h"
+#include "EventRuler.h"
 
 namespace papas {
 
