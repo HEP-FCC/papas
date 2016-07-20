@@ -11,7 +11,7 @@
 #include "Definitions.h"
 #include "FloodFill.h"
 #include "PDebug.h"
-#include "directedacyclicgraph.h"
+#include "DirectedAcyclicGraph.h"
 
 namespace papas {
 

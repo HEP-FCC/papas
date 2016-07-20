@@ -10,7 +10,7 @@
 #define DefinitionsNodes_h
 
 #include "Id.h"
-#include "directedacyclicgraph.h"
+#include "DirectedAcyclicGraph.h"
 #include <map>
 #include <vector>
 namespace papas {

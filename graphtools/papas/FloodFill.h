@@ -34,7 +34,7 @@
  *  @date    2016-04-12
  */
 
-#include "directedacyclicgraph.h"
+#include "DirectedAcyclicGraph.h"
 #include <map>
 
 namespace DAG {
