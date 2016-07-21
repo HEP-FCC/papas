@@ -55,10 +55,8 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  //SimParticle& addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
   SimParticle makeSimParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
-  SimParticle& storeSimParticle(SimParticle&& simParticle, Id::Type parentId) ;
-  
+
   /**
    Makes a new SimParticle
    @param[in] int pdgid: particle id (eg 22 for a photon)
@@ -72,6 +70,8 @@ public:
   SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
                            TVector3 vertex = TVector3(0., 0., 0.));
 
+  SimParticle& storeSimParticle(SimParticle&& simParticle, Id::Type parentId) ;
+  
   /**
    Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
    @param[in] int pdgid: particle id (eg 22 for a photon)
@@ -88,7 +88,7 @@ public:
   Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
   Cluster smearCluster(const Cluster& cluster, papas::Layer = papas::Layer::kNone);
 
-  const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
+  const Cluster& cluster(Id::Type clusterId) const;          ///< retreive a cluster with this unique id
   const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
   const Clusters& hcalClusters() const { return m_hcalClusters; }  ///<return Hcal clusters collection
   const Clusters& smearedEcalClusters() const { return m_smearedEcalClusters; }  ///<return smeared Ecal clusters

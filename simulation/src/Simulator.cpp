@@ -233,10 +233,9 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
   
 
 
-Id::Type Simulator::addSmearedCluster(const Cluster& parent, papas::Layer detlayer, papas::Layer acceptlayer,
-                                      bool accept)
-
+  Id::Type Simulator::addSmearedCluster(const Cluster& parent, papas::Layer detlayer, papas::Layer acceptlayer, bool accept)
 {
+  //we return the id rather than th
   Cluster smeared = smearCluster(parent, detlayer);
   Id::Type id = smeared.id();
   PDebug::write("Made Smeared{}", smeared);
