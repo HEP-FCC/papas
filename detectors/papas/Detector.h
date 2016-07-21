@@ -5,6 +5,8 @@
 #ifndef DETECTOR_H
 #define DETECTOR_H
 
+#include <memory>
+
 #include "SurfaceCylinder.h"
 #include "Calorimeter.h"
 #include "Tracker.h"

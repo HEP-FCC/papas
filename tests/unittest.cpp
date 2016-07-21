@@ -41,14 +41,14 @@
 #include "Simulator.h"
 #include "SurfaceCylinder.h"
 #include "VolumeCylinder.h"
-#include "material.h"
+#include "Material.h"
 #include "pTrack.h"
 #include "Distance.h"
 
 #include "PapasManager.h"
 
 // include "random.h"
-#include "random.h"
+#include "Random.h"
 using namespace papas;
 
 TEST_CASE("Id") {  /// ID test

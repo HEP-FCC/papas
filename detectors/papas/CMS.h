@@ -9,6 +9,8 @@
 #include "Detector.h"
 #include <string>
 #include <vector>
+#include <memory>
+
 
 namespace papas {
 

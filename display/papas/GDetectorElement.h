@@ -6,6 +6,7 @@
 #define PAPAS_GDETECTORELEMENT_H
 
 #include <string>
+#include <memory>
 #include <list>
 
 #include "TBox.h"

@@ -6,7 +6,7 @@
 #define PAPAS_GDETECTOR_H
 
 #include <list>
-
+#include <memory>
 #include "Detector.h"
 #include "GDetectorElement.h"
 #include "Drawable.h"
