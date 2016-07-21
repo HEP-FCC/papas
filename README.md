@@ -58,7 +58,7 @@ Compilation
 Test
 --
 Rudimentary tests that run a simple example and run unit tests can be run with
---
+
 
     cd build
     make test
