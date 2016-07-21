@@ -47,6 +47,7 @@ Top-level-structure
 Still needs work on where everything should “live”  & ownership. This needs to take into account Python calls and future use in Gaudi. Its not quite right as yet.
 PfEvent, PapasManager, Simulator and Reconstructor all own some key parts and some jiggling is needed, esp for  where C++ is to be used as a library.
 Still not sure about Path and how it is used.
+STARTED (but on "working" branch):Simulator class needs  rationalisation
 
 C++ library:
 DONE Tidy the selections.xml file. 
@@ -96,7 +97,7 @@ DONE: unordered_map with sroting to match python makes it slower? Work on sortin
 Consider making helper classes for outputs??
 remove attempts to reserve for vectors (Stroustrup says its not worthwhile)
 SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
-DISCUSSED: Issue with naming of Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. Need advice!
+DISCUSSED still TO implement: Issue with naming of (p)Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. 
 
 Ctest
 DONE example Catch
@@ -107,3 +108,4 @@ Investigate reduction  in speed following unordered_maps and sorting - make opti
 
 Do I really need to split very small classes eg Random
 DONE Separate out CMS
+Simulator class needs some more thought to be cleaner design... perhaps make into more than one class?
