@@ -39,7 +39,7 @@ public:
    * @param[in] const Detector& : Detector to be used as basis for simulation
    */
   Simulator(const Detector&, Nodes& nodes);
-  void SimulateParticle(const Particle& ptc, IdType parentid = 0);
+  void simulateParticle(const Particle& ptc, IdType parentid = 0);
 
   // TODO consider whether the following should be private
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
@@ -49,16 +49,18 @@ public:
   void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
 
   /**
-   Makes a new SimParticle and adds this into collection of particles
+   Makes a new SimParticle 
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] TLorentzVector tlv: particle momentum
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
-
+  //SimParticle& addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle makeSimParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex= TVector3(0., 0., 0.));
+  SimParticle& storeSimParticle(SimParticle&& simParticle, Id::Type parentId) ;
+  
   /**
-   Makes a new SimParticle and adds this into collection of particles
+   Makes a new SimParticle
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
    @param[in] double theta: initial direction of particle
@@ -67,7 +69,7 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(int pdgid, double charge, double theta, double phi, double energy,
+  SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
                            TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
@@ -111,8 +113,11 @@ private:
   Id::Type addSmearedCluster(const Cluster& parent, papas::Layer detlayer = papas::Layer::kNone,
                              papas::Layer acceptlayer = papas::Layer::kNone, bool accept = false);
 
-  const Track& addTrack(SimParticle& ptc);
-  Id::Type addSmearedTrack(const Track& track, bool accept = false);
+  //const Track& addTrack(SimParticle& ptc);
+  const Track& storeTrack(Track&& track, Id::Type parentId);
+  Track smearTrack(const Track& track) ;
+  const Track& storeSmearedTrack(Track&& smearedtrack, Id::Type parentid, bool accept = false);
+  //Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed
   void propagateAllLayers(SimParticle& ptc);                 // more args needed
 

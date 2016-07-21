@@ -36,7 +36,7 @@ void PapasManager::simulateEvent(Particles&& particles) {
   for (const auto& id : ids) {
     // std::cout << id<< m_particles.at(id)<<std::endl;
     m_history.emplace(id, std::move(PFNode(id)));  ///< insert the raw particle ids into the history
-    m_simulator.SimulateParticle(m_particles.at(id), id);
+    m_simulator.simulateParticle(m_particles.at(id), id);
   }
   m_pfEvent.mergeClusters();
 }
