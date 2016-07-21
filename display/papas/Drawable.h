@@ -5,7 +5,6 @@
 #ifndef PAPAS_DRAWABLE_H
 #define PAPAS_DRAWABLE_H
 
-
 #include <string>
 
 namespace papas {
@@ -14,9 +13,9 @@ namespace papas {
 /// The key thing is to have the Draw element
 class Drawable {
 public:
-  Drawable() {};
+  Drawable(){};
   virtual ~Drawable() = default;
-  virtual void Draw(const std::string& projection)  = 0;
+  virtual void Draw(const std::string& projection) = 0;
 
 private:
 };

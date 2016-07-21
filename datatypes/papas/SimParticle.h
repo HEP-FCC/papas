@@ -16,15 +16,15 @@ public:
   bool isElectroMagnetic() const;
   ~SimParticle() = default;
   SimParticle() = default;
-  SimParticle(SimParticle&& ) = default;
-  SimParticle(SimParticle& ) = default; //{std::cout << "COPY SimParticle";};
-  SimParticle(const SimParticle& ) = default; //{std::cout << "COPY CONST SimParticle";};
+  SimParticle(SimParticle&&) = default;
+  SimParticle(SimParticle&) = default;        //{std::cout << "COPY SimParticle";};
+  SimParticle(const SimParticle&) = default;  //{std::cout << "COPY CONST SimParticle";};
   // SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field =
   // 0.);
-  SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv,
-              TVector3 vertex = TVector3(0., 0., 0.), double field = 0.);
+  SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.),
+              double field = 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, const Track& track);
-  
+
   TVector3 pathPosition(papas::Position layer) const;
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }

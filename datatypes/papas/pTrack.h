@@ -14,10 +14,9 @@ public:
   ~Track() = default;
   Track(Track&& t) = default;
   Track& operator=(const Track& T) = default;
-  Track(Track& ) = default;// {std::cout << "COPY Track";};
-  Track(const Track& ) = default;//{std::cout << "COPY CONST Track";};
+  Track(Track&) = default;        // {std::cout << "COPY Track";};
+  Track(const Track&) = default;  //{std::cout << "COPY CONST Track";};
 
-  
   double pt() const { return m_p3.Perp(); }
   double energy() const { return m_p3.Mag(); }
   double eta() const { return m_p3.Eta(); }
@@ -39,8 +38,6 @@ protected:
   double m_charge;
   Path::Ptr m_path;  // not owned by track but useful to know where it is
 private:
-  
-
 };
 
 std::ostream& operator<<(std::ostream& os, const Track& track);

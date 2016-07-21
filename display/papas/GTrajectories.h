@@ -5,21 +5,20 @@
 #ifndef PAPAS_GTRAJECTORIES_H
 #define PAPAS_GTRAJECTORIES_H
 
-#include <utility>
 #include <list>
+#include <utility>
 
-#include "Path.h"
-#include "TVector3.h"
 #include "Drawable.h"
 #include "GBlob.h"
 #include "GTrajectory.h"
-
+#include "Path.h"
+#include "TVector3.h"
 
 namespace papas {
 
 class Cluster;
-  class Track;
-  class Particle;
+class Track;
+class Particle;
 class SimParticle;
 
 /// Used to display the tracks and clusters on output graphs
@@ -32,7 +31,7 @@ public:
   GTrajectories(const Track& track);
   GTrajectories(const SimParticle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
-  void Draw(const std::string& projection)  override;
+  void Draw(const std::string& projection) override;
   void addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth);
   void addHelix(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor);
   void addNamedPoints(const Path::Points& path, TVector3 tvec, int linestyle, int linecolor, int linewidth);

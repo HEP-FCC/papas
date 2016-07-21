@@ -9,12 +9,12 @@
 #include "Definitions.h"
 #include "DefinitionsCollections.h"
 #include "DefinitionsNodes.h"
+#include "HelixPropagator.h"
 #include "SimParticle.h"
+#include "StraightLinePropagator.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "pTrack.h"
-#include "HelixPropagator.h"
-#include "StraightLinePropagator.h"
 
 namespace papas {
 class Detector;
@@ -55,8 +55,7 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle( int pdgid, double charge, TLorentzVector tlv,
-                           TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle& addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
    Makes a new SimParticle and adds this into collection of particles
@@ -68,7 +67,7 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle( int pdgid, double charge, double theta, double phi, double energy,
+  SimParticle& addParticle(int pdgid, double charge, double theta, double phi, double energy,
                            TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
@@ -82,12 +81,11 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                              double ptmax,
+  SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                               TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
   Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
-  Cluster smearCluster(const Cluster& cluster, papas::Layer  =  papas::Layer::kNone);
-  
+  Cluster smearCluster(const Cluster& cluster, papas::Layer = papas::Layer::kNone);
+
   const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
   const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
   const Clusters& hcalClusters() const { return m_hcalClusters; }  ///<return Hcal clusters collection
@@ -110,9 +108,9 @@ public:
 private:
   Id::Type addEcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
   Id::Type addHcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
-  Id::Type addSmearedCluster(const Cluster& parent,papas::Layer detlayer = papas::Layer::kNone,
+  Id::Type addSmearedCluster(const Cluster& parent, papas::Layer detlayer = papas::Layer::kNone,
                              papas::Layer acceptlayer = papas::Layer::kNone, bool accept = false);
-  
+
   const Track& addTrack(SimParticle& ptc);
   Id::Type addSmearedTrack(const Track& track, bool accept = false);
   void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed

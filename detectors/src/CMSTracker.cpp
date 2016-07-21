@@ -7,11 +7,10 @@
  * @brief Implementation of the CMS detector
  */
 #include "CMSTracker.h"
-#include "pTrack.h"
 #include "Random.h"
+#include "pTrack.h"
 
 namespace papas {
-
 
 CMSTracker::CMSTracker(const VolumeCylinder& volume) : Tracker(Layer::kTracker, volume, Material(0, 0)) {}
 

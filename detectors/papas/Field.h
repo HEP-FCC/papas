@@ -5,11 +5,10 @@
 #ifndef FIELD_H
 #define FIELD_H
 #include "DetectorElement.h"
-#include "VolumeCylinder.h"
 #include "Material.h"
+#include "VolumeCylinder.h"
 
 namespace papas {
-
 
 class Material;
 class VolumeCylinder;
@@ -17,7 +16,6 @@ class VolumeCylinder;
 /**
  Detector Element is the  base for Calorimeter, Tracker and Field
 */
-
 
 class Field : public DetectorElement {
 public:
@@ -30,8 +28,6 @@ public:
 protected:
   double m_magnitude;
 };
-
-
 
 }  // end namespace papas
 #endif

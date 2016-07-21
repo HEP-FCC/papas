@@ -2,9 +2,9 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include <memory>
 #include "GBlob.h"
 #include "Cluster.h"
+#include <memory>
 
 namespace papas {
 

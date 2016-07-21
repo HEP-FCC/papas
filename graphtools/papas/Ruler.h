@@ -12,7 +12,6 @@
 #include "Cluster.h"
 #include "pTrack.h"
 
-
 namespace papas {
 
 class Distance;
@@ -21,11 +20,9 @@ class Distance;
 class Ruler {
 
 public:
-  Ruler() {};
+  Ruler(){};
   Distance clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const;
   Distance clusterTrackDistance(const Cluster& cluster, const Track& track) const;
-
-
 };
 }  // end namespace papas
 

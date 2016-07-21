@@ -6,7 +6,6 @@
 namespace papas {
 class SimParticle;
 
-
 class StraightLinePropagator {
 public:
   StraightLinePropagator();

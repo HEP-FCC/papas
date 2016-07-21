@@ -50,8 +50,8 @@ public:
    */
   PFBlock(const Ids& elementIds, Edges& edges);
   PFBlock();
-  ~PFBlock() = default ;
-  PFBlock(PFBlock&& pfblock)=default;
+  ~PFBlock() = default;
+  PFBlock(PFBlock&& pfblock) = default;
 
   const Ids elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
   Edge& findEdge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
@@ -90,11 +90,10 @@ public:
   const class Edge& edge(Id::Type id1, Id::Type id2) const;
 
 private:
-  PFBlock(PFBlock& pfblock) =default; //{std::cout << "COPY BLOCK";};
-  PFBlock(const PFBlock& pfblock)=default; //{std::cout << "COPY CONST BLOCK";};
-  PFBlock& operator=(const PFBlock& ) = default; //{std::cout << "= BLOCK"; };//return PFBlock(c);};
+  PFBlock(PFBlock& pfblock) = default;           //{std::cout << "COPY BLOCK";};
+  PFBlock(const PFBlock& pfblock) = default;     //{std::cout << "COPY CONST BLOCK";};
+  PFBlock& operator=(const PFBlock&) = default;  //{std::cout << "= BLOCK"; };//return PFBlock(c);};
 
-  
   Id::Type m_uniqueId;        //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy

@@ -7,8 +7,8 @@
  * @brief Implementation of the CMS ECAL  */
 #include "CMSEcal.h"
 #include "Cluster.h"
-#include "PParticle.h"
 #include "Material.h"
+#include "PParticle.h"
 
 namespace papas {
 /*
@@ -63,6 +63,5 @@ double CMSECAL::energyResponse(double energy, double eta) const {
   (void)eta;
   return 1;
 }
-
 
 }  // end namespace papas

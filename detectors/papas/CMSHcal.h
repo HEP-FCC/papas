@@ -5,7 +5,6 @@
 #ifndef CMSHCAL_H
 #define CMSHCAL_H
 
-
 #include "Calorimeter.h"
 #include <vector>
 
@@ -50,7 +49,6 @@ private:
   std::vector<std::vector<double>> m_eres;   /// energy resolution
   std::vector<std::vector<double>> m_eresp;  /// ask Colin what this is};
 };
-
 
 }  // end namespace papas
 #endif

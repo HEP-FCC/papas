@@ -34,8 +34,8 @@ else
 
 SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field)
     : Particle(uniqueid, pdgid, charge, tlv), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
-      
-  if (m_isHelix )
+
+  if (m_isHelix)
     if (field > 0)
       m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
     else
@@ -48,7 +48,7 @@ SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVect
     :  // for when particle is created via reconstruct track - it calls the above constructor
       SimParticle(uniqueid, pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
                   track.path()->field()) {
-  
+
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
     if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);
   }

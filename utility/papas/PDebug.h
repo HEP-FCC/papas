@@ -18,7 +18,7 @@
 namespace papas {
 
 class PDebug {
-  //produce physics debug output
+  // produce physics debug output
 public:
   PDebug() {
     s_fname = "";
@@ -33,15 +33,18 @@ public:
 
   /// Write to output (this is either null or a file)
   template <typename T>
-  static spdlog::details::line_logger write(const T& t) { return log()->info(t); };
+  static spdlog::details::line_logger write(const T& t) {
+    return log()->info(t);
+  };
   /// Write to output (this is either null or a file)
   template <typename... Args>
   static spdlog::details::line_logger write(const char* fmt, const Args&... args) {
     return log()->info(fmt, args...);
   };
-  
-  static void flush() {PDebug::log()->flush();}
+
+  static void flush() { PDebug::log()->flush(); }
   static std::shared_ptr<spdlog::logger> log();
+
 private:
   static spdlog::details::line_logger info() { return log()->info(); }
   static spdlog::details::line_logger write() { return log()->info(); }
@@ -50,7 +53,7 @@ private:
   static spdlog::details::line_logger debug() { return log()->debug(); }
   static void init();
   static void consoleinit();
- 
+
   static bool logInitialized;
   static std::vector<spdlog::sink_ptr> m_sinks;
   static spdlog::level::level_enum slevel;  // err or info

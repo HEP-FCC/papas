@@ -15,7 +15,6 @@ namespace papas {
 
 class Cluster;
 
-
 /// Used to display Clusters on output graphs
 class GBlob {
 public:
@@ -29,8 +28,6 @@ private:
   // inside circle of cluster
   std::unordered_map<std::string, std::unique_ptr<TEllipse>> m_inners;
 };
-
-
 
 }  // end namespace papas
 

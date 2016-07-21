@@ -17,8 +17,7 @@ Helix::Helix() {}
 
 Helix::Helix(TLorentzVector p4, TVector3 origin, double field, double charge)
     : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
-  if (charge*field==0)
-    throw "invalid parameters for Helix: charge or field are zero";
+  if (charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
   m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
   m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
   TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();

@@ -70,22 +70,20 @@ int main(int argc, char* argv[]) {
 int example(int argc, char* argv[]) {
   // open up Pythia file
   auto reader = podio::ROOTReader();
-  //reader.openFile("ee_ZH_Zmumu_Hbb.root");
+  // reader.openFile("ee_ZH_Zmumu_Hbb.root");
 
-  
-  if( argc != 2) {
-    std::cerr<<"Usage: ./mainexe filename"<<std::endl;
+  if (argc != 2) {
+    std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   try {
     reader.openFile(fname);
-  }
-  catch(std::runtime_error& err) {
-    std::cerr<<err.what()<<". Quitting."<<std::endl;
+  } catch (std::runtime_error& err) {
+    std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
   }
-  
+
   // read an event
   unsigned int eventNo = 0;
   auto store = podio::EventStore();

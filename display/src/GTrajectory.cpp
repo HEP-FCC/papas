@@ -32,5 +32,4 @@ GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>
   }
 }
 
-
 }  // end namespace papas

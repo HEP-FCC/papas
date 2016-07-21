@@ -9,8 +9,8 @@
 #include "PFEvent.h"
 #include "Cluster.h"
 #include "Id.h"
-#include "PDebug.h"
 #include "MergedClusterBuilder.h"
+#include "PDebug.h"
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
 #include "Path.h"
@@ -53,7 +53,7 @@ PFEvent::PFEvent(Simulator& sim)
       m_historyNodes(sim.historyNodes()),
       m_reconstructedParticles() {}
 
-  /*void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = std::move(builder.blocks()); }*/
+/*void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = std::move(builder.blocks()); }*/
 
 void PFEvent::mergeClusters() {
   EventRuler ruler{*this};
@@ -137,15 +137,16 @@ const Cluster& PFEvent::HCALCluster(Id::Type id) const {
 }
 
 const Cluster& PFEvent::cluster(Id::Type id) const {
-   if (m_hcals.find(id) != m_hcals.end()) {
-     if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
-       std::cout <<"humph MH";
-     }
-     if (m_mergedEcals.find(id) != m_mergedHcals.end()) {
-       std::cout <<"humph ME";
-     }
-     if (m_ecals.find(id) != m_ecals.end()) {
-       std::cout <<"humph e";}
+  if (m_hcals.find(id) != m_hcals.end()) {
+    if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
+      std::cout << "humph MH";
+    }
+    if (m_mergedEcals.find(id) != m_mergedHcals.end()) {
+      std::cout << "humph ME";
+    }
+    if (m_ecals.find(id) != m_ecals.end()) {
+      std::cout << "humph e";
+    }
     return m_hcals.at(id);
   } else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);
@@ -153,7 +154,7 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
     return m_mergedHcals.at(id);
   } else if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
     return m_mergedEcals.at(id);
-  } 
+  }
   std::cout << "Oopps" << Id::pretty(id);
   // TODO throw error
   class Cluster c;
@@ -163,7 +164,7 @@ const Cluster& PFEvent::cluster(Id::Type id) const {
 }
 
 void PFEvent::clear() {
-  //m_blocks.clear();
+  // m_blocks.clear();
   m_mergedEcals.clear();
   m_mergedHcals.clear();
   m_reconstructedParticles.clear();

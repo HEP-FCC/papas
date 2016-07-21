@@ -10,54 +10,50 @@
 #include <stdio.h>
 
 #include "CMS.h"
+#include "PDebug.h"
 #include "PapasManager.h"
 #include "PythiaConnector.h"
-#include "PDebug.h"
 
 #include <iostream>
 
-
-
 int main(int argc, char* argv[]) {
-  
-  randomgen::setEngineSeed(0xdeadbeef); //make results reproduceable
-  
+
+  randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
-  //open the Pythia file fname
+  // open the Pythia file fname
   try {
     auto pythiaConnector = PythiaConnector(fname);
-    
+
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
     papas::PapasManager papasManager{CMSDetector};
-    
-    //read and process a single event
+
+    // read and process a single event
     unsigned int eventNo = 0;
     pythiaConnector.processEvent(eventNo, papasManager);
-    
-    //write out the reconstructed particles to a root file
+
+    // write out the reconstructed particles to a root file
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
-    
+
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;
-    for ( const auto& p : papasManager.rawParticles()) {
+    for (const auto& p : papasManager.rawParticles()) {
       std::cout << "  " << p.second << std::endl;
     }
     std::cout << "Reconstructed Particles" << std::endl;
     for (const auto& p : papasManager.reconstructedParticles()) {
       std::cout << "  " << p.second << std::endl;
     }
-    //produce papas display
+    // produce papas display
     papasManager.display();
     return EXIT_SUCCESS;
-  }
-  catch (std::runtime_error& err) {
+  } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
   }
-  
 }

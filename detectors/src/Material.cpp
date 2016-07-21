@@ -22,7 +22,7 @@ double Material::pathLength(bool isEm) const {
   }
 
   else {
-    double pl=randomgen::RandExponential(1. / freepath).next();
+    double pl = randomgen::RandExponential(1. / freepath).next();
     return pl;
   }
 }
@@ -32,4 +32,3 @@ TestMaterial::TestMaterial(double x0, double lambdaI) : Material(x0, lambdaI) {}
 double TestMaterial::PathLength(/*AJRTODO const Particle& ptc)*/) { return 99.999; }
 
 }  // end namespace papas
-

@@ -26,6 +26,5 @@ public:
 private:
 };
 
-
 }  // end namespace papas
 #endif

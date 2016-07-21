@@ -26,8 +26,6 @@ private:
   std::unordered_map<std::string, std::unique_ptr<TGraph>> m_graphs;  ///< the line/curves for a track on each proj
 };
 
-
-
 }  // end namespace papas
 
 #endif

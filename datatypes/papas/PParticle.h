@@ -21,18 +21,17 @@ namespace papas {
 class Particle {
 public:
   Particle();
-  //Particle& operator=(const Particle& P) = default;
-  Particle( int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle( int pdgid, double charge);
-  Particle(IdType id,  int pdgid, double charge, TLorentzVector tlv, double status = 1);
-  Particle(IdType id,  int pdgid, double charge);
-  ~Particle() =default; //{ PDebug::write(" Delete particle {}", *this);};
+  // Particle& operator=(const Particle& P) = default;
+  Particle(int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(int pdgid, double charge);
+  Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(IdType id, int pdgid, double charge);
+  ~Particle() = default;  //{ PDebug::write(" Delete particle {}", *this);};
   Particle(Particle&&) = default;
-  Particle& operator=(const Particle& )= default;// {std::cout << "= Particle"; };
-  Particle(Particle& pfblock) =default; //{std::cout << "COPY Particle";};
-  Particle(const Particle& pfblock)= default; // {std::cout << "COPY CONST Particle";};
-  
-  
+  Particle& operator=(const Particle&) = default;  // {std::cout << "= Particle"; };
+  Particle(Particle& pfblock) = default;           //{std::cout << "COPY Particle";};
+  Particle(const Particle& pfblock) = default;     // {std::cout << "COPY CONST Particle";};
+
   std::string stringDescription() const;              ///< String to describe the particle
   const TLorentzVector p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   const TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz
@@ -53,7 +52,6 @@ public:
 protected:
   IdType m_uniqueId;  // to be used by virtual classes
 private:
-
   TLorentzVector m_tlv;
   int m_particleId;
   double m_charge;

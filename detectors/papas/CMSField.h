@@ -9,7 +9,6 @@
 
 namespace papas {
 
-
 class VolumeCylinder;
 /**
  * @file CMS.h

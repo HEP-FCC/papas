@@ -64,32 +64,29 @@ Cluster::Cluster(const Cluster& c, Id::Type id)
 }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info() ;
+  os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
   os << " sub(";
   for (auto c : cluster.subClusters()) {
-    os<< Id::pretty(c->id()) << ", ";
+    os << Id::pretty(c->id()) << ", ";
   }
-  os <<")";
+  os << ")";
   return os;
 }
 
+/*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
+Cluster::Cluster( Cluster && c) :
+m_size(c.m_size),
+m_angularSize(c.m_angularSize),
+m_pt(c.m_pt),
+m_uniqueId(c.m_uniqueId),
+m_energy(c.m_energy),
+m_subClusters(std::move(c.m_subClusters))
 
-
-  /*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
- Cluster::Cluster( Cluster && c) :
- m_size(c.m_size),
- m_angularSize(c.m_angularSize),
- m_pt(c.m_pt),
- m_uniqueId(c.m_uniqueId),
- m_energy(c.m_energy),
-  m_subClusters(std::move(c.m_subClusters))
-
- {
- m_p3=c.m_p3;
-      PDebug::write("Move cluster {}" , *this);
-   std::cout<< "Move Cluster" <<std::endl;
- }*/
-
+{
+m_p3=c.m_p3;
+    PDebug::write("Move cluster {}" , *this);
+ std::cout<< "Move Cluster" <<std::endl;
+}*/
 
 /* Cluster& Cluster::operator=(Cluster&& c) {
  m_energy=c.m_energy;
@@ -101,25 +98,24 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
  return *this;
  };*/
 
- /*Cluster& Cluster::operator=(const Cluster& c) {
- m_energy=c.m_energy;
- m_p3=c.m_p3;
- m_size=c.m_size;
- m_pt=c.m_pt;
- m_uniqueId=c.m_uniqueId;
- std::cout<< "copy cluster=" <<std::endl;
- return *this;
- };
+/*Cluster& Cluster::operator=(const Cluster& c) {
+m_energy=c.m_energy;
+m_p3=c.m_p3;
+m_size=c.m_size;
+m_pt=c.m_pt;
+m_uniqueId=c.m_uniqueId;
+std::cout<< "copy cluster=" <<std::endl;
+return *this;
+};
 
- Cluster::Cluster(const Cluster&) {
-   PDebug::write("copy cluster {}" , Id::pretty(m_uniqueId));
- std::cout<< "copy cluster" ;
- } ;*/
-  
-  /*Cluster::~Cluster() {
-    PDebug::write("delete cluster {}" , Id::pretty(m_uniqueId));
-    std::cout<< "delete cluster" ;
-  } ;*/
+Cluster::Cluster(const Cluster&) {
+  PDebug::write("copy cluster {}" , Id::pretty(m_uniqueId));
+std::cout<< "copy cluster" ;
+} ;*/
+
+/*Cluster::~Cluster() {
+  PDebug::write("delete cluster {}" , Id::pretty(m_uniqueId));
+  std::cout<< "delete cluster" ;
+} ;*/
 
 }  // end namespace papas
- 

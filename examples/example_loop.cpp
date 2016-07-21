@@ -13,13 +13,12 @@
 #include "PapasManager.h"
 #include "PythiaConnector.h"
 
-
 // STL
 #include <chrono>
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  //papas::PDebug::On("physics.txt");
+  // papas::PDebug::On("physics.txt");
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
 
   if (argc != 2) {
@@ -34,11 +33,10 @@ int main(int argc, char* argv[]) {
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
     papas::PapasManager papasManager{CMSDetector};
-    
+
     unsigned int eventNo = 0;
     unsigned int nEvents = 100;
 
-    
     auto start = std::chrono::steady_clock::now();
 
     for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {

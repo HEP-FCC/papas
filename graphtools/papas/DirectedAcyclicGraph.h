@@ -216,7 +216,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::en
 
   // Create a queue for the Breadth First Search
   std::queue<const N*> nodeQueue;
-  std::queue<int> nodeDepth; //keeps track of the node depths so we can limit how deep we go if we wish
+  std::queue<int> nodeDepth;  // keeps track of the node depths so we can limit how deep we go if we wish
 
   // Mark the current node as visited and enqueue it
   for (auto const& node : nodes) {
@@ -237,7 +237,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::en
     // next item in the queue
     int curdepth = nodeDepth.front();
 
-    if ((depth < 0 || curdepth < depth) &&// NB depth=-1 means we are visiting everything
+    if ((depth < 0 || curdepth < depth) &&  // NB depth=-1 means we are visiting everything
         ((visittype == pt::CHILDREN) | (visittype == pt::UNDIRECTED))) {  // use the children
       for (auto node : nodeQueue.front()->children()) {
         if (m_visited.find(node) == m_visited.end()) {  // check node is not already being visited
@@ -248,7 +248,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::en
         }
       }
     }
-    if ((depth < 0 || curdepth < depth) && //NB depth=-1 means we are visiting everything
+    if ((depth < 0 || curdepth < depth) &&                               // NB depth=-1 means we are visiting everything
         ((visittype == pt::PARENTS) | (visittype == pt::UNDIRECTED))) {  // use the parents
       for (auto node : nodeQueue.front()->parents()) {
 

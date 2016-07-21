@@ -13,7 +13,7 @@ std::string Track::info() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Track& track) {
-  os << "Track :" << Id::pretty(track.id()) << ":" << track.id() <<": " << track.info();
+  os << "Track :" << Id::pretty(track.id()) << ":" << track.id() << ": " << track.info();
   return os;
 }
 

@@ -8,7 +8,6 @@
 
 namespace papas {
 
-
 Display::Display(std::list<ViewPane::Projection> views) {
   // TODO consider making views concrete objects
   if (views.size() == 0) {

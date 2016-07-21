@@ -23,9 +23,10 @@ public:
   const Particles& rawParticles() { return m_particles; }
   void clear();
   void display();  ///< relocate?
-  Simulator& simulator() { return m_simulator;}
+  Simulator& simulator() { return m_simulator; }
+
 private:
-  bool  operator()(IdType i, IdType j);
+  bool operator()(IdType i, IdType j);
   const Detector& m_detector;
   Simulator m_simulator;
   PFEvent m_pfEvent;

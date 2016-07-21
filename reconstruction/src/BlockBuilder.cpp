@@ -5,13 +5,13 @@
 //  Created by Alice Robson on 07/04/16.
 //
 //
-#include "PFBlock.h"
 #include "BlockBuilder.h"
+#include "PFBlock.h"
 //#include "PFEvent.h"
 #include "Definitions.h"
+#include "DirectedAcyclicGraph.h"
 #include "FloodFill.h"
 #include "PDebug.h"
-#include "DirectedAcyclicGraph.h"
 
 namespace papas {
 
@@ -41,9 +41,9 @@ void BlockBuilder::makeBlocks() {
     PFBlock block{elementIds, m_edges};
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
-    Id::Type id=block.uniqueId();
+    Id::Type id = block.uniqueId();
     m_blocks.emplace(id, std::move(block));
-    //std::cout << m_blocks.size() << " " << m_blocks.empty() ;
+    // std::cout << m_blocks.size() << " " << m_blocks.empty() ;
 
     // update the history nodes (if they exist)
     if (m_historyNodes.size() > 0) {

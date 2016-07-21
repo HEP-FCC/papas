@@ -5,21 +5,17 @@
 #ifndef CMS_H
 #define CMS_H
 
-
 #include "Detector.h"
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-
 
 namespace papas {
-
 
 /**
  * @file CMS.h
  * @brief Implementation of CMS detector
  */
-
 
 class CMS : public Detector {
 public:

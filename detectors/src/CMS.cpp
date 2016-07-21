@@ -8,9 +8,9 @@
  */
 #include "CMS.h"
 #include "CMSEcal.h"
+#include "CMSField.h"
 #include "CMSHcal.h"
 #include "CMSTracker.h"
-#include "CMSField.h"
 
 #include <vector>
 
@@ -39,6 +39,5 @@ CMS::CMS() : Detector() {
   // Field detector element
   m_field = std::shared_ptr<const Field>{new CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8)};
 }
-
 
 }  // end namespace papas

@@ -15,12 +15,12 @@ std::map<papas::Layer, int> gCOLORMap{{papas::Layer::kEcal, kRed - 10}, {papas::
     //TODO
 }*/
 
-void GDetectorElement::Draw(const std::string& projection)  {
+void GDetectorElement::Draw(const std::string& projection) {
   if (projection == "xy") {
-    for (auto & circle : m_circles)
+    for (auto& circle : m_circles)
       circle.Draw("same");
   } else if ((projection == "yz") | (projection == "xz")) {
-    for (auto & box : m_boxes) {
+    for (auto& box : m_boxes) {
       box.Draw("samel");
     }
   } else if (projection.find("thetaphi") != projection.npos) {
@@ -28,7 +28,6 @@ void GDetectorElement::Draw(const std::string& projection)  {
   // else
   // AJRTODO throw error
 };
-
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detElem) {  // For each inner and outer
                                                                                       // cyclinder create a cyclinder

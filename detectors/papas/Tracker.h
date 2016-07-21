@@ -11,9 +11,7 @@
 
 namespace papas {
 
-
 class Track;
-
 
 class Tracker : public DetectorElement {
 public:

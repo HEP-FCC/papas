@@ -29,7 +29,6 @@ public:
   static bool logInitialized;
   static std::vector<spdlog::sink_ptr> m_sinks;
 };
-
 }
 
 #endif /* log_h */

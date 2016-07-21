@@ -5,7 +5,6 @@
 #ifndef CMSECAL_H
 #define CMSECAL_H
 
-
 #include "Calorimeter.h"
 #include <vector>
 
@@ -78,7 +77,6 @@ private:
   std::vector<std::vector<double>> m_eres;  ///< two vectors (Barrel and EndCap) each of 3 elements
                                             ///> TODO describe elements
 };
-
 
 }  // end namespace papas
 #endif

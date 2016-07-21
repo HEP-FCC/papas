@@ -10,7 +10,6 @@
 
 #include "ViewPane.h"
 
-
 namespace papas {
 
 class Drawable;

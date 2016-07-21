@@ -2,10 +2,10 @@
 
 //#include <iostream>
 #include "StraightLinePropagator.h"
+#include "GeoTools.h"
 #include "Helix.h"
 #include "Path.h"
 #include "SimParticle.h"
-#include "GeoTools.h"
 
 namespace papas {
 

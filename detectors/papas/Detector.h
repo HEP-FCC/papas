@@ -7,12 +7,11 @@
 
 #include <memory>
 
-#include "SurfaceCylinder.h"
 #include "Calorimeter.h"
-#include "Tracker.h"
-#include "Field.h"
 #include "DetectorElement.h"
-
+#include "Field.h"
+#include "SurfaceCylinder.h"
+#include "Tracker.h"
 
 namespace papas {
 

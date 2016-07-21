@@ -7,7 +7,6 @@
 
 #include "DetectorElement.h"
 
-
 namespace papas {
 
 class Particle;

@@ -8,7 +8,6 @@
  */
 #include "CMSField.h"
 
-
 namespace papas {
 
 CMSField::CMSField(const VolumeCylinder& volume, double magnitude) : Field(volume, Material(0, 0), magnitude) {}

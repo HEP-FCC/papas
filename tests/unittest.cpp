@@ -33,17 +33,17 @@
 #include "SimParticle.h"
 
 #include "Definitions.h"
+#include "Distance.h"
 #include "Edge.h"
 #include "Helix.h"
 #include "Id.h"
+#include "Material.h"
 #include "PParticle.h"
 #include "Path.h"
 #include "Simulator.h"
 #include "SurfaceCylinder.h"
 #include "VolumeCylinder.h"
-#include "Material.h"
 #include "pTrack.h"
-#include "Distance.h"
 
 #include "PapasManager.h"
 
@@ -561,20 +561,19 @@ TEST_CASE("randomgen") {
   REQUIRE(r3 != r4);
 }
 
-
 TEST_CASE("Distance") {
-auto c1 = Cluster(1, TVector3(1, 0, 0), 1., Id::ItemType::kEcalCluster);
-auto c2 = Cluster(2, TVector3(1, 0, 0), 1., Id::ItemType::kHcalCluster);
- auto p3 = c1.position().Unit()*100.;
+  auto c1 = Cluster(1, TVector3(1, 0, 0), 1., Id::ItemType::kEcalCluster);
+  auto c2 = Cluster(2, TVector3(1, 0, 0), 1., Id::ItemType::kHcalCluster);
+  auto p3 = c1.position().Unit() * 100.;
   auto p4 = TLorentzVector();
   p4.SetVectM(p3, 1.);
-  auto path = std::make_shared<Path>(StraightLine(p4, TVector3(0,0,0)));
-  path->addPoint(papas::Position::kEcalIn,c1.position());
-  path->addPoint(papas::Position::kHcalIn,c2.position());
+  auto path = std::make_shared<Path>(StraightLine(p4, TVector3(0, 0, 0)));
+  path->addPoint(papas::Position::kEcalIn, c1.position());
+  path->addPoint(papas::Position::kHcalIn, c2.position());
   double charge = 1.;
   auto tr = Track(p3, charge, path);
 
-  auto dist1 = Distance( c1, tr);
+  auto dist1 = Distance(c1, tr);
   REQUIRE(dist1.isLinked());
   auto dist2 = Distance(c2, c1);
   REQUIRE(dist2.isLinked());

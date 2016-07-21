@@ -11,5 +11,4 @@ namespace papas {
 
 SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {}
 
-
 }  // end namespace papas

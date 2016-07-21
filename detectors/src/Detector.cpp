@@ -3,8 +3,8 @@
 //
 //
 #include "Detector.h"
-#include "SurfaceCylinder.h"
 #include "Material.h"
+#include "SurfaceCylinder.h"
 #include <list>
 #include <vector>
 
@@ -34,7 +34,7 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
     return m_hcal;
     break;
   default:
-      throw std::range_error( "Cluster not found" );
+    throw std::range_error("Cluster not found");
   }
 }
 
@@ -48,13 +48,12 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
     return m_hcal;
     break;
   default:
-      throw std::range_error( "Cluster not found" );
+    throw std::range_error("Cluster not found");
     // TODO add track and field
   }
 
   // TODO is this the best route or should it throw
-  //return nullptr;
+  // return nullptr;
 }
-
 
 }  // end namespace papas

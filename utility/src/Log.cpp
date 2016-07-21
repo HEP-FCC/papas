@@ -13,7 +13,7 @@ namespace papas {
 
 bool Log::logInitialized = false;
 std::vector<spdlog::sink_ptr> Log::m_sinks;
-  
+
 void Log::init() {
   logInitialized = true;
   m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>("logfile", true));

@@ -10,14 +10,13 @@
 #include <stdio.h>
 
 #include "CMS.h"
+#include "PDebug.h"
 #include "PapasManager.h"
 #include "PythiaConnector.h"
-#include "PDebug.h"
 
 // STL
 #include <chrono>
 #include <iostream>
-
 
 using namespace papas;
 
@@ -28,8 +27,8 @@ int longrun(int argc, char* argv[]);
 int main(int argc, char* argv[]) {
 
   return example(argc, argv);
-  //return example2(argc, argv);
-  //return longrun(argc, argv);
+  // return example2(argc, argv);
+  // return longrun(argc, argv);
 }
 
 int example(int argc, char* argv[]) {
@@ -39,79 +38,75 @@ int example(int argc, char* argv[]) {
     return 1;
   }
   const char* fname = argv[1];
-  //open the Pythia file fname
+  // open the Pythia file fname
   try {
-  auto pythiaConnector = PythiaConnector(fname);
-  
-  // Create CMS detector and PapasManager
-  CMS CMSDetector;
-  papas::PapasManager papasManager{CMSDetector};
-  
-  //read and process an event
-  unsigned int eventNo = 0;
-  pythiaConnector.processEvent(eventNo, papasManager);
-  
-  //write out the reconstructed particles to a root file
-  pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
+    auto pythiaConnector = PythiaConnector(fname);
 
-  // outputs
-  std::cout << "Generated Stable Particles" << std::endl;
-  for ( const auto& p : papasManager.rawParticles()) {
-    std::cout << "  " << p.second << std::endl;
-  }
-  std::cout << "Reconstructed Particles" << std::endl;
-  for (const auto& p : papasManager.reconstructedParticles()) {
-    std::cout << "  " << p.second << std::endl;
-  }
-  
-  papasManager.display();
-  return EXIT_SUCCESS;
+    // Create CMS detector and PapasManager
+    CMS CMSDetector;
+    papas::PapasManager papasManager{CMSDetector};
+
+    // read and process an event
+    unsigned int eventNo = 0;
+    pythiaConnector.processEvent(eventNo, papasManager);
+
+    // write out the reconstructed particles to a root file
+    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
+
+    // outputs
+    std::cout << "Generated Stable Particles" << std::endl;
+    for (const auto& p : papasManager.rawParticles()) {
+      std::cout << "  " << p.second << std::endl;
+    }
+    std::cout << "Reconstructed Particles" << std::endl;
+    for (const auto& p : papasManager.reconstructedParticles()) {
+      std::cout << "  " << p.second << std::endl;
+    }
+
+    papasManager.display();
+    return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
   }
-
 }
 
 int example2(int argc, char* argv[]) {
   auto pythiaConnector = PythiaConnector("simpleeg.root");
-  
+
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
-  
+
   unsigned int eventNo = 0;
   pythiaConnector.processEvent(eventNo, papasManager);
-  
+
   papasManager.display();
   return EXIT_SUCCESS;
 }
 
-
 int longrun(int argc, char* argv[]) {
 
-  //PDebug::On();  // physics debug output
+  // PDebug::On();  // physics debug output
   randomgen::setEngineSeed(0xdeadbeef);
-  
-  
+
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   auto pythiaConnector = PythiaConnector(fname);
-  
+
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
 
-
   auto start = std::chrono::steady_clock::now();
-  
+
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
-    
+
     PDebug::write("Event: {}", i);
     if (i % 10 == 0) {
       std::cout << "reading event " << i << std::endl;
@@ -131,9 +126,6 @@ int longrun(int argc, char* argv[]) {
   std::cout << 1000 * nEvents / times << " Evs/s" << std::endl;
   return EXIT_SUCCESS;
 }
-
-
-
 
 /*
  //TODO make a gunparticles example out of the following
@@ -182,7 +174,5 @@ for (int i = 0; i < nParticles; i++) {
  sim.simulateHadron(ptc);
 
  }*/
-
-
 
 //}  // end namespace papas

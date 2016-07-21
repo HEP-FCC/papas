@@ -5,13 +5,12 @@
 #ifndef PAPAS_VIEWPANE_H
 #define PAPAS_VIEWPANE_H
 
-#include <list>
-#include <string>
-#include <vector>
 #include "Drawable.h"
 #include "TCanvas.h"
 #include "TH2F.h"
-
+#include <list>
+#include <string>
+#include <vector>
 
 namespace papas {
 
@@ -55,7 +54,6 @@ private:
   /// One of "xy", "yz", "zx" and some more not yet implemented
   Projection m_projection;
 };
-
 
 }  // end namespace papas
 

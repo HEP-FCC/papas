@@ -14,7 +14,6 @@
 
 namespace papas {
 
-
 CMSHCAL::CMSHCAL(const VolumeCylinder& volume, const Material& material, double etacrack,
                  std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
     : Calorimeter(Layer::kHcal, volume, material), m_etaCrack(etacrack), m_eres(eres), m_eresp(eresp) {}

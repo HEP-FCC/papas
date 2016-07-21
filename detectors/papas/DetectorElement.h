@@ -5,8 +5,8 @@
 #ifndef DETECTORELEMENT_H
 #define DETECTORELEMENT_H
 
-#include "VolumeCylinder.h"
 #include "Material.h"
+#include "VolumeCylinder.h"
 #include <list>
 
 namespace papas {

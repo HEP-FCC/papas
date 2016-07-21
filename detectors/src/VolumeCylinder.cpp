@@ -9,8 +9,6 @@
 
 namespace papas {
 
-
-
 VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad, double innerz)
     : m_outer(papas::Position::kHcalOut, outerrad, outerz), m_inner(papas::Position::kHcalIn, innerrad, innerz) {
 
@@ -26,17 +24,17 @@ VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outer
   }
   // AJRTODO define what happens if inner is empty
 }
-  
-  VolumeCylinder::~VolumeCylinder() {}
-  
-  bool VolumeCylinder::contains(const TVector3& point) const {
-    double_t perp = point.Perp();
-    if (std::abs(point.Z()) < m_inner.z()) {
-      return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
-    } else if (std::abs(point.Z()) < m_outer.z()) {
-      return perp < m_outer.getRadius();
-    } else
-      return false;
-  }
+
+VolumeCylinder::~VolumeCylinder() {}
+
+bool VolumeCylinder::contains(const TVector3& point) const {
+  double_t perp = point.Perp();
+  if (std::abs(point.Z()) < m_inner.z()) {
+    return (perp >= m_inner.getRadius()) & (perp < m_outer.getRadius());
+  } else if (std::abs(point.Z()) < m_outer.z()) {
+    return perp < m_outer.getRadius();
+  } else
+    return false;
+}
 
 }  // end namespace papas

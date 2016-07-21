@@ -45,12 +45,12 @@ int main() {
   for (auto n : bfs.traverseChildren(n0, 1)) {
     std::cout << n->value().itype << ":" << n->value().ivalue << std::endl;
   }
-  
+
   std::cout << std::endl << "TRAVERSE UNDIRECTED (start Node 5) 2 levels " << std::endl;
   for (auto n : bfs.traverseUndirected(n5, 2)) {
     std::cout << n->value().itype << ":" << n->value().ivalue << std::endl;
   }
-  
+
   std::cout << std::endl << "TRAVERSE CHILDREN (start Node 0)  all levels" << std::endl;
 
   for (auto n : bfs.traverseChildren(n0)) {

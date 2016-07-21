@@ -17,8 +17,8 @@ In PROGRESS: Document and test Mac and lxplus.
 Look into TWidget. Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
 
 FCCSW Guidelines & Code Formatting
-Files which start with lower case letter are in the queue &  need to be reformatted according to FCCSW guidelines
-Several files contain more than one class and will need to be split into separate files
+DONE Files which start with lower case letter are in the queue &  need to be reformatted according to FCCSW guidelines
+DONE Several files contain more than one class and will need to be split into separate files
 Rename class variables and functions where needed
 Have just run a global reformat using FCCSW Clang format file through all code. Need to check for any glitches in this.
 DONE: Address remaining code warnings
@@ -33,6 +33,7 @@ Update existing comments which are outdated.
 
 Makefiles
 NEARLY THERE: Embarrassingly horrible at present. Completely Revamp the CMakefiles using PODIO make file as example. 
+Ongoing problem with ROOT and Xcode not working using FCCSW cmakelists
 Figure out how to get DYLD_LIBRARY_PATH properly sorted for Mac - need advise.
 Make the Makefiles use package structure more formally 
 DONE: Take advice about how to separate out library, examples etc
@@ -73,10 +74,10 @@ DONE Bug fix
 DONE There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
 
 Unit testing
-DONE: Probably convert to Catch (check) 
-Implement the rest of the python & gtest tests
-STARTED Sort out where to store the tests and set up a separate test build
-REMOVING Gtest is not working on lxplus and has been commented out of cmake for now.
+DONE: Convert to Catch  
+UNDERWAY:Implement the rest of the python & gtest tests
+DONE Sort out where to store the tests and set up a separate test build
+DONE Gtest is not working on lxplus and has been commented out of cmake for now.
 
 
 Physics
@@ -91,7 +92,7 @@ Others
 Attend to TODOs and comments in the existing code
 *** Add in new Id:type for simulated particle
 **** Header file for constants
-DONE: makes it slower? Work on sorting
+DONE: unordered_map with sroting to match python makes it slower? Work on sorting
 Consider making helper classes for outputs??
 remove attempts to reserve for vectors (Stroustrup says its not worthwhile)
 SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
@@ -103,3 +104,6 @@ DONE example Catch
 New queries:
 see if Python library check still works
 Investigate reduction  in speed following unordered_maps and sorting - make optional?
+
+Do I really need to split very small classes eg Random
+DONE Separate out CMS

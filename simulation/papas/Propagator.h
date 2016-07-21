@@ -8,7 +8,7 @@ class SimParticle;
 
 class Propagator {
 public:
-  Propagator() {};
+  Propagator(){};
   // virtual void propagateOne(SimParticle& ptc, Id::Layer Layer, bool inner = true) = 0;
   virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl) = 0;
 

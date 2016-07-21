@@ -8,8 +8,8 @@
 #include "Definitions.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include <map>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 namespace papas {
@@ -21,14 +21,14 @@ class Path {
   /// Path base class is for straightline.
   ///
 public:
-  typedef std::unordered_map<papas::Position, TVector3, std::hash<int>> Points;
+  typedef std::map<papas::Position, TVector3> Points;
+
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
-  Path(TLorentzVector p4, TVector3 origin, double field=0.);
+  Path(TLorentzVector p4, TVector3 origin, double field = 0.);
   Path();
   virtual ~Path() = default;
 
-  // void addPoint(int layer, TVector3 vec) { m_points[layer] = vec; }
   void addPoint(papas::Position layer, TVector3 vec) { m_points[layer] = vec; }
   double timeAtZ(double z) const;
   double deltaT(double path_length) const;
@@ -51,11 +51,10 @@ protected:
   double m_field;  // set to 0 for a straightline
 private:
 };
-  
-  
-  class StraightLine: public Path {
-    using Path::Path;
-  };
+
+class StraightLine : public Path {
+  using Path::Path;
+};
 }  // end namespace papas
 
 #endif /* path_h */

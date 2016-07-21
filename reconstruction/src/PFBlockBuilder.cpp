@@ -9,9 +9,9 @@
 #include "BlockBuilder.h"
 #include "DefinitionsCollections.h"
 #include "Distance.h"
+#include "EventRuler.h"
 #include "PFBlock.h"
 #include "PFEvent.h"
-#include "EventRuler.h"
 
 // temp
 #include "Id.h"
@@ -43,7 +43,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
   }
   BlockBuilder bb(m_uniqueIds, edges, m_historyNodes);
   m_blocks = std::move(bb.blocks());
-      //std::cout <<"*"<<m_blocks.size() << "*";
+  // std::cout <<"*"<<m_blocks.size() << "*";
   /*for (auto & b : m_blocks) {
     std::cout << b.second;
   }*/

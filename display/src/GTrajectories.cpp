@@ -12,7 +12,6 @@
 
 namespace papas {
 
-
 void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
 }

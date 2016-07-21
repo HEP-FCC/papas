@@ -8,20 +8,20 @@
 
 #ifndef PythiaConnector_h
 #define PythiaConnector_h
-#include "datamodel/ParticleCollection.h"
 #include "datamodel/EventInfoCollection.h"
+#include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
 
 // ROOT
 #include "TBranch.h"
 #include "TFile.h"
-#include "TTree.h"
-#include "TROOT.h"
 #include "TLorentzVector.h"
+#include "TROOT.h"
+#include "TTree.h"
 
 // STL
-#include <vector>
 #include <iostream>
+#include <vector>
 
 // podio specific includes
 #include "podio/EventStore.h"
@@ -29,22 +29,21 @@
 #include "podio/ROOTWriter.h"
 
 #include "DefinitionsCollections.h"
-#include "PapasManager.h"
 #include "PParticle.h"
-
+#include "PapasManager.h"
 
 class PapasManager;
-  
-  
+
 class PythiaConnector {
 public:
-  PythiaConnector(const char* fname) ;
-  void writeParticlesROOT(const char* fname, const papas::Particles& particles) ;
-  void processEvent(unsigned int eventNo,  papas::PapasManager& papasManager) ;
-  papas::Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) ;
+  PythiaConnector(const char* fname);
+  void writeParticlesROOT(const char* fname, const papas::Particles& particles);
+  void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);
+  papas::Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);
+
 private:
-   podio::EventStore m_store;
-   podio::ROOTReader m_reader;
+  podio::EventStore m_store;
+  podio::ROOTReader m_reader;
 };
 
 #endif /* PythiaConnector_h */

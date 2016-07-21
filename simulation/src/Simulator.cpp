@@ -6,30 +6,25 @@
 
 #include <iostream>  //TODOAJR remove
 
-//#include "CMS.h"
 #include "Cluster.h"
 #include "Definitions.h"
 #include "Id.h"
 #include "PDebug.h"
 #include "ParticlePData.h"
 #include "Path.h"
+#include "Random.h"
 #include "SimParticle.h"
 #include "pTrack.h"
-#include "Random.h"
 
 namespace papas {
 
-// using papas::Layer;
-
 Simulator::Simulator(const Detector& d, Nodes& nodes)
-    : m_nodes(nodes), m_detector(d), m_propStraight(), m_propHelix(d.field()->getMagnitude()) {
-
-}
+    : m_nodes(nodes), m_detector(d), m_propStraight(), m_propHelix(d.field()->getMagnitude()) {}
 
 void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
 
   int pdgid = ptc.pdgId();
- 
+
   SimParticle& pfptc = addParticle(pdgid, ptc.charge(), ptc.p4(), TVector3{0, 0, 0});
   if (parentid) {
     PFNode& parent = m_nodes[parentid];
@@ -42,7 +37,7 @@ void Simulator::SimulateParticle(const Particle& ptc, IdType parentid) {
     // to avoid numerical problems in propagation
     return;
   }
-  
+
   if (pdgid == 22) {
     simulatePhoton(pfptc);
   } else if (abs(pdgid) == 11) {
@@ -127,8 +122,8 @@ void Simulator::smearElectron(SimParticle& ptc) {
   const Track& track = addTrack(ptc);
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ptc, ecal_sp->volumeCylinder().inner());
-  //SimParticle smeared{ptc}; //this line to match deepcopy on python
-  //PDebug::write("Made Smeared{}", smeared);
+  // SimParticle smeared{ptc}; //this line to match deepcopy on python
+  // PDebug::write("Made Smeared{}", smeared);
 
   // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
 }
@@ -152,7 +147,7 @@ const Cluster& Simulator::cluster(Id::Type clusterId) const {
     return m_ecalClusters.at(clusterId);
   else if (Id::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
-  throw std::out_of_range( "Cluster not found" );
+  throw std::out_of_range("Cluster not found");
 }
 
 SimParticle& Simulator::addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
@@ -166,8 +161,8 @@ SimParticle& Simulator::addParticle(int pdgid, double charge, TLorentzVector tlv
   return m_particles[uniqueid];
 }
 
-SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax,
-                                       double ptmin, double ptmax, TVector3 vertex) {
+SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
+                                       double ptmax, TVector3 vertex) {
   double theta = randomgen::RandUniform(thetamin, thetamax).next();
   double phi = randomgen::RandUniform(-M_PI, M_PI).next();
   double energy = randomgen::RandUniform(ptmin, ptmax).next();
@@ -198,14 +193,14 @@ SimParticle& Simulator::addParticle(int pdgid, double charge, double theta, doub
 
 Id::Type Simulator::addEcalCluster(SimParticle& ptc, double fraction, double csize) {
   Cluster cluster = makeCluster(ptc, papas::Layer::kEcal, fraction, csize);
-  Id::Type id=cluster.id();
+  Id::Type id = cluster.id();
   m_ecalClusters.emplace(id, std::move(cluster));
   return id;
 }
 
 Id::Type Simulator::addHcalCluster(SimParticle& ptc, double fraction, double csize) {
   Cluster cluster = makeCluster(ptc, papas::Layer::kHcal, fraction, csize);
-  Id::Type id=cluster.id();
+  Id::Type id = cluster.id();
   m_hcalClusters.emplace(id, std::move(cluster));
   return id;
 }
@@ -223,50 +218,23 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
   PDebug::write("Made {}", cluster);
   return std::move(cluster);
 }
-  
-  Id::Type Simulator::addSmearedCluster(const Cluster& parent, papas::Layer detlayer, papas::Layer acceptlayer,  bool accept)
-  
-  {
-    Cluster smeared = smearCluster(parent, detlayer);
-    Id::Type id=smeared.id();
-    PDebug::write("Made Smeared{}", smeared);
-    
-    // Determine if this smeared cluster will be detected and, if so, add it into the
-    // smeared cluster collections (Ecal or Hcal)
-    if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parent.id());
-    if (acceptlayer == papas::Layer::kNone) acceptlayer = detlayer;
-    
-    if (m_detector.calorimeter(acceptlayer)->acceptance(smeared) || accept) {
-      addNode(id, parent.id());
-      if (Id::layer(parent.id()) == papas::Layer::kEcal) {
-        m_smearedEcalClusters.emplace(id, std::move(smeared));
-      } else
-        m_smearedHcalClusters.emplace(id, std::move(smeared));
-      
-      return id;
-    } else {
-      PDebug::write("Rejected Smeared{}", smeared);
-      return parent.id();
-    }
-  }
 
-
-/*Id::Type Simulator::addSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer, papas::Layer acceptlayer,
+Id::Type Simulator::addSmearedCluster(const Cluster& parent, papas::Layer detlayer, papas::Layer acceptlayer,
                                       bool accept)
 
 {
-  Cluster smeared = makeSmearedCluster(parentClusterId, detlayer);
-  Id::Type id=smeared.id();
+  Cluster smeared = smearCluster(parent, detlayer);
+  Id::Type id = smeared.id();
   PDebug::write("Made Smeared{}", smeared);
 
   // Determine if this smeared cluster will be detected and, if so, add it into the
   // smeared cluster collections (Ecal or Hcal)
-  if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parentClusterId);
+  if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parent.id());
   if (acceptlayer == papas::Layer::kNone) acceptlayer = detlayer;
 
   if (m_detector.calorimeter(acceptlayer)->acceptance(smeared) || accept) {
-    addNode(id, parentClusterId);
-    if (Id::layer(parentClusterId) == papas::Layer::kEcal) {
+    addNode(id, parent.id());
+    if (Id::layer(parent.id()) == papas::Layer::kEcal) {
       m_smearedEcalClusters.emplace(id, std::move(smeared));
     } else
       m_smearedHcalClusters.emplace(id, std::move(smeared));
@@ -274,34 +242,9 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
     return id;
   } else {
     PDebug::write("Rejected Smeared{}", smeared);
-    return parentClusterId;
+    return parent.id();
   }
 }
-
-Cluster Simulator::makeSmearedCluster(Id::Type parentClusterId, papas::Layer detlayer) {
-
-  // detlayer will be used to choose which detector layer is used for energy resolution etc.
-  // NB It is not always the same layer as the new smeared cluster
-  if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parentClusterId);
-  std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detlayer);
-
-  // now do the smearing
-  const Cluster& parent = cluster(parentClusterId);  // find the cluster in the Clusters collections
-  double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
-  double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
-  double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
-
-  // if (Id::pretty(parentClusterId).compare(0,5, "h3498")==0)
-  //  std::cout <<"e106";
-
-  // create smeared cluster
-  Cluster cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parentClusterId)};
-  return std::move(cluster);
-}
-  
-  Cluster Simulator::makeSmearedCluster(const Cluster& parent, papas::Layer detlayer) {
-    
-      }*/
 
 const Track& Simulator::addTrack(SimParticle& ptc) {
   Track track = Track{ptc.p3(), ptc.charge(), ptc.path()};
@@ -311,21 +254,19 @@ const Track& Simulator::addTrack(SimParticle& ptc) {
   PDebug::write("Made {}", track);
   return m_tracks.at(id);
 }
-  
-  Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detlayer)
-  {
-    // detlayer will be used to choose which detector layer is used for energy resolution etc.
-    // NB It is not always the same layer as the new smeared cluster
-    if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parent.id());
-    std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detlayer);
-    
-    double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
-    double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
-    double energy = parent.energy()* randomgen::RandNormal(response, energyresolution).next();
-    auto cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parent.id())};
-    return std::move(cluster);
 
-  }
+Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detlayer) {
+  // detlayer will be used to choose which detector layer is used for energy resolution etc.
+  // NB It is not always the same layer as the new smeared cluster
+  if (detlayer == papas::Layer::kNone) detlayer = Id::layer(parent.id());
+  std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detlayer);
+
+  double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
+  double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
+  double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
+  auto cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parent.id())};
+  return std::move(cluster);
+}
 
 Id::Type Simulator::addSmearedTrack(const Track& track, bool accept) {
 
@@ -377,46 +318,6 @@ void Simulator::testing() {
       std::cout << "  " << r->value() << ": " << Id::itemType(r->value()) << std::endl;
   }
 }
-/*
-Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
-  return getMatchingIds(nodeid,
-                        Id::DataType::kCluster,
-                        papas::Layer::kEcal,
-                        papas::SubType::SMEARED,
-                        papas::enumSource::SIMULATION);
-}
-
-Ids  Simulator::linkedRawTrackIds(long nodeid) const {
-  return getMatchingIds(nodeid,
-                        Id::DataType::kTrack,
-                        papas::Layer::kNone,
-                        papas::SubType::RAW,
-                        papas::enumSource::SIMULATION);
-}
-
-Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
-  return getMatchingIds(nodeid,
-                        Id::DataType::kTrack,
-                        papas::Layer::kNone,
-                        papas::SubType::SMEARED,
-                        papas::enumSource::SIMULATION);
-}
-
-Ids Simulator::linkedParticleIds(long nodeid) const {
-  return getMatchingIds(nodeid,
-                        Id::DataType::kParticle,
-                        papas::Layer::kNone,
-                        papas::SubType::RAW,
-                        papas::enumSource::SIMULATION);
-}
-
-Ids Simulator::parentParticleIds(long nodeid) const {
-  return getMatchingParentIds(nodeid,
-                              Id::DataType::kParticle,
-                              papas::Layer::kNone,
-                              papas::SubType::RAW,
-                              papas::enumSource::SIMULATION);
-}*/
 
 Ids Simulator::linkedIds(Id::Type nodeid) const {
   DAG::BFSVisitor<PFNode> bfs;
@@ -430,37 +331,78 @@ Ids Simulator::linkedIds(Id::Type nodeid) const {
 }
 
 /*
-Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,
-papas::enumSource source) const
-{
-DAG::BFSVisitor<PFNode> bfs;
-Ids foundids;
-auto res =bfs.traverseUndirected(m_nodes.at(nodeid));
-for (auto r : res)
-{
-  long id=r->value();
-  if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
-    foundids.push_back(id);
-  }
-}
-return foundids;
-}
+ Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
+ return getMatchingIds(nodeid,
+ Id::DataType::kCluster,
+ papas::Layer::kEcal,
+ papas::SubType::SMEARED,
+ papas::enumSource::SIMULATION);
+ }
 
-Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType
-type,papas::enumSource source) const
-{
-DAG::BFSVisitor<PFNode> bfs;
-Ids foundids;
-//foundids.reserve(1000); //TODO set sizes sensible.... how
-auto res =bfs.traverseParents(m_nodes.at(nodeid));
-for (auto r : res)
-{
-  long id=r->value();
-  if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
-    foundids.push_back(id);
-  }
-}
-return foundids;
-}*/
+ Ids  Simulator::linkedRawTrackIds(long nodeid) const {
+ return getMatchingIds(nodeid,
+ Id::DataType::kTrack,
+ papas::Layer::kNone,
+ papas::SubType::RAW,
+ papas::enumSource::SIMULATION);
+ }
+
+ Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
+ return getMatchingIds(nodeid,
+ Id::DataType::kTrack,
+ papas::Layer::kNone,
+ papas::SubType::SMEARED,
+ papas::enumSource::SIMULATION);
+ }
+
+ Ids Simulator::linkedParticleIds(long nodeid) const {
+ return getMatchingIds(nodeid,
+ Id::DataType::kParticle,
+ papas::Layer::kNone,
+ papas::SubType::RAW,
+ papas::enumSource::SIMULATION);
+ }
+
+ Ids Simulator::parentParticleIds(long nodeid) const {
+ return getMatchingParentIds(nodeid,
+ Id::DataType::kParticle,
+ papas::Layer::kNone,
+ papas::SubType::RAW,
+ papas::enumSource::SIMULATION);
+ }*/
+
+/*
+ Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,
+ papas::enumSource source) const
+ {
+ DAG::BFSVisitor<PFNode> bfs;
+ Ids foundids;
+ auto res =bfs.traverseUndirected(m_nodes.at(nodeid));
+ for (auto r : res)
+ {
+ long id=r->value();
+ if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
+ foundids.push_back(id);
+ }
+ }
+ return foundids;
+ }
+
+ Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType
+ type,papas::enumSource source) const
+ {
+ DAG::BFSVisitor<PFNode> bfs;
+ Ids foundids;
+ //foundids.reserve(1000); //TODO set sizes sensible.... how
+ auto res =bfs.traverseParents(m_nodes.at(nodeid));
+ for (auto r : res)
+ {
+ long id=r->value();
+ if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
+ foundids.push_back(id);
+ }
+ }
+ return foundids;
+ }*/
 
 }  // end namespace papas

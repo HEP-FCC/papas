@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 namespace papas {
-  class Cluster {
+class Cluster {
 public:
   /** Constructor
    @param[in]  double energy: Cluster energy

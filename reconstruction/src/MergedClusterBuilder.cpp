@@ -11,10 +11,10 @@
 #include "DefinitionsCollections.h"
 #include "Distance.h"
 #include "Edge.h"
+#include "EventRuler.h"
 #include "GraphBuilder.h"
 #include "Id.h"
 #include "PDebug.h"
-#include "EventRuler.h"
 
 namespace papas {
 
@@ -25,24 +25,24 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
   }
   Ids uniqueids;
   uniqueids.reserve(clusters.size());
-      //std::cout << " CSIZE "<< clusters.size()<<std::endl;
-  for (auto const &cluster : clusters) {
+  // std::cout << " CSIZE "<< clusters.size()<<std::endl;
+  for (auto const& cluster : clusters) {
     // if (cluster.first==8589934920)
     //  std::cout<<"STOPE HERE";
-    //PDebug::write(" unique id {} {}", Id::pretty(cluster.first), cluster.second);
+    // PDebug::write(" unique id {} {}", Id::pretty(cluster.first), cluster.second);
     uniqueids.push_back(cluster.first);
   }
   std::sort(uniqueids.begin(), uniqueids.end());
 
-      //create unorederedmap containing all edge combinations indexed by edgeKey
+  // create unorederedmap containing all edge combinations indexed by edgeKey
   Edges edges;
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        //PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
-        Edge::EdgeKey key =edge.key();
+        // PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
+        Edge::EdgeKey key = edge.key();
         edges.emplace(key, std::move(edge));
       }
     }
@@ -60,9 +60,8 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
     //  std::cout<<"STOPE HERE";
     auto mergedCluster =
         Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
-    if (id== mergedCluster.id())
-      std::cout <<"problem";
-    Id::Type mid =mergedCluster.id();
+    if (id == mergedCluster.id()) std::cout << "problem";
+    Id::Type mid = mergedCluster.id();
     PFNode snode{mid};
     m_historyNodes.at(id).addChild(snode);
     m_historyNodes.emplace(mid, std::move(snode));
@@ -78,7 +77,6 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
     }
     if (ids.size() > 1) PDebug::write("Made Merged{}", mergedCluster);
     m_merged.emplace(mid, std::move(mergedCluster));  // create a new cluster based on existing cluster
-    
   }
 }
 

@@ -9,8 +9,8 @@
 #ifndef DefinitionsNodes_h
 #define DefinitionsNodes_h
 
-#include "Id.h"
 #include "DirectedAcyclicGraph.h"
+#include "Id.h"
 #include <map>
 #include <vector>
 namespace papas {

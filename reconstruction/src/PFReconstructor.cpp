@@ -27,48 +27,45 @@
 namespace papas {
 
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
-    : m_pfEvent(pfEvent),
-      m_historyNodes(pfEvent.historyNodes()),
-      m_hasHistory(pfEvent.historyNodes().size() == 0) {}
+    : m_pfEvent(pfEvent), m_historyNodes(pfEvent.historyNodes()), m_hasHistory(pfEvent.historyNodes().size() == 0) {}
 
 void PFReconstructor::reconstruct(Blocks& blocks) {
   // TODO sort m_blocks
 
   // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
-  
-  
-  //sort the blocks by id to ensure match with python
+
+  // sort the blocks by id to ensure match with python
   std::vector<IdType> blockids;
-  //blockids.reserve(blocks.size());
-  //std::cout <<"NEXT";
-  for (const auto& b: blocks) {
+  // blockids.reserve(blocks.size());
+  // std::cout <<"NEXT";
+  for (const auto& b : blocks) {
     blockids.push_back(b.first);
-    //std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
+    // std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
   }
-  //std::cout <<"sorted";
+  // std::cout <<"sorted";
   std::sort(blockids.begin(), blockids.end());
-  //for (const auto& b: blockids) {
+  // for (const auto& b: blockids) {
   //  std::cout<<Id::pretty(b)<< ":" << b <<std::endl;
   //}
-  //std::cout <<"end sorted";
-  //go through each block and see if it can be simplified
-  //in some cases it will end up being split into smaller blocks
-  //Note that the old block will be marked as disactivated
-  for (auto& bid: blockids) {
-    //std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
+  // std::cout <<"end sorted";
+  // go through each block and see if it can be simplified
+  // in some cases it will end up being split into smaller blocks
+  // Note that the old block will be marked as disactivated
+  for (auto& bid : blockids) {
+    // std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
     Blocks newBlocks = simplifyBlock(blocks.at(bid));
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
-        Id::Type id=b.first;
+        Id::Type id = b.first;
         blocks.emplace(id, std::move(b.second));
         blockids.push_back(b.first);
       }
     }
   }
 
-  for (auto& bid: blockids) {
-    PFBlock& block =blocks.at(bid);
+  for (auto& bid : blockids) {
+    PFBlock& block = blocks.at(bid);
     if (block.isActive()) {  // when blocks are split the original gets deactivated
       PDebug::write("Processing {}", block);
       reconstructBlock(block);
@@ -76,12 +73,11 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   }
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");
-                  for (auto u: m_unused)
-                  PDebug::write("{},", u);
-    //TODO warning message
+    for (auto u : m_unused)
+      PDebug::write("{},", u);
+    // TODO warning message
   }
 }
-
 
 Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
   /* Block: a block which contains list of element ids and set of edges that connect them
@@ -97,7 +93,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    */
   Blocks splitBlocks;
   Ids ids = block.elementIds();
-  
+
   if (ids.size() <= 1) {  // if block is just one element therer are no links to remove
     return splitBlocks;
   }
@@ -128,7 +124,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
         // unlink anything that is greater than minimum distance
         for (auto elem : linkedEdgeKeys) {
           if (block.findEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
-            toUnlink[elem] = block.findEdge(elem); //should toUnlink be list of keys rather than edges
+            toUnlink[elem] = block.findEdge(elem);          // should toUnlink be list of keys rather than edges
           }
         }
       }
@@ -291,7 +287,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
   }
   std::sort(trackIds.begin(), trackIds.end());
   std::sort(ecalIds.begin(), ecalIds.end());
-  //hcal should be the only remaining linked hcal cluster (closest one)
+  // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
@@ -360,7 +356,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::L
   }
   // assert(pdg_id)
   double mass = ParticlePData::particleMass(pdgId);
-  
+
   if (energy < mass)  // null particle
     return SimParticle();
 

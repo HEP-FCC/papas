@@ -7,12 +7,12 @@
 //
 
 #include "PFEvent.h"
+#include "Drawable.h"
+#include "GTrajectories.h"
 #include "PFEventDisplay.h"
 #include "Simulator.h"
 #include "ViewPane.h"
-#include "GTrajectories.h"
 #include <iostream>
-#include "Drawable.h"
 
 namespace papas {
 
