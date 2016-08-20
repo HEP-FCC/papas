@@ -37,7 +37,7 @@ class BlockSplitter {
 public:
   /** Constructor
    * @param[in] unlink_edges : list of edges where a link is to be removed
-   * @param[inout] block  : Block to be split, will me marked as disactivated
+   * @param[inout] block  : Block to be split, will be marked as disactivated
    * @param[inout] historyNodes : optional unordered_map that describes which elements are parents of which blocks
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the exisiting history

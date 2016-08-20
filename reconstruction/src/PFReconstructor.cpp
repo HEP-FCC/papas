@@ -36,19 +36,13 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   // each track will end up linked to at most one hcal
 
   // sort the blocks by id to ensure match with python
-  std::vector<IdType> blockids;
-  // blockids.reserve(blocks.size());
-  // std::cout <<"NEXT";
+  std::vector<IdType > blockids;
   for (const auto& b : blocks) {
     blockids.push_back(b.first);
     // std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
   }
-  // std::cout <<"sorted";
   std::sort(blockids.begin(), blockids.end());
-  // for (const auto& b: blockids) {
-  //  std::cout<<Id::pretty(b)<< ":" << b <<std::endl;
-  //}
-  // std::cout <<"end sorted";
+ 
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
@@ -57,7 +51,7 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
     Blocks newBlocks = simplifyBlock(blocks.at(bid));
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
-        Id::Type id = b.first;
+        IdType id = b.first;
         blocks.emplace(id, std::move(b.second));
         blockids.push_back(b.first);
       }
@@ -155,7 +149,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
 
   if (ids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
-    Id::Type id = ids[0];
+    IdType id = ids[0];
     if (Id::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id), papas::Layer::kEcal));
     } else if (Id::isHcal(id)) {
@@ -201,7 +195,7 @@ void PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newpart
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   // if (newparticle) :
-  Id::Type newid = newparticle.id();
+  IdType newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
 
   // check if history nodes exists
@@ -246,7 +240,7 @@ double PFReconstructor::nsigmaHcal(const Cluster& cluster) const {
   return 1. + exp(-cluster.energy() / 100.);
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, Id::Type hcalId) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -370,7 +364,7 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::L
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
-  Id::Type newid = Id::makeRecParticleId();
+  IdType newid = Id::makeRecParticleId();
   SimParticle particle{newid, pdgId, 0., p4, vertex};
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
@@ -395,7 +389,7 @@ SimParticle PFReconstructor::reconstructTrack(const Track& track) {
   // , Clusters = None): cluster argument does not ever seem to be used at present
   /*construct a charged hadron from the track
    */
-  Id::Type newid = Id::makeRecParticleId();
+  IdType newid = Id::makeRecParticleId();
   int pdgId = 211 * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));

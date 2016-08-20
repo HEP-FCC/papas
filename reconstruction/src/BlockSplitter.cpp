@@ -24,7 +24,7 @@ BlockSplitter::BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& hi
   }
 
   BlockBuilder bbuilder{block.elementIds(), modifiedEdges, historynodes};
-  m_blocks = bbuilder.blocks();
+  m_blocks = bbuilder.moveBlocks();
   block.setActive(false);
 }
 
@@ -55,13 +55,13 @@ std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
 #include "Id.h"
 
 int test_BlockSplitter() {
-  Id::Type id1 = Id::makeEcalId();
-  Id::Type id2 = Id::makeHcalId();
-  Id::Type id3 = Id::makeTrackId();
+  IdType id1 = Id::makeEcalId();
+  IdType id2 = Id::makeHcalId();
+  IdType id3 = Id::makeTrackId();
 
-  Id::Type id4 = Id::makeEcalId();
-  Id::Type id5 = Id::makeHcalId();
-  Id::Type id6 = Id::makeTrackId();
+  IdType id4 = Id::makeEcalId();
+  IdType id5 = Id::makeHcalId();
+  IdType id6 = Id::makeTrackId();
 
   std::vector<Id::Type> ids{id1, id2, id3, id4, id5, id6};
 
@@ -92,7 +92,7 @@ int test_BlockSplitter() {
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
-  for (auto& block : blockbuilder.blocks()) {
+  for (auto& block : blockbuilder.moveBlocks()) {
     auto blocksplitter = BlockSplitter(to_unlink, block.second, emptyNodes);
     std::cout << block.second;
     std::cout << blocksplitter;

@@ -53,7 +53,7 @@ using namespace papas;
 
 TEST_CASE("Id") {  /// ID test
   using namespace papas;
-  Id::Type id(0);
+  IdType id(0);
   auto uid = Id::uniqueId(id);
   auto type = Id::itemType(id);
 
@@ -261,7 +261,7 @@ TEST_CASE("StraightLine") {
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  long uid = Id::makeParticleId(papas::enumSource::SIMULATION);
+  long uid = Id::makeId(Id::ItemType::kParticle);
   SimParticle photon = SimParticle(uid, 22, 0, tlv);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
@@ -276,7 +276,7 @@ TEST_CASE("StraightLine") {
 
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
-  uid = Id::makeParticleId(papas::enumSource::SIMULATION);
+  uid = Id::makeId(Id::ItemType::kParticle);
   SimParticle photon2 = SimParticle(uid, 22, 0, tlv);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);

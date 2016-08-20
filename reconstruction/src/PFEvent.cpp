@@ -20,7 +20,7 @@
 namespace papas {
 
 /*
-bool PFEvent::compare(Id::Type id1, Id::Type id2) const //TODO check direction of sort
+bool PFEvent::compare(IdType id1, IdType id2) const //TODO check direction of sort
 {
   //sort by the type eg ecal hcal
   // and then in order of decreasing energy
@@ -37,7 +37,7 @@ bool PFEvent::compare(Id::Type id1, Id::Type id2) const //TODO check direction o
 }
 
 
-double PFEvent::energy(Id::Type id1) const //TODO check direction of sort
+double PFEvent::energy(IdType id1) const //TODO check direction of sort
 {
   return 12.5; //TODO
 }*/
@@ -63,7 +63,7 @@ void PFEvent::mergeClusters() {
   m_mergedHcals = std::move(hcalmerger.mergedClusters());
 }
 
-const Track& PFEvent::track(Id::Type id) const {
+const Track& PFEvent::track(IdType id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);
   } else {
@@ -74,7 +74,7 @@ const Track& PFEvent::track(Id::Type id) const {
   };
 }
 
-const Cluster& PFEvent::ECALCluster(Id::Type id) const {
+const Cluster& PFEvent::ECALCluster(IdType id) const {
   if (m_mergedEcals.find(id) != m_mergedEcals.end()) {  // not quite as I want it yet...
     return m_mergedEcals.at(id);
   }
@@ -124,7 +124,7 @@ std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) {  // TODO mo
   return os;
 }
 
-const Cluster& PFEvent::HCALCluster(Id::Type id) const {
+const Cluster& PFEvent::HCALCluster(IdType id) const {
   if (m_mergedHcals.find(id) != m_mergedHcals.end()) {  // not quite as I want it yet...
     return m_mergedHcals.at(id);
   } else if (m_hcals.find(id) != m_hcals.end()) {
@@ -136,7 +136,7 @@ const Cluster& PFEvent::HCALCluster(Id::Type id) const {
   return std::move(c);  // TODO produce error
 }
 
-const Cluster& PFEvent::cluster(Id::Type id) const {
+const Cluster& PFEvent::cluster(IdType id) const {
   if (m_hcals.find(id) != m_hcals.end()) {
     if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
       std::cout << "humph MH";

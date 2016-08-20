@@ -24,16 +24,19 @@ public:
    @param[in]  Id::ItemType type of cluster eg kEcalCluster or kHcalCluster
     */
   Cluster(double energy, TVector3 position, double size_m, Id::ItemType id);
-  /** Constructor: makes a complete copy of the original cluster and sets a new unique id
-   @param[in]  const Cluster& cluster
+  /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
+   @param[in]  const Cluster& cluster to be copied
+   @param[in]  IdType id new unique id to be provided by user
+   example usage:
+   auto mergedCluster = Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));
    */
-  Cluster(const Cluster& cluster, Id::Type id);
+  Cluster(const Cluster& cluster, IdType id);
   Cluster() = default;
   ~Cluster() = default;
   Cluster(Cluster&& c) = default;
   Cluster(const Cluster& cluster) = default;
-  Cluster& operator=(const Cluster&) = default;  // {std::cout<< "copy" ;} ;
-  Cluster& operator+=(const Cluster& rhs);
+  Cluster& operator=(const Cluster&) = default;
+  Cluster& operator+=(const Cluster& rhs); ///< merges a cluster into an existing cluster
   double angularSize() const { return m_angularSize; }
   double size() const { return m_size; }
   double pt() const { return m_pt; }
@@ -45,7 +48,7 @@ public:
   void setEnergy(double energy);
   void setSize(double value);
   const std::vector<const Cluster*>& subClusters() const { return m_subClusters; };
-  static double s_maxEnergy;  // AJR is this in the right place
+  static double maxEnergy() { return s_maxEnergy;};
   std::string info() const;
 
 protected:
@@ -55,7 +58,8 @@ protected:
   double m_pt;
   TVector3 m_p3;
   double m_energy;
-  std::vector<const Cluster*> m_subClusters;
+  std::vector<const Cluster*> m_subClusters; ///< A cluster may be a merging of subClusters
+  static double s_maxEnergy; ///< Maximum energy over all clusters
 };
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster);

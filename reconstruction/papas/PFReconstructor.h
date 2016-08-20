@@ -26,7 +26,7 @@ public:
 private:
   Blocks simplifyBlock(PFBlock& block);
   void reconstructBlock(const PFBlock& block);
-  void reconstructHcal(const PFBlock& block, Id::Type hcalId);
+  void reconstructHcal(const PFBlock& block, IdType hcalId);
   SimParticle reconstructTrack(const Track& track);
   SimParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
                                  TVector3 vertex = TVector3());

@@ -23,7 +23,7 @@ namespace papas {
 
  class attributes:
 
- Id::Type m_uniqueid : the block's unique id generated from Id class
+ IdType m_uniqueid : the block's unique id generated from Id class
  Ids m_elementIds : list of uniqueids of its elements
 
  Edges m_edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
@@ -64,7 +64,7 @@ public:
   @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
   @return vector of EdgeKeys to linked edges
  */
-  std::vector<Edge::EdgeKey> linkedEdgeKeys(Id::Type uniqueid,
+  std::vector<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid,
                                             Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
@@ -73,28 +73,28 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the uniqueid
   */
-  Ids linkedIds(Id::Type uniqueId, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+  Ids linkedIds(IdType uniqueId, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const;               ///< length of the element_unqiueids
-  Id::Type uniqueId() const { return m_uniqueId; };      ///<Unique ID of the block
+  IdType uniqueId() const { return m_uniqueId; };      ///<Unique ID of the block
   bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
   void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
   Edges& edges() { return m_edges; }
   std::string info() const;
   std::string elementsString() const;
   std::string edgeMatrixString() const;
-  const class Edge& edge(Id::Type id1, Id::Type id2) const;
+  const class Edge& edge(IdType id1, IdType id2) const;
 
 private:
   PFBlock(PFBlock& pfblock) = default;           //{std::cout << "COPY BLOCK";};
   PFBlock(const PFBlock& pfblock) = default;     //{std::cout << "COPY CONST BLOCK";};
   PFBlock& operator=(const PFBlock&) = default;  //{std::cout << "= BLOCK"; };//return PFBlock(c);};
 
-  Id::Type m_uniqueId;        //  make a uniqueid for this block
+  IdType m_uniqueId;        //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy
   Edges m_edges;              // all the edges for elements in this block

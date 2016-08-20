@@ -27,12 +27,12 @@ class PFEvent {
 public:
   PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes);
   PFEvent(Simulator& sim);
-  bool compare(Id::Type id1, Id::Type id2) const;
-  double energy(Id::Type id1) const;
-  const Track& track(Id::Type id) const;
-  const Cluster& cluster(Id::Type id) const;
-  const class Cluster& ECALCluster(Id::Type id) const;
-  const class Cluster& HCALCluster(Id::Type id) const;
+  bool compare(IdType id1, IdType id2) const;
+  double energy(IdType id1) const;
+  const Track& track(IdType id) const;
+  const Cluster& cluster(IdType id) const;
+  const class Cluster& ECALCluster(IdType id) const;
+  const class Cluster& HCALCluster(IdType id) const;
   Ids elementIds() const;
   Ids mergedElementIds() const;
   Nodes& historyNodes() { return m_historyNodes; }  // allow these to be changed

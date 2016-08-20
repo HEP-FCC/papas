@@ -25,23 +25,18 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
   }
   Ids uniqueids;
   uniqueids.reserve(clusters.size());
-  // std::cout << " CSIZE "<< clusters.size()<<std::endl;
   for (auto const& cluster : clusters) {
-    // if (cluster.first==8589934920)
-    //  std::cout<<"STOPE HERE";
-    // PDebug::write(" unique id {} {}", Id::pretty(cluster.first), cluster.second);
     uniqueids.push_back(cluster.first);
   }
   std::sort(uniqueids.begin(), uniqueids.end());
 
-  // create unorederedmap containing all edge combinations indexed by edgeKey
+  // create unorderedmap containing all edge combinations indexed by edgeKey
   Edges edges;
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        // PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
         Edge::EdgeKey key = edge.key();
         edges.emplace(key, std::move(edge));
       }
@@ -56,21 +51,20 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
         PDebug::write("Merged Cluster from Smeared{}", clusters.at(c));
       }
     }
-    // if (id==8589934920)
-    //  std::cout<<"STOPE HERE";
+
     auto mergedCluster =
         Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
     if (id == mergedCluster.id()) std::cout << "problem";
-    Id::Type mid = mergedCluster.id();
-    PFNode snode{mid};
+    IdType mid = mergedCluster.id();
+    
+    m_historyNodes.emplace(mid, std::move(PFNode(mid)));
+    auto snode = m_historyNodes[mid];
     m_historyNodes.at(id).addChild(snode);
-    m_historyNodes.emplace(mid, std::move(snode));
     if (ids.size() > 1) {
       for (auto elemid : ids) {
         // now add in the links between the block elements and the block into the history_nodes
         if (elemid != id) {  // we have already handled the first element
           m_historyNodes.at(elemid).addChild(snode);
-
           mergedCluster += clusters.at(elemid);
         }
       }

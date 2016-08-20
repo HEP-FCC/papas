@@ -21,13 +21,13 @@ public:
   typedef IdType Type;
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kRecParticle, kBlock };
 
-  static Id::Type makeId(ItemType type, unsigned int uniqueid = Id::s_counter);  ///< creates a new ID of given type
-  static Id::Type makeEcalId(unsigned int uniqueid = Id::s_counter) { return makeId(kEcalCluster, uniqueid); }
-  static Id::Type makeHcalId(unsigned int uniqueid = Id::s_counter) { return makeId(kHcalCluster, uniqueid); }
-  static Id::Type makeTrackId(unsigned int uniqueid = Id::s_counter) { return makeId(kTrack, uniqueid); }
-  static Id::Type makeParticleId(unsigned int uniqueid = Id::s_counter) { return makeId(kParticle, uniqueid); }
-  static Id::Type makeRecParticleId(unsigned int uniqueid = Id::s_counter) { return makeId(kRecParticle, uniqueid); }
-  static Id::Type makeBlockId(unsigned int uniqueid = Id::s_counter) { return makeId(kBlock, uniqueid); }
+  static IdType makeId(ItemType type, unsigned int uniqueid = Id::s_counter);  ///< creates a new ID of given type
+  static IdType makeEcalId(unsigned int uniqueid = Id::s_counter) { return makeId(kEcalCluster, uniqueid); }
+  static IdType makeHcalId(unsigned int uniqueid = Id::s_counter) { return makeId(kHcalCluster, uniqueid); }
+  static IdType makeTrackId(unsigned int uniqueid = Id::s_counter) { return makeId(kTrack, uniqueid); }
+  static IdType makeParticleId(unsigned int uniqueid = Id::s_counter) { return makeId(kParticle, uniqueid); }
+  static IdType makeRecParticleId(unsigned int uniqueid = Id::s_counter) { return makeId(kRecParticle, uniqueid); }
+  static IdType makeBlockId(unsigned int uniqueid = Id::s_counter) { return makeId(kBlock, uniqueid); }
 
   static papas::Layer layer(Type id);  ///< eg kEcal or kHcal
 
@@ -43,7 +43,7 @@ public:
   static ItemType itemType(papas::Layer layer);
   static unsigned int uniqueId(Type id);  ///< normally starts at one and incremented by one for each new id
   static char typeShortCode(Type id);     ///<One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static std::string pretty(Id::Type id);
+  static std::string pretty(IdType id);
   static const unsigned int bitshift = 32;
   static void reset();
   static unsigned int counter() { return s_counter; };

@@ -5,13 +5,10 @@
 #include "PDebug.h"
 namespace papas {
 
-// Allow optional parameters where construction arguments are references
-
 GraphBuilder::GraphBuilder(Ids ids, Edges& edges) : m_edges(edges), m_elementIds(ids) {
 
   // create local nodes ready to use to make the blocks
   for (auto id : ids) {
-    // PDebug::write("Node {}", Id::pretty(id));
     m_localNodes.emplace(id, PFNode(id));
   }
 
@@ -24,26 +21,14 @@ GraphBuilder::GraphBuilder(Ids ids, Edges& edges) : m_edges(edges), m_elementIds
     }
   }
 
-  /*for (auto&  node : m_localNodes) {
-    PDebug::write("Node {:9}",Id::pretty(node.second.value()));
-    for (auto& c : node.second.children()) {
-      PDebug::write("      Children Node {:9}",Id::pretty(c->value()));
-    }
-    for (auto& p : node.second.parents()) {
-      PDebug::write("      Parent Node {:9}",Id::pretty(p->value()));
-    }
-  }*/
-
   DAG::FloodFill<Id::Type> FFill;
 
   // traverse does the work and returns a vector of connected node groups
   for (auto& group : FFill.traverse(m_localNodes)) {
-    // PDebug::write("Group");
     // each of the nodevectors is about to become a separate block
     // we need the vector of ids and the map of edges in order to make the block
     Ids subgraph;
     for (auto& node : group) {
-      // PDebug::write("inside Node {}", Id::pretty(node->value()));
       subgraph.push_back(node->value());
     }
     m_subGraphs.push_back(subgraph);
@@ -58,17 +43,17 @@ GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b) {
 }
 
 void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
-  std::sort(ids.begin(), ids.end(), [](Id::Type a, Id::Type b) -> bool { return a < b; });
+  std::sort(ids.begin(), ids.end(), [](IdType a, IdType b) -> bool { return a < b; });
 }
 
 }  // end namespace papas
 
 /*void GraphBuilder::sortIds(std::vector<Id::Type>& ids) // sorts by type and energy
  {//TODO move to helper
- std::sort( ids.begin(), ids.end(), [this] (Id::Type a, Id::Type b) { return this->m_pfEvent.compare(a,b);});
+ std::sort( ids.begin(), ids.end(), [this] (IdType a, IdType b) { return this->m_pfEvent.compare(a,b);});
  }*/
 
-/*bool GraphBuilder::compareEdges(long long key1, long long key2, Id::Type uniqueid) const//TODO check direction of sort
+/*bool GraphBuilder::compareEdges(long long key1, long long key2, IdType uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy

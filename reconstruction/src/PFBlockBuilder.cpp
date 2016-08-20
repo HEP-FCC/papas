@@ -42,7 +42,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
     }
   }
   BlockBuilder bb(m_uniqueIds, edges, m_historyNodes);
-  m_blocks = std::move(bb.blocks());
+  m_blocks = bb.moveBlocks();
   // std::cout <<"*"<<m_blocks.size() << "*";
   /*for (auto & b : m_blocks) {
     std::cout << b.second;

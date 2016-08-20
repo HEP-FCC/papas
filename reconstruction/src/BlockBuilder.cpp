@@ -7,7 +7,6 @@
 //
 #include "BlockBuilder.h"
 #include "PFBlock.h"
-//#include "PFEvent.h"
 #include "Definitions.h"
 #include "DirectedAcyclicGraph.h"
 #include "FloodFill.h"
@@ -20,39 +19,29 @@ BlockBuilder::BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes)
   makeBlocks();
 }
 
-/*BlockBuilder& BlockBuilder::operator=(const BlockBuilder& b)
-{
-  m_elementIds=b.m_elementIds;
-  m_historyNodes=b.m_historyNodes;
-  m_edges = b.m_edges;
-  m_blocks =b.m_blocks;
-  return *this;
-}*/
-
 void BlockBuilder::makeBlocks() {
-  /** uses the base class  GraphBuilder to work out which elements are connected
-   Each set of connected elements will be used to make a new PFBlock
+  /** uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
+   Each subGraph will be used to make a new PFBlock
    */
 
   for (auto& elementIds : m_subGraphs) {
-
-    // make the block
-    sortIds(elementIds);  // TODO allow sorting by energy using a helper class
-    PFBlock block{elementIds, m_edges};
+    if (elementIds.size()>1) {
+      sortIds(elementIds);  // TODO allow sorting by energy using a helper class
+    }
+    auto block = PFBlock(elementIds, m_edges); // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
-    Id::Type id = block.uniqueId();
+    IdType id = block.uniqueId();
     m_blocks.emplace(id, std::move(block));
-    // std::cout << m_blocks.size() << " " << m_blocks.empty() ;
 
     // update the history nodes (if they exist)
     if (m_historyNodes.size() > 0) {
       // make a new history node for the block and add into the history Nodes
-      PFNode blocknode{block.uniqueId()};
-      m_historyNodes.emplace(block.uniqueId(), std::move(blocknode));  // move
+      m_historyNodes.emplace(id, std::move(PFNode(id)));  // move
+      auto storedBlocknode = m_historyNodes[id];
       // add in the links between the block elements and the block
-      for (auto elemid : block.elementIds()) {
-        m_historyNodes[elemid].addChild(blocknode);
+      for (auto elemid : m_blocks[id].elementIds()) {
+        m_historyNodes[elemid].addChild(storedBlocknode);
       }
     }
   }
@@ -66,12 +55,10 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
   return os;
 }
 
-/*void BlockBuilder::sortIds(std::vector<Id::Type>& ids) // sorts by type and energy
-{//TODO move to helper
-  std::sort( ids.begin(), ids.end(), [this] (Id::Type a, Id::Type b) { return this->m_pfEvent.compare(a,b);});
-}*/
 
-/*bool BlockBuilder::compareEdges(long long key1, long long key2, Id::Type uniqueid) const//TODO check direction of sort
+
+/* keep for now as might just be useful if we want to sort by energy
+ bool BlockBuilder::compareEdges(long long key1, long long key2, IdType uniqueid) const//TODO check direction of sort
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy
@@ -91,48 +78,3 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
  }*/
 
 }  // end namespace papas
-/*
-//TODO make into gtest and move
-int test_BlockBuilder()
-{
-  using namespace papas;
-
-  Id::Type id1 = Id::makeEcalId();
-  Id::Type id2 = Id::makeHcalId();
-  Id::Type id3 = Id::makeTrackId();
-
-  Id::Type id4 = Id::makeEcalId();
-  Id::Type id5 = Id::makeHcalId();
-  Id::Type id6 = Id::makeTrackId();
-
-  std::vector<Id::Type> ids {id1, id2, id3, id4, id5, id6};
-
-  Edge edge = Edge(id1, id2, false, 0.00023);
-  Edge edge1 = Edge(id1, id3, true, 10030.0);
-  Edge edge2 = Edge(id2, id3, true, 0.00005);
-
-  Edge edge4 = Edge(id4, id5, false, 3.1234);
-  Edge edge5 = Edge(id4, id6, true, 0.1234);
-  Edge edge6 = Edge(id5, id6, true, 123.0);
-
-  Edges edges;
-
-  edges.emplace(edge.key(),  std::move(edge));
-  edges.emplace(edge1.key(), std::move(edge1));
-  edges.emplace(edge2.key(), std::move(edge2));
-  edges.emplace(edge4.key(), std::move(edge4));
-  edges.emplace(edge5.key(), std::move(edge5));
-  edges.emplace(edge6.key(), std::move(edge6));
-
-
-  //create history nodes
-  Nodes historyNodes;
-  for (auto id : ids)
-    historyNodes.emplace(id, std::move(PFNode(id)));
-
-
-  auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
-
-  std::cout << blockbuilder;
-  return 0;
-}*/

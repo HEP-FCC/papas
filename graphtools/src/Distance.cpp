@@ -23,11 +23,8 @@ Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) : m_distanc
 }
 
 void Distance::setDistanceToPoint(TVector3 point, const Cluster& cluster) {
-  // TODO check bottom later cluster
   m_distance = (cluster.position() - point).Mag();
   m_isLinked = m_distance < cluster.size();
-
-  // std::cout<<"Error this should not be reacheded unless is is an unmerged cluster";
 }
 
 Distance::Distance() : m_distance(-1), m_isLinked(false) {}
@@ -39,7 +36,7 @@ Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1),
   if (Id::isHcal(cluster.id())) {
     cyl_layer = papas::Position::kHcalIn;
   }
-  if (track.path()->hasNamedPoint(cyl_layer)) {  // check exists {
+  if (track.path()->hasNamedPoint(cyl_layer)) {  // check exists 
     TVector3 pos = track.path()->namedPoint(cyl_layer);
     setDistanceToPoint(pos, cluster);
   }

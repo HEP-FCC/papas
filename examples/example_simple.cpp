@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    papas::PapasManager papasManager{CMSDetector};
+    auto papasManager =papas::PapasManager(CMSDetector);
 
     // read and process a single event
     unsigned int eventNo = 0;

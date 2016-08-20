@@ -71,17 +71,17 @@ pfblock.m_edges.size(), pfblock.m_elementIds.size());
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::Type elem) { return Id::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::Type elem) { return Id::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Id::Type elem) { return Id::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -96,7 +96,7 @@ std::string PFBlock::shortName() const {
 
 int PFBlock::size() const { return m_elementIds.size(); }
 
-std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::EdgeType matchtype) const {
+std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
 
@@ -118,14 +118,14 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Id::Type uniqueid, Edge::Edge
   return linkedEdgeKeys;
 }
 
-std::vector<Id::Type> PFBlock::linkedIds(Id::Type uniqueid, Edge::EdgeType edgetype) const {
+std::vector<Id::Type> PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   /// TODO think about sorting
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     linkedIds.push_back(m_edges.find(key)->second.otherid(uniqueid));
   }
-  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](Id::Type a, Id::Type b) -> bool
+  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](IdType a, IdType b) -> bool
   //                  { return this->compareEdges(a, b, uniqueid); } );
   return linkedIds;
 }
@@ -198,7 +198,7 @@ std::string PFBlock::edgeMatrixString() const {
   }
   return out.str();
 }
-const Edge& PFBlock::edge(Id::Type id1, Id::Type id2) const {
+const Edge& PFBlock::edge(IdType id1, IdType id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)
@@ -227,13 +227,13 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
 
 int test_blocks() {
   using namespace papas;
-  Id::Type id1 = Id::makeEcalId();
-  Id::Type id2 = Id::makeHcalId();
-  Id::Type id3 = Id::makeTrackId();
+  IdType id1 = Id::makeEcalId();
+  IdType id2 = Id::makeHcalId();
+  IdType id3 = Id::makeTrackId();
 
-  Id::Type id4 = Id::makeEcalId();
-  Id::Type id5 = Id::makeHcalId();
-  Id::Type id6 = Id::makeTrackId();
+  IdType id4 = Id::makeEcalId();
+  IdType id5 = Id::makeHcalId();
+  IdType id6 = Id::makeTrackId();
 
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
@@ -247,7 +247,6 @@ int test_blocks() {
   Edge edge6 = Edge(id5, id6, true, 123.0);
 
   Edges edges;
-  // edges.reserve(100);
   std::cout << "ee "
             << ":" << Id::pretty(id1) << ":" << edge.key() << edge << std::endl;
   std::cout << ":" << Id::pretty(id2) << ":" << edge1.key() << edge1 << std::endl;

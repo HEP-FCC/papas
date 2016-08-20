@@ -24,11 +24,11 @@ class EventRuler {
 
 public:
   EventRuler(const PFEvent& pfevent);
-  Distance distance(Id::Type id1, Id::Type id2) const;
+  Distance distance(IdType id1, IdType id2) const;
 
 private:
-  Distance clusterClusterDistance(Id::Type id1, Id::Type id2) const;
-  Distance clusterTrackDistance(Id::Type id1, Id::Type id2) const;
+  Distance clusterClusterDistance(IdType id1, IdType id2) const;
+  Distance clusterTrackDistance(IdType id1, IdType id2) const;
 
   Ruler m_ruler;
   const PFEvent& m_pfEvent;

@@ -52,7 +52,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
-Cluster::Cluster(const Cluster& c, Id::Type id)
+Cluster::Cluster(const Cluster& c, IdType id)
     : m_uniqueId(id),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),

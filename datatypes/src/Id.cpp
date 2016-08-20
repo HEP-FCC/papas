@@ -16,7 +16,7 @@
 /** @class   Id Datatypes/Datatypes/Id.h Id.h
  *
  *  @brief Encode information into a unique identifier
- *  Example usage: Id::Type uid=Id::MakeId(kEcalCluster)
+ *  Example usage: IdType uid=Id::MakeId(kEcalCluster)
  *
  *  @author  Alice Robson
  *  @date    2016-04-05
@@ -26,7 +26,7 @@ namespace papas {
 
 unsigned int Id::s_counter = 1;  /// static which will be used to create a unique long
 
-Id::Type Id::makeId(ItemType type, unsigned int uniqueid) {
+IdType Id::makeId(ItemType type, unsigned int uniqueid) {
 
   if (type > 6) {  // TODO proper error checking on type
     std::cout << "TOO big" << std::endl;
@@ -68,11 +68,11 @@ Id::ItemType Id::itemType(papas::Layer layer) {
     return ItemType::kNone;
 }
 
-char Id::typeShortCode(Id::Type id) {
+char Id::typeShortCode(IdType id) {
   std::string typelist = ".ehtprb....";
   return typelist[(unsigned int)Id::itemType(id)];
   // TODO error handling
 }
 
-std::string Id::pretty(Id::Type id) { return string_format("%1c%-8d", Id::typeShortCode(id), Id::uniqueId(id)); }
+std::string Id::pretty(IdType id) { return string_format("%1c%-8d", Id::typeShortCode(id), Id::uniqueId(id)); }
 }  // end namespace papas

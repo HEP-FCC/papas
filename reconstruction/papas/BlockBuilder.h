@@ -40,17 +40,14 @@ public:
    *                     the new history will be added into the exisiting history
    */
   BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes);
-  Blocks blocks() { return std::move(m_blocks); };  ///<return the unordered map of the resulting blocks;
-                                                    // TODO should this be move
+  Blocks moveBlocks() { return std::move(m_blocks); };  ///<move the unordered map of the resulting blocks;
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?
 
 private:
   void makeBlocks();      // does the main work
-  Nodes& m_historyNodes;  ///<optional, allows history to be updated
+  Nodes& m_historyNodes;  ///< optional, allows history to be updated
   Blocks m_blocks;        ///< the blocks made by blockbuilder
 
-  // bool compareEdges( long long key1, long long key2, Id::Type uniqueid) const; //todo move to helper class
-  // void sortIds(Ids& ids); //sorts elements by type
 };
 
 }  // end namespace papas
