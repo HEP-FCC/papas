@@ -25,8 +25,9 @@ void GDetectorElement::Draw(const std::string& projection) {
     }
   } else if (projection.find("thetaphi") != projection.npos) {
   }
-  // else
-  // AJRTODO throw error
+  else {
+    throw std::range_error("Projection not recognised");
+  }
 };
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detElem) {  // For each inner and outer
@@ -37,7 +38,7 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detEle
 
   for (auto const& elem :
        {detElem->volumeCylinder().outer(), detElem->volumeCylinder().inner()}) {  // AJRTODO should be if inner ......
-    double radius = elem.getRadius();
+    double radius = elem.radius();
     double dz = elem.z();
 
     m_circles.push_back(std::move(TEllipse(0., 0., radius, radius)));

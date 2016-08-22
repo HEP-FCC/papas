@@ -70,17 +70,3 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 
 }  // end namespace papas
 
-int test_edges() {
-  using namespace papas;
-  IdType id1 = Id::makeEcalId();
-  IdType id2 = Id::makeHcalId();
-  IdType id3 = Id::makeTrackId();
-
-  Edge edge = Edge(id1, id2, false, 0.0);
-  Edge edge1 = Edge(id1, id3, true, 0.0);
-
-  std::cout << edge1 << std::endl;
-  std::cout << edge << std::endl;
-
-  return 0;
-}

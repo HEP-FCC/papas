@@ -12,18 +12,18 @@ namespace papas {
 
 Detector::Detector() {}
 
-// aim to make this a const function and to do sort at initialisation
+  /*// aim to make this a const function and to do sort at initialisation
 const std::list<SurfaceCylinder>& Detector::sortedCylinders() {
   // Return list of surface cylinders sorted by increasing radius.'''
 
   return m_cylinders;
-  /* for element in self.elements.values():
+   for element in self.elements.values():
    if element.volume.inner is not None:
    self._cylinders.append(element.volume.inner)
    self._cylinders.append(element.volume.outer)
    self._cylinders.sort(key=operator.attrgetter("rad"))
-  return m_cylinders;*/
-}
+  return m_cylinders;
+}*/
 
 std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const {
   switch (layer) {
@@ -34,7 +34,7 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
     return m_hcal;
     break;
   default:
-    throw std::range_error("Cluster not found");
+    throw std::range_error("Detector Calorimeter not found");
   }
 }
 
@@ -48,12 +48,10 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
     return m_hcal;
     break;
   default:
-    throw std::range_error("Cluster not found");
+    throw std::range_error("TODO: Detector Element Layer not found");
     // TODO add track and field
   }
 
-  // TODO is this the best route or should it throw
-  // return nullptr;
 }
 
 }  // end namespace papas

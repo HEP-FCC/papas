@@ -14,11 +14,11 @@ HelixPropagator::HelixPropagator(double field) : m_field(field) {}
 void HelixPropagator::propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl) {
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
 
-  bool is_looper = helix->extremePointXY().Mag() < cyl.getRadius();
+  bool is_looper = helix->extremePointXY().Mag() < cyl.radius();
   double udir_z = helix->unitDirection().Z();
 
   if (!is_looper) {
-    auto intersect = circleIntersection(helix->centerXY().X(), helix->centerXY().Y(), helix->rho(), cyl.getRadius());
+    auto intersect = circleIntersection(helix->centerXY().X(), helix->centerXY().Y(), helix->rho(), cyl.radius());
 
     double phi_m = helix->phi(intersect[0].first, intersect[0].second);
     double phi_p = helix->phi(intersect[1].first, intersect[1].second);

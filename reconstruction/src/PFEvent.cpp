@@ -129,11 +129,12 @@ const Cluster& PFEvent::HCALCluster(IdType id) const {
     return m_mergedHcals.at(id);
   } else if (m_hcals.find(id) != m_hcals.end()) {
     return m_hcals.at(id);
-  }
-  class Cluster c;
-  PDebug::write("problem with cluster not found :{}", id);
+  } else
+  {
+    PDebug::write("problem with cluster not found :{}", id);
   PDebug::flush();
-  return std::move(c);  // TODO produce error
+  throw std::range_error("Cluster not found in Clusters Collections");
+  }
 }
 
 const Cluster& PFEvent::cluster(IdType id) const {

@@ -356,7 +356,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 
 /*
  Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
- return getMatchingIds(nodeid,
+ return matchingIds(nodeid,
  Id::DataType::kCluster,
  papas::Layer::kEcal,
  papas::SubType::SMEARED,
@@ -364,7 +364,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  }
 
  Ids  Simulator::linkedRawTrackIds(long nodeid) const {
- return getMatchingIds(nodeid,
+ return matchingIds(nodeid,
  Id::DataType::kTrack,
  papas::Layer::kNone,
  papas::SubType::RAW,
@@ -372,7 +372,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  }
 
  Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
- return getMatchingIds(nodeid,
+ return matchingIds(nodeid,
  Id::DataType::kTrack,
  papas::Layer::kNone,
  papas::SubType::SMEARED,
@@ -380,7 +380,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  }
 
  Ids Simulator::linkedParticleIds(long nodeid) const {
- return getMatchingIds(nodeid,
+ return matchingIds(nodeid,
  Id::DataType::kParticle,
  papas::Layer::kNone,
  papas::SubType::RAW,
@@ -396,7 +396,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  }*/
 
 /*
- Ids Simulator::getMatchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,
+ Ids Simulator::matchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,
  papas::enumSource source) const
  {
  DAG::BFSVisitor<PFNode> bfs;

@@ -54,9 +54,8 @@ public:
   PFBlock(PFBlock&& pfblock) = default;
 
   const Ids elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-  Edge& findEdge(Edge::EdgeKey key) { return m_edges.find(key)->second; }
-  const Edge& findEdge(Edge::EdgeKey key) const { return m_edges.find(key)->second; }
-
+  Edge& findEdge(Edge::EdgeKey key);
+  const Edge& findEdge(Edge::EdgeKey key) const;
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing distance
@@ -64,8 +63,7 @@ public:
   @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
   @return vector of EdgeKeys to linked edges
  */
-  std::vector<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid,
-                                            Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::vector<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
@@ -80,7 +78,7 @@ public:
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const;               ///< length of the element_unqiueids
-  IdType uniqueId() const { return m_uniqueId; };      ///<Unique ID of the block
+  IdType uniqueId() const { return m_uniqueId; };        ///<Unique ID of the block
   bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
   void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
   Edges& edges() { return m_edges; }
@@ -94,7 +92,7 @@ private:
   PFBlock(const PFBlock& pfblock) = default;     //{std::cout << "COPY CONST BLOCK";};
   PFBlock& operator=(const PFBlock&) = default;  //{std::cout << "= BLOCK"; };//return PFBlock(c);};
 
-  IdType m_uniqueId;        //  make a uniqueid for this block
+  IdType m_uniqueId;          //  make a uniqueid for this block
   bool m_isActive;            // if a block is subsequently split it will be deactivated
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy
   Edges m_edges;              // all the edges for elements in this block

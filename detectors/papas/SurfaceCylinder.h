@@ -15,7 +15,7 @@ class SurfaceCylinder {
 public:
   SurfaceCylinder(papas::Position clayer, double rad = 0., double z = 0.);
   double z() const { return m_z; };
-  double getRadius() const { return m_radius; }
+  double radius() const { return m_radius; }
   papas::Position layer() const { return m_layer; }
 
 private:

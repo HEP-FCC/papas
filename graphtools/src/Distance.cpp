@@ -45,18 +45,3 @@ Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1),
 
 }  // end namespace papas
 
-/*
-int test_Distamce2() {
-c1 = Cluster(10, TVector3(1, 0, 0), 4., 'ecal_in')
-c2 = Cluster(20, TVector3(1, 0, 0), 4., 'hcal_in')
-link_type, link_ok, distance = ruler(c1, c2)
-self.assertTrue(link_ok)
-self.assertEqual(distance, 0.)
-pos3 = TVector3(c1.position)
-pos3.RotateZ(0.059)
-c3 = Cluster(30, pos3, 5, 'hcal_in')
-link_type, link_ok, distance = ruler(c1, c3)
-self.assertEqual(distance, 0.059)
-}*/
-
-// Implemented via datatypes.cc

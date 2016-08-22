@@ -31,7 +31,6 @@
 #include "CMS.h"
 #include "Cluster.h"
 #include "SimParticle.h"
-
 #include "Definitions.h"
 #include "Distance.h"
 #include "Edge.h"
@@ -46,9 +45,8 @@
 #include "pTrack.h"
 
 #include "PapasManager.h"
-
-// include "random.h"
 #include "Random.h"
+#include "BlockSplitter.h"
 using namespace papas;
 
 TEST_CASE("Id") {  /// ID test
@@ -85,6 +83,8 @@ TEST_CASE("Helix") {  /// Helix path test
   REQUIRE(helix.deltaT(length) == Approx(1e-9));
 }
 
+
+
 TEST_CASE("Helixpath") {  /// Helix path test
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1., 2.);
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2., 1.);
@@ -100,58 +100,15 @@ TEST_CASE("Helixpath") {  /// Helix path test
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
   REQUIRE(tvec2.Z() == Approx(0.50701872));
 }
+
 TEST_CASE("Structures") {
   // testing cylinders etc
   // Try base classes ;
   Material M(1, 1);
   SurfaceCylinder S(papas::Position::kEcalIn);
   VolumeCylinder V(papas::Layer::kEcal, 4, 6, 3, 6);
-  // TODO return SUCCEED();
 }
 
-void testGraphs() {  // Testing graphics
-                     // Display display = Display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
-  // Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-
-  TVector3 vpos(1., .5, .3);
-  Cluster cluster = Cluster(10., vpos, 1., Id::ItemType::kEcalCluster);
-  std::vector<TVector3> tvec;
-  tvec.push_back(TVector3(0., 0., 0.));
-  tvec.push_back(TVector3(1., 1., 1.));
-  tvec.push_back(TVector3(2., 2., 2.));
-
-  /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.addToRegister(gtrajectories,1);
-   display.addToRegister(gcluster,2);
-   display.Draw();*/
-
-  // Testing graphics
-  /*
-   TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
-   std::vector<TVector3> tvec;
-
-   std::cout <<"cluster "<< cluster.pt()<<"\n";
-
-   std::vector<TVector3> tvec;
-   tvec.push_back(TVector3(0.,0.,0.));
-   tvec.push_back(TVector3(1.,1.,1.));
-   tvec.push_back(TVector3(2.,2.,2.));
-
-
-   Display display = Display({enumProjection::xy,enumProjection::yz});
-   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-
-   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-   display.addToRegister(gdetector, 0);
-
-   std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.addToRegister(gtrajectories,1);
-   display.addToRegister(gcluster,2);
-   display.Draw();*/
-}
 
 TEST_CASE("Cylinder") {
 
@@ -159,31 +116,13 @@ TEST_CASE("Cylinder") {
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalIn, 0.7, 1.5);
   auto subcyl = VolumeCylinder(papas::Layer::kEcal, 1, 2, 0.7, 1.5);
 
-  REQUIRE(subcyl.inner().getRadius() == 0.7);
+  REQUIRE(subcyl.inner().radius() == 0.7);
   REQUIRE(subcyl.inner().z() == 1.5);
-  REQUIRE(subcyl.outer().getRadius() == 1.);
+  REQUIRE(subcyl.outer().radius() == 1.);
   REQUIRE(subcyl.outer().z() == 2.);
+  REQUIRE_THROWS(VolumeCylinder( papas::Layer::kEcal, 1, 2, 1.1, 1.5));
+  }
 
-  /* TODO
-   # inner cylinder larger than the outer one
-   self.assertRaises(ValueError,
-   VolumeCylinder, 'test', 1, 2, 1.1, 1.5 )
-   # signature does not exist anymore
-   self.assertRaises(TypeError,
-   VolumeCylinder, cyl2, cyl1 )
-   # forgot name
-   self.assertRaises(ValueError,
-   VolumeCylinder, 1, 2, 0.9, 1.9*/
-}
-
-TEST_CASE("CMS") {
-  CMS cms = CMS();
-  std::cout << "TODO Tested CMS" << std::endl;
-  /*  radii = [cyl.rad for cyl in cms.cylinders()];
-   self.assertEqual( radii, sorted(radii))
-   zs = [cyl.z for cyl in cms.cylinders()]
-   self.assertEqual( zs, sorted(zs))*/
-}
 
 TEST_CASE("ClusterPT") {
 
@@ -213,7 +152,8 @@ TEST_CASE("ClusterSmear") {
 
   // check mean and stddev
   double sum = std::accumulate(energies.begin(), energies.end(), 0.0);
-  std::cout << energies.size();
+
+  REQUIRE(energies.size() == 10000);
   double m = sum / energies.size();
   double accum = 0.0;
   std::for_each(std::begin(energies), std::end(energies), [&](const double d) { accum += (d - m) * (d - m); });
@@ -235,7 +175,6 @@ TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there i
   for (int i = 0; i < n; i++) {
     x[i] = i;
     y[i] = 2 * i;
-    // std::cout<<x[i]<<"\t"<<y[i]<<std::endl;
   }
 
   TGraph* gr = new TGraph(n, x, y);
@@ -328,7 +267,6 @@ TEST_CASE("RandomExp") {
   randomgen::setEngineSeed();
   randomgen::RandExponential rexpA(5.);
   double r3 = rexpA.next();
-  // std::cout << rexpA()<<", "<< rexpA()<<", "<< rexpA()<<", "<< rexpA();
   randomgen::RandExponential rexpB(5.);
   double r4 = rexpB.next();
 
@@ -340,202 +278,15 @@ TEST_CASE("dummy") {
   REQUIRE(true == success);
 }
 
-void test_helix() {  // Helix path test
-  TLorentzVector p4 = TLorentzVector();
-  p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-  Helix helix(p4, TVector3(0, 0, 0), 3.8, 1);
-  double length = helix.pathLength(1.0e-9);
-  TVector3 junk = helix.pointAtTime(1e-9);
-  std::cout << "Helix point: " << junk.X() << " " << junk.Y() << " " << junk.Z() << " ";
-  std::cout << "\nlength" << length << " " << helix.deltaT(length) << std::endl;
-}
-void test_Structures() {
-  // testing cylinders etc
-  std::cout << "Try base classes\n";
-  Material M(1, 1);
-  SurfaceCylinder S(papas::Position::kEcalIn);
-  VolumeCylinder V(papas::Layer::kEcal, 4, 6, 3, 6);
-}
-
-struct A {
-  virtual void foo() const = 0;
-  void bar();
-};
-
-struct B : A {
-  // void foo()  override; // Error: B::foo does not override A::foo
-  // (signature mismatch)
-  void foo() const override;  // OK: B::foo overrides A::foo
-                              // void bar() override; // Error: A::bar is not virtual
-};
-
-void B::foo() const { std::cout << "foo"; }
-
-/*using boost::any_cast;
- typedef std::list<boost::any> many;
 
 
- void append_int(many & values, int value)
- {
- boost::any to_append = value;
- values.push_back(to_append);
- }*/
-
-int old_main_stuff(int argc, char* argv[]) {
-
-  B b;
-  b.foo();
-
-  std::unordered_map<long, TVector3> rootvec;
-  TVector3 tv1{0, 0, 0};
-  TVector3 tv2{0, 0, 0};
-  rootvec[0] = std::move(tv1);
-  rootvec[2] = std::move(tv2);
-  rootvec.emplace(3, TVector3{0, 0, 0});
-
-  // all new
-  TApplication theApp("App", &argc, argv);
-  if (gROOT->IsBatch()) {
-    fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
-    return 1;
-  }
-  // testing();
-  // theApp.Run();
-  return 0;
-}
-
-void test_graphs() {  // Testing graphics
-  Display display = Display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
-  // Display display =
-  // Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi
-  // ,papas::ViewPane::Projection::HCAL_thetaphi });
-
-  TVector3 vpos(1., .5, .3);
-  Cluster cluster = Cluster(10., vpos, 1., Id::ItemType::kEcalCluster);
-  std::vector<TVector3> tvec;
-  tvec.push_back(TVector3(0., 0., 0.));
-  tvec.push_back(TVector3(1., 1., 1.));
-  tvec.push_back(TVector3(2., 2., 2.));
-
-  /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.addToRegister(gtrajectories,1);
-   display.addToRegister(gcluster,2);
-   display.Draw();*/
-
-  // Testing graphics
-  /* TVector3 vpos(1.,.5,.3);
-   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
-   std::vector<TVector3> tvec;
-
-   std::cout <<"cluster "<< cluster.pt()<<"\n";
-
-   std::vector<TVector3> tvec;
-   tvec.push_back(TVector3(0.,0.,0.));
-   tvec.push_back(TVector3(1.,1.,1.));
-   tvec.push_back(TVector3(2.,2.,2.));
 
 
-   Display display = Display({enumProjection::xy,enumProjection::yz});
-   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
 
-   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
-   display.addToRegister(gdetector, 0);
 
-   std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
-   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
-   display.addToRegister(gtrajectories,1);
-   display.addToRegister(gcluster,2);
-   display.Draw();*/
-}
 
-void mytesting() {  // change to concrete object or unique pointer is there is an issue
-  TCanvas* c1 = new TCanvas("c1", "A Simple Graph Example", 200, 10, 700, 500);
-  c1->SetFillColor(42);
-  c1->SetGrid();
 
-  const int n = 20;
-  double x[n], y[n];
-  for (int i = 0; i < n; i++) {
-    x[i] = i;
-    y[i] = 2 * i;
-    std::cout << x[i] << "\t" << y[i] << std::endl;
-  }
 
-  TGraph* gr = new TGraph(n, x, y);
-  gr->SetLineColor(2);
-  gr->SetLineWidth(4);
-  gr->SetMarkerColor(4);
-  gr->SetMarkerStyle(21);
-  gr->SetTitle("a simple graph");
-  gr->GetXaxis()->SetTitle("X title");
-  gr->GetYaxis()->SetTitle("Y title");
-  gr->Draw("ACP");
-
-  c1->Update();
-  c1->Modified();
-  c1->Connect("Closed()", "TApplication", gApplication, "Terminate()");  // new
-}
-
-class MyClass {
-public:
-  MyClass(std::string);
-  MyClass(MyClass& other);
-  MyClass(const MyClass& other);
-  MyClass(const MyClass&& other);
-  MyClass(MyClass&& other);
-  MyClass someFunction();
-
-  std::string m_str;
-};
-
-MyClass::MyClass(std::string str) : m_str(str) {}
-
-MyClass::MyClass(const MyClass& other) {
-  std::cout << "Copy constructor was called" << m_str << std::endl;
-  m_str = other.m_str;
-}
-
-MyClass::MyClass(MyClass&& other) {
-  m_str = std::move(other.m_str);
-  std::cout << "Move constructor was called" << m_str << std::endl;
-}
-MyClass::MyClass(const MyClass&& other) {
-  m_str = std::move(other.m_str);
-
-  std::cout << "const Move constructor was called" << m_str << std::endl;
-}
-
-MyClass someFunction() {
-  MyClass dummy("dummy");
-  return dummy;
-}
-
-void test_RandomNew() {
-
-  auto rgen = randomgen::RandUniform(1, 2);
-  for (auto i = 1; i < 20; i++) {
-    std::cout << rgen.next() << ",";
-  }
-  std::cout << std::endl << std::endl;
-  auto rgen1 = randomgen::RandUniform(1, 2);
-  for (auto i = 1; i < 20; i++) {
-    std::cout << rgen1.next() << ",";
-  }
-  std::cout << std::endl << std::endl;
-  auto rgen2 = randomgen::RandUniform(1, 2);
-  for (auto i = 1; i < 20; i++) {
-    std::cout << rgen2.next() << ",";
-  }
-  randomgen::setEngineSeed();
-  std::cout << std::endl << std::endl << std::endl;
-  std::cout << std::endl << std::endl;
-  auto rgen3 = randomgen::RandUniform(1, 2);
-  for (auto i = 1; i < 20; i++) {
-    std::cout << rgen3.next() << ",";
-  }
-  std::cout << std::endl << std::endl << std::endl;
-}
 
 TEST_CASE("randomgen") {
   // seed it to have known start point
@@ -578,15 +329,180 @@ TEST_CASE("Distance") {
   auto dist2 = Distance(c2, c1);
   REQUIRE(dist2.isLinked());
 }
-/*elems = [c1, c2, tr]
-for ele in elems:
-link_type, link_ok, distance = ruler(ele, ele)
-if ele!=tr:
-self.assertTrue(link_ok)
-elif ele==tr:
-self.assertFalse(link_ok)
-for ele1, ele2 in itertools.combinations(elems, 2):
-link_type, link_ok, distance = ruler(ele1, ele2)
-self.assertTrue(link_ok)
-link_type, link_ok, distance = ruler(c2, c1)
-self.assertEqual(link_type, ('ecal_in','hcal_in'))*/
+
+
+TEST_CASE("Distance2") {
+  auto c1 = Cluster(10, TVector3(1, 0, 0), 4., Id::ItemType::kEcalCluster);
+  auto c2 = Cluster(20, TVector3(1, 0, 0), 4., Id::ItemType::kHcalCluster);
+  auto dist1 = Distance(c1, c2);
+  REQUIRE(dist1.isLinked());
+  REQUIRE(dist1.distance() == 0);
+
+  auto pos3 = TVector3(c1.position());
+  pos3.RotateZ(0.059);
+  auto c3 = Cluster(30, pos3, 5., Id::ItemType::kHcalCluster);
+  auto dist2 = Distance(c1, c3);
+  REQUIRE(dist2.isLinked());
+  REQUIRE(dist2.distance() == 0.059);
+  auto dist3 = Distance(c3, c1);
+  REQUIRE(dist3.isLinked());
+  REQUIRE(dist3.distance() == 0.059);
+}
+
+
+//TODO
+void test_graphs() {  // Testing graphics
+  Display display = Display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
+  // Display display =
+  // Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi
+  // ,papas::ViewPane::Projection::HCAL_thetaphi });
+  
+  TVector3 vpos(1., .5, .3);
+  Cluster cluster = Cluster(10., vpos, 1., Id::ItemType::kEcalCluster);
+  std::vector<TVector3> tvec;
+  tvec.push_back(TVector3(0., 0., 0.));
+  tvec.push_back(TVector3(1., 1., 1.));
+  tvec.push_back(TVector3(2., 2., 2.));
+  
+  /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
+   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
+   display.Draw();*/
+  
+  // Testing graphics
+  /* TVector3 vpos(1.,.5,.3);
+   Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
+   std::vector<TVector3> tvec;
+   
+   std::cout <<"cluster "<< cluster.pt()<<"\n";
+   
+   std::vector<TVector3> tvec;
+   tvec.push_back(TVector3(0.,0.,0.));
+   tvec.push_back(TVector3(1.,1.,1.));
+   tvec.push_back(TVector3(2.,2.,2.));
+   
+   
+   Display display = Display({enumProjection::xy,enumProjection::yz});
+   //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
+   
+   std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
+   display.addToRegister(gdetector, 0);
+   
+   std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
+   std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
+   display.addToRegister(gtrajectories,1);
+   display.addToRegister(gcluster,2);
+   display.Draw();*/
+}
+
+
+TEST_CASE("Edges") {
+  using namespace papas;
+  IdType id1 = Id::makeEcalId();
+  IdType id2 = Id::makeHcalId();
+  IdType id3 = Id::makeTrackId();
+  
+  Edge edge = Edge(id1, id2, false, 0.0);
+  Edge edge1 = Edge(id1, id3, true, 0.0);
+  
+  REQUIRE(edge1.isLinked()==TRUE);
+  REQUIRE(edge.isLinked()==FALSE);
+  //NB ids are ordered when stored so may be the opposite way around to the constructor
+  REQUIRE( ((edge1.id1()==id1 && edge1.id2()==id2) ||(edge1.id2()==id1 && edge1.id1()==id2)) == FALSE);
+  return ;
+}
+
+
+TEST_CASE("PFBlocks") {
+  using namespace papas;
+  IdType id1 = Id::makeEcalId();
+  IdType id2 = Id::makeHcalId();
+  IdType id3 = Id::makeTrackId();
+  
+  IdType id4 = Id::makeEcalId();
+  IdType id5 = Id::makeHcalId();
+  IdType id6 = Id::makeTrackId();
+  
+  Ids ids{id1, id2, id3};
+  Ids ids2{id4, id5, id6};
+  
+  Edge edge = Edge(id1, id2, false, 0.00023);
+  Edge edge1 = Edge(id1, id3, true, 10030.0);
+  Edge edge2 = Edge(id2, id3, true, 0.00005);
+  
+  Edge edge4 = Edge(id4, id5, false, 3.1234);
+  Edge edge5 = Edge(id4, id6, true, 0.1234);
+  Edge edge6 = Edge(id5, id6, true, 123.0);
+  
+  Edges edges;
+  REQUIRE(edge1.distance()== 10030);
+  REQUIRE(edge.isLinked()==FALSE);
+  
+  edges.emplace(edge.key(), std::move(edge));
+  edges.emplace(edge1.key(), std::move(edge1));
+  edges.emplace(edge2.key(), std::move(edge2));
+  edges.emplace(edge4.key(), std::move(edge4));
+  edges.emplace(edge5.key(), std::move(edge5));
+  edges.emplace(edge6.key(), std::move(edge6));
+  
+  REQUIRE_NOTHROW(PFBlock(ids, edges));
+  PFBlock block2(ids2, edges);
+  REQUIRE(block2.countEcal()==1);
+  REQUIRE(block2.countHcal()==1);
+  REQUIRE(block2.countTracks()==1);
+  REQUIRE(block2.shortName()=="E1H1T1");
+  REQUIRE(block2.isActive()==TRUE);
+  REQUIRE(block2.elementIds()==ids2);
+  REQUIRE(block2.size()==3);
+  REQUIRE(Id::isBlock(block2.uniqueId())==TRUE);
+  REQUIRE(block2.findEdge(edge4.key()).key()==edge4.key());
+  REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
+  REQUIRE_THROWS(block2.findEdge(edge1.key()));
+  REQUIRE(block2.edge(id4,id5).isLinked()==FALSE);
+  REQUIRE(block2.edge(id4,id6).distance()==0.1234);
+  
+  
+  return;
+}
+
+
+
+TEST_CASE("BlockSplitter") {
+  IdType id1 = Id::makeEcalId();
+  IdType id2 = Id::makeHcalId();
+  IdType id3 = Id::makeTrackId();
+  
+  
+  std::vector<Id::Type> ids{id1, id2, id3};
+  
+  Edge edge = Edge(id1, id2, false, 0.00023);
+  Edge edge1 = Edge(id1, id3, true, 10030.0);
+  Edge edge2 = Edge(id2, id3, true, 0.00005);
+  
+ 
+  Edges edges;
+  
+  edges.emplace(edge.key(), std::move(edge));
+  edges.emplace(edge1.key(), std::move(edge1));
+  edges.emplace(edge2.key(), std::move(edge2));
+  
+  // create history nodes
+  Nodes historyNodes;
+  for (auto id : ids)
+    historyNodes.emplace(id, std::move(PFNode(id)));
+  
+  Nodes emptyNodes;
+  auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
+  REQUIRE(blockbuilder.subGraphs().size()==1);
+  
+  Edges to_unlink;
+  to_unlink[edge1.key()] = edge1;
+  for (auto& block : blockbuilder.moveBlocks()) {
+    auto blocksplitter = BlockSplitter(to_unlink, block.second, emptyNodes);
+    REQUIRE(blocksplitter.blocks().size()==2);
+  }
+  
+  return;
+}
+
