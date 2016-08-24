@@ -10,10 +10,7 @@
 namespace papas {
 
 class VolumeCylinder;
-/**
- * @file CMS.h
- * @brief Implementation of CMS detector
- */
+/// CMS implementation of Detector Field element
 class CMSField : public Field {
 public:
   // TODO consider best approach for below?

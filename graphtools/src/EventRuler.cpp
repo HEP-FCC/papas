@@ -28,6 +28,7 @@ Distance EventRuler::distance(IdType id1, IdType id2) const {
     return clusterTrackDistance(id2, id1);
   else if (Id::isTrack(id1) && Id::isTrack(id2))
     return Distance();
+  std::cout<<Id::itemType(id1) << ":"<< Id::itemType(id2) << std::endl;
   throw "Distance between ids could not be computed";
   return Distance();
 }

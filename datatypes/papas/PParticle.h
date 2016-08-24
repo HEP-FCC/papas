@@ -10,11 +10,11 @@
 #include "TVector3.h"
 
 #include "PDebug.h"
-/// Particle
-/**
- Contains 4-momentum vector, particle id and accessor functions
- Intended to be used as the base for derived Particle classes
- */
+/// Main Particle class
+///
+/// Contains 4-momentum vector, particle id and accessor functions
+/// Intended to be used as the base for derived Particle classes
+
 
 namespace papas {
 
@@ -26,7 +26,7 @@ public:
   Particle(int pdgid, double charge);
   Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 1);
   Particle(IdType id, int pdgid, double charge);
-  ~Particle() = default;  //{ PDebug::write(" Delete particle {}", *this);};
+  ~Particle() = default;
   Particle(Particle&&) = default;
   Particle& operator=(const Particle&) = default;  // {std::cout << "= Particle"; };
   Particle(Particle& pfblock) = default;           //{std::cout << "COPY Particle";};

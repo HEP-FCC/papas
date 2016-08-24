@@ -12,13 +12,23 @@
 #include "Definitions.h"
 #include <inttypes.h>
 #include <iostream>
-// default is to start at 1 for first id so that id=0 means unset
+/// Identifier class
+/** Used to unqiuely identify all clusters, tracks, blocks etc in PAPAS and also used in Nodes which
+* store the history (linkages) between items
+*
+* The Id Identifier is a 64bit unsigned integer
+* which is encoded using bit shifts:-
+* - a unique id (counter 1, 2, 3 etc) and
+* - the IdType:  ecalCluster, hcalCluster, track, particle
+*/
+
 namespace papas {
 
 class Id {
 public:
   Id(){};
   typedef IdType Type;
+  /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kRecParticle, kBlock };
 
   static IdType makeId(ItemType type, unsigned int uniqueid = Id::s_counter);  ///< creates a new ID of given type
@@ -29,8 +39,6 @@ public:
   static IdType makeRecParticleId(unsigned int uniqueid = Id::s_counter) { return makeId(kRecParticle, uniqueid); }
   static IdType makeBlockId(unsigned int uniqueid = Id::s_counter) { return makeId(kBlock, uniqueid); }
 
-  static papas::Layer layer(Type id);  ///< eg kEcal or kHcal
-
   static bool isEcal(Type id) { return (Id::itemType(id) == kEcalCluster); }
   static bool isHcal(Type id) { return (Id::itemType(id) == kHcalCluster); }
   static bool isCluster(Type id) { return (Id::isEcal(id) || Id::isHcal(id)); }
@@ -39,17 +47,21 @@ public:
   static bool isRecParticle(Type id) { return (Id::itemType(id) == kRecParticle); }
   static bool isBlock(Type id) { return (Id::itemType(id) == kBlock); }
 
-  static ItemType itemType(Type id);  ///< For example particle/cluster/block (kParticle etc)
-  static ItemType itemType(papas::Layer layer);
-  static unsigned int uniqueId(Type id);  ///< normally starts at one and incremented by one for each new id
-  static char typeShortCode(Type id);     ///<One letter code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static std::string pretty(IdType id);
-  static const unsigned int bitshift = 32;
-  static void reset();
-  static unsigned int counter() { return s_counter; };
+  static ItemType itemType(papas::Layer layer); ///< uses detector layer to work out itemType
+  static papas::Layer layer(Type id); ///< says which detector layer the item belongs to, may be kNone
+  static ItemType itemType(Type id);  ///< Returns encoded ItemType eg kParticle etc;
+  static unsigned int uniqueId(Type id);  ///< Returns encoded unique id  normally starts at one and incremented by one for each new id
+  static char typeShortCode(Type id);     ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
+  static std::string pretty(IdType id); ///< Pretty string Id name eg e101 for an ecal wiht uniqueid 101;
+  static void reset(); ///< resets Id counter back to 0. NB care needed that Ids produced prior to this are thrown away
+  static const unsigned int bitshift = 32; ///< encoding parameter (used also by EdgeKey)
+private:
+  
+  static unsigned int counter() { return s_counter; }; ///< provides the unique id part of the Id
   // TODO add a checkValid function
 private:
-  static unsigned int s_counter;
+  static unsigned int s_counter;  ///< unique id part of the Id starts at and increments by 1 each times
+
 };
 }  // end nam
 #endif /* Id_hpp */

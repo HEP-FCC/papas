@@ -12,7 +12,7 @@
 #include "Path.h"
 
 namespace papas {
-
+/// Decribes path of charged particles 
 class Helix : public Path {
 public:
   Helix();
@@ -32,10 +32,10 @@ public:
   double maxTime() const;
 
 private:
-  double m_rho;  /// Radius of Helix
+  double m_rho;  ///< Radius of Helix
   double m_omega;
   double m_phi0;
-  double m_phiMin;  /// Minimum angle of ARC
+  double m_phiMin;  ///< Minimum angle of ARC
   double m_phiMax;
   TVector3 m_vOverOmega;
   TVector3 m_centerXY;

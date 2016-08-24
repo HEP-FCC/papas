@@ -14,11 +14,8 @@ class Particle;
 class Cluster;
 class Material;
 class VolumeCylinder;
-/**
- * @file CMS.h
- * @brief Implementation of CMS detector
- */
 
+/// CMS implementation of  HCAL Detector element
 class CMSHCAL : public Calorimeter {
 public:
   // TODO consider best approach for below?

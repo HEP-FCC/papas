@@ -15,20 +15,27 @@
 #include <stdio.h>
 
 namespace papas {
+  
+  
+/// Cluster class for use with raw and merged clusters
+
 class Cluster {
 public:
   /** Constructor
-   @param[in]  double energy: Cluster energy
-   @param[in]  TVector3 position: location of Cluster
-   @param[in]  double size_m: size of cluster (units?)
-   @param[in]  Id::ItemType type of cluster eg kEcalCluster or kHcalCluster
+   @param[in]  energy Cluster energy
+   @param[in]  position  location of Cluster
+   @param[in]  size_m  size of cluster (units?)
+   @param[in]  id type of cluster eg kEcalCluster or kHcalCluster
     */
   Cluster(double energy, TVector3 position, double size_m, Id::ItemType id);
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
-   @param[in]  const Cluster& cluster to be copied
-   @param[in]  IdType id new unique id to be provided by user
+   @param[in]  cluster to be copied
+   @param[in]  id new unique id to be provided by user
+   
    example usage:
-   auto mergedCluster = Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));
+   
+   IdType newid =Id::makeId(Id::kEcalCluster)
+   auto mergedCluster = Cluster(clusters.at(id), newid);
    */
   Cluster(const Cluster& cluster, IdType id);
   Cluster() = default;
@@ -37,8 +44,8 @@ public:
   Cluster(const Cluster& cluster) = default;
   Cluster& operator=(const Cluster&) = default;
   Cluster& operator+=(const Cluster& rhs); ///< merges a cluster into an existing cluster
-  double angularSize() const { return m_angularSize; }
-  double size() const { return m_size; }
+  double angularSize() const ;
+  double size() const ;
   double pt() const { return m_pt; }
   double energy() const { return m_energy; }
   double eta() const { return m_p3.Eta(); }
@@ -48,9 +55,10 @@ public:
   void setEnergy(double energy);
   void setSize(double value);
   const std::vector<const Cluster*>& subClusters() const { return m_subClusters; };
+  std::string info() const; ///< returns a text descriptor of the cluster
+  /// static that returns max cluster energy
   static double maxEnergy() { return s_maxEnergy;};
-  std::string info() const;
-
+ 
 protected:
   IdType m_uniqueId;
   double m_size;

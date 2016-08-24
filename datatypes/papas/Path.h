@@ -16,10 +16,8 @@ namespace papas {
 
 /// Path followed by a particle in 3D space.
 class Path {
-  ///
   /// Assumes constant speed magnitude both along the z axis and in the transverse plane.
   /// Path base class is for straightline.
-  ///
 public:
   typedef std::map<papas::Position, TVector3> Points;
 

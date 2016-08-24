@@ -30,7 +30,6 @@
 //#include "fastsim/my_utilities.h"
 #include "CMS.h"
 #include "Cluster.h"
-#include "SimParticle.h"
 #include "Definitions.h"
 #include "Distance.h"
 #include "Edge.h"
@@ -39,14 +38,17 @@
 #include "Material.h"
 #include "PParticle.h"
 #include "Path.h"
+#include "SimParticle.h"
 #include "Simulator.h"
 #include "SurfaceCylinder.h"
 #include "VolumeCylinder.h"
 #include "pTrack.h"
 
+#include "BlockSplitter.h"
 #include "PapasManager.h"
 #include "Random.h"
-#include "BlockSplitter.h"
+#include "PFEvent.h"
+#include "MergedClusterBuilder.h"
 using namespace papas;
 
 TEST_CASE("Id") {  /// ID test
@@ -83,8 +85,6 @@ TEST_CASE("Helix") {  /// Helix path test
   REQUIRE(helix.deltaT(length) == Approx(1e-9));
 }
 
-
-
 TEST_CASE("Helixpath") {  /// Helix path test
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1., 2.);
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2., 1.);
@@ -109,7 +109,6 @@ TEST_CASE("Structures") {
   VolumeCylinder V(papas::Layer::kEcal, 4, 6, 3, 6);
 }
 
-
 TEST_CASE("Cylinder") {
 
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1, 2);
@@ -120,9 +119,8 @@ TEST_CASE("Cylinder") {
   REQUIRE(subcyl.inner().z() == 1.5);
   REQUIRE(subcyl.outer().radius() == 1.);
   REQUIRE(subcyl.outer().z() == 2.);
-  REQUIRE_THROWS(VolumeCylinder( papas::Layer::kEcal, 1, 2, 1.1, 1.5));
-  }
-
+  REQUIRE_THROWS(VolumeCylinder(papas::Layer::kEcal, 1, 2, 1.1, 1.5));
+}
 
 TEST_CASE("ClusterPT") {
 
@@ -278,16 +276,6 @@ TEST_CASE("dummy") {
   REQUIRE(true == success);
 }
 
-
-
-
-
-
-
-
-
-
-
 TEST_CASE("randomgen") {
   // seed it to have known start point
   randomgen::setEngineSeed(100);
@@ -330,7 +318,6 @@ TEST_CASE("Distance") {
   REQUIRE(dist2.isLinked());
 }
 
-
 TEST_CASE("Distance2") {
   auto c1 = Cluster(10, TVector3(1, 0, 0), 4., Id::ItemType::kEcalCluster);
   auto c2 = Cluster(20, TVector3(1, 0, 0), 4., Id::ItemType::kHcalCluster);
@@ -349,46 +336,45 @@ TEST_CASE("Distance2") {
   REQUIRE(dist3.distance() == 0.059);
 }
 
-
-//TODO
+// TODO
 void test_graphs() {  // Testing graphics
   Display display = Display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
   // Display display =
   // Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi
   // ,papas::ViewPane::Projection::HCAL_thetaphi });
-  
+
   TVector3 vpos(1., .5, .3);
   Cluster cluster = Cluster(10., vpos, 1., Id::ItemType::kEcalCluster);
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0., 0., 0.));
   tvec.push_back(TVector3(1., 1., 1.));
   tvec.push_back(TVector3(2., 2., 2.));
-  
+
   /*std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
    display.addToRegister(gtrajectories,1);
    display.addToRegister(gcluster,2);
    display.Draw();*/
-  
+
   // Testing graphics
   /* TVector3 vpos(1.,.5,.3);
    Cluster cluster=  Cluster(10., vpos, 1.,Id::makeEcalId() );
    std::vector<TVector3> tvec;
-   
+
    std::cout <<"cluster "<< cluster.pt()<<"\n";
-   
+
    std::vector<TVector3> tvec;
    tvec.push_back(TVector3(0.,0.,0.));
    tvec.push_back(TVector3(1.,1.,1.));
    tvec.push_back(TVector3(2.,2.,2.));
-   
-   
+
+
    Display display = Display({enumProjection::xy,enumProjection::yz});
    //Display display = Display({Projection::xy,Projection::yz,Projection::ECAL_thetaphi ,Projection::HCAL_thetaphi });
-   
+
    std::shared_ptr<GDetector> gdetector (new GDetector(CMSDetector));
    display.addToRegister(gdetector, 0);
-   
+
    std::shared_ptr<GTrajectories> gtrajectories (new GTrajectories(tvec)) ;// simulator.ptcs)
    std::shared_ptr<GTrajectories> gcluster (new GTrajectories(cluster)) ;
    display.addToRegister(gtrajectories,1);
@@ -396,113 +382,239 @@ void test_graphs() {  // Testing graphics
    display.Draw();*/
 }
 
-
 TEST_CASE("Edges") {
   using namespace papas;
   IdType id1 = Id::makeEcalId();
   IdType id2 = Id::makeHcalId();
   IdType id3 = Id::makeTrackId();
-  
+
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
-  
-  REQUIRE(edge1.isLinked()==TRUE);
-  REQUIRE(edge.isLinked()==FALSE);
-  //NB ids are ordered when stored so may be the opposite way around to the constructor
-  REQUIRE( ((edge1.id1()==id1 && edge1.id2()==id2) ||(edge1.id2()==id1 && edge1.id1()==id2)) == FALSE);
-  return ;
-}
 
+  REQUIRE(edge1.isLinked() == TRUE);
+  REQUIRE(edge.isLinked() == FALSE);
+  // NB ids are ordered when stored so may be the opposite way around to the constructor
+  REQUIRE(((edge1.id1() == id1 && edge1.id2() == id2) || (edge1.id2() == id1 && edge1.id1() == id2)) == FALSE);
+  return;
+}
 
 TEST_CASE("PFBlocks") {
   using namespace papas;
   IdType id1 = Id::makeEcalId();
   IdType id2 = Id::makeHcalId();
   IdType id3 = Id::makeTrackId();
-  
+
   IdType id4 = Id::makeEcalId();
   IdType id5 = Id::makeHcalId();
   IdType id6 = Id::makeTrackId();
-  
+
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
-  
+
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
   Edge edge2 = Edge(id2, id3, true, 0.00005);
-  
+
   Edge edge4 = Edge(id4, id5, false, 3.1234);
   Edge edge5 = Edge(id4, id6, true, 0.1234);
   Edge edge6 = Edge(id5, id6, true, 123.0);
-  
+
   Edges edges;
-  REQUIRE(edge1.distance()== 10030);
-  REQUIRE(edge.isLinked()==FALSE);
-  
+  REQUIRE(edge1.distance() == 10030);
+  REQUIRE(edge.isLinked() == FALSE);
+
   edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
   edges.emplace(edge2.key(), std::move(edge2));
   edges.emplace(edge4.key(), std::move(edge4));
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
-  
+
   REQUIRE_NOTHROW(PFBlock(ids, edges));
   PFBlock block2(ids2, edges);
-  REQUIRE(block2.countEcal()==1);
-  REQUIRE(block2.countHcal()==1);
-  REQUIRE(block2.countTracks()==1);
-  REQUIRE(block2.shortName()=="E1H1T1");
-  REQUIRE(block2.isActive()==TRUE);
-  REQUIRE(block2.elementIds()==ids2);
-  REQUIRE(block2.size()==3);
-  REQUIRE(Id::isBlock(block2.uniqueId())==TRUE);
-  REQUIRE(block2.findEdge(edge4.key()).key()==edge4.key());
+  REQUIRE(block2.countEcal() == 1);
+  REQUIRE(block2.countHcal() == 1);
+  REQUIRE(block2.countTracks() == 1);
+  REQUIRE(block2.shortName() == "E1H1T1");
+  REQUIRE(block2.isActive() == TRUE);
+  REQUIRE(block2.elementIds() == ids2);
+  REQUIRE(block2.size() == 3);
+  REQUIRE(Id::isBlock(block2.uniqueId()) == TRUE);
+  REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()));
-  REQUIRE(block2.edge(id4,id5).isLinked()==FALSE);
-  REQUIRE(block2.edge(id4,id6).distance()==0.1234);
-  
-  
+  REQUIRE(block2.edge(id4, id5).isLinked() == FALSE);
+  REQUIRE(block2.edge(id4, id6).distance() == 0.1234);
+
   return;
 }
-
-
 
 TEST_CASE("BlockSplitter") {
   IdType id1 = Id::makeEcalId();
   IdType id2 = Id::makeHcalId();
   IdType id3 = Id::makeTrackId();
-  
-  
+
   std::vector<Id::Type> ids{id1, id2, id3};
-  
+
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
   Edge edge2 = Edge(id2, id3, true, 0.00005);
-  
- 
+
   Edges edges;
-  
+
   edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
   edges.emplace(edge2.key(), std::move(edge2));
-  
+
   // create history nodes
   Nodes historyNodes;
   for (auto id : ids)
     historyNodes.emplace(id, std::move(PFNode(id)));
-  
+
   Nodes emptyNodes;
   auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
-  REQUIRE(blockbuilder.subGraphs().size()==1);
-  
+  REQUIRE(blockbuilder.subGraphs().size() == 1);
+
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
   for (auto& block : blockbuilder.moveBlocks()) {
     auto blocksplitter = BlockSplitter(to_unlink, block.second, emptyNodes);
-    REQUIRE(blocksplitter.blocks().size()==2);
+    REQUIRE(blocksplitter.blocks().size() == 2);
   }
-  
+
   return;
 }
 
+TEST_CASE("Merge") {
+
+  auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, Id::kEcalCluster);
+  auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, Id::kEcalCluster);
+  Clusters eclusters;
+  eclusters.emplace(cluster1.id(), cluster1);
+  eclusters.emplace(cluster2.id(), cluster2);
+  Clusters hclusters;
+  Tracks tracks;
+  Nodes nodes;
+  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto ruler = papas::EventRuler(testevent);
+  auto builder = MergedClusterBuilder (eclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() ==1);
+  for(auto mergedCluster : builder.mergedClusters() ) {
+  REQUIRE_THROWS(mergedCluster.second.size());         // not valid for merged cluster
+  REQUIRE_THROWS(mergedCluster.second.angularSize());  // not valid for merged cluster
+  REQUIRE(mergedCluster.second.energy() == 30.);
+  REQUIRE(mergedCluster.second.pt() == 30.);
+  REQUIRE(mergedCluster.second.subClusters().size() == 2);
+  REQUIRE(mergedCluster.second.theta() ==0);
+  REQUIRE(mergedCluster.second.position().Z() == 0.);
+  return;
+}
+}
+
+TEST_CASE("merge_pair") {
+  
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, Id::kHcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, Id::kHcalCluster);
+  Clusters hclusters;
+  hclusters.emplace(cluster1.id(), cluster1);
+  hclusters.emplace(cluster2.id(),cluster2);
+  Clusters eclusters;
+  Tracks tracks;
+  Nodes nodes;
+  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto ruler = papas::EventRuler(testevent);
+  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() ==1);
+  return;
+}
+
+TEST_CASE("merge_pair_away") {
+  
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kHcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
+  Clusters hclusters;
+  hclusters.emplace(cluster1.id(), cluster1);
+  hclusters.emplace(cluster2.id(),cluster2);
+  Clusters eclusters;
+  Tracks tracks;
+  Nodes nodes;
+  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto ruler = papas::EventRuler(testevent);
+  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() ==2);
+  return;
+}
+
+TEST_CASE("merge_different_layers") {
+  
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kEcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
+  Clusters hclusters;
+  Clusters eclusters;
+  hclusters.emplace(cluster1.id(), cluster1);
+  hclusters.emplace(cluster2.id(),cluster2);
+  
+  Tracks tracks;
+  Nodes nodes;
+  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto ruler = papas::EventRuler(testevent);
+  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() ==2);
+ 
+  return;
+}
+
+/*
+TEST_CASE("merge_inside") {
+  
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, Id::kEcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1.,0.1, 0.0), 0.055, Id::kEcalCluster);
+  Clusters hclusters;
+  Clusters eclusters;
+  hclusters.emplace(cluster1.id(), cluster1);
+  hclusters.emplace(cluster2.id(),cluster2);
+  
+  Tracks tracks;
+  Nodes nodes;
+  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto ruler = papas::EventRuler(testevent);
+  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() ==1);
+  for (auto c : builder.mergedClusters())
+    REQUIRE(c.second.isInside(TVector3(1, 0.06, 0));
+  
+  return;
+}*/
+
+/*TEST_CASE("merge_pair_away"
+  auto cluster1 = Cluster(20, TVector3(1,0,0), 0.04, Id::kHcalCluster);
+  auto cluster2 = Cluster(20, TVector3(1,1.1,0.0), 0.04, Id::kHcalCluster);
+  auto id = cluster1.id();
+  auto mergedCluster = Cluster(cluster1,Id::makeId(Id::itemType(id)));
+
+clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in'),
+            Cluster(20, TVector3(1,1.1,0.0), 0.04, 'hcal_in')]
+merge_clusters(clusters, 'hcal_in')
+self.assertEqual( len(clusters), 2 )
+self.assertEqual( len(clusters[0].subclusters), 1)
+self.assertEqual( len(clusters[1].subclusters), 1)
+
+def test_merge_different_layers(self):
+clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'ecal_in'),
+            Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in')]
+merge_clusters(clusters, 'hcal_in')
+self.assertEqual( len(clusters), 2)
+
+def test_inside(self):
+clusters = [ Cluster(20, TVector3(1, 0, 0), 0.055, 'hcal_in'),
+            Cluster(20, TVector3(1.,0.1, 0.0), 0.055, 'hcal_in')]
+merged_clusters = merge_clusters(clusters, 'hcal_in')
+self.assertEqual( len(merged_clusters), 1 )
+cluster = merged_clusters[0]
+self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0 , 0)) )
+self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0.1, 0)) )
+in_the_middle = cluster.is_inside(TVector3(1, 0.06, 0))
+self.assertTrue(in_the_middle[0])
+self.assertAlmostEqual(in_the_middle[1], 0.04000)
+self.assertFalse( cluster.is_inside(TVector3(1, 0.156, 0))[0]  )
+*/

@@ -21,19 +21,20 @@ class Detector;
 class DetectorElement;
 class SurfaceCylinder;
 
-class Simulator {
-  /** Simulator simulates particles and keeps a collection of the Particles and resulting Clusters, Tracks and
+  /** Simulator clas simulates particles and keeps a collection of the Particles and resulting Clusters, Tracks and
    of the relations (history) between them
    The Tracks and Clusters are created and then smeared (and stored separately). Clusters are separated into
    Ecal and Hcal collections.
    Simulator supports simulation of neutral and charged Hadrons and Photons.
-
+   
    Usage:
    Nodes history;
    auto sim = Simulator(CMSDetector, Nodes);
    SimParticle& ptc = sim.addParticle(211, M_PI / 2. + 0.5 , 0, 40. );
    sim.simulateHadron(ptc);
    */
+class Simulator {
+  
 
 public:
   /** Constructor

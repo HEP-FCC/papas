@@ -12,7 +12,7 @@ namespace papas {
 class Particle;
 class Cluster;
 
-/** The Calorimeter class  is the basis of HCAL and ECAL elements.
+/** The Calorimeter class is the basis of HCAL and ECAL elements.
     It contains virtual functions that must be implemented by users so as to be detector specific.
     Users must provide clusterSize/acceptance/energyResolution methods for the inheriting class
  */

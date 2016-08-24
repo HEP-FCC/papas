@@ -5,12 +5,12 @@
 \vspace*{2.5cm}
 
 \huge
-PODIO - the POD I/O Library
+PAPAS - Particle Simulation and Reconstruction C++
 
 \vspace{1.5cm}
 
 \normalsize
-Benedikt Hegner (CERN)
+FCCSW (CERN)
 
 \end{center}
 \end{titlepage}

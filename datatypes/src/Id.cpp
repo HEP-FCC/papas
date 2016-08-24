@@ -36,9 +36,24 @@ IdType Id::makeId(ItemType type, unsigned int uniqueid) {
   Type id = (((uint64_t)type) << bitshift) | uniqueid;
   s_counter++;
 
+  if(type==kNone)
+    std::cout<<"why?";
   // std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
   return id;
 }
+  
+  
+  Id::ItemType Id::itemType(papas::Layer layer) {
+    if (layer == papas::Layer::kEcal)
+      return ItemType::kEcalCluster;
+    else if (layer == papas::Layer::kHcal)
+      return ItemType::kHcalCluster;
+    else if (layer == papas::Layer::kTracker)
+      return ItemType::kTrack;
+    else
+      return ItemType::kNone;
+  }
+
 
 void Id::reset() { s_counter = 1; }
 
@@ -57,7 +72,7 @@ papas::Layer Id::layer(Type id) {
     return papas::Layer::kNone;
 }
 
-Id::ItemType Id::itemType(papas::Layer layer) {
+/*Id::ItemType Id::itemType(papas::Layer layer) {
   if (layer == papas::Layer::kEcal)
     return ItemType::kEcalCluster;
   else if (layer == papas::Layer::kHcal)
@@ -66,7 +81,7 @@ Id::ItemType Id::itemType(papas::Layer layer) {
     return ItemType::kTrack;
   else
     return ItemType::kNone;
-}
+}*/
 
 char Id::typeShortCode(IdType id) {
   std::string typelist = ".ehtprb....";
