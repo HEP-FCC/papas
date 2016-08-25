@@ -37,6 +37,8 @@ target_link_libraries(example_plot papascpp ${ROOT_LIBRARIES} datamodel datamode
 
 install(TARGETS example_simple DESTINATION bin)
 install(TARGETS example_loop DESTINATION bin)
+install(TARGETS example_debug DESTINATION bin)
+install(TARGETS example_plot DESTINATION bin)
 #install(TARGETS example_root DESTINATION bin)
 
 # --- adding tests for examples ------------------------------
