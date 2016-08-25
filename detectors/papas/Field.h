@@ -27,12 +27,12 @@ public:
    */
   Field(const VolumeCylinder&& volume, const Material&& material,
         double magnitude);  ///< allows the Material and Volume to be created on the fly
-  /** Constructor
-   *
-   * @param[in] volume The field cyclinders
-   * @param[in] material field material
-   * @param[in] magnitude field strength
-   */
+                            /** Constructor
+                             *
+                             * @param[in] volume The field cyclinders
+                             * @param[in] material field material
+                             * @param[in] magnitude field strength
+                             */
   Field(const VolumeCylinder& volume, const Material& material, double magnitude);
   double getMagnitude() const { return m_magnitude; };
 

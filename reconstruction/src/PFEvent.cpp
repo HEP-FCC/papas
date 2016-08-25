@@ -6,13 +6,13 @@
 //
 //
 
+#include "PFEvent.h"
 #include "Cluster.h"
 #include "Id.h"
 #include "MergedClusterBuilder.h"
 #include "PDebug.h"
 #include "PFBlock.h"
 #include "PFBlockBuilder.h"
-#include "PFEvent.h"
 #include "Path.h"
 #include "PrettyPrinter.h"
 #include "Simulator.h"  //temp
@@ -49,7 +49,6 @@ const Track& PFEvent::track(IdType id) const {
     return std::move(t);  // TODO produce error
   };
 }
-
 
 Ids PFEvent::elementIds() const {
   Ids ids;
@@ -89,20 +88,18 @@ std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent) {  // TODO mo
   os << " TR: " << pfevent.m_tracks << std::endl;
   return os;
 }
-  
-  const Cluster& PFEvent::ECALCluster(IdType id) const {
-    if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
-      return m_mergedEcals.at(id);
-    }
-    if (m_ecals.find(id) != m_ecals.end()) {
-      return m_ecals.at(id);
-    }
-    PDebug::write("problem with ECAL cluster not found :{}", id);
-    PDebug::flush();
-    throw std::range_error("Cluster not found in ECAL Clusters Collections");
-    
-  }
 
+const Cluster& PFEvent::ECALCluster(IdType id) const {
+  if (m_mergedEcals.find(id) != m_mergedEcals.end()) {
+    return m_mergedEcals.at(id);
+  }
+  if (m_ecals.find(id) != m_ecals.end()) {
+    return m_ecals.at(id);
+  }
+  PDebug::write("problem with ECAL cluster not found :{}", id);
+  PDebug::flush();
+  throw std::range_error("Cluster not found in ECAL Clusters Collections");
+}
 
 const Cluster& PFEvent::HCALCluster(IdType id) const {
   if (m_mergedHcals.find(id) != m_mergedHcals.end()) {
@@ -111,17 +108,15 @@ const Cluster& PFEvent::HCALCluster(IdType id) const {
     return m_hcals.at(id);
   }
   PDebug::write("problem with HCAL cluster not found :{}", id);
-  
+
   PDebug::flush();
-    throw std::range_error("Cluster not found in HCAL Clusters Collections");
-  
-  
+  throw std::range_error("Cluster not found in HCAL Clusters Collections");
 }
 
 const Cluster& PFEvent::cluster(IdType id) const {
   if (m_hcals.find(id) != m_hcals.end()) {
-    if (m_mergedHcals.find(id) != m_mergedHcals.end()
-        || m_mergedEcals.find(id) != m_mergedHcals.end()|| (m_ecals.find(id) != m_ecals.end())) {
+    if (m_mergedHcals.find(id) != m_mergedHcals.end() || m_mergedEcals.find(id) != m_mergedHcals.end() ||
+        (m_ecals.find(id) != m_ecals.end())) {
       throw "id is erroneously found in more than one collection";
     }
     return m_hcals.at(id);

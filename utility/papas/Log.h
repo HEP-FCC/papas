@@ -16,7 +16,7 @@
 #include <iostream>
 
 namespace papas {
-/** Logging class based on external speedy logging library spdlog 
+/** Logging class based on external speedy logging library spdlog
 *  https://github.com/gabime/spdlog
 */
 class Log {

@@ -10,8 +10,8 @@
 namespace papas {
 
 class Track;
-  /// Simulated particle
-  /// Inherits from Particle and contains additional information to decribe the path of the particle
+/// Simulated particle
+/// Inherits from Particle and contains additional information to decribe the path of the particle
 class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;

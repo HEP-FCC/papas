@@ -15,7 +15,6 @@
 
 namespace papas {
 
-
 /** Used to unqiuely identify all clusters, tracks, blocks etc in PAPAS and also used in Nodes which
  * store the history (linkages) between items
  *
@@ -32,7 +31,7 @@ namespace papas {
 class Id {
 public:
   Id(){};
-  typedef IdType Type;  
+  typedef IdType Type;
   /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kRecParticle, kBlock };
 

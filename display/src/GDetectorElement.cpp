@@ -24,8 +24,7 @@ void GDetectorElement::Draw(const std::string& projection) {
       box.Draw("samel");
     }
   } else if (projection.find("thetaphi") != projection.npos) {
-  }
-  else {
+  } else {
     throw std::range_error("Projection not recognised");
   }
 };

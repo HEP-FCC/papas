@@ -37,8 +37,7 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
       if (id1 >= id2) continue;
       // move the edge from one unordered map to the other
       auto e = edges.find(Edge::makeKey(id1, id2));
-      if (e==edges.end())
-        throw  std::range_error("Required Edge is missing from edges collection");
+      if (e == edges.end()) throw std::range_error("Required Edge is missing from edges collection");
       m_edges.emplace(e->second.key(), std::move(e->second));
       edges.erase(e);
     }
@@ -136,9 +135,8 @@ std::vector<Id::Type> PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetyp
   /// TODO think about sorting
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
-    auto found =m_edges.find(key);
-    if (found == m_edges.end())
-      throw  std::range_error("Required EdgeKey is missing from Linked Edges collection");
+    auto found = m_edges.find(key);
+    if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
     linkedIds.push_back(found->second.otherid(uniqueid));
   }
   // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](IdType a, IdType b) -> bool
@@ -219,9 +217,8 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)
   ///                        '''
-  auto found=m_edges.find(Edge::makeKey(id1, id2));
-  if (found==m_edges.end())
-    throw std::range_error("Required edge not found");
+  auto found = m_edges.find(Edge::makeKey(id1, id2));
+  if (found == m_edges.end()) throw std::range_error("Required edge not found");
   return found->second;
 }
 std::string PFBlock::info() const {
@@ -243,4 +240,3 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
 }
 
 }  // end namespace papas
-

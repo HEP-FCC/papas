@@ -16,7 +16,6 @@ class VolumeCylinder;
 ///
 class CMSTracker : public Tracker {
 public:
-  
   /** Constructor
    *
    * @param[in] volume The tracker cyclinders
@@ -27,8 +26,8 @@ public:
    * @param[in] volume The tracker cyclinders
    */
   CMSTracker(const VolumeCylinder& volume);
-  virtual double ptResolution(const Track& track) const override;   ///< describes tracker resolution of momentum
-  virtual bool acceptance(const Track& track) const override; ///< determines if a track is detected
+  virtual double ptResolution(const Track& track) const override;  ///< describes tracker resolution of momentum
+  virtual bool acceptance(const Track& track) const override;      ///< determines if a track is detected
   // TODO space_resolution(self, ptc):
 private:
 };

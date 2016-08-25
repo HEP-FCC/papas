@@ -45,10 +45,10 @@
 #include "pTrack.h"
 
 #include "BlockSplitter.h"
+#include "MergedClusterBuilder.h"
+#include "PFEvent.h"
 #include "PapasManager.h"
 #include "Random.h"
-#include "PFEvent.h"
-#include "MergedClusterBuilder.h"
 using namespace papas;
 
 TEST_CASE("Id") {  /// ID test
@@ -495,85 +495,85 @@ TEST_CASE("Merge") {
   Clusters hclusters;
   Tracks tracks;
   Nodes nodes;
-  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
   auto ruler = papas::EventRuler(testevent);
-  auto builder = MergedClusterBuilder (eclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() ==1);
-  for(auto mergedCluster : builder.mergedClusters() ) {
-  REQUIRE_THROWS(mergedCluster.second.size());         // not valid for merged cluster
-  REQUIRE_THROWS(mergedCluster.second.angularSize());  // not valid for merged cluster
-  REQUIRE(mergedCluster.second.energy() == 30.);
-  REQUIRE(mergedCluster.second.pt() == 30.);
-  REQUIRE(mergedCluster.second.subClusters().size() == 2);
-  REQUIRE(mergedCluster.second.theta() ==0);
-  REQUIRE(mergedCluster.second.position().Z() == 0.);
-  return;
-}
+  auto builder = MergedClusterBuilder(eclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() == 1);
+  for (auto mergedCluster : builder.mergedClusters()) {
+    REQUIRE_THROWS(mergedCluster.second.size());         // not valid for merged cluster
+    REQUIRE_THROWS(mergedCluster.second.angularSize());  // not valid for merged cluster
+    REQUIRE(mergedCluster.second.energy() == 30.);
+    REQUIRE(mergedCluster.second.pt() == 30.);
+    REQUIRE(mergedCluster.second.subClusters().size() == 2);
+    REQUIRE(mergedCluster.second.theta() == 0);
+    REQUIRE(mergedCluster.second.position().Z() == 0.);
+    return;
+  }
 }
 
 TEST_CASE("merge_pair") {
-  
+
   auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, Id::kHcalCluster);
   auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, Id::kHcalCluster);
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
-  hclusters.emplace(cluster2.id(),cluster2);
+  hclusters.emplace(cluster2.id(), cluster2);
   Clusters eclusters;
   Tracks tracks;
   Nodes nodes;
-  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
   auto ruler = papas::EventRuler(testevent);
-  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() ==1);
+  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() == 1);
   return;
 }
 
 TEST_CASE("merge_pair_away") {
-  
+
   auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kHcalCluster);
   auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
-  hclusters.emplace(cluster2.id(),cluster2);
+  hclusters.emplace(cluster2.id(), cluster2);
   Clusters eclusters;
   Tracks tracks;
   Nodes nodes;
-  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
   auto ruler = papas::EventRuler(testevent);
-  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() ==2);
+  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() == 2);
   return;
 }
 
 TEST_CASE("merge_different_layers") {
-  
+
   auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kEcalCluster);
   auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
   Clusters hclusters;
   Clusters eclusters;
   hclusters.emplace(cluster1.id(), cluster1);
-  hclusters.emplace(cluster2.id(),cluster2);
-  
+  hclusters.emplace(cluster2.id(), cluster2);
+
   Tracks tracks;
   Nodes nodes;
-  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
   auto ruler = papas::EventRuler(testevent);
-  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() ==2);
- 
+  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
+  REQUIRE(builder.mergedClusters().size() == 2);
+
   return;
 }
 
 /*
 TEST_CASE("merge_inside") {
-  
+
   auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, Id::kEcalCluster);
   auto cluster2 = Cluster(20., TVector3(1.,0.1, 0.0), 0.055, Id::kEcalCluster);
   Clusters hclusters;
   Clusters eclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(),cluster2);
-  
+
   Tracks tracks;
   Nodes nodes;
   auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
@@ -582,7 +582,7 @@ TEST_CASE("merge_inside") {
   REQUIRE(builder.mergedClusters().size() ==1);
   for (auto c : builder.mergedClusters())
     REQUIRE(c.second.isInside(TVector3(1, 0.06, 0));
-  
+
   return;
 }*/
 

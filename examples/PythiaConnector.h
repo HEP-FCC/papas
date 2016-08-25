@@ -39,8 +39,9 @@ class PythiaConnector {
 public:
   PythiaConnector(const char* fname);
   void writeParticlesROOT(const char* fname, const papas::Particles& particles);
-  void processEvent(unsigned int eventNo, papas::PapasManager& papasManager); ///<reads and processes a Pythia event
-  papas::Particles makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
+  void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
+  papas::Particles makePapasParticlesFromGeneratedParticles(
+      const fcc::ParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
 
 private:
   podio::EventStore m_store;

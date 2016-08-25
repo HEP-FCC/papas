@@ -30,15 +30,15 @@ public:
    * @param[in] layer : enum kEcal, kHcal, kTrack, kField
    */
   std::shared_ptr<const DetectorElement> element(papas::Layer layer) const;
-  ///return the ecal or hcal
+  /// return the ecal or hcal
   /** Returns ecal or hcal
    * @param[in] layer : enum kEcal, kHcal
    */
   std::shared_ptr<const Calorimeter> calorimeter(papas::Layer layer) const;
-  std::shared_ptr<const Calorimeter> ecal() const { return m_ecal; } ///<access the ecal
-  std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; } ///<access the hcal
-  std::shared_ptr<const Tracker> tracker() const { return m_tracker; } ///<access the tracker
-  std::shared_ptr<const Field> field() const { return m_field; }; ///<access the field
+  std::shared_ptr<const Calorimeter> ecal() const { return m_ecal; }    ///<access the ecal
+  std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
+  std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
+  std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
 
 protected:
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class

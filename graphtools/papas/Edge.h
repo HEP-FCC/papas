@@ -4,17 +4,16 @@
 #include "Id.h"
 #include <iostream>
 
-
 namespace papas {
-  /** 
-   *
-   *  @brief An Edge stores end node ids, distance between the nodes, and whether they are linked
-   *
-   *  Example usage: Edge e = Edge(obj1.unqiueid, obj2.uniqueid, True, 0.0);
-   *
-   *  @author  Alice Robson
-   *  @date    2016-04-05
-   */
+/**
+ *
+ *  @brief An Edge stores end node ids, distance between the nodes, and whether they are linked
+ *
+ *  Example usage: Edge e = Edge(obj1.unqiueid, obj2.uniqueid, True, 0.0);
+ *
+ *  @author  Alice Robson
+ *  @date    2016-04-05
+ */
 
 class Edge {
 public:

@@ -6,11 +6,11 @@
 //
 //
 #include "BlockBuilder.h"
-#include "PFBlock.h"
 #include "Definitions.h"
 #include "DirectedAcyclicGraph.h"
 #include "FloodFill.h"
 #include "PDebug.h"
+#include "PFBlock.h"
 
 namespace papas {
 
@@ -25,10 +25,10 @@ void BlockBuilder::makeBlocks() {
    */
 
   for (auto& elementIds : m_subGraphs) {
-    if (elementIds.size()>1) {
+    if (elementIds.size() > 1) {
       sortIds(elementIds);  // TODO allow sorting by energy using a helper class
     }
-    auto block = PFBlock(elementIds, m_edges); // make the block
+    auto block = PFBlock(elementIds, m_edges);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.uniqueId();
@@ -54,8 +54,6 @@ std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
   }
   return os;
 }
-
-
 
 /* keep for now as might just be useful if we want to sort by energy
  bool BlockBuilder::compareEdges(long long key1, long long key2, IdType uniqueid) const//TODO check direction of sort

@@ -36,13 +36,13 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   // each track will end up linked to at most one hcal
 
   // sort the blocks by id to ensure match with python
-  std::vector<IdType > blockids;
+  std::vector<IdType> blockids;
   for (const auto& b : blocks) {
     blockids.push_back(b.first);
     // std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
   }
   std::sort(blockids.begin(), blockids.end());
- 
+
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated

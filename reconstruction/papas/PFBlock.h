@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string>
 
-
 namespace papas {
 
 /** A Particle Flow Block (PFBlock) stores a set of element ids that are connected to each other
@@ -27,7 +26,6 @@ namespace papas {
  block = PFBlock(element_ids,  edges, pfevent)
  os << block;
  */
-
 
 class PFBlock {
 

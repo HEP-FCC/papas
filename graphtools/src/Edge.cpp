@@ -69,4 +69,3 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 }
 
 }  // end namespace papas
-

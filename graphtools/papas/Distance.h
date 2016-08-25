@@ -15,7 +15,7 @@ namespace papas {
 
 class Track;
 class Cluster;
-  /// determines the distance between clusters or clusters and tracks
+/// determines the distance between clusters or clusters and tracks
 class Distance {
 public:
   Distance();

@@ -25,7 +25,7 @@ public:
    *
    * @param[in] volume the field cyclinders
    * @param[in] magnitude field strength
-   */  CMSField(const VolumeCylinder& volume, double magnitude);
+   */ CMSField(const VolumeCylinder& volume, double magnitude);
 
 private:
 };

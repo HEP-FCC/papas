@@ -240,7 +240,7 @@ const Cluster& Simulator::storeHcalCluster(Cluster&& cluster, IdType parentId) {
 Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLayer) {
   // detectorLayer will be used to choose which detector layer is used for energy resolution etc.
   // NB It is not always the same layer as the new smeared cluster
-  if (detectorLayer == papas::Layer::kNone) detectorLayer = Id::layer(parent.id()); //default to same layer as cluster
+  if (detectorLayer == papas::Layer::kNone) detectorLayer = Id::layer(parent.id());  // default to same layer as cluster
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detectorLayer);
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());

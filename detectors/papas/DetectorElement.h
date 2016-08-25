@@ -36,8 +36,8 @@ public:
 
 protected:
   VolumeCylinder m_volume;  ///< The cyclinders describing the detector element
-  Material m_material; ///< material for the detector element
-  Layer m_layer;  ///< eg kEcal, kHcal
+  Material m_material;      ///< material for the detector element
+  Layer m_layer;            ///< eg kEcal, kHcal
 
 private:
 };

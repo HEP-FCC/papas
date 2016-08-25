@@ -23,11 +23,11 @@ private:
   double m_lambdaI;
 };
 
-  /*// Temporary //TODO
+/*// Temporary //TODO
 class TestMaterial : public Material {
 public:
-  TestMaterial(double x0, double lambda);
-  double PathLength();
+TestMaterial(double x0, double lambda);
+double PathLength();
 
 private:
 };*/

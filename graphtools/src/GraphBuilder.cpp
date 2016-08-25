@@ -5,8 +5,7 @@
 #include "PDebug.h"
 namespace papas {
 
-
-  GraphBuilder::GraphBuilder(Ids ids, Edges& edges) : m_edges(edges), m_elementIds(ids) {
+GraphBuilder::GraphBuilder(Ids ids, Edges& edges) : m_edges(edges), m_elementIds(ids) {
 
   // create local nodes ready to use to make the blocks
   for (auto id : ids) {

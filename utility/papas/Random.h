@@ -13,12 +13,12 @@
 /**Wrapper for random generators which allows reproducibility of numbers from C++ and from Python via library call
 */
 namespace randomgen {
-  ///global device
+/// global device
 extern std::random_device rdevice;
-  ///global setting of seed
+/// global setting of seed
 extern void setEngineSeed(double seed = rdevice());
 
-  ///Generates random numbers from Uniform distribution
+/// Generates random numbers from Uniform distribution
 class RandUniform {
 public:
   /// If a seed if given this will start from a known point and thus be repeatable

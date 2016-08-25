@@ -23,7 +23,7 @@ class PFEvent;
 class Detector;
 class GDetector;
 
-  /// Experimental Wrapper for display to allow graphs to be plotted
+/// Experimental Wrapper for display to allow graphs to be plotted
 class PFApp {
 public:
   PFApp();
@@ -34,20 +34,20 @@ public:
     gPad->Modified();
     gPad->Update();
     gSystem->ProcessEvents();
-    //m_theApp.Run(k);
+    // m_theApp.Run(k);
   }
   void terminate() {
-    std::cout <<"Terminate";
-    //m_theApp.Terminate();
+    std::cout << "Terminate";
+    // m_theApp.Terminate();
   }
-   
+
 private:
   Int_t m_argc;  // dummy arguments
   char* m_str[1];
-  //TApplication m_theApp;
-  //PFEventDisplay m_display;  // make shared
+  // TApplication m_theApp;
+  // PFEventDisplay m_display;  // make shared
   std::shared_ptr<GDetector> m_gdetector;
-  PFEventDisplay* m_display ;
+  PFEventDisplay* m_display;
 };
 
 }  // end namespace papas

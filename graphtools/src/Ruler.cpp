@@ -16,7 +16,7 @@ namespace papas {
 Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& cluster2) const {
   /// Decides whether these are merged clusters or a simple cluster.
   if (cluster1.subClusters().size() <= 1 && cluster2.subClusters().size() <= 1) {
-    return Distance(cluster1, cluster2); /// If both are simple clusters then returns the distance between the two
+    return Distance(cluster1, cluster2);  /// If both are simple clusters then returns the distance between the two
   } else {
     /// Otherwise deal with merged cluster(s).
     /// Examine all cluster cluster distances within the subclusters
@@ -24,11 +24,10 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
     std::vector<double> allDistances;
     std::vector<double> linkedDistances;
     bool isLinked = false;
-    
-    
+
     for (const auto c1 : cluster1.subClusters()) {
       for (const auto c2 : cluster2.subClusters()) {
-        Distance d = clusterClusterDistance(*c1, *c2); // recursive call
+        Distance d = clusterClusterDistance(*c1, *c2);  // recursive call
         allDistances.push_back(d.distance());
         if (d.isLinked()) {
           linkedDistances.push_back(d.distance());

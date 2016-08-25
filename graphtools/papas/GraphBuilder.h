@@ -8,9 +8,10 @@ namespace papas {
 
 class PFEvent;
 
-/** 
+/**
  *
- * GraphBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link /true/false) info.
+ * GraphBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link
+/true/false) info.
  * The graph can be thought of as having the ids as the nodes and the edges as the connecting lines.
  * It uses the distances/links between elements to construct a set of connected blocks.
  * Each element will end up in one (and only one) block.
@@ -42,11 +43,12 @@ public:
   GraphBuilder(Ids ids, Edges& edges);
   GraphBuilder& operator=(const GraphBuilder&);
 
-  ///returns a vector containing vectors of Ids each of which is a subgraph
-  const std::vector<Ids> subGraphs() const {return m_subGraphs;};
+  /// returns a vector containing vectors of Ids each of which is a subgraph
+  const std::vector<Ids> subGraphs() const { return m_subGraphs; };
+
 protected:
-  void sortIds(Ids& ids);  ///<sorted by IdType
-  Edges& m_edges; ///< must contain all edges corresponding to all pairs of ids for ids in m_elementIda
+  void sortIds(Ids& ids);        ///<sorted by IdType
+  Edges& m_edges;                ///< must contain all edges corresponding to all pairs of ids for ids in m_elementIda
   std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
 private:
   Ids m_elementIds;    ///<uniqueids to be grouped into subgraphs

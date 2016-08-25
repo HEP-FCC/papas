@@ -9,13 +9,13 @@
 namespace papas {
 class PFEvent;
 
-  /// The PFBlockBuilder takes a PFEvent and a set of ids (all of which must be in the PFEvent)
-  /// It uses the PFEvent to access the elements corresponding to each id
-  /// It proceeds by creating a collection of all possible edges (between ids)
-  /// The blockbuilder is then used to create a set of distinct blocks, and the
-  /// blocks look after the corresponding parts of the edges information.
-  /// Class to create blocks of connected elements from a PF event eg connected tracs and clusters.
-  /// It creates what is needed in order to call BlockBuilder
+/// The PFBlockBuilder takes a PFEvent and a set of ids (all of which must be in the PFEvent)
+/// It uses the PFEvent to access the elements corresponding to each id
+/// It proceeds by creating a collection of all possible edges (between ids)
+/// The blockbuilder is then used to create a set of distinct blocks, and the
+/// blocks look after the corresponding parts of the edges information.
+/// Class to create blocks of connected elements from a PF event eg connected tracs and clusters.
+/// It creates what is needed in order to call BlockBuilder
 class PFBlockBuilder {
 public:
   /** Constructor

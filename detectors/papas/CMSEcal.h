@@ -21,7 +21,6 @@ class VolumeCylinder;
 ///
 /// CMSECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution etc methods
 
-
 class CMSECAL : public Calorimeter {
 public:
   // AJRTODO check whether both constructors are needed

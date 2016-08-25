@@ -12,11 +12,11 @@
 #include "PDebug.h"
 
 namespace papas {
-  /// Main Particle class
-  ///
-  /// Contains 4-momentum vector, particle id and accessor functions
-  /// Intended to be used as the base for derived Particle classes
-  
+/// Main Particle class
+///
+/// Contains 4-momentum vector, particle id and accessor functions
+/// Intended to be used as the base for derived Particle classes
+
 class Particle {
 public:
   Particle();

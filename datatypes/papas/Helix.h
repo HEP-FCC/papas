@@ -12,7 +12,7 @@
 #include "Path.h"
 
 namespace papas {
-/// Decribes helix path of charged particles 
+/// Decribes helix path of charged particles
 class Helix : public Path {
 public:
   Helix();

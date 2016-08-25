@@ -15,8 +15,7 @@
 #include <stdio.h>
 
 namespace papas {
-  
-  
+
 /// Cluster class for use with raw and merged clusters
 
 class Cluster {
@@ -31,9 +30,9 @@ public:
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster to be copied
    @param[in]  id new unique id to be provided by user
-   
+
    example usage:
-   
+
    IdType newid =Id::makeId(Id::kEcalCluster)
    auto mergedCluster = Cluster(clusters.at(id), newid);
    */
@@ -43,9 +42,9 @@ public:
   Cluster(Cluster&& c) = default;
   Cluster(const Cluster& cluster) = default;
   Cluster& operator=(const Cluster&) = default;
-  Cluster& operator+=(const Cluster& rhs); ///< merges a cluster into an existing cluster
-  double angularSize() const ;
-  double size() const ;
+  Cluster& operator+=(const Cluster& rhs);  ///< merges a cluster into an existing cluster
+  double angularSize() const;
+  double size() const;
   double pt() const { return m_pt; }
   double energy() const { return m_energy; }
   double eta() const { return m_p3.Eta(); }
@@ -55,10 +54,10 @@ public:
   void setEnergy(double energy);
   void setSize(double value);
   const std::vector<const Cluster*>& subClusters() const { return m_subClusters; };
-  std::string info() const; ///< returns a text descriptor of the cluster
+  std::string info() const;  ///< returns a text descriptor of the cluster
   /// static that returns max cluster energy
-  static double maxEnergy() { return s_maxEnergy;};
- 
+  static double maxEnergy() { return s_maxEnergy; };
+
 protected:
   IdType m_uniqueId;
   double m_size;
@@ -66,8 +65,8 @@ protected:
   double m_pt;
   TVector3 m_p3;
   double m_energy;
-  std::vector<const Cluster*> m_subClusters; ///< A cluster may be a merging of subClusters
-  static double s_maxEnergy; ///< Maximum energy over all clusters
+  std::vector<const Cluster*> m_subClusters;  ///< A cluster may be a merging of subClusters
+  static double s_maxEnergy;                  ///< Maximum energy over all clusters
 };
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster);

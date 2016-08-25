@@ -6,7 +6,6 @@
 //  Copyright © 2015 CERN. All rights reserved.
 //
 
-
 #ifndef DirectedAcyclicGraph_h
 #define DirectedAcyclicGraph_h
 
@@ -78,8 +77,8 @@ using Nodevector = std::vector<const N*>;  ///<vector of Nodes typically used to
 template <typename N>  // N is the templated Node
 class Visitor {
 public:
-  Visitor();  ///<Constructor
-  virtual void visit(const N* node) = 0; ///< Key function for visitor pattern
+  Visitor();                              ///<Constructor
+  virtual void visit(const N* node) = 0;  ///< Key function for visitor pattern
 
   /// returns vector of all child nodes (including the start node and all children of children)
   virtual const Nodevector<N>& traverseChildren(const N& startnode, int depth) = 0;
@@ -122,8 +121,8 @@ protected:
   void addParent(Node& node) { m_parents.insert(&node); }  // private as only available via addChild
 };
 
-  /// Breadth First Search implementation of BFSVisitor (iterative)
-  /// @tparam N the Node
+/// Breadth First Search implementation of BFSVisitor (iterative)
+/// @tparam N the Node
 template <typename N>
 class BFSVisitor : public Visitor<N> {
 public:
@@ -136,12 +135,11 @@ public:
 protected:
   Nodeset<N> m_visited;    ///< which nodes have been visited (reset each time a traversal is made)
   Nodevector<N> m_result;  ///< the list of nodes that are linked and that will be returned
-  
+
   /// @enum Whether to seek for linked Children , Parents or both
   enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };  ///< internal enumeration
 
-  virtual void traverse(const DAG::Nodeset<N>& nodes, BFSVisitor<N>::enumVisitType visittype,
-                        int depth);
+  virtual void traverse(const DAG::Nodeset<N>& nodes, BFSVisitor<N>::enumVisitType visittype, int depth);
   bool alreadyVisited(const N* node) const;
 };
 

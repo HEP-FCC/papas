@@ -54,5 +54,4 @@ std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
  #set the original block to be inactive*/
 #include "Id.h"
 
-
 }  // end namespace papas

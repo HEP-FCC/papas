@@ -22,21 +22,22 @@ Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType i
 
 void Cluster::setSize(double value) {
   m_size = value;
-  if (m_p3.Mag()==0)
-    throw "Undefined angularsize for zero momentum";
+  if (m_p3.Mag() == 0) throw "Undefined angularsize for zero momentum";
   m_angularSize = atan(m_size / m_p3.Mag());
 }
-  
-  double Cluster::angularSize() const {
-    if (m_subClusters.size()<2)  {
-      return m_angularSize; }
-    else throw "angularSize is not a valid measurement for a merged cluster";
-  }
-  double Cluster::size() const {
-    if (m_subClusters.size()<2)  {
-      return m_size; }
-    else throw "size is not a valid measurement for a merged cluster";
-  }
+
+double Cluster::angularSize() const {
+  if (m_subClusters.size() < 2) {
+    return m_angularSize;
+  } else
+    throw "angularSize is not a valid measurement for a merged cluster";
+}
+double Cluster::size() const {
+  if (m_subClusters.size() < 2) {
+    return m_size;
+  } else
+    throw "size is not a valid measurement for a merged cluster";
+}
 void Cluster::setEnergy(double energy) {
   m_energy = energy;
   if (energy > s_maxEnergy) s_maxEnergy = energy;
@@ -51,7 +52,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
   m_energy = m_energy + rhs.energy();
-  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy; //ajr not sure if this is needed at all?
+  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // ajr not sure if this is needed at all?
   double denom = 1. / m_energy;
   m_p3 *= denom;
   if (rhs.subClusters().size() > 1) {

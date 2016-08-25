@@ -5,6 +5,7 @@
 //  Created by Alice Robson on 07/06/16.
 //
 //
+#include "MergedClusterBuilder.h"
 #include "Cluster.h"
 #include "Definitions.h"
 #include "DefinitionsCollections.h"
@@ -13,7 +14,6 @@
 #include "EventRuler.h"
 #include "GraphBuilder.h"
 #include "Id.h"
-#include "MergedClusterBuilder.h"
 #include "PDebug.h"
 
 namespace papas {
@@ -49,7 +49,8 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
     auto id = ids[0];
     if (ids.size() > 1) {
       for (const auto& c : ids) {
-        PDebug::write("Merged Cluster from Smeared{}", clusters.at(c)); //hmmm not quite right we don't really know it is smeared
+        PDebug::write("Merged Cluster from Smeared{}",
+                      clusters.at(c));  // hmmm not quite right we don't really know it is smeared
       }
     }
 

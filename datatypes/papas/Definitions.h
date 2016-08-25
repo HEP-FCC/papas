@@ -18,7 +18,7 @@ typedef uint64_t IdType;
 enum Position { kVertex, kEcalIn, kEcalOut, kEcalDecay, kHcalIn, kHcalOut };
 /// detector layers
 enum Layer { kNone, kTracker, kEcal, kHcal, kField };
-  //enum SubType { kNONE, RAW, MERGED, SMEARED };  // TODO could this go in clusters class
+// enum SubType { kNONE, RAW, MERGED, SMEARED };  // TODO could this go in clusters class
 // enum enumSource { NONE, SIMULATION, RECONSTRUCTION, OBSERVED };  // TODO get rid
 }
 

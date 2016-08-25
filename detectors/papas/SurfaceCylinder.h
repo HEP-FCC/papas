@@ -19,9 +19,9 @@ public:
    * @param[in] double z : cyclinder maximum z value
    */
   SurfaceCylinder(papas::Position clayer, double rad = 0., double z = 0.);
-  double z() const { return m_z; };  ///<z value
-  double radius() const { return m_radius; } ///<cyclinder radius
-  papas::Position layer() const { return m_layer; } ///<cyclinder layer
+  double z() const { return m_z; };                  ///<z value
+  double radius() const { return m_radius; }         ///<cyclinder radius
+  papas::Position layer() const { return m_layer; }  ///<cyclinder layer
 
 private:
   papas::Position m_layer;

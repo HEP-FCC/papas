@@ -20,7 +20,7 @@ namespace papas {
 /// Path base class is essentially straightline but can be inherited from to make Helix etc
 ///
 class Path {
-  public:
+public:
   typedef std::map<papas::Position, TVector3> Points;
 
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
@@ -52,7 +52,7 @@ protected:
 private:
 };
 
-  ///Alternative name for Path class
+/// Alternative name for Path class
 class StraightLine : public Path {
   using Path::Path;
 };

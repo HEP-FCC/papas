@@ -12,7 +12,6 @@ namespace papas {
 
 Detector::Detector() {}
 
-
 std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const {
   switch (layer) {
   case papas::Layer::kEcal:
@@ -39,7 +38,6 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
     throw std::range_error("TODO: Detector Element Layer not found");
     // TODO add track and field
   }
-
 }
 
 }  // end namespace papas

@@ -12,20 +12,16 @@ namespace papas {
 VolumeCylinder::VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad, double innerz)
     : m_outer(papas::Position::kHcalOut, outerrad, outerz), m_inner(papas::Position::kHcalIn, innerrad, innerz) {
 
-      
-      if (innerrad > outerrad) {
-        throw "ERROR: outer radius of subtracted cylinder must be smaller";
-      } else if (innerz > outerz) {
-        throw  "ERROR: outer z of subtracted cylinder must be smaller";
-      }
-      
+  if (innerrad > outerrad) {
+    throw "ERROR: outer radius of subtracted cylinder must be smaller";
+  } else if (innerz > outerz) {
+    throw "ERROR: outer z of subtracted cylinder must be smaller";
+  }
+
   if (layer == papas::Layer::kEcal) {
     m_outer = SurfaceCylinder(papas::Position::kEcalOut, outerrad, outerz);
     m_inner = SurfaceCylinder(papas::Position::kEcalIn, innerrad, innerz);
   }
-
-
-  
 }
 
 VolumeCylinder::~VolumeCylinder() {}
