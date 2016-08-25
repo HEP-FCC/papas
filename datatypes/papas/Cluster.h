@@ -39,7 +39,7 @@ public:
   Cluster(const Cluster& cluster, IdType id);
   Cluster() = default;
   ~Cluster() = default;
-  Cluster(Cluster&& c) = default;
+  Cluster(Cluster&& c) ;
   Cluster(const Cluster& cluster) = default;
   Cluster& operator=(const Cluster&) = default;
   Cluster& operator+=(const Cluster& rhs);  ///< merges a cluster into an existing cluster

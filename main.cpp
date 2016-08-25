@@ -26,9 +26,9 @@ int longrun(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
 
-  return example(argc, argv);
-  // return example2(argc, argv);
-  // return longrun(argc, argv);
+  //return example(argc, argv);
+  //return example2(argc, argv);
+  return longrun(argc, argv);
 }
 
 int example(int argc, char* argv[]) {
@@ -87,16 +87,22 @@ int example2(int argc, char* argv[]) {
 
 int longrun(int argc, char* argv[]) {
 
-  // PDebug::On();  // physics debug output
+ 
   randomgen::setEngineSeed(0xdeadbeef);
 
-  if (argc != 2) {
-    std::cerr << "Usage: ./mainexe filename" << std::endl;
+  if (argc < 2) {
+    std::cerr << "Usage: ./mainexe filename [logname]" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   auto pythiaConnector = PythiaConnector(fname);
 
+  if (argc == 3) {
+    const char* lname = argv[2];
+    PDebug::On(lname);  // physics debug output
+  }
+  
+  
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};

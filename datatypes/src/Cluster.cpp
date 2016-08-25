@@ -15,10 +15,45 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType idtype)
-    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters{this} {
+    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
+  m_subClusters.push_back(this);
 }
+  
+  Cluster::Cluster(const Cluster& c, IdType id)
+  : m_uniqueId(id),
+  m_size(c.m_size),
+  m_angularSize(c.m_angularSize),
+  m_pt(c.m_pt),
+  m_energy(c.m_energy),
+  m_subClusters() {
+    m_p3 = c.m_p3;
+    m_subClusters.push_back(&c);
+  }
+  
+  Cluster::Cluster(Cluster&& c)
+  : m_uniqueId(c.id()),
+  m_size(c.m_size),
+  m_angularSize(c.m_angularSize),
+  m_pt(c.m_pt),
+  m_energy(c.m_energy),
+  m_subClusters() {
+    m_p3 = c.m_p3;
+    
+    //Moving a Cluster is a little tricky because must make sure that
+    //the subclusters are pointing to something that has already been moved
+    //This is a disadvantage of using Cluster class to deal with both
+    // "cluster" and "mergedcluster" and it may infact be better to have the
+    // subclusters empty for a non-merged cluster
+    //For a non merged cluster the subcluster points to itself.
+    if (c.subClusters().size()==1 && c.id()==c.subClusters()[0]->id())
+      m_subClusters.push_back(this); //non merged cluster point to itself
+    else
+      for (auto s : c.subClusters()) //merged clusters
+        m_subClusters.push_back(s);
+  }
+
 
 void Cluster::setSize(double value) {
   m_size = value;
@@ -65,20 +100,13 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
-Cluster::Cluster(const Cluster& c, IdType id)
-    : m_uniqueId(id),
-      m_size(c.m_size),
-      m_angularSize(c.m_angularSize),
-      m_pt(c.m_pt),
-      m_energy(c.m_energy),
-      m_subClusters() {
-  m_p3 = c.m_p3;
-  m_subClusters.push_back(&c);
-}
+
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
   os << " sub(";
+  if (cluster.subClusters().size()==0)
+    std::cout <<"hmmm";
   for (auto c : cluster.subClusters()) {
     os << Id::pretty(c->id()) << ", ";
   }
