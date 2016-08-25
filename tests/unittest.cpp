@@ -394,7 +394,7 @@ TEST_CASE("Edges") {
   REQUIRE(edge1.isLinked() == true);
   REQUIRE(edge.isLinked() == false);
   // NB ids are ordered when stored so may be the opposite way around to the constructor
-  REQUIRE(((edge1.id1() == id1 && edge1.id2() == id2) || (edge1.id2() == id1 && edge1.id1() == id2)) == FALSE);
+  REQUIRE(((edge1.id1() == id1 && edge1.id2() == id2) || (edge1.id2() == id1 && edge1.id1() == id2)) == false);
   return;
 }
 
@@ -421,7 +421,7 @@ TEST_CASE("PFBlocks") {
 
   Edges edges;
   REQUIRE(edge1.distance() == 10030);
-  REQUIRE(edge.isLinked() == FALSE);
+  REQUIRE(edge.isLinked() == false);
 
   edges.emplace(edge.key(), std::move(edge));
   edges.emplace(edge1.key(), std::move(edge1));
@@ -436,14 +436,14 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.countHcal() == 1);
   REQUIRE(block2.countTracks() == 1);
   REQUIRE(block2.shortName() == "E1H1T1");
-  REQUIRE(block2.isActive() == TRUE);
+  REQUIRE(block2.isActive() == true);
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
-  REQUIRE(Id::isBlock(block2.uniqueId()) == TRUE);
+  REQUIRE(Id::isBlock(block2.uniqueId()) == true);
   REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()));
-  REQUIRE(block2.edge(id4, id5).isLinked() == FALSE);
+  REQUIRE(block2.edge(id4, id5).isLinked() == false);
   REQUIRE(block2.edge(id4, id6).distance() == 0.1234);
 
   return;
