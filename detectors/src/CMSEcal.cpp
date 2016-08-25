@@ -23,12 +23,6 @@ CMSECAL::CMSECAL(const VolumeCylinder&& volume, const Material&& material, doubl
                  const std::vector<std::vector<double>> eres)
     : Calorimeter(Layer::kEcal, volume, material), m_etaCrack(eta_crack), m_emin(emin), m_eres(eres) {}
 
-// will need to be rewritten for different detectors
-/**
- Cluster_size as a function of the type of particle
- @param ptc particle
- @return size of resulting cluster
- */
 double CMSECAL::clusterSize(const Particle& ptc) const {
 
   int pdgid = abs(ptc.pdgId());

@@ -15,27 +15,32 @@
 #include <iostream>
 
 namespace papas {
-
+/// Takes a collection of clusters and produces a collection of merged clusters.
+/// The MergedClusterBuilder creates a collection of edges describing the distances between
+/// every possible pair of clusters.
+/// The cluster ids and corresponding edges are then passed to GraphBuilder which
+/// returns a set of blocks, each block is a set of overlapping clusters and if it
+/// contains more than one element forms a new merged cluster.
+/// The mergedcluster is created by making a new cluster and adding in each of the overlapping clusters
+/// The ids of these clusters are stored in the subClusters vector of the Cluster class.
+///
 class MergedClusterBuilder {
 public:
   /** Constructor
    TODO update docs
-   * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
-   * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
-   *            an edge records the distance and links between two ids
-   * @param[inout] historyNodes : optional unordered_map that describes which elements are parents of which blocks
-   *                     if a history_nodes tree is provided then
-   *                     the new history will be added into the exisiting history
+   * @param[in] clusters : collections of clusters
+   * @param[in] ruler : measures distance between clusters
+   * @param[inout] historyNodes : unordered_map that describes which elements are parents of which blocks
+   *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
+   *                     if it is empty it will be ignored
    */
   MergedClusterBuilder(const Clusters& clusters, EventRuler& ruler, Nodes& historyNodes);
-  // const Ids elementIds() const { return m_elementIds;};///< return the blockbuilders element ids
   Clusters& mergedClusters() { return m_merged; }
   Nodes& historyNodes() { return m_historyNodes; }
 
 private:
-  void makeMergedClusters();  // does the main work
-  Clusters m_merged;          ///< the merged Clusters
-  Nodes& m_historyNodes;      ///<optional, allows history to be updated
+  Clusters m_merged;      ///< the merged Clusters
+  Nodes& m_historyNodes;  ///<optional, allows history to be updated
 };
 }  // end namespace papas
 

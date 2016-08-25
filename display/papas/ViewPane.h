@@ -14,9 +14,8 @@
 
 namespace papas {
 
-/// ViewPane Class
 /**
- * Class to manage provide a window in which to display graphs
+ * Class to provide a ROOT canvas window in which to display graphs
  */
 class ViewPane {
 public:
@@ -32,6 +31,7 @@ public:
   void draw();
   void zoom(double xmin, double xmax, double ymin, double ymax);
   void unZoom();
+  void saveAs(const char* fname);
 
   /// Static counter to say how many viewpanes there are in total
   static int nviews;

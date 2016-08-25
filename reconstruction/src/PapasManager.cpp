@@ -36,7 +36,7 @@ void PapasManager::simulateEvent(Particles&& particles) {
   for (const auto& id : ids) {
     // std::cout << id<< m_particles.at(id)<<std::endl;
     m_history.emplace(id, std::move(PFNode(id)));  ///< insert the raw particle ids into the history
-    m_simulator.SimulateParticle(m_particles.at(id), id);
+    m_simulator.simulateParticle(m_particles.at(id), id);
   }
   m_pfEvent.mergeClusters();
 }
@@ -63,14 +63,16 @@ void PapasManager::clear() {
   Id::reset();
 }
 
-void PapasManager::display() {
+void PapasManager::display(bool jpg) {
 
-  PFApp myApp{};
+  PFApp myApp{}; // I think this should turn into a PapasManager member
+  
   myApp.display(m_simulator, m_pfEvent, m_particles, m_detector);
-  // myApp.display2(m_simulator, m_pfEvent, m_particles, m_detector);
-
-  myApp.run();
-  std::cout << "finish";
+  if (jpg)
+    myApp.jpg();
+ 
 }
+  
+
 
 }  // end namespace papas

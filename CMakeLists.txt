@@ -65,9 +65,9 @@ add_definitions(-Wno-unused-variable -Wno-unused-parameter -pthread)
 include(CTest)
 
 #--- target for Doxygen documentation ------------------------------------------
-if(papas_documentation)
+#if(papas_documentation)
     include(cmake/papasDoxygen.cmake)
-endif()
+#endif()
 
 
 #--- add version files ---------------------------------------------------------
@@ -87,7 +87,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 
 
 add_subdirectory(papascpp)
-add_subdirectory(main)
+#add_subdirectory(main)
 add_subdirectory(examples)
 #add_subdirectory(graphtools)
 

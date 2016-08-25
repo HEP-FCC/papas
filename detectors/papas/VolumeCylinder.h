@@ -18,9 +18,9 @@ class VolumeCylinder {
 public:
   VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad = 0., double innerz = 0.);
   bool contains(const TVector3& point) const;
-  const SurfaceCylinder& inner() const { return m_inner; }
-  const SurfaceCylinder& outer() const { return m_outer; }
-  papas::Position innerLayer() const { return m_inner.layer(); }
+  const SurfaceCylinder& inner() const { return m_inner; }        ///< inner cyclinder of volume
+  const SurfaceCylinder& outer() const { return m_outer; }        ///< outer cyclinder of volume
+  papas::Position innerLayer() const { return m_inner.layer(); }  /// enum describing layer of inner cyclinder
   ~VolumeCylinder();
 
 private:

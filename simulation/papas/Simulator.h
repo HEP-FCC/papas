@@ -21,27 +21,41 @@ class Detector;
 class DetectorElement;
 class SurfaceCylinder;
 
-class Simulator {
-  /** Simulator simulates particles and keeps a collection of the Particles and resulting Clusters, Tracks and
-   of the relations (history) between them
-   The Tracks and Clusters are created and then smeared (and stored separately). Clusters are separated into
-   Ecal and Hcal collections.
-   Simulator supports simulation of neutral and charged Hadrons and Photons.
+/** Simulator clas simulates particles and keeps a collection of the Particles and resulting Clusters, Tracks and
+ of the relations (history) between them
+ The Tracks and Clusters are created and then smeared (and stored separately). Clusters are separated into
+ Ecal and Hcal collections.
+ Simulator supports simulation of neutral and charged Hadrons and Photons.
 
-   Usage:
-   Simulator sim = Simulator{CMSDetector};
-   SimParticle& ptc = sim.addParticle(211, M_PI / 2. + 0.5 , 0, 40. );
-   sim.simulateHadron(ptc);
-   */
+ Usage:
+ Nodes history;
+ auto sim = Simulator(CMSDetector, Nodes);
+ SimParticle& ptc = sim.addParticle(211, M_PI / 2. + 0.5 , 0, 40. );
+ sim.simulateHadron(ptc);
+ */
+class Simulator {
 
 public:
   /** Constructor
    * @param[in] const Detector& : Detector to be used as basis for simulation
+   * @param[nodes] Nodes& : Collection of Nodes which will be used to store history. It may be empty.
    */
   Simulator(const Detector&, Nodes& nodes);
-  void SimulateParticle(const Particle& ptc, IdType parentid = 0);
+  void simulateParticle(const Particle& ptc, IdType parentid = 0);
+  const Cluster& cluster(IdType clusterId) const;                  ///< retreive a cluster with this unique id
+  const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return Ecal clusters collection
+  const Clusters& hcalClusters() const { return m_hcalClusters; }  ///<return Hcal clusters collection
+  const Clusters& smearedEcalClusters() const { return m_smearedEcalClusters; }  ///<return smeared Ecal clusters coll.
+  const Clusters& smearedHcalClusters() const { return m_smearedHcalClusters; }  ///<return smeared Hcal clusters coll.
+  const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
+  const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
+  Nodes& historyNodes() { return m_nodes; }                      /// return a reference to history nodes collection
+  const SimParticles& particles() const { return m_particles; }  ///< Return particles collection
+  Cluster smearCluster(const Cluster& cluster,
+                       papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
+  void clear();  ///< Clear all the collections of clusters, particles, tracks
 
-  // TODO consider whether the following should be private
+private:
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
   void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
@@ -49,16 +63,16 @@ public:
   void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
 
   /**
-   Makes a new SimParticle and adds this into collection of particles
+   Makes a new SimParticle
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] TLorentzVector tlv: particle momentum
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle makeSimParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
 
   /**
-   Makes a new SimParticle and adds this into collection of particles
+   Makes a new SimParticle
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
    @param[in] double theta: initial direction of particle
@@ -67,8 +81,33 @@ public:
    @param[in] TVector3 vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle& addParticle(int pdgid, double charge, double theta, double phi, double energy,
-                           TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
+                              TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle& storeSimParticle(SimParticle&& simParticle, IdType parentId);
+  Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
+  const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
+  const Cluster& storeHcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
+  bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer = papas::Layer::kNone,
+                            papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false);
+  const Cluster& storeSmearedCluster(Cluster&& smearedCluster, IdType parentId);
+  const Track& storeTrack(Track&& track, IdType parentId);  ///<move track into tracks collection and history
+  Track smearTrack(const Track& track);                     ///< randomisation of the energy of a track
+  bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false);  ///< check if track is detected
+  const Track& storeSmearedTrack(Track&& smearedtrack,
+                                 IdType parentid);  ///<move into the smearedtracks collection and history
+
+  void propagate(SimParticle& ptc, const SurfaceCylinder&);     ///< find where particle hits cylinder
+  void propagateAllLayers(SimParticle& ptc);                    ///< find where particle hits detector cylinders
+  void addNode(const IdType newid, const IdType parentid = 0);  ///<update history nodes
+  std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
+
+  void testing();                                        // temp
+  Ids linkedEcalSmearedClusterIds(IdType nodeid) const;  // TODO move to helper/history class?
+  Ids linkedParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
+  Ids parentParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
+  Ids linkedRawTrackIds(IdType nodeid) const;            // TODO move to helper/history class?
+  Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
+  Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
 
   /**
    Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
@@ -82,42 +121,7 @@ public:
    @return SimParticle& the newly created particle
    */
   SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO probably should live elsewhere
-  Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
-  Cluster smearCluster(const Cluster& cluster, papas::Layer = papas::Layer::kNone);
-
-  const Cluster& cluster(Id::Type clusterId) const;                ///< retreive a cluster with this unique id
-  const Clusters& ecalClusters() const { return m_ecalClusters; }  ///<return  Ecal clusters collection
-  const Clusters& hcalClusters() const { return m_hcalClusters; }  ///<return Hcal clusters collection
-  const Clusters& smearedEcalClusters() const { return m_smearedEcalClusters; }  ///<return smeared Ecal clusters
-  const Clusters& smearedHcalClusters() const { return m_smearedHcalClusters; }  ///<return smeared Hcal clusters
-  const Tracks& tracks() const { return m_tracks; }                              ///<return tracks  collection
-  const Tracks& smearedTracks() const { return m_smearedTracks; }  ///<return a copy of smeared tracks  collection
-  Nodes& historyNodes() { return m_nodes; }  /// return a reference to history //TODO decide if a copy should be made
-  const SimParticles& particles() const { return m_particles; }  ///< Return copy of  particles collection
-
-  void testing();                                          // temp
-  Ids linkedEcalSmearedClusterIds(Id::Type nodeid) const;  // TODO move to helper/history class?
-  Ids linkedParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class?
-  Ids parentParticleIds(Id::Type nodeid) const;            // TODO move to helper/history class?
-  Ids linkedRawTrackIds(Id::Type nodeid) const;            // TODO move to helper/history class?
-  Ids linkedSmearedTrackIds(Id::Type nodeid) const;        // TODO move to helper/history class?
-  Ids linkedIds(Id::Type nodeid) const;                    // TODO move to helper/history class?
-  void clear();
-
-private:
-  Id::Type addEcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
-  Id::Type addHcalCluster(SimParticle& ptc, double fraction = 1., double csize = -1);
-  Id::Type addSmearedCluster(const Cluster& parent, papas::Layer detlayer = papas::Layer::kNone,
-                             papas::Layer acceptlayer = papas::Layer::kNone, bool accept = false);
-
-  const Track& addTrack(SimParticle& ptc);
-  Id::Type addSmearedTrack(const Track& track, bool accept = false);
-  void propagate(SimParticle& ptc, const SurfaceCylinder&);  // more args needed
-  void propagateAllLayers(SimParticle& ptc);                 // more args needed
-
-  void addNode(const Id::Type newid, const Id::Type parentid = 0);
-  std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
+                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
   Clusters m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters m_hcalClusters;         ///< hcal clusters (prior to smearing)

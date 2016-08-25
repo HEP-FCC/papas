@@ -3,7 +3,7 @@
 //
 //
 /**
- * @file CMS.cc
+ * @file CMS.cpp
  * @brief Implementation of the CMS detector
  */
 #include "CMS.h"

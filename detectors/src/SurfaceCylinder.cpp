@@ -9,6 +9,8 @@
 
 namespace papas {
 
-SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {}
+SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {
+  if (m_radius < 0) throw "Invalid cyclinder radius";
+}
 
 }  // end namespace papas

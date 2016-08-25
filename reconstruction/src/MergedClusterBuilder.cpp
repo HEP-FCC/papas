@@ -20,28 +20,24 @@ namespace papas {
 
 MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler& ruler, Nodes& historyNodes)
     : m_merged(), m_historyNodes(historyNodes) {
+  bool addHistory = true;
   if (m_historyNodes.empty()) {
-    // throw error
+    addHistory = false;
   }
   Ids uniqueids;
   uniqueids.reserve(clusters.size());
-  // std::cout << " CSIZE "<< clusters.size()<<std::endl;
   for (auto const& cluster : clusters) {
-    // if (cluster.first==8589934920)
-    //  std::cout<<"STOPE HERE";
-    // PDebug::write(" unique id {} {}", Id::pretty(cluster.first), cluster.second);
     uniqueids.push_back(cluster.first);
   }
   std::sort(uniqueids.begin(), uniqueids.end());
 
-  // create unorederedmap containing all edge combinations indexed by edgeKey
+  // create unordered map containing all edge combinations indexed by edgeKey
   Edges edges;
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        // PDebug::write("      Add Edge {:9} - {:9}", Id::pretty(id1), Id::pretty(id2));
         Edge::EdgeKey key = edge.key();
         edges.emplace(key, std::move(edge));
       }
@@ -53,29 +49,38 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
     auto id = ids[0];
     if (ids.size() > 1) {
       for (const auto& c : ids) {
-        PDebug::write("Merged Cluster from Smeared{}", clusters.at(c));
+        PDebug::write("Merged Cluster from Smeared{}",
+                      clusters.at(c));  // hmmm not quite right we don't really know it is smeared
       }
     }
-    // if (id==8589934920)
-    //  std::cout<<"STOPE HERE";
+
     auto mergedCluster =
         Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
-    if (id == mergedCluster.id()) std::cout << "problem";
-    Id::Type mid = mergedCluster.id();
-    PFNode snode{mid};
-    m_historyNodes.at(id).addChild(snode);
-    m_historyNodes.emplace(mid, std::move(snode));
+    if (id == mergedCluster.id()) {
+      throw "MergedCluster has same id as existing cluster";
+    }
+    IdType mid = mergedCluster.id();
+
+    if (addHistory) {
+      m_historyNodes.emplace(mid, std::move(PFNode(mid)));
+      PFNode snode = m_historyNodes[mid];
+      m_historyNodes.at(id).addChild(snode);
+    }
     if (ids.size() > 1) {
       for (auto elemid : ids) {
         // now add in the links between the block elements and the block into the history_nodes
         if (elemid != id) {  // we have already handled the first element
-          m_historyNodes.at(elemid).addChild(snode);
-
+          if (addHistory) {
+            PFNode snode = m_historyNodes[mid];
+            m_historyNodes.at(elemid).addChild(snode);
+          }
           mergedCluster += clusters.at(elemid);
         }
       }
     }
-    if (ids.size() > 1) PDebug::write("Made Merged{}", mergedCluster);
+    if (ids.size() > 1) {
+      PDebug::write("Made Merged{}", mergedCluster);
+    }
     m_merged.emplace(mid, std::move(mergedCluster));  // create a new cluster based on existing cluster
   }
 }

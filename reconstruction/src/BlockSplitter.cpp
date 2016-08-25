@@ -24,7 +24,7 @@ BlockSplitter::BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& hi
   }
 
   BlockBuilder bbuilder{block.elementIds(), modifiedEdges, historynodes};
-  m_blocks = bbuilder.blocks();
+  m_blocks = bbuilder.moveBlocks();
   block.setActive(false);
 }
 
@@ -53,52 +53,5 @@ std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {
 
  #set the original block to be inactive*/
 #include "Id.h"
-
-int test_BlockSplitter() {
-  Id::Type id1 = Id::makeEcalId();
-  Id::Type id2 = Id::makeHcalId();
-  Id::Type id3 = Id::makeTrackId();
-
-  Id::Type id4 = Id::makeEcalId();
-  Id::Type id5 = Id::makeHcalId();
-  Id::Type id6 = Id::makeTrackId();
-
-  std::vector<Id::Type> ids{id1, id2, id3, id4, id5, id6};
-
-  Edge edge = Edge(id1, id2, false, 0.00023);
-  Edge edge1 = Edge(id1, id3, true, 10030.0);
-  Edge edge2 = Edge(id2, id3, true, 0.00005);
-
-  Edge edge4 = Edge(id4, id5, false, 3.1234);
-  Edge edge5 = Edge(id4, id6, true, 0.1234);
-  Edge edge6 = Edge(id5, id6, true, 123.0);
-
-  Edges edges;
-
-  edges.emplace(edge.key(), std::move(edge));
-  edges.emplace(edge1.key(), std::move(edge1));
-  edges.emplace(edge2.key(), std::move(edge2));
-  edges.emplace(edge4.key(), std::move(edge4));
-  edges.emplace(edge5.key(), std::move(edge5));
-  edges.emplace(edge6.key(), std::move(edge6));
-
-  // create history nodes
-  Nodes historyNodes;
-  for (auto id : ids)
-    historyNodes.emplace(id, std::move(PFNode(id)));
-
-  Nodes emptyNodes;
-  auto blockbuilder = BlockBuilder(ids, edges, historyNodes);
-
-  Edges to_unlink;
-  to_unlink[edge1.key()] = edge1;
-  for (auto& block : blockbuilder.blocks()) {
-    auto blocksplitter = BlockSplitter(to_unlink, block.second, emptyNodes);
-    std::cout << block.second;
-    std::cout << blocksplitter;
-  }
-
-  return 0;
-}
 
 }  // end namespace papas

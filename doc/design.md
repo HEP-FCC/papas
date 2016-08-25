@@ -1,61 +1,53 @@
-# Design and Implementation Details
+# Key Design/Implementation Details
 
-The driving considerations for the PODIO design are:
 
-  1. the concrete data are contained within plain-old-data structures (PODs)
-  1. user-exposed data types are concrete and do not use inheritance
-  1. The C++ and Python interface should look as close as possible
-  1. The user does not do any explicit memory management
-  1. Classes are generated using a higher-level abstraction and code generators
+PAPAS uses directed Acyclic graph structures togther with unique identifiers to keep track of the links between particles and structures.
 
-The following sections give some more technical details and explanations for the design choices. More concrete implementation details can be found in the doxygen documentation.
+## Identifiers
 
-## Layout of Objects
-The data model is based on four different kind of objects and layers, namely
+In PAPAS each cluster, track, particle etc is given a unique Identifier.  
 
- 1. user visible (physics) classes (e.g. `Hit`). These act as transparent references to the underlying data,
- 2. a transient object knowing about all data for a certain physics object, including inter-object references (e.g. `HitObject`),
- 3. a plain-old-data (POD) type holding the persistent object information (e.g. `HitData`), and
- 4. a user-visible collection containing the physics objects (e.g. `HitCollection`).
- 
-These layers are described in the following.
+An Identifier is a 64bit unsigned integer encoded using bit shifts:-
 
-### The User Layer
+    - a unique id (counter 1, 2, 3 etc) and
+    - the item type: ecalCluster, hcalCluster, track, particle...
 
-The user visible objects (e.g. `Hit`) act as light-weight references to the underlying data, and provide the necessary user interface. For each of the data-members and one-to-one relations declared in the data model definition, corresponding setters and getters are created. For each of the one-to-many relations a vector-like interface is provided.
+Simple and can be extended or modified
+￼
+## Directed Acyclic Graph
 
-With the chosen interface, the code written in C++ and Python looks almost identical, if taking proper advantage of the `auto` keyword.
+In a Directed Acyclic Graph (DAG)
 
-### The Internal Data Layer
+    •  A Node represents an item
+    •  Links between Nodes are directed, no cycles
+    •  Each Node can have multiple children/multiple parents
 
-The internal objects give access to the object data, i.e. the POD, and the references to other objects.
-These objects inherit from `podio::ObjBase`, which takes care of object identification (`podio::ObjectID`), and object-ownership. The `ObjectID` consists of the index of the object and an ID of the collection it belongs to. If the object does not belong to a collection yet, the data object owns the POD containing the real data, otherwise the POD is owned by the respective collection. For details about the inter-object references and their handling within the data objects please see below.
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼PAPAS includes a  DirectedAcyclicTool library that provides (templated) classes/ algorithms & allows graph to be traversed, subgraphs to be identified
 
-### The POD Layer
-The plain-old-data (POD) contain just the data declared in the `Members` section of the datamodel definition. Ownership and lifetime of the PODs is managed by the other parts of the infrastructure, namely the data objects and the data collections.
+## PAPAS approach
 
-### The Collections
+•  Each item of interest has an Id eg Cluster, Particle, Track
 
-The collections created serve three purposes:
+•  Store items in collections (dict /unordered_map), indexed on Id
 
-  1. giving access to or creating the data items
-  2. preparing objects for writing into PODs or preparing them after reading
-  3. support for the so-called notebook pattern
+•  Separate collections for different types (EcalClusters, Tracks etc)
 
-### Vectorization support / notebook pattern
+•  For each item we also create a Node, templated on Id
 
-As an end-user oriented library, PODIO provides only a limited support for struct-of-arrays (SoA) memory layouts. In the vision, that the data used for heavy calculations is best copied locally, the library provides convenience methods for extracting the necessary information from the collections. More details can be found in the examples section of this document.
+•  Each Node is stored in a Nodes collection, indexed on Id
 
-### References between objects
+•  The history and/or links between items are stored in the Nodes eg nodeParticle.addChild(nodeCluster) !
 
-The existence of relations between objects has been mentioned several times. 
+Given the collections and the history we can find out how a reconstructed particle came about.
 
-#### Transient representation
+##Other resources
 
-TODO
+Powerpoint talk decribing Directed Acyclic Tool (DAG):
 
-## Handling const-correcteness
+https://indico.cern.ch/event/490466/contributions/1168040/attachments/1218006/1779467/DAGtool.pdf
 
-As a peculiarity, PODIO provides dedicated const and non-const classes, instead of fully trusting the C++ `const` keyword. This is done for two reasons - to avoid accidental drop of the const-keyword on user side. And to hide the non-const methods in Python. A case for accidental dropping of the `const` keyword in C++ are implicit copies when using the auto keyword. 
-  
+Powerpoint talk pdf for PAPAS implementation:
+
+https://indico.cern.ch/event/547855/contributions/2221423/attachments/1300412/1941158/Papas_cpp3.pdf
+
  

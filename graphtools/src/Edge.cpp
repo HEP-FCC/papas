@@ -2,7 +2,7 @@
 
 namespace papas {
 
-Edge::Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance)
+Edge::Edge(IdType id1, IdType id2, bool isLinked, double distance)
     : m_id1(id1),
       m_id2(id2),
       m_isLinked(isLinked),
@@ -12,11 +12,11 @@ Edge::Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance)
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
-Edge::EdgeKey Edge::makeKey(Id::Type id1, Id::Type id2) {
+Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
 
   EdgeKey key;
-  Id::Type uid1 = Id::uniqueId(id1);
-  Id::Type uid2 = Id::uniqueId(id2);
+  IdType uid1 = Id::uniqueId(id1);
+  IdType uid2 = Id::uniqueId(id2);
 
   if (id1 > id2)  // ensure that the order of the ids does not matter
     key = (((uint64_t)uid1) << Id::bitshift) | ((uint64_t)uid2);
@@ -26,7 +26,7 @@ Edge::EdgeKey Edge::makeKey(Id::Type id1, Id::Type id2) {
   return key;
 }
 
-Id::Type Edge::otherid(Id::Type id) const {
+IdType Edge::otherid(IdType id) const {
   if (m_id1 == id)
     return m_id2;
   else if (m_id2 == id)
@@ -69,19 +69,3 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
 }
 
 }  // end namespace papas
-
-int test_edges() {
-  using namespace papas;
-  Id::Type id1 = Id::makeEcalId();
-  Id::Type id2 = Id::makeHcalId();
-  Id::Type id3 = Id::makeTrackId();
-
-  Edge edge = Edge(id1, id2, false, 0.0);
-  Edge edge1 = Edge(id1, id3, true, 0.0);
-  // Edge edge2=Edge(id2,id3,true,0.0);
-
-  std::cout << edge1 << std::endl;
-  std::cout << edge << std::endl;
-
-  return 0;
-}

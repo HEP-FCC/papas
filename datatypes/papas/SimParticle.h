@@ -10,7 +10,8 @@
 namespace papas {
 
 class Track;
-
+/// Simulated particle
+/// Inherits from Particle and contains additional information to decribe the path of the particle
 class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
@@ -25,7 +26,7 @@ public:
               double field = 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, const Track& track);
 
-  TVector3 pathPosition(papas::Position layer) const;
+  TVector3 pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }
   Path::Ptr path() const { return m_path; }

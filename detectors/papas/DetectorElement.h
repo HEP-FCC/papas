@@ -18,7 +18,7 @@ namespace papas {
 class DetectorElement {
 public:
   /** Constructor (allows the Material and Volume to be created on the fly)
-   * @param[in] layer : enum kEcal, kHcal, ktracker, kField
+   * @param[in] layer : enum kEcal, kHcal, kTracker, kField
    * @param[in] const VolumeCylinder&& volume : defines the element cyclinders
    * @param[in] const Material&& material : material allows the Material to be created on the fly
     */
@@ -36,8 +36,8 @@ public:
 
 protected:
   VolumeCylinder m_volume;  ///< The cyclinders describing the detector element
-  Material m_material;
-  Layer m_layer;  ///< eg kEcal, kHcal
+  Material m_material;      ///< material for the detector element
+  Layer m_layer;            ///< eg kEcal, kHcal
 
 private:
 };

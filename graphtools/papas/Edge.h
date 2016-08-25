@@ -4,7 +4,8 @@
 #include "Id.h"
 #include <iostream>
 
-/** @class   rec::Edge Reconstruction/Reconstruction/Edge.h Edge.h
+namespace papas {
+/**
  *
  *  @brief An Edge stores end node ids, distance between the nodes, and whether they are linked
  *
@@ -13,8 +14,6 @@
  *  @author  Alice Robson
  *  @date    2016-04-05
  */
-
-namespace papas {
 
 class Edge {
 public:
@@ -33,21 +32,21 @@ public:
    *   @param[in]  isLinked : boolean T/F
    *   @param[in]  distance: distance between two elements
    */
-  Edge(Id::Type id1, Id::Type id2, bool isLinked, double distance);
+  Edge(IdType id1, IdType id2, bool isLinked, double distance);
   Edge(const Edge&) = default;  //{std::cout <<"copy Edge";};
   Edge(Edge&&) = default;
   Edge& operator=(const Edge& other) = default;  // {   std::cout<<"copy EDGE =";};
   Edge& operator=(Edge&& other) = default;       // { std::cout <<"move edge =";};
   ~Edge() = default;
 
-  Id::Type id1() const { return m_id1; }
-  Id::Type id2() const { return m_id2; }
+  IdType id1() const { return m_id1; }
+  IdType id2() const { return m_id2; }
   bool isLinked() const { return m_isLinked; }  ///<boolean to mark if this edge links the two elements
   void setLinked(bool link) { m_isLinked = link; };
   double distance() const { return m_distance; }  ///<distance between the two elements
   Edge::EdgeKey key() const { return m_key; }  ///<unique key for this edge that can be found from the two element ids
   EdgeType edgeType() const { return m_edgeType; }  ///<describes what types of elements are connected
-  Id::Type otherid(Id::Type id) const;  /// return the id of the other end, or -1 if id is not part of this edge
+  IdType otherid(IdType id) const;  /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
   /**
     *   @brief  Static function that creates a unique key given two Id::Types
@@ -59,7 +58,7 @@ public:
     *   @param  id1 : element uniqueid enerated from Id class for one end
     *   @param  id2 : element2 uniqueid generated from Id class for other end
     */
-  static EdgeKey makeKey(Id::Type id1, Id::Type id2);  ///<static function to create a unique key
+  static EdgeKey makeKey(IdType id1, IdType id2);  ///<static function to create a unique key
 
 private:
   /** Produces an EdgeType enumeration such as kEcalTrack

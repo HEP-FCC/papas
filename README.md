@@ -1,4 +1,4 @@
-Papas
+Papas README and examples
 =======
 
 UNDER Developement and Testing
@@ -27,6 +27,7 @@ You need to install:
 
     - podio: a package allowing to define event data models and to manipulate EDM events.
     - fcc-edm: definition of the FCC EDM, based on podio
+
 - You may also find it useful to have
 
     - pythia8
@@ -54,10 +55,15 @@ Compilation
     make install
     cd ..
 
+DOxygen Documentation
+--
+  
+   make doc
 
 Test
 --
 Rudimentary tests that run a simple example and run unit tests can be run with
+
     cd build
     make test
 
@@ -67,24 +73,38 @@ Examples can be found in the examples directory
 
 To run example_simple:
 
-example_simple examples/ee_ZH_Zmumu_Hbb.root
+(1) create a Pythia example.root file eg by following:-
 
-This should produce a display (NB to exit choose file/quit ROOT).
+https://twiki.cern.ch/twiki/bin/view/FCC/FccSoftwareHeppy
 
-You should also get a printout like:
+(2) Then run Papas on this file
 
-Generated Stable Particles
-  Particle :p206     :17179869390: pdgid =    22, status =   1, q =  0, pt =   0.9, e =   0.9, eta = -0.13, theta = -0.13, phi =  0.08, mass =  0.00
-  Particle :p202     :17179869386: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
-  Particle :p201     :17179869385: pdgid =    22, status =   1, q =  0, pt =   0.3, e =   0.3, eta = -0.44, theta = -0.43, phi =  0.69, mass =  0.00
- ...
-  Particle :p88      :17179869272: pdgid =  -211, status =   1, q = -1, pt =   0.8, e =   0.8, eta =  0.10, theta =  0.10, phi = -2.56, mass =  0.14
-Reconstructed Particles
-  Particle :r678     :21474837158: pdgid =   211, status =   1, q =  1, pt =   0.6, e =   0.6, eta = -0.24, theta = -0.24, phi = -2.94, mass =  0.14
-  Particle :r677     :21474837157: pdgid =  -211, status =   1, q = -1, pt =   0.8, e =   0.9, eta =  0.30, theta =  0.29, phi = -2.44, mass =  0.14
-  Particle :r676     :21474837156: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
-  ...
-  Particle :r631     :21474837111: pdgid =    22, status =   1, q =  0, pt =  16.1, e =  16.5, eta = -0.23, theta = -0.23, phi = -0.01, mass =  0.00
+    example_simple example.root
+
+This should produce text outputs and also jgp display files.
+
+
+You should get a printout like:
+
+    Generated Stable Particles
+    Particle :p206     :17179869390: pdgid =    22, status =   1, q =  0, pt =   0.9, e =   0.9, eta = -0.13, theta = -0.13, phi =  0.08, mass =  0.00
+    Particle :p202     :17179869386: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
+    Particle :p201     :17179869385: pdgid =    22, status =   1, q =  0, pt =   0.3, e =   0.3, eta = -0.44, theta = -0.43, phi =  0.69, mass =  0.00
+    ...
+    Particle :p88      :17179869272: pdgid =  -211, status =   1, q = -1, pt =   0.8, e =   0.8, eta =  0.10, theta =  0.10, phi = -2.56, mass =  0.14
+
+    Reconstructed Particles
+    Particle :r678     :21474837158: pdgid =   211, status =   1, q =  1, pt =   0.6, e =   0.6, eta = -0.24, theta = -0.24, phi = -2.94, mass =  0.14
+    Particle :r677     :21474837157: pdgid =  -211, status =   1, q = -1, pt =   0.8, e =   0.9, eta =  0.30, theta =  0.29, phi = -2.44, mass =  0.14
+    Particle :r676     :21474837156: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
+    ...
+    Particle :r631     :21474837111: pdgid =    22, status =   1, q =  0, pt =  16.1, e =  16.5, eta = -0.23, theta = -0.23, phi = -0.01, mass =  0.00
+
+jpg files like:
+
+TODO work out how to add in an image
+![Alt text](/Users/alice/fcc/papas/papas_cc/doc/file0.pdf?raw=true "Optional Title")
+
 
 The example will also produce an output root file containing the reconstructed particles
 

@@ -16,6 +16,20 @@
 
 #include <iostream>
 
+
+#include <iostream>
+
+using namespace std;
+
+#include <TApplication.h>
+#include <TCanvas.h>
+
+
+
+
+
+
+
 int main(int argc, char* argv[]) {
 
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
@@ -31,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    papas::PapasManager papasManager{CMSDetector};
+    auto papasManager = papas::PapasManager(CMSDetector);
 
     // read and process a single event
     unsigned int eventNo = 0;
@@ -50,10 +64,14 @@ int main(int argc, char* argv[]) {
       std::cout << "  " << p.second << std::endl;
     }
     // produce papas display
-    papasManager.display();
+    //TApplication tApp("theApp", &argc, argv) ;
+    papasManager.display(true);
+    
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
+  } catch (const char* c) {
+    std::cerr << c << ". Quitting." << std::endl;
   }
 }

@@ -13,7 +13,7 @@
 #include "Simulator.h"
 
 namespace papas {
-
+/// High level class to recieve a set of particles, run simulation and then reconstruction
 class PapasManager {
 public:
   PapasManager(Detector& detector);
@@ -22,7 +22,7 @@ public:
   const Particles& reconstructedParticles() { return m_pfEvent.reconstructedParticles(); }
   const Particles& rawParticles() { return m_particles; }
   void clear();
-  void display();  ///< relocate?
+  void display(bool show=false);  ///< relocate?
   Simulator& simulator() { return m_simulator; }
 
 private:

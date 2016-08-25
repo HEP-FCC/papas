@@ -16,16 +16,25 @@
 #include <iostream>
 
 namespace papas {
-
+/** Produces Physics debug output and writes to file
+ *
+ * Usage:
+ * @code
+ *  PDebug::On("papas.log");  //If not turned on nothing will be produced
+ *  PDebug::write("problem with track not found :{}", id);
+ * @endcode
+*/
 class PDebug {
   // produce physics debug output
 public:
+  /// Constructor  defaults to debugger being turned off/ logging only errors
   PDebug() {
     s_fname = "";
     slevel = spdlog::level::err;
   };
 
-  /// Tells PDebug where to write output
+  /// Tells PDebug where to write output and sets output level to info
+  /// @param[in] fname filename
   static void On(std::string fname) {
     s_fname = fname;
     slevel = spdlog::level::info;
@@ -51,12 +60,11 @@ private:
   static spdlog::details::line_logger warn() { return log()->warn(); }
   static spdlog::details::line_logger error() { return log()->error(); }
   static spdlog::details::line_logger debug() { return log()->debug(); }
-  static void init();
-  static void consoleinit();
-
-  static bool logInitialized;
+  static void init();          ///< called when a log message is first encountered
+  static void consoleinit();   ///< not used at present
+  static bool logInitialized;  ///< whether the pdebug has been initialised yet (happens just once)
   static std::vector<spdlog::sink_ptr> m_sinks;
-  static spdlog::level::level_enum slevel;  // err or info
+  static spdlog::level::level_enum slevel;  ///< either err or info
   static std::string s_fname;
 };
 }

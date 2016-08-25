@@ -10,19 +10,25 @@
 namespace papas {
 
 class Track;
-
 class VolumeCylinder;
 
+/// CMS specific implementation of the detector Tracker
+///
 class CMSTracker : public Tracker {
 public:
-  // TODO consider best approach for below?
-  /// constructor - allows the Material and Volume to be created on the fly
+  /** Constructor
+   *
+   * @param[in] volume The tracker cyclinders
+   */
   CMSTracker(const VolumeCylinder&& volume);
-  /// constructor - requires the Material and Volume to be already in existance
+  /** Constructor
+   *
+   * @param[in] volume The tracker cyclinders
+   */
   CMSTracker(const VolumeCylinder& volume);
-  virtual double ptResolution(const Track& track) const override;
-  virtual bool acceptance(const Track& track) const override;
-  // TODOAJR space_resolution(self, ptc):
+  virtual double ptResolution(const Track& track) const override;  ///< describes tracker resolution of momentum
+  virtual bool acceptance(const Track& track) const override;      ///< determines if a track is detected
+  // TODO space_resolution(self, ptc):
 private:
 };
 

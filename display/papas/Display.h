@@ -14,9 +14,7 @@ namespace papas {
 
 class Drawable;
 
-/// Display Class
-/** Class to manage the  different display projections
-*/
+/// Manges the  different display projections for ROOT display
 class Display {
 public:
   /// Constructor using a list of projections names
@@ -31,6 +29,7 @@ public:
   // AJRTODO does this need Zoom?
   void unZoom();
   void draw() const;
+  void saveAs() const;
 
 private:
   /// Map containing the views //TODO make enum

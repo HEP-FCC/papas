@@ -16,7 +16,7 @@ namespace papas {
 
 class Distance;
 
-// TODO template on Distance class?
+/// Used to calculate distances between Particle flow elements (clusters and track)
 class Ruler {
 
 public:

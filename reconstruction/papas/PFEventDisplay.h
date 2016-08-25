@@ -18,6 +18,7 @@ namespace papas {
 class PFEvent;
 class Simulator;
 
+/// prototype only
 class PFEventDisplay : public Display {
 public:
   PFEventDisplay(std::list<ViewPane::Projection> views = {});

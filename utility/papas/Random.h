@@ -10,12 +10,15 @@
 #define rand_h
 
 #include <random>
-
+/**Wrapper for random generators which allows reproducibility of numbers from C++ and from Python via library call
+*/
 namespace randomgen {
-
+/// global device
 extern std::random_device rdevice;
+/// global setting of seed
 extern void setEngineSeed(double seed = rdevice());
 
+/// Generates random numbers from Uniform distribution
 class RandUniform {
 public:
   /// If a seed if given this will start from a known point and thus be repeatable
@@ -31,7 +34,7 @@ class RandNormal {
 public:
   /// If seed is set manually then will give repeatable results for other RandNormal instances
   // If makeseed is used it means that instances of RandNormal are independent but
-  // can be consistenlty generated usng the makeseeds own seed.
+  // can be consistently generated usng the makeseeds own seed.
   RandNormal(double mean, double sd);
   double next();
   static void setSeed(double);

@@ -6,10 +6,10 @@
 namespace papas {
 class SimParticle;
 
+/// Calculates where an uncharged particle crosses a detector cyclinder
 class StraightLinePropagator {
 public:
   StraightLinePropagator();
-  // void propagateOne(SimParticle& ptc, Id::Layer Layer, bool inner = true) override;
   void propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl);
 
 private:

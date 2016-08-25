@@ -4,7 +4,6 @@
 //
 #include "GBlob.h"
 #include "Cluster.h"
-#include <memory>
 
 namespace papas {
 
@@ -12,7 +11,7 @@ GBlob::GBlob(const Cluster& cluster) {
   TVector3 pos = cluster.position();
   double radius = cluster.size();
   double thetaphiradius = cluster.angularSize();
-  double max_energy = Cluster::s_maxEnergy;
+  double max_energy = Cluster::maxEnergy();
   double iradius = radius * cluster.energy() / max_energy;
   double ithetaphiradius = thetaphiradius * cluster.energy() / max_energy;
 
