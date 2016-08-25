@@ -13,7 +13,7 @@
 #include "Simulator.h"
 
 namespace papas {
-
+  /// High level class to recieve a set of particles, run simulation and then reconstruction
 class PapasManager {
 public:
   PapasManager(Detector& detector);

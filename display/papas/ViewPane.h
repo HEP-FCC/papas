@@ -14,9 +14,8 @@
 
 namespace papas {
 
-/// ViewPane Class
 /**
- * Class to manage provide a window in which to display graphs
+ * Class to provide a ROOT canvas window in which to display graphs
  */
 class ViewPane {
 public:

@@ -6,8 +6,17 @@
 //  Copyright © 2015 CERN. All rights reserved.
 //
 
+
+#ifndef DirectedAcyclicGraph_h
+#define DirectedAcyclicGraph_h
+
+#include <iostream>
+#include <list>
+#include <queue>
+#include <unordered_set>
+
+/// Directed Acyclic Graph
 /**
- * @file DirectedAcyclicGraph.h
  * @brief Implementation of Directed Acyclic Graph
  *
  * Supports traversal of a DirectedAcyclicGraph (also known here as DAG or a polytree)
@@ -54,33 +63,24 @@
  *
  */
 
-#ifndef DirectedAcyclicGraph_h
-#define DirectedAcyclicGraph_h
-
-#include <iostream>
-#include <list>
-#include <queue>
-#include <unordered_set>
-
-/// DirectedAcyclicGraph Namespace
 namespace DAG {
 
 // note internal use of pointer to N (supports the Nodes being concrete objects)
 template <typename N>
-using Nodeset = std::unordered_set<const N*>;  ///<allows find and just one of each node
+using Nodeset = std::unordered_set<const N*>;  ///<set of Nodes which allows find and just one of each node
 template <typename N>
-using Nodevector = std::vector<const N*>;  ///<typically used to return results
+using Nodevector = std::vector<const N*>;  ///<vector of Nodes typically used to return results
 
-/// Visitor interface
+/// Visitor class interface for the DirectedAcyclicGraph
 /**Defines the visitor class interface for the DirectedAcyclicGraph
  */
-/// Visitor Class/Interface templated on the Node N
+/// @tparam  N is a Node
 template <typename N>  // N is the templated Node
 class Visitor {
 public:
   Visitor();  ///<Constructor
-  /// Key function for visitor pattern
-  virtual void visit(const N* node) = 0;
+  virtual void visit(const N* node) = 0; ///< Key function for visitor pattern
+
   /// returns vector of all child nodes (including the start node and all children of children)
   virtual const Nodevector<N>& traverseChildren(const N& startnode, int depth) = 0;
   /// returns vector of all parent nodes (including the start node and all parents of parents)
@@ -91,8 +91,9 @@ public:
 protected:
 };
 
-/// Node class for visitor pattern templated on T the item of interest
-template <typename T>  // T is the item of interest inside the Node
+/// Node class for visitor pattern templated on T
+/// @tparam T item of interest
+template <typename T>
 class Node {
 public:
   typedef Node<T> TNode;
@@ -108,8 +109,8 @@ public:
   TNode& operator=(TNode&& other) = default;
   Node(TNode&& other) = default;
 
-  void accept(Visitor<TNode>& visitor) const;  ///< Key function for visitor pattern
-  void addChild(Node& node);  ///< Add in a link (this will set the reverse parent link in the other node)
+  void accept(Visitor<TNode>& visitor) const;
+  void addChild(Node& node);  ///< Add in a link to node (also set the reverse parent link in the other node)
   const T& value() const { return m_val; };  ///< return the node item
   const Nodeset<TNode>& children() const { return m_children; }
   const Nodeset<TNode>& parents() const { return m_parents; }
@@ -121,8 +122,9 @@ protected:
   void addParent(Node& node) { m_parents.insert(&node); }  // private as only available via addChild
 };
 
-// Breadth First Search implementation of BFSVisitor (iterative)
-template <typename N>  /// N is the Node
+  /// Breadth First Search implementation of BFSVisitor (iterative)
+  /// @tparam N the Node
+template <typename N>
 class BFSVisitor : public Visitor<N> {
 public:
   BFSVisitor();
@@ -134,11 +136,12 @@ public:
 protected:
   Nodeset<N> m_visited;    ///< which nodes have been visited (reset each time a traversal is made)
   Nodevector<N> m_result;  ///< the list of nodes that are linked and that will be returned
+  
+  /// @enum Whether to seek for linked Children , Parents or both
   enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };  ///< internal enumeration
 
-  /// core traversal code uses by all of the public traversals
   virtual void traverse(const DAG::Nodeset<N>& nodes, BFSVisitor<N>::enumVisitType visittype,
-                        int depth);  // the iterative method
+                        int depth);
   bool alreadyVisited(const N* node) const;
 };
 

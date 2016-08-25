@@ -26,9 +26,5 @@ double Material::pathLength(bool isEm) const {
     return pl;
   }
 }
-
-TestMaterial::TestMaterial(double x0, double lambdaI) : Material(x0, lambdaI) {}
-
-double TestMaterial::PathLength(/*AJRTODO const Particle& ptc)*/) { return 99.999; }
-
-}  // end namespace papas
+}
+// end namespace papas

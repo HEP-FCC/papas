@@ -7,14 +7,6 @@
 #include <iostream>
 #include <string>
 
-/** @class   rec::PFBlock Reconstruction/Reconstruction/PFBlock.h PFBlock.h
- *
- *  @brief PFBlock
- *  Example usage: PFBlock
- *
- *  @author  Alice Robson
- *  @date    2016-04-05
- */
 
 namespace papas {
 
@@ -36,7 +28,6 @@ namespace papas {
  os << block;
  */
 
-// import itertools
 
 class PFBlock {
 

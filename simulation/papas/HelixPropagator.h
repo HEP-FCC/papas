@@ -5,7 +5,7 @@
 
 namespace papas {
 class SimParticle;
-
+  /// Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
 class HelixPropagator {
 public:
   HelixPropagator(double field);

@@ -15,8 +15,7 @@ class Cluster;
 class Material;
 class VolumeCylinder;
 
-/// CMS ECAL calorimeter implementation
-/// This ECAL is implmented specifically for CMS
+/// CMS specific ECAL calorimeter implementation
 ///
 ///  It is intended to be replaced by users to match the required detector characteristics
 ///

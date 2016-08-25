@@ -27,7 +27,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
       m_historyNodes.emplace(id, PFNode(id));
   }
 
-  // TODO thhink hard about best way to deal with distance /ruler / edges etc
+  // TODO think hard about best way to deal with distance /ruler / edges etc
   // compute edges between each pair of nodes
   Edges edges;
   EventRuler ruler(pfevent);
@@ -43,10 +43,6 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
   }
   BlockBuilder bb(m_uniqueIds, edges, m_historyNodes);
   m_blocks = bb.moveBlocks();
-  // std::cout <<"*"<<m_blocks.size() << "*";
-  /*for (auto & b : m_blocks) {
-    std::cout << b.second;
-  }*/
 }
 
 }  // end namespace papas

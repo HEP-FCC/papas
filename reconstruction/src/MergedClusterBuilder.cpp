@@ -31,7 +31,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
   }
   std::sort(uniqueids.begin(), uniqueids.end());
 
-  // create unorderedmap containing all edge combinations indexed by edgeKey
+  // create unordered map containing all edge combinations indexed by edgeKey
   Edges edges;
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
@@ -49,7 +49,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
     auto id = ids[0];
     if (ids.size() > 1) {
       for (const auto& c : ids) {
-        PDebug::write("Merged Cluster from Smeared{}", clusters.at(c));
+        PDebug::write("Merged Cluster from Smeared{}", clusters.at(c)); //hmmm not quite right we don't really know it is smeared
       }
     }
 

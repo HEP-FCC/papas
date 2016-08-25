@@ -4,17 +4,17 @@
 #include "Id.h"
 #include <iostream>
 
-/** @class   rec::Edge Reconstruction/Reconstruction/Edge.h Edge.h
- *
- *  @brief An Edge stores end node ids, distance between the nodes, and whether they are linked
- *
- *  Example usage: Edge e = Edge(obj1.unqiueid, obj2.uniqueid, True, 0.0);
- *
- *  @author  Alice Robson
- *  @date    2016-04-05
- */
 
 namespace papas {
+  /** 
+   *
+   *  @brief An Edge stores end node ids, distance between the nodes, and whether they are linked
+   *
+   *  Example usage: Edge e = Edge(obj1.unqiueid, obj2.uniqueid, True, 0.0);
+   *
+   *  @author  Alice Robson
+   *  @date    2016-04-05
+   */
 
 class Edge {
 public:

@@ -23,7 +23,7 @@ class PFEvent;
 class Detector;
 class GDetector;
 
-// Experimental Wrapper for Python to allow graphs to be plotted
+  /// Experimental Wrapper for display to allow graphs to be plotted
 class PFApp {
 public:
   PFApp();

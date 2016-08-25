@@ -5,7 +5,8 @@
 
 namespace papas {
 class SimParticle;
-
+  
+/// Determines where an uncharged particle path crosses a detector cylinder
 class Propagator {
 public:
   Propagator(){};

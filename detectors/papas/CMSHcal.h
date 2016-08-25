@@ -15,11 +15,19 @@ class Cluster;
 class Material;
 class VolumeCylinder;
 
-/// CMS implementation of  HCAL Detector element
+/// CMS specific implementation of  HCAL Detector element
+///
 class CMSHCAL : public Calorimeter {
 public:
   // TODO consider best approach for below?
-  /// constructor - allows the Material and Volume to be created on the fly
+  /** Constructor
+   *
+   * @param[in] volume The HCAL cyclinders
+   * @param[in] material HCAL material
+   * @param[in] eta_crack ask Colin
+   * @param[in] emin vector of minimum energy { barrel, endcap}
+   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   */
   CMSHCAL(const VolumeCylinder&& volume,
           const Material&& material,
           double m_eta_crack,
@@ -27,7 +35,14 @@ public:
               eres,
           std::vector<std::vector<double>>
               eresp);
-  /// constructor - requires the Material and Volume to be already in existance
+  /** Constructor
+   *
+   * @param[in] volume The HCAL cyclinders
+   * @param[in] material HCAL material
+   * @param[in] eta_crack ask Colin
+   * @param[in] emin vector of minimum energy { barrel, endcap}
+   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   */
   CMSHCAL(const VolumeCylinder& volume,
           const Material& material,
           double m_etaCrack,

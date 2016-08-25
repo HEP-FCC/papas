@@ -13,6 +13,9 @@
 #include <utility>
 
 namespace papas {
+  
+  /// Defines Particle data (mass and charge) for basic partcle types
+  ///
 class ParticlePData {
 public:
   static const double m_e;   // = 0.000511;

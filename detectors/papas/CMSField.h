@@ -10,14 +10,22 @@
 namespace papas {
 
 class VolumeCylinder;
-/// CMS implementation of Detector Field element
+/// CMS specific implementation of Detector Field element
+///
 class CMSField : public Field {
 public:
   // TODO consider best approach for below?
-  /// constructor - allows the Material and Volume to be created on the fly
+  /** Constructor
+   *
+   * @param[in] volume The field cyclinders
+   * @param[in] magnitude field strength
+   */
   CMSField(const VolumeCylinder&& volume, double magnitude);
-  /// constructor - requires the Material and Volume to be already in existance
-  CMSField(const VolumeCylinder& volume, double magnitude);
+  /** Constructor
+   *
+   * @param[in] volume the field cyclinders
+   * @param[in] magnitude field strength
+   */  CMSField(const VolumeCylinder& volume, double magnitude);
 
 private:
 };

@@ -416,7 +416,7 @@ EXTRACT_PACKAGE        = NO
 # included in the documentation.
 # The default value is: NO.
 
-EXTRACT_STATIC         = NO
+EXTRACT_STATIC         = YES
 
 # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs) defined
 # locally in source files will be included in the documentation. If set to NO
@@ -797,11 +797,11 @@ EXCLUDE_SYMLINKS       = NO
 # If the value of the INPUT tag contains directories, you can use the
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
 # certain files from those directories.
-#
+#make 
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       =  */tests/* */dict/* */cmake/* @CMAKE_BINARY_DIR@
+EXCLUDE_PATTERNS       =  */tests/* */dict/* */cmake/* */spdlog/* */dageg/* *PrettyPrinter* *simpleidentifier* *example* *xxx* @CMAKE_BINARY_DIR@
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -812,7 +812,7 @@ EXCLUDE_PATTERNS       =  */tests/* */dict/* */cmake/* @CMAKE_BINARY_DIR@
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        =
+EXCLUDE_SYMBOLS        = ROOT ROOT::* test_macro AliceR
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include

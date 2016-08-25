@@ -15,7 +15,8 @@
 
 namespace papas {
 
-/// Detector
+/// Base Detector Class which needs to be inherited from for new detectors
+///
 /**
    Class from which user can provide their own detector code
    It must contain an HCAL, ECAL, Tracker and Field element

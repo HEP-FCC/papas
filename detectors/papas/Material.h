@@ -12,10 +12,7 @@
 
 namespace papas {
 
-/// Material
-/**
-  Users need to define material properties for their detectors
-*/
+/// Detector Material - users need to define material properties for their detector elements
 class Material {
 public:
   Material(double x0, double lambda);
@@ -26,13 +23,13 @@ private:
   double m_lambdaI;
 };
 
-// Temporary //TODO
+  /*// Temporary //TODO
 class TestMaterial : public Material {
 public:
   TestMaterial(double x0, double lambda);
   double PathLength();
 
 private:
-};
+};*/
 }  // end namespace papas
 #endif

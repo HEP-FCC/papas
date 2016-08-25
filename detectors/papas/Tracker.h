@@ -13,6 +13,7 @@ namespace papas {
 
 class Track;
 
+  ///< Base class for tracker detector element. User must define own tracker.
 class Tracker : public DetectorElement {
 public:
   using DetectorElement::DetectorElement;

@@ -9,8 +9,7 @@
 
 namespace papas {
 
-/// This is the base class used for other elements that are to be drawn.
-/// The key thing is to have the Draw element
+/// This is the base class used for elements that are to be drawn.
 class Drawable {
 public:
   Drawable(){};

@@ -6,7 +6,8 @@
 #include "TVector3.h"
 
 namespace papas {
-
+  /// Describes the particle track  - stored momentum and charge and can access particle path
+  ///
 class Track {
 public:
   Track(TVector3 p3, double charge, Path::Ptr path);

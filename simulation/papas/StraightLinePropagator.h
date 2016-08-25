@@ -6,6 +6,8 @@
 namespace papas {
 class SimParticle;
 
+  
+  ///Calculates where an uncharged particle crosses a detector cyclinder
 class StraightLinePropagator {
 public:
   StraightLinePropagator();

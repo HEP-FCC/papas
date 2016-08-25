@@ -10,14 +10,13 @@
 #include "TVector3.h"
 
 #include "PDebug.h"
-/// Main Particle class
-///
-/// Contains 4-momentum vector, particle id and accessor functions
-/// Intended to be used as the base for derived Particle classes
-
 
 namespace papas {
-
+  /// Main Particle class
+  ///
+  /// Contains 4-momentum vector, particle id and accessor functions
+  /// Intended to be used as the base for derived Particle classes
+  
 class Particle {
 public:
   Particle();
@@ -47,10 +46,10 @@ public:
   TVector3 startVertex() const { return m_startVertex; }     ///<start vertex (3d point)
   TVector3 endVertex() const { return m_endVertex; }         ///<end vertex (3d point)
   IdType id() const { return m_uniqueId; }
-  std::string info() const;
+  std::string info() const;  ///< text descriptor of the particle
 
 protected:
-  IdType m_uniqueId;  // to be used by virtual classes
+  IdType m_uniqueId;  ///< unique identifier for particle
 private:
   TLorentzVector m_tlv;
   int m_particleId;
