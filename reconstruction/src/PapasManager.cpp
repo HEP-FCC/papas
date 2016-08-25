@@ -66,29 +66,8 @@ void PapasManager::clear() {
 void PapasManager::display() {
 
   PFApp myApp{};
-  TApplication gApp("gapp", 0, 0);
-  gApp.SetReturnFromRun(1);
+  
   myApp.display(m_simulator, m_pfEvent, m_particles, m_detector);
-  // myApp.display2(m_simulator, m_pfEvent, m_particles, m_detector);
-  TQObject::Connect("TCanvas", "Closed()", "TApplication", gApplication, "Terminate()");
-  // TQObject::Connect("TApplication","LastWindowClosed","TApplication", gApplication, "TerminateAndQuit(0)");
-  gSystem->ProcessEvents();
-
-  // loop for waiting
-  time_t t0 = time(0);
-  double wait = 0.001;
-
-  while (1) {
-    try {
-      t0 = time(0);
-      gSystem->ProcessEvents();
-      while (static_cast<unsigned int>(time(0) - t0) < wait)
-        ;
-    } catch (int e) {
-      std::cout << "Finish";
-    }
-  }
-
   std::cout << "finish" << std::endl;
 }
 
