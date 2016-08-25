@@ -4,7 +4,6 @@
 //
 #include "GBlob.h"
 #include "Cluster.h"
-#include <memory>
 
 namespace papas {
 
