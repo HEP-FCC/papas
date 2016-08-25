@@ -24,7 +24,9 @@ IdType Id::makeId(ItemType type, unsigned int uniqueid) {
   Type id = (((uint64_t)type) << bitshift) | uniqueid;
   s_counter++;
 
-  if (type == kNone) throw "Id must have a valid type";
+  if (type == kNone) {
+    throw "Id must have a valid type";
+  }
   // std::cout << "makeID: "  << id << " = "<< type << " : uid = " << uniqueid << std::endl;;
   return id;
 }

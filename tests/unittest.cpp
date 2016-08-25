@@ -53,13 +53,13 @@ using namespace papas;
 
 TEST_CASE("Id") {  /// ID test
   using namespace papas;
-  IdType id(0);
+  IdType id(Id::ItemType::kEcalCluster);
   auto uid = Id::uniqueId(id);
   auto type = Id::itemType(id);
 
   for (int j = 0; j < 6; j++) {
 
-    Id::ItemType e = Id::ItemType(0);
+    Id::ItemType e = Id::ItemType::kEcalCluster;
     for (int i = 1; i < 30; i++) {
       int n = pow(2, i);
       id = Id::makeId(e, n);
@@ -391,8 +391,8 @@ TEST_CASE("Edges") {
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
 
-  REQUIRE(edge1.isLinked() == TRUE);
-  REQUIRE(edge.isLinked() == FALSE);
+  REQUIRE(edge1.isLinked() == true);
+  REQUIRE(edge.isLinked() == false);
   // NB ids are ordered when stored so may be the opposite way around to the constructor
   REQUIRE(((edge1.id1() == id1 && edge1.id2() == id2) || (edge1.id2() == id1 && edge1.id1() == id2)) == FALSE);
   return;
