@@ -49,5 +49,13 @@ void Display::draw() const {
     view.second->draw();
   }
 }
+  
+  void Display::saveAs() const {
+    int i =0;
+    for (auto const& view : m_views) {
+      view.second->saveAs(std::string ("file" + std::to_string(i)+ ".jpg").c_str());
+      i++;
+    }
+  }
 
 }  // end namespace papas

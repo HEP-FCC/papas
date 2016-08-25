@@ -75,7 +75,12 @@ To run example_simple:
 
 example_simple examples/ee_ZH_Zmumu_Hbb.root
 
-This should produce a display (NB to exit choose file/quit ROOT).
+This should produce a display (NB to exit choose file/quit ROOT) and gif outputs: file0.gif file1.gif
+
+TODO work out how to add in an image
+![Alt text](/Users/alice/fcc/papas/papas_cc/doc/file0.pdf?raw=true "Optional Title")
+
+
 
 You should also get a printout like:
 

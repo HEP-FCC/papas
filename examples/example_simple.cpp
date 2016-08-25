@@ -16,6 +16,20 @@
 
 #include <iostream>
 
+
+#include <iostream>
+
+using namespace std;
+
+#include <TApplication.h>
+#include <TCanvas.h>
+
+
+
+
+
+
+
 int main(int argc, char* argv[]) {
 
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
@@ -55,5 +69,7 @@ int main(int argc, char* argv[]) {
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;
     exit(1);
+  } catch (const char* c) {
+    std::cerr << c << ". Quitting." << std::endl;
   }
 }

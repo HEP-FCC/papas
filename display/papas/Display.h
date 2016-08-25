@@ -29,6 +29,7 @@ public:
   // AJRTODO does this need Zoom?
   void unZoom();
   void draw() const;
+  void saveAs() const;
 
 private:
   /// Map containing the views //TODO make enum

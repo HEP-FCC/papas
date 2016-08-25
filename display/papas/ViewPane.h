@@ -31,6 +31,7 @@ public:
   void draw();
   void zoom(double xmin, double xmax, double ymin, double ymax);
   void unZoom();
+  void saveAs(const char* fname);
 
   /// Static counter to say how many viewpanes there are in total
   static int nviews;

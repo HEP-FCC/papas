@@ -6,9 +6,9 @@
 //
 //
 
-#include "PythiaConnector.h"
 #include "PFReconstructor.h"
 #include "PapasManager.h"
+#include "PythiaConnector.h"
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
@@ -19,6 +19,8 @@
 #include "Simulator.h"
 
 #include <exception>
+#include <string>
+#include <sys/stat.h>
 
 // ROOT
 #include "TBranch.h"
@@ -29,14 +31,11 @@
 
 PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore()), m_reader(podio::ROOTReader()) {
 
-  try {
-     m_reader.openFile(fname);
-  } catch (std::exception& err) {
-    std::cerr << err.what() << ". Quitting." << std::endl;
-    exit(1);
-  } catch(...) {
-    std::cerr << "Error occured: quitting"<< std::endl;
-    exit(1);
+  // check file exists before attempting to open (this is supposed to be a fast way to check)
+  if (access(fname, F_OK) != -1) {
+    m_reader.openFile(fname);
+  } else {
+    throw "File not found";
   }
   m_store.setReader(&m_reader);
 }

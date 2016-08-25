@@ -22,6 +22,7 @@ void PFApp::display(const Simulator& simulator, const PFEvent& pfEvent, const Pa
   m_gdetector = std::make_shared<GDetector>(GDetector(det));
   m_display->addToRegister(m_gdetector, 0);
   m_display->drawEvent(simulator, pfEvent);
+  m_display->saveAs();
 }
 void PFApp::display2(const Simulator& simulator, const PFEvent& pfEvent, const Particles& particles,
                      const Detector& det) {
