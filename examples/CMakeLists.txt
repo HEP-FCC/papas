@@ -22,6 +22,12 @@ target_link_libraries(example_loop papascpp ${ROOT_LIBRARIES}  datamodel datamod
 add_executable(example_pair example_dag_pair.cpp)
 target_link_libraries(example_pair papascpp ${ROOT_LIBRARIES} )
 
+add_executable(example_pdebug example_pdebug_python_comparer.cpp  PythiaConnector.cpp )
+target_link_libraries(example_pdebug papascpp ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
+
+add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )
+target_link_libraries(example_plot papascpp ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
+
 #add_executable(example_root example_root.cpp example_frame.cpp)
 #target_link_libraries(example_root  papascpp ${ROOT_LIBRARIES} datamodelDict )
 

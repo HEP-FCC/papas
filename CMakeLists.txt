@@ -87,7 +87,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 
 
 add_subdirectory(papascpp)
-add_subdirectory(main)
+#add_subdirectory(main)
 add_subdirectory(examples)
 #add_subdirectory(graphtools)
 

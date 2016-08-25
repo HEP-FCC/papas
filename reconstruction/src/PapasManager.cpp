@@ -63,12 +63,16 @@ void PapasManager::clear() {
   Id::reset();
 }
 
-void PapasManager::display() {
+void PapasManager::display(bool jpg) {
 
-  PFApp myApp{};
+  PFApp myApp{}; // I think this should turn into a PapasManager member
   
   myApp.display(m_simulator, m_pfEvent, m_particles, m_detector);
-  std::cout << "finish" << std::endl;
+  if (jpg)
+    myApp.jpg();
+ 
 }
+  
+
 
 }  // end namespace papas

@@ -64,7 +64,9 @@ int main(int argc, char* argv[]) {
       std::cout << "  " << p.second << std::endl;
     }
     // produce papas display
-    papasManager.display();
+    //TApplication tApp("theApp", &argc, argv) ;
+    papasManager.display(true);
+    
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;

@@ -10,7 +10,7 @@
 #define AliceDisplay_hpp
 
 #include "Display.h"
-#include "TApplication.h"
+//#include "TApplication.h"
 
 #include "DefinitionsCollections.h"
 #include "GDetector.h"
@@ -34,20 +34,19 @@ public:
     gPad->Modified();
     gPad->Update();
     gSystem->ProcessEvents();
-    // m_theApp.Run(k);
+    //m_theApp.Run(k);
   }
   void terminate() {
     std::cout << "Terminate";
     // m_theApp.Terminate();
   }
+  void jpg();
+  
 
 private:
-  Int_t m_argc;  // dummy arguments
-  char* m_str[1];
-  // TApplication m_theApp;
-  // PFEventDisplay m_display;  // make shared
   std::shared_ptr<GDetector> m_gdetector;
   PFEventDisplay* m_display;
+  
 };
 
 }  // end namespace papas

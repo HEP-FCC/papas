@@ -58,7 +58,7 @@ Compilation
 DOxygen Documentation
 --
   
-  make doc
+   make doc
 
 Test
 --
@@ -73,16 +73,18 @@ Examples can be found in the examples directory
 
 To run example_simple:
 
-example_simple examples/ee_ZH_Zmumu_Hbb.root
+(1) create a Pythia example.root file eg by following:-
 
-This should produce a display (NB to exit choose file/quit ROOT) and gif outputs: file0.gif file1.gif
+https://twiki.cern.ch/twiki/bin/view/FCC/FccSoftwareHeppy
 
-TODO work out how to add in an image
-![Alt text](/Users/alice/fcc/papas/papas_cc/doc/file0.pdf?raw=true "Optional Title")
+(2) Then run Papas on this file
+
+    example_simple example.root
+
+This should produce text outputs and also jgp display files.
 
 
-
-You should also get a printout like:
+You should get a printout like:
 
     Generated Stable Particles
     Particle :p206     :17179869390: pdgid =    22, status =   1, q =  0, pt =   0.9, e =   0.9, eta = -0.13, theta = -0.13, phi =  0.08, mass =  0.00
@@ -97,6 +99,12 @@ You should also get a printout like:
     Particle :r676     :21474837156: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
     ...
     Particle :r631     :21474837111: pdgid =    22, status =   1, q =  0, pt =  16.1, e =  16.5, eta = -0.23, theta = -0.23, phi = -0.01, mass =  0.00
+
+jpg files like:
+
+TODO work out how to add in an image
+![Alt text](/Users/alice/fcc/papas/papas_cc/doc/file0.pdf?raw=true "Optional Title")
+
 
 The example will also produce an output root file containing the reconstructed particles
 
