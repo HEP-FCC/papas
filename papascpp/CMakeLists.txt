@@ -43,7 +43,7 @@ add_library(papascpp SHARED ${sources}  ${headers}  papascppDict.cxx )
 add_dependencies(papascpp papascppDict-dictgen )
 
 target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} )
-
+target_compile_definitions(papascpp PRIVATE WITHSORT=1)
 install(TARGETS papascpp DESTINATION lib)
 
 # Install the dictionary

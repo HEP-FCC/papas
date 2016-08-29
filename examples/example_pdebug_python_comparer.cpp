@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     const char* lname = argv[2];
     PDebug::On(lname);  // physics debug output
   }
-  
+
   
   // Create CMS detector and PapasManager
   CMS CMSDetector;

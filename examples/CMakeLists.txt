@@ -17,12 +17,14 @@ add_executable(example_simple example_simple.cpp PythiaConnector.cpp)
 target_link_libraries(example_simple papascpp ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
 
 add_executable(example_loop example_loop.cpp PythiaConnector.cpp)
+target_compile_definitions(example_loop PRIVATE WITHSORT=1)
 target_link_libraries(example_loop papascpp ${ROOT_LIBRARIES}  datamodel datamodelDict podio utilities)
 
 add_executable(example_pair example_dag_pair.cpp)
 target_link_libraries(example_pair papascpp ${ROOT_LIBRARIES} )
 
 add_executable(example_pdebug example_pdebug_python_comparer.cpp  PythiaConnector.cpp )
+
 target_link_libraries(example_pdebug papascpp ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
 
 add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )

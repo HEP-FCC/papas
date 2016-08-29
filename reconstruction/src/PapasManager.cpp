@@ -30,9 +30,10 @@ void PapasManager::simulateEvent(Particles&& particles) {
     ids.push_back(kv.first);
   }
 
+  #if WITHSORT
   std::sort(ids.begin(), ids.end(),
             [&](IdType i, IdType j) { return (m_particles.at(i).e() > m_particles.at(j).e()); });
-
+#endif
   for (const auto& id : ids) {
     // std::cout << id<< m_particles.at(id)<<std::endl;
     m_history.emplace(id, std::move(PFNode(id)));  ///< insert the raw particle ids into the history

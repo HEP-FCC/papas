@@ -43,7 +43,10 @@ GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b) {
 }
 
 void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
+  
+#if WITHSORT
   std::sort(ids.begin(), ids.end(), [](IdType a, IdType b) -> bool { return a < b; });
+#endif
 }
 
 }  // end namespace papas

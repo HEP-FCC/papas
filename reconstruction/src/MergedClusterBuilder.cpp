@@ -29,8 +29,9 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
   for (auto const& cluster : clusters) {
     uniqueids.push_back(cluster.first);
   }
+      #if WITHSORT
   std::sort(uniqueids.begin(), uniqueids.end());
-
+#endif
   // create unordered map containing all edge combinations indexed by edgeKey
   Edges edges;
   for (auto id1 : uniqueids) {
@@ -45,7 +46,9 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
   }
   GraphBuilder grBuilder{uniqueids, edges};
   for (auto ids : grBuilder.subGraphs()) {
+    #if WITHSORT
     std::sort(ids.begin(), ids.end());
+#endif
     auto id = ids[0];
     if (ids.size() > 1) {
       for (const auto& c : ids) {
