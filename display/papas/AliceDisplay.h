@@ -16,6 +16,7 @@
 #include "GDetector.h"
 #include "PFEventDisplay.h"
 #include "TSystem.h"
+#include <TApplication.h>
 
 namespace papas {
 
@@ -44,6 +45,7 @@ public:
   
 
 private:
+ 
   std::shared_ptr<GDetector> m_gdetector;
   PFEventDisplay* m_display;
   

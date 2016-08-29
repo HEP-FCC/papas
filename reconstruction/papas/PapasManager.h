@@ -11,6 +11,7 @@
 
 #include "PFEvent.h"
 #include "Simulator.h"
+#include "AliceDisplay.h"
 
 namespace papas {
 /// High level class to recieve a set of particles, run simulation and then reconstruction
@@ -22,7 +23,8 @@ public:
   const Particles& reconstructedParticles() { return m_pfEvent.reconstructedParticles(); }
   const Particles& rawParticles() { return m_particles; }
   void clear();
-  void display(bool show=false);  ///< relocate?
+  void display(bool plot=false);  ///< relocate?
+  void show();
   Simulator& simulator() { return m_simulator; }
 
 private:
@@ -32,6 +34,7 @@ private:
   PFEvent m_pfEvent;
   Nodes m_history;
   Particles m_particles;
+  PFApp m_app;
 };
 }
 

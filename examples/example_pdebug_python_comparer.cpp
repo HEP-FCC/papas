@@ -18,6 +18,8 @@
 #include <chrono>
 #include <iostream>
 
+#include <TApplication.h>
+
 
 
 using namespace papas;
@@ -25,12 +27,12 @@ using namespace papas;
 
 int main(int argc, char* argv[]) {
 
-  
+ 
   
   randomgen::setEngineSeed(0xdeadbeef);
   
   if (argc < 2) {
-    std::cerr << "Usage: ./mainexe filename [logname]" << std::endl;
+    std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
@@ -46,10 +48,11 @@ int main(int argc, char* argv[]) {
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 10;
+  unsigned int nEvents = 1000;
   
   auto start = std::chrono::steady_clock::now();
   
+  // TApplication tapp("papas", &argc, argv );
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
     
     PDebug::write("Event: {}", i);
@@ -61,9 +64,13 @@ int main(int argc, char* argv[]) {
     else {
       papasManager.clear();
     }
+    
     pythiaConnector.processEvent(i, papasManager);
+    /*if (i==0)
+      papasManager.display();
+    gSystem->ProcessEvents();*/
   }
-  papasManager.display();
+  
   auto end = std::chrono::steady_clock::now();
   auto diff = end - start;
   auto times = std::chrono::duration<double, std::milli>(diff).count();

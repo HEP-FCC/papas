@@ -65,14 +65,20 @@ void PapasManager::clear() {
 
 void PapasManager::display(bool jpg) {
 
-  PFApp myApp{}; // I think this should turn into a PapasManager member
+  //PFApp myApp{}; // I think this should turn into a PapasManager member
   
-  myApp.display(m_simulator, m_pfEvent, m_particles, m_detector);
+  m_app.display(m_simulator, m_pfEvent, m_particles, m_detector);
   if (jpg)
-    myApp.jpg();
+    m_app.jpg();
  
 }
-  
+  void PapasManager::show() {
+    
+    //move to PFApp;
+    
+    gSystem->ProcessEvents();
+    
+  }
 
 
 }  // end namespace papas
