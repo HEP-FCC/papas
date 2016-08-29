@@ -1,61 +1,39 @@
-TODO C++ Papas Code. July 2016
+TODO C++ Papas Code. Aug  2016
 
-Main.cpp
-In progress: Tidy up, make examples folder
-DONE Throw out several unused headers
-DONE Separate out into example(s)
-DONE Make it write results out to Pythia
-DONE Use command line arguments to feed in parameters (filename, initialevent, #No events)
-Get Gun example to run
-DONE: make PDEBUG turn on and off properly
-
-Examples
-In PROGRESS: Document and test Mac and lxplus.
-? Make example use papas library rather than compiling all together
-?? make example suitable for Nicolo to try out.
-
-Look into TWidget. Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
 
 FCCSW Guidelines & Code Formatting
-DONE Files which start with lower case letter are in the queue &  need to be reformatted according to FCCSW guidelines
-DONE Several files contain more than one class and will need to be split into separate files
-Rename class variables and functions where needed
-Have just run a global reformat using FCCSW Clang format file through all code. Need to check for any glitches in this.
-DONE: Address remaining code warnings
-Revisit use of && in code and whether this is a good idea
 Clear out debugging stuff and commented out sections 
+Ask Joshka: See if there are new tools for automated checking
+ASk Joschka: How best to integrate DOxygen outputs
 
 Commenting
-Commenting is very variable. Try CMS.h, detector.h, PFBlock for examples of more complete commenting
-DONE: Reinstate Doxygen documentation again on Max
-Add doxygen comments to header files which have not yet been done
-Update existing comments which are outdated.
+Still more to do but it has improved.
 
-Makefiles
-NEARLY THERE: Embarrassingly horrible at present. Completely Revamp the CMakefiles using PODIO make file as example. 
-Ongoing problem with ROOT and Xcode not working using FCCSW cmakelists
-Figure out how to get DYLD_LIBRARY_PATH properly sorted for Mac - need advise.
-Make the Makefiles use package structure more formally 
-DONE: Take advice about how to separate out library, examples etc
-REMOVED FOR NOW: Looks like am building library twice (slow).
+ROOT: 
+ask Pere re Makefiles
+	Ongoing problem with ROOT and Xcode not working using FCCSW cmakelists
+	Figure out how to get DYLD_LIBRARY_PATH properly sorted for Mac - need advise.
+Tried and lost: ask Père. Look into TWidget. Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
 
-Package Structure
+
+Package Structure & Top-level-structure
 Review package structure as some parts are not quite right. PFEventdisplay may need to be moved. 
-Change Makefile and Headers to match the finalised package structure eg “datatypes/Cluster.h” not “Cluster.h"
-
-Top-level-structure
+Change Makefile and Headers to match the finalised package structure eg “papas/Cluster.h” not “Cluster.h"
 Still needs work on where everything should “live”  & ownership. This needs to take into account Python calls and future use in Gaudi. Its not quite right as yet.
 PfEvent, PapasManager, Simulator and Reconstructor all own some key parts and some jiggling is needed, esp for  where C++ is to be used as a library.
-Still not sure about Path and how it is used.
 
-C++ library:
-DONE Tidy the selections.xml file. 
+C++ library for Python:
 Add suitable additional functions & remove redundant ones
 
-Timings/Profiling
+Examples
+Get Gun example to run separately
+Add pythia generate file into example instructions
+
+Timings/Profiling:
 Timings on linux
 Time pythia on Mac
-Profiling and memory leaks 
+Profiling and memory leaks
+Discuss sortng with Colin - matching with Python which required sorting has slowed code down 
 
 History: make a  class to provide user friendly front end
 
@@ -68,42 +46,23 @@ make map of views use enum not string
 Logging etc
 STARTED: Add in error handling
 Implement logging messages. Logging structure is available but not used except for PDebug which handles the physics debug output).
-DONE: Separate out PDebug from Logging. Make PDebug more configurable.
-
-DONE Bug fix
-DONE There is a bug somewhere that comes into play when I use the papasmamanger.clear( ). Needs careful investigation.
 
 Unit testing
-DONE: Convert to Catch  
-UNDERWAY:Implement the rest of the python & gtest tests
-DONE Sort out where to store the tests and set up a separate test build
-DONE Gtest is not working on lxplus and has been commented out of cmake for now.
-
+Still more to do, but quite a bit now in place
 
 Physics
 Check with Colin about smeared electrons and muons and their duplicate particles in python
 Take a look at some of the particle reconstructions to understand differences relative to raw particles.
 
-DONE Python matching
-DONE Adjust particles in Python to match latest C++ modifications and get matching working once more
-DONE Add sorting routine to reinstate matching with Python
-
 Others
 Attend to TODOs and comments in the existing code
 *** Add in new Id:type for simulated particle
 **** Header file for constants
-DONE: unordered_map with sroting to match python makes it slower? Work on sorting
 Consider making helper classes for outputs??
-remove attempts to reserve for vectors (Stroustrup says its not worthwhile)
 SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
-DISCUSSED: Issue with naming of Track.h and ParticleData.h and clashing with PODIO header files. Adjusted names for time being to allow compilation. Need advice!
 
-Ctest
-DONE example Catch
 
 New queries:
-see if Python library check still works
 Investigate reduction  in speed following unordered_maps and sorting - make optional?
 
-Do I really need to split very small classes eg Random
-DONE Separate out CMS
+In progress: Constructors syntax remove {}
