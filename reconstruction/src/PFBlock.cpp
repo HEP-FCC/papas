@@ -95,11 +95,11 @@ std::string PFBlock::shortName() const {
   return shortName;
 }
 
-Edge& PFBlock::findEdge(Edge::EdgeKey key) {
+/*Edge& PFBlock::findEdge(Edge::EdgeKey key) {
   auto edge = m_edges.find(key);
   if (edge == m_edges.end()) throw std::range_error("Edge not found");
   return edge->second;
-}
+}*/
 const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   auto edge = m_edges.find(key);
   if (edge == m_edges.end()) throw std::range_error("Edge not found");

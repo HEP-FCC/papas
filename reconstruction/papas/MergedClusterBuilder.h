@@ -34,8 +34,8 @@ public:
    *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
    *                     if it is empty it will be ignored
    */
-  MergedClusterBuilder(const Clusters& clusters, EventRuler& ruler, Nodes& historyNodes);
-  Clusters& mergedClusters() { return m_merged; }
+  MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler, Nodes& historyNodes);
+  const Clusters& mergedClusters() { return m_merged; }
   Nodes& historyNodes() { return m_historyNodes; }
 
 private:

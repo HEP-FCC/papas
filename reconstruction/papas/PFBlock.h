@@ -42,8 +42,8 @@ public:
   ~PFBlock() = default;
   PFBlock(PFBlock&& pfblock) = default;
 
-  const Ids elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-  Edge& findEdge(Edge::EdgeKey key);
+  const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
+                                                          //Edge& findEdge(Edge::EdgeKey key);
   const Edge& findEdge(Edge::EdgeKey key) const;
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
@@ -74,7 +74,7 @@ public:
   std::string info() const;
   std::string elementsString() const;
   std::string edgeMatrixString() const;
-  const class Edge& edge(IdType id1, IdType id2) const;
+  const Edge& edge(IdType id1, IdType id2) const;
 
 private:
   PFBlock(PFBlock& pfblock) = default;           //{std::cout << "COPY BLOCK";};
