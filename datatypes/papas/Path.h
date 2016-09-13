@@ -25,20 +25,20 @@ public:
 
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
-  Path(TLorentzVector p4, TVector3 origin, double field = 0.);
+  Path(TLorentzVector p4, const TVector3& origin, double field = 0.);
   Path();
   virtual ~Path() = default;
 
-  void addPoint(papas::Position layer, TVector3 vec) { m_points[layer] = vec; }
+  void addPoint(papas::Position layer, const TVector3& vec) { m_points[layer] = vec; }
   double timeAtZ(double z) const;
   double deltaT(double path_length) const;
   double vZ() const;
   double vPerp() const;
   double speed() const { return m_speed; }
-  TVector3 unitDirection() const { return m_unitDirection; }
-  TVector3 origin() const { return m_origin; }
+  const TVector3& unitDirection() const { return m_unitDirection; }
+  const TVector3& origin() const { return m_origin; }
   bool hasNamedPoint(papas::Position layer) const;
-  TVector3 namedPoint(papas::Position layer) const;
+  const TVector3& namedPoint(papas::Position layer) const;
   virtual TVector3 pointAtTime(double time) const;
   const Points& points() const { return m_points; }
   double field() const { return m_field; }

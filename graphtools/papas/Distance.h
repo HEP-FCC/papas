@@ -22,7 +22,7 @@ public:
   Distance(bool islinked, double dist);
   Distance(const Cluster& cluster, const Track& track);
   Distance(const Cluster& cluster1, const Cluster& cluster2);
-  void setDistanceToPoint(TVector3 point, const Cluster& cluster);
+  void setDistanceToPoint(const TVector3& point, const Cluster& cluster);
   bool isLinked() const { return m_isLinked; };
   double distance() const { return m_distance; };
 

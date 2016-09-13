@@ -166,7 +166,7 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-SimParticle Simulator::makeSimParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex) {
+SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex) {
 
   double field = m_detector.field()->getMagnitude();
   IdType uniqueid = Id::makeParticleId();
@@ -175,7 +175,7 @@ SimParticle Simulator::makeSimParticle(int pdgid, double charge, TLorentzVector 
 }
 
 SimParticle Simulator::makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
-                                       TVector3 vertex) {
+                                       const TVector3& vertex) {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
@@ -194,7 +194,7 @@ SimParticle& Simulator::storeSimParticle(SimParticle&& simParticle, IdType paren
 }
 
 SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                                       double ptmax, TVector3 vertex) {
+                                       double ptmax, const TVector3& vertex) {
   double theta = randomgen::RandUniform(thetamin, thetamax).next();
   double phi = randomgen::RandUniform(-M_PI, M_PI).next();
   double energy = randomgen::RandUniform(ptmin, ptmax).next();

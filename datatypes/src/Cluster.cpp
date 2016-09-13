@@ -14,7 +14,7 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, TVector3 position, double size_m, Id::ItemType idtype)
+Cluster::Cluster(double energy,const TVector3& position, double size_m, Id::ItemType idtype)
     : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);

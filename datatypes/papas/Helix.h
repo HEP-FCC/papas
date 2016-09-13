@@ -17,7 +17,7 @@ class Helix : public Path {
 public:
   Helix();
   ~Helix() = default;
-  Helix(TLorentzVector p4, TVector3 origin, double field, double charge);
+  Helix(const TLorentzVector& p4, const TVector3& origin, double field, double charge);
   std::vector<double> polarAtTime(double time) const;
   double timeAtPhi(double phi) const;
   double phi(double x, double y) const;
@@ -27,8 +27,8 @@ public:
   TVector3 pointAtTime(double time) const override;
   TVector3 pointAtZ(double z) const;
   TVector3 pointAtPhi(double phi) const;
-  TVector3 extremePointXY() const { return m_extremePointXY; }
-  TVector3 centerXY() const { return m_centerXY; }
+  const TVector3& extremePointXY() const { return m_extremePointXY; }
+  const TVector3& centerXY() const { return m_centerXY; }
   double maxTime() const;
 
 private:

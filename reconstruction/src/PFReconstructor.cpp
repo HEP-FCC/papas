@@ -344,7 +344,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
 }
 
 SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy,
-                                                TVector3 vertex) {
+                                               const TVector3& vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
   int pdgId = 0;

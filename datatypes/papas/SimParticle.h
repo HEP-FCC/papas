@@ -22,9 +22,9 @@ public:
   SimParticle(const SimParticle&) = default;  //{std::cout << "COPY CONST SimParticle";};
   // SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field =
   // 0.);
-  SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.),
+  SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.),
               double field = 0.);
-  SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, const Track& track);
+  SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track);
 
   TVector3 pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
   void setPath(Path::Ptr path) { m_path = path; }

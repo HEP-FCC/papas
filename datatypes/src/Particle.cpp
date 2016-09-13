@@ -29,7 +29,7 @@ Particle::Particle(IdType id, int pdgid, double charge)
   m_tlv = TLorentzVector{0., 0., 0., 0.};
 }
 
-Particle::Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status)
+Particle::Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status)
     : m_uniqueId(id), m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status) {}
 
 std::string Particle::info() const {

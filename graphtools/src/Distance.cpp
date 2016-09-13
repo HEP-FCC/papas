@@ -22,7 +22,7 @@ Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) : m_distanc
   m_isLinked = (m_distance < cluster1.angularSize() + cluster2.angularSize());
 }
 
-void Distance::setDistanceToPoint(TVector3 point, const Cluster& cluster) {
+void Distance::setDistanceToPoint(const TVector3& point, const Cluster& cluster) {
   m_distance = (cluster.position() - point).Mag();
   m_isLinked = m_distance < cluster.size();
 }

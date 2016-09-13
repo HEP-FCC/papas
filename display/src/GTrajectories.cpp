@@ -12,11 +12,11 @@
 
 namespace papas {
 
-void GTrajectories::addStraight(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor, int linewidth) {
+void GTrajectories::addStraight(Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
 }
 
-void GTrajectories::addPoints(const std::vector<TVector3>& points, TVector3 tvec, int linestyle, int linecolor,
+void GTrajectories::addPoints(const std::vector<TVector3>& points, const TVector3& tvec, int linestyle, int linecolor,
                               int linewidth) {
 
   std::vector<double> X;
@@ -70,7 +70,7 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, double scale,
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.3, linestyle, linecolor, linewidth));
 }
 
-void GTrajectories::addNamedPoints(const Path::Points& points, TVector3 tvec, int linestyle, int linecolor,
+void GTrajectories::addNamedPoints(const Path::Points& points,const TVector3& tvec, int linestyle, int linecolor,
                                    int linewidth) {
 
   std::vector<double> X;
@@ -100,7 +100,7 @@ void GTrajectories::addNamedPoints(const Path::Points& points, TVector3 tvec, in
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.7, linestyle, linecolor, linewidth));
 }
 
-void GTrajectories::addHelix(Path::Ptr path, TVector3 tvec, int linestyle, int linecolor) {
+void GTrajectories::addHelix(Path::Ptr path,const TVector3& tvec, int linestyle, int linecolor) {
 
   int npoints = 100;
   std::vector<double> X;

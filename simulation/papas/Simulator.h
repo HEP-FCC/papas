@@ -63,11 +63,11 @@ public:
    @param[in] double thetamax: maximum theta
    @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
    @param[in] double ptmax: maximum pt
-   @param[in] TVector3 vertex: start point of particle
+   @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
   SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
+                              const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
 private:
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
@@ -79,11 +79,11 @@ private:
   /**
    Makes a new SimParticle
    @param[in] int pdgid: particle id (eg 22 for a photon)
-   @param[in] TLorentzVector tlv: particle momentum
-   @param[in] TVector3 vertex: start point of particle
+   @param[in] const TLorentzVector& tlv: particle momentum
+   @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle makeSimParticle(int pdgid, double charge, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.));
+  SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.));
 
   /**
    Makes a new SimParticle
@@ -92,11 +92,11 @@ private:
    @param[in] double theta: initial direction of particle
    @param[in] double phi: initial direction of particle
    @param[in] double energy: energy of particle
-   @param[in] TVector3 vertex: start point of particle
+   @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
   SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
-                              TVector3 vertex = TVector3(0., 0., 0.));
+                              const TVector3& vertex = TVector3(0., 0., 0.));
   SimParticle& storeSimParticle(SimParticle&& simParticle, IdType parentId);
   Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
   const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history

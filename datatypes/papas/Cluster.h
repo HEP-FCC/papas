@@ -26,7 +26,7 @@ public:
    @param[in]  size_m  size of cluster (units?)
    @param[in]  id type of cluster eg kEcalCluster or kHcalCluster
     */
-  Cluster(double energy, TVector3 position, double size_m, Id::ItemType id);
+  Cluster(double energy, const TVector3& position, double size_m, Id::ItemType id);
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster to be copied
    @param[in]  id new unique id to be provided by user
@@ -50,7 +50,7 @@ public:
   double eta() const { return m_p3.Eta(); }
   double theta() const { return M_PI / 2. - m_p3.Theta(); }
   IdType id() const { return m_uniqueId; }
-  TVector3 position() const { return m_p3; }
+  const TVector3& position() const { return m_p3; }
   void setEnergy(double energy);
   void setSize(double value);
   const std::vector<const Cluster*>& subClusters() const { return m_subClusters; };

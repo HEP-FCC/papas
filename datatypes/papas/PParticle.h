@@ -21,9 +21,9 @@ class Particle {
 public:
   Particle();
   // Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(int pdgid, double charge,const  TLorentzVector& tlv, double status = 1);
   Particle(int pdgid, double charge);
-  Particle(IdType id, int pdgid, double charge, TLorentzVector tlv, double status = 1);
+  Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   Particle(IdType id, int pdgid, double charge);
   ~Particle() = default;
   Particle(Particle&&) = default;
@@ -32,7 +32,7 @@ public:
   Particle(const Particle& pfblock) = default;     // {std::cout << "COPY CONST Particle";};
 
   std::string stringDescription() const;              ///< String to describe the particle
-  const TLorentzVector p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
+  const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   const TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz
   double e() const { return m_tlv.E(); }              ///<Energy
   double pt() const { return m_tlv.Pt(); }            ///<transverse momentum (magnitude of p3 in transverse plane)
@@ -43,8 +43,8 @@ public:
   int pdgId() const { return m_particleId; }                 ///< particle type (an integer value)
   double charge() const { return m_charge; }                 ///< particle charge
   bool status() const { return m_status; }                   ///<status code, e.g. from generator. 1:stable.
-  TVector3 startVertex() const { return m_startVertex; }     ///<start vertex (3d point)
-  TVector3 endVertex() const { return m_endVertex; }         ///<end vertex (3d point)
+  const TVector3& startVertex() const { return m_startVertex; }     ///<start vertex (3d point)
+  const TVector3& endVertex() const { return m_endVertex; }         ///<end vertex (3d point)
   IdType id() const { return m_uniqueId; }
   std::string info() const;  ///< text descriptor of the particle
 

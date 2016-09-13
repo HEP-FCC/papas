@@ -32,7 +32,7 @@ else
 
 }*/
 
-SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, TVector3 vertex, double field)
+SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex, double field)
     : Particle(uniqueid, pdgid, charge, tlv), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
 
   if (m_isHelix)
@@ -44,7 +44,7 @@ SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVect
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, TLorentzVector tlv, const Track& track)
+SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track)
     :  // for when particle is created via reconstruct track - it calls the above constructor
       SimParticle(uniqueid, pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
                   track.path()->field()) {
