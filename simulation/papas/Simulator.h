@@ -83,7 +83,7 @@ private:
    @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.));
+  SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.))const;
 
   /**
    Makes a new SimParticle
@@ -96,17 +96,17 @@ private:
    @return SimParticle& the newly created particle
    */
   SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
-                              const TVector3& vertex = TVector3(0., 0., 0.));
+                              const TVector3& vertex = TVector3(0., 0., 0.)) const;
   SimParticle& storeSimParticle(SimParticle&& simParticle, IdType parentId);
-  Cluster makeCluster(SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.);
+  Cluster makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.) const;
   const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
   const Cluster& storeHcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
   bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer = papas::Layer::kNone,
-                            papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false);
+                            papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false) const;
   const Cluster& storeSmearedCluster(Cluster&& smearedCluster, IdType parentId);
   const Track& storeTrack(Track&& track, IdType parentId);  ///<move track into tracks collection and history
-  Track smearTrack(const Track& track);                     ///< randomisation of the energy of a track
-  bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false);  ///< check if track is detected
+  Track smearTrack(const Track& track) const;                     ///< randomisation of the energy of a track
+  bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
   const Track& storeSmearedTrack(Track&& smearedtrack,
                                  IdType parentid);  ///<move into the smearedtracks collection and history
 

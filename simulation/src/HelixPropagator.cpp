@@ -11,7 +11,7 @@ namespace papas {
 
 HelixPropagator::HelixPropagator(double field) : m_field(field) {}
 
-void HelixPropagator::propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl) {
+void HelixPropagator::propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const {
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
 
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();

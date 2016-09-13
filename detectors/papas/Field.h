@@ -37,7 +37,7 @@ public:
   double getMagnitude() const { return m_magnitude; };
 
 protected:
-  double m_magnitude;  ///< Magentic field strength in TEV
+  double m_magnitude;  ///< Magentic field strength in Tesla
 };
 
 }  // end namespace papas

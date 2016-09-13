@@ -9,12 +9,12 @@ class SimParticle;
 class HelixPropagator {
 public:
   HelixPropagator(double field);
-  virtual void propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl);
+  virtual void propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const;
 
 private:
   double m_field;
-  void propagateOne(SimParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius,
-                    const Field& field, bool debugInfo);
+  void propagateOne(const SimParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius,
+                    const Field& field, bool debugInfo) const;
 };
 }  // end namespace papas
 #endif

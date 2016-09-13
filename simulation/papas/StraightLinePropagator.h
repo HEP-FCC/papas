@@ -10,10 +10,10 @@ class SimParticle;
 class StraightLinePropagator {
 public:
   StraightLinePropagator();
-  void propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl);
+  void propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const;
 
 private:
-  void propagateOne(SimParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius);
+  void propagateOne(const SimParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius) const;
 };
 
 }  // end namespace papas

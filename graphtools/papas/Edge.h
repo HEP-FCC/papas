@@ -20,7 +20,7 @@ public:
   /** @enum foo::EdgeType
    *  enumeration to describe the type of edge eg an hcal to hcal edge is type kHcalHcal
    */
-  enum class EdgeType { kUnknown = 0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack };
+  enum EdgeType { kUnknown = 0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack };
   typedef uint64_t EdgeKey;
 
   Edge() : m_id1(0), m_id2(0), m_isLinked(false), m_distance(0){};

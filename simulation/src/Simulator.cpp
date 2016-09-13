@@ -166,7 +166,7 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex) {
+SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
   IdType uniqueid = Id::makeParticleId();
@@ -175,7 +175,7 @@ SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzV
 }
 
 SimParticle Simulator::makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
-                                       const TVector3& vertex) {
+                                       const TVector3& vertex) const {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
@@ -183,7 +183,7 @@ SimParticle Simulator::makeSimParticle(int pdgid, double charge, double theta, d
   double cosphi = cos(phi);
   double sinphi = sin(phi);
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  return std::move(makeSimParticle(pdgid, charge, p4, vertex));
+  return makeSimParticle(pdgid, charge, p4, vertex);
 }
 
 SimParticle& Simulator::storeSimParticle(SimParticle&& simParticle, IdType parentId) {
@@ -211,7 +211,7 @@ SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin
   return storeSimParticle(std::move(simParticle), 0);
 }
 
-Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double fraction, double csize) {
+Cluster Simulator::makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction, double csize) const {
   double energy = ptc.p4().E() * fraction;
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();
   TVector3 pos = ptc.pathPosition(clayer);
@@ -219,7 +219,7 @@ Cluster Simulator::makeCluster(SimParticle& ptc, papas::Layer layer, double frac
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
   Cluster cluster{energy, pos, csize, Id::itemType(layer)};
-  return std::move(cluster);
+  return cluster;
 }
 
 const Cluster& Simulator::storeEcalCluster(Cluster&& cluster, IdType parentId) {
@@ -251,7 +251,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
 }
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer,
-                                     papas::Layer acceptLayer, bool accept) {
+                                     papas::Layer acceptLayer, bool accept) const {
 
   // Determine if this smeared cluster will be detected
   if (acceptLayer == papas::Layer::kNone) acceptLayer = detectorLayer;
@@ -284,12 +284,12 @@ const Track& Simulator::storeTrack(Track&& track, IdType parentid) {
   return m_tracks.at(id);
 }
 
-Track Simulator::smearTrack(const Track& track) {
+Track Simulator::smearTrack(const Track& track) const {
   double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
   Track smeared = Track{track.p3() * scale_factor, track.charge(), track.path()};
   PDebug::write("Made Smeared{}", smeared);
-  return std::move(smeared);
+  return smeared;
 }
 
 const Track& Simulator::storeSmearedTrack(Track&& smearedtrack, IdType parentid) {
@@ -300,7 +300,7 @@ const Track& Simulator::storeSmearedTrack(Track&& smearedtrack, IdType parentid)
   return m_smearedTracks[id];
 }
 
-bool Simulator::acceptSmearedTrack(const Track& smearedtrack, bool accept) {
+bool Simulator::acceptSmearedTrack(const Track& smearedtrack, bool accept) const {
   // decide whether the smearedTrack is detected
   if (m_detector.tracker()->acceptance(smearedtrack) || accept) {
     return true;

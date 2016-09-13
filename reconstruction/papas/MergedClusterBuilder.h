@@ -36,7 +36,7 @@ public:
    */
   MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler, Nodes& historyNodes);
   const Clusters& mergedClusters() { return m_merged; }
-  Nodes& historyNodes() { return m_historyNodes; }
+  Nodes& historyNodes() { return m_historyNodes; } //history nodes can be updated
 
 private:
   Clusters m_merged;      ///< the merged Clusters

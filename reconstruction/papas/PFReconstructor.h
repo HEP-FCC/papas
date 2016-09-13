@@ -88,7 +88,7 @@ private:
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
   SimParticle reconstructTrack(const Track& track);           ///< constructs particle(s) starting from a track
   SimParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
-                                const TVector3& vertex = TVector3());       ///< constructs particles starting from a cluster
+                                 const TVector3& vertex = TVector3());       ///< constructs particles starting from a cluster
   void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< adds particle into history
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;

@@ -11,10 +11,10 @@ namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(SimParticle& ptc,
+void StraightLinePropagator::propagateOne(const SimParticle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
-                                          double cylinderradius) {
+                                          double cylinderradius) const {
   Path::Ptr line = ptc.path();
   TVector3 udir = line->unitDirection();
   TVector3 origin = line->origin();
@@ -53,7 +53,7 @@ void StraightLinePropagator::propagateOne(SimParticle& ptc,
   }
 }
 
-void StraightLinePropagator::propagateOne(SimParticle& ptc, const SurfaceCylinder& cyl) {
+void StraightLinePropagator::propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const {
   propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 
