@@ -44,7 +44,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, EventRuler&
       }
     }
   }
-  GraphBuilder grBuilder{uniqueids, edges};
+      GraphBuilder grBuilder{uniqueids, std::move(edges)};
   for (auto ids : grBuilder.subGraphs()) {
     #if WITHSORT
     std::sort(ids.begin(), ids.end());

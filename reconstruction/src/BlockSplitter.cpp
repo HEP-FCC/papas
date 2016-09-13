@@ -23,7 +23,7 @@ BlockSplitter::BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& hi
     modifiedEdges.emplace(e.key(), std::move(e));
   }
 
-  BlockBuilder bbuilder{block.elementIds(), modifiedEdges, historynodes};
+  BlockBuilder bbuilder{block.elementIds(), std::move(modifiedEdges), historynodes};
   m_blocks = bbuilder.moveBlocks();
   block.setActive(false);
 }

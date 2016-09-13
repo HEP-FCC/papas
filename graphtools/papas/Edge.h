@@ -33,11 +33,11 @@ public:
    *   @param[in]  distance: distance between two elements
    */
   Edge(IdType id1, IdType id2, bool isLinked, double distance);
-  Edge(const Edge&) = default;  //{std::cout <<"copy Edge";};
+  /*Edge(const Edge&) = default;  //{std::cout <<"copy Edge";};
   Edge(Edge&&) = default;
   Edge& operator=(const Edge& other) = default;  // {   std::cout<<"copy EDGE =";};
   Edge& operator=(Edge&& other) = default;       // { std::cout <<"move edge =";};
-  ~Edge() = default;
+  ~Edge() = default;*/
 
   IdType id1() const { return m_id1; }
   IdType id2() const { return m_id2; }

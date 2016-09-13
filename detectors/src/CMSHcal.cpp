@@ -42,7 +42,7 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
   double eta = fabs(cluster.eta());
 
   bool accept = false;
-  randomgen::RandUniform rUniform{0, 1};
+  auto rUniform = randomgen::RandUniform(0, 1);
   if (eta < m_etaCrack) {
     if (energy > 1.) accept = rUniform.next() < (1 / (1 + exp((energy - 1.93816) / (-1.75330))));
   } else if (eta < 3.) {

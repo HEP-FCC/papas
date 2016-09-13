@@ -21,19 +21,19 @@ class Particle {
 public:
   Particle();
   // Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge,const  TLorentzVector& tlv, double status = 1);
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   Particle(int pdgid, double charge);
   Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   Particle(IdType id, int pdgid, double charge);
   ~Particle() = default;
   Particle(Particle&&) = default;
   Particle& operator=(const Particle&) = default;  // {std::cout << "= Particle"; };
-  Particle(Particle& pfblock) = default;           //{std::cout << "COPY Particle";};
-  Particle(const Particle& pfblock) = default;     // {std::cout << "COPY CONST Particle";};
+  Particle(Particle& particle) = default;           //{std::cout << "COPY Particle";};
+  Particle(const Particle& particle) = default;     // {std::cout << "COPY CONST Particle";};
 
   std::string stringDescription() const;              ///< String to describe the particle
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
-  const TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz
+  TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz, returning a local object so is not const &
   double e() const { return m_tlv.E(); }              ///<Energy
   double pt() const { return m_tlv.Pt(); }            ///<transverse momentum (magnitude of p3 in transverse plane)
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane

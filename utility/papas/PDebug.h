@@ -36,7 +36,7 @@ public:
 
   /// Tells PDebug where to write output and sets output level to info
   /// @param[in] fname filename
-  static void On(std::string fname) {
+  static void On(const std::string& fname) {
     s_On=true;
     s_fname = fname;
     slevel = spdlog::level::info;

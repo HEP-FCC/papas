@@ -17,12 +17,12 @@ namespace papas {
 class VolumeCylinder {
 public:
   VolumeCylinder(papas::Layer layer, double outerrad, double outerz, double innerrad = 0., double innerz = 0.);
+  ~VolumeCylinder();
   bool contains(const TVector3& point) const;
   const SurfaceCylinder& inner() const { return m_inner; }        ///< inner cyclinder of volume
   const SurfaceCylinder& outer() const { return m_outer; }        ///< outer cyclinder of volume
   papas::Position innerLayer() const { return m_inner.layer(); }  /// enum describing layer of inner cyclinder
-  ~VolumeCylinder();
-
+  
 private:
   SurfaceCylinder m_outer;
   SurfaceCylinder m_inner;

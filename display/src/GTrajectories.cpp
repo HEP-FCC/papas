@@ -12,7 +12,7 @@
 
 namespace papas {
 
-void GTrajectories::addStraight(Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth) {
+void GTrajectories::addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
 }
 
@@ -100,7 +100,7 @@ void GTrajectories::addNamedPoints(const Path::Points& points,const TVector3& tv
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.7, linestyle, linecolor, linewidth));
 }
 
-void GTrajectories::addHelix(Path::Ptr path,const TVector3& tvec, int linestyle, int linecolor) {
+void GTrajectories::addHelix(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor) {
 
   int npoints = 100;
   std::vector<double> X;

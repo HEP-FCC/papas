@@ -14,8 +14,8 @@
 
 namespace papas {
 
-BlockBuilder::BlockBuilder(Ids ids, Edges& edges, Nodes& historynodes)
-    : GraphBuilder(ids, edges), m_historyNodes(historynodes), m_blocks() {
+BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes)
+  : GraphBuilder(ids, std::move(edges)), m_historyNodes(historynodes), m_blocks() {
   makeBlocks();
 }
 

@@ -43,12 +43,9 @@ public:
   }
   void jpg();
   
-
 private:
- 
   std::shared_ptr<GDetector> m_gdetector;
   PFEventDisplay* m_display;
-  
 };
 
 }  // end namespace papas

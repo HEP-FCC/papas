@@ -15,7 +15,7 @@
 
 namespace papas {
 
-/** Used to unqiuely identify all clusters, tracks, blocks etc in PAPAS and also used in Nodes which
+/** Used to uniquely identify all clusters, tracks, blocks etc in PAPAS and also used in Nodes which
  * store the history (linkages) between items
  *
  * The Id Identifier is a 64bit unsigned integer

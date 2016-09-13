@@ -41,7 +41,7 @@ PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
       }
     }
   }
-  BlockBuilder bb(m_uniqueIds, edges, m_historyNodes);
+      BlockBuilder bb(m_uniqueIds, std::move(edges), m_historyNodes);
   m_blocks = bb.moveBlocks();
 }
 

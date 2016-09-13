@@ -25,9 +25,9 @@ public:
   static const double m_n;   //= 1.;
   static const double m_p;   //= 1.;
 
-  static double particleMass(unsigned int pid) { return particleData(pid).first; };
-  static double particleCharge(unsigned int pid) { return particleData(pid).second; };
-  static std::pair<double, unsigned int>& particleData(unsigned int pid) { return m_datamap[pid]; };
+  static double particleMass(unsigned int pid) { return particleData(pid).first; } ;
+  static double particleCharge(unsigned int pid) { return particleData(pid).second; } ;
+  static const std::pair<double, unsigned int>& particleData(unsigned int pid) { return m_datamap[pid]; } ;
   static std::unordered_map<unsigned int, std::pair<double, unsigned int>> m_datamap;
 };
 }  // end namespace papas
