@@ -26,7 +26,7 @@ public:
               double field = 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track);
 
-  TVector3 pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
+  const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }
   Path::Ptr path() const { return m_path; }

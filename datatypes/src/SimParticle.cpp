@@ -62,7 +62,7 @@ void SimParticle::setPath(const Path& path) {
   m_path = path;
 }*/
 
-TVector3 SimParticle::pathPosition(papas::Position layer) const { return m_path->namedPoint(layer); }
+const TVector3& SimParticle::pathPosition(papas::Position layer) const { return m_path->namedPoint(layer); }
 
 /*SimParticle::SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
  Particle(pdgid, charge, tlv), m_vertex(vertex) {

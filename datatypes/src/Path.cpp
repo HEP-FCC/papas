@@ -15,7 +15,7 @@ double gconstc = 299792458.0;  // TODO constants.c)
 
 Path::Path() {}
 
-Path::Path(TLorentzVector p4, const TVector3& origin, double field)
+Path::Path(const TLorentzVector& p4, const TVector3& origin, double field)
     : m_unitDirection(p4.Vect().Unit()),
       m_speed(p4.Beta() * gconstc),
       m_origin(origin.X(), origin.Y(), origin.Z()),

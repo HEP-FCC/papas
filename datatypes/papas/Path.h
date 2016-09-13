@@ -25,7 +25,7 @@ public:
 
   typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
 
-  Path(TLorentzVector p4, const TVector3& origin, double field = 0.);
+  Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
   Path();
   virtual ~Path() = default;
 
