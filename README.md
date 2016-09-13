@@ -110,3 +110,11 @@ The example will also produce an output root file containing the reconstructed p
 
           simpleeg.root
 
+For Mac Xcode project use 
+--
+
+mkdir xbuild
+cd xbuild
+cmake -G Xcode ../
+make
+
