@@ -33,7 +33,7 @@ public:
    * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
    */
   CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
-          std::vector<std::vector<double>> eres);
+          std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp);
 
   // constructor - requires the Material and Volume to be already in existance
   /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
@@ -68,6 +68,8 @@ private:
   double m_etaCrack;                        ///< ask Colin
   std::vector<double> m_emin;               ///< vector contains two elements (Barrel and EndCap)
   std::vector<std::vector<double>> m_eres;  ///< two vectors (Barrel and EndCap) each of 3 elements
+                                            ///< TODO describe elements
+  std::vector<std::vector<double>> m_eresp;  ///< two vectors (Barrel and EndCap) each of 3 elements
                                             ///< TODO describe elements
 };
 

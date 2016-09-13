@@ -24,12 +24,6 @@ using namespace std;
 #include <TApplication.h>
 #include <TCanvas.h>
 
-
-
-
-
-
-
 int main(int argc, char* argv[]) {
 
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable

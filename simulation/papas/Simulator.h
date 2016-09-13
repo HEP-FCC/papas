@@ -55,6 +55,20 @@ public:
                        papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
   void clear();  ///< Clear all the collections of clusters, particles, tracks
 
+  /**
+   Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
+   @param[in] int pdgid: particle id (eg 22 for a photon)
+   @param[in] double charge: charge of particle eg -1
+   @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
+   @param[in] double thetamax: maximum theta
+   @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
+   @param[in] double ptmax: maximum pt
+   @param[in] TVector3 vertex: start point of particle
+   @return SimParticle& the newly created particle
+   */
+  SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
+                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
+
 private:
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
   void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
@@ -109,20 +123,7 @@ private:
   Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
   Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
 
-  /**
-   Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
-   @param[in] int pdgid: particle id (eg 22 for a photon)
-   @param[in] double charge: charge of particle eg -1
-   @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
-   @param[in] double thetamax: maximum theta
-   @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
-   @param[in] double ptmax: maximum pt
-   @param[in] TVector3 vertex: start point of particle
-   @return SimParticle& the newly created particle
-   */
-  SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                              TVector3 vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
-
+ 
   Clusters m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters m_hcalClusters;         ///< hcal clusters (prior to smearing)
   Clusters m_smearedEcalClusters;  ///< smeared ecal clusters

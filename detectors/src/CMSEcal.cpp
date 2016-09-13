@@ -20,8 +20,8 @@ namespace papas {
  {}*/
 
 CMSECAL::CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
-                 const std::vector<std::vector<double>> eres)
-    : Calorimeter(Layer::kEcal, volume, material), m_etaCrack(eta_crack), m_emin(emin), m_eres(eres) {}
+                 const std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp)
+    : Calorimeter(Layer::kEcal, volume, material), m_etaCrack(eta_crack), m_emin(emin), m_eres(eres), m_eresp(eresp) {}
 
 double CMSECAL::clusterSize(const Particle& ptc) const {
 
@@ -53,9 +53,10 @@ double CMSECAL::energyResolution(double energy, double eta) const {
 }
 
 double CMSECAL::energyResponse(double energy, double eta) const {
-  (void)energy;  // suppress warning messages for unused parameters;
-  (void)eta;
-  return 1;
+  int location = kBarrel;
+  if (fabs(eta) > m_etaCrack) location = kEndCap;  // endcap
+  //using fermi-dirac function : [0]/(1 + exp( (energy-[1]) /[2] );
+  return m_eresp[location][0]/(1+exp((energy-m_eresp[location][1])/m_eresp[location][2]));   return 1;
 }
 
 }  // end namespace papas
