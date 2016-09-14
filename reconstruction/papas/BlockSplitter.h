@@ -40,7 +40,7 @@ public:
    *                     the new history will be added into the existing history
    */
   BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes);
-  Blocks& blocks() { return m_blocks; }; //not const as block status may be reset later on
+  Blocks blocks() { return std::move(m_blocks); }; //will move blocks out of Blocksplitter (better way?)
   friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);  // todo move to helper class?
 
 private:

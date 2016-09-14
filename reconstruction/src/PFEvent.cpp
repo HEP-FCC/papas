@@ -35,8 +35,8 @@ void PFEvent::mergeClusters() {
   EventRuler ruler{*this};
   MergedClusterBuilder ecalmerger{m_ecals, ruler, m_historyNodes};
   MergedClusterBuilder hcalmerger{m_hcals, ruler, m_historyNodes};
-  m_mergedEcals = std::move(ecalmerger.mergedClusters());
-  m_mergedHcals = std::move(hcalmerger.mergedClusters());
+  m_mergedEcals = ecalmerger.mergedClusters(); //move (check)
+  m_mergedHcals = hcalmerger.mergedClusters(); //move (check)
 }
 
 const Track& PFEvent::track(IdType id) const {

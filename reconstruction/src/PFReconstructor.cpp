@@ -139,9 +139,9 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
 
   // if there is something to unlink then use the BlockSplitter
   if (toUnlink.size() > 0) {
-    splitBlocks = std::move(BlockSplitter(toUnlink, block, m_historyNodes).blocks());
+    splitBlocks = BlockSplitter(toUnlink, block, m_historyNodes).blocks();
   }
-  return std::move(splitBlocks);
+  return splitBlocks; //moves
 }
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {

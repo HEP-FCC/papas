@@ -70,7 +70,7 @@ public:
   IdType uniqueId() const { return m_uniqueId; };        ///<Unique ID of the block
   bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
   void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
-  Edges& edges() { return m_edges; }
+  const Edges& edges() const { return m_edges; }
   std::string info() const;
   std::string elementsString() const;
   std::string edgeMatrixString() const;

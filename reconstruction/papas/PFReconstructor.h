@@ -79,7 +79,7 @@ public:
   // TODO consider if this is the best constructor function interface (could be the clusters tracks and history nodes)
   PFReconstructor(PFEvent& pfEvent);
   void reconstruct(Blocks& blocks);  ///< create reconstructed particles from the evnet
-  Particles& particles() { return m_particles; }
+  Particles& particles() { return m_particles; } ///allow the particles collection to be moved out and into PFevent
 
 private:
   Blocks simplifyBlock(

@@ -35,7 +35,7 @@ public:
    *                     if it is empty it will be ignored
    */
   MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler, Nodes& historyNodes);
-  const Clusters& mergedClusters() { return m_merged; }
+  Clusters mergedClusters() { return std::move(m_merged); } //empties m_merged - is this best way?
   Nodes& historyNodes() { return m_historyNodes; } //history nodes can be updated
 
 private:

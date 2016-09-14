@@ -50,7 +50,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent);  // TODO move to helper class??
 
 private:
-  const Clusters& m_ecals;
+  const Clusters& m_ecals; 
   const Clusters& m_hcals;
   Clusters m_mergedEcals;
   Clusters m_mergedHcals;

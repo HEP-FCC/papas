@@ -44,7 +44,7 @@ public:
 
 private:
   void makeBlocks();      // does the main work
-  Nodes& m_historyNodes;  ///< optional (can be empty) allows history to be updated
+  Nodes& m_historyNodes;  ///< history can be updated
   Blocks m_blocks;        ///< the blocks made by blockbuilder
 };
 
