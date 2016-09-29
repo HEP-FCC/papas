@@ -38,10 +38,8 @@ public:
    */
   Cluster(const Cluster& cluster, IdType id);
   Cluster() = default;
-  ~Cluster() = default;
-  Cluster(Cluster&& c) ;
-  Cluster(const Cluster& cluster) = default;
-  Cluster& operator=(const Cluster&) = default;
+  Cluster(Cluster&& c) ; //needed for unordered_map
+  Cluster(const Cluster& cluster) = default; //needed for unordered_map
   Cluster& operator+=(const Cluster& rhs);  ///< merges a cluster into an existing cluster
   double angularSize() const;
   double size() const;

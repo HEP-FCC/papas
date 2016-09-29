@@ -35,13 +35,6 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
   }
 }
 
-GraphBuilder& GraphBuilder::operator=(const GraphBuilder& b) {
-  m_elementIds = b.m_elementIds;
-  m_edges = b.m_edges;
-  m_subGraphs = b.m_subGraphs;
-  return *this;
-}
-
 void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
   
 #if WITHSORT

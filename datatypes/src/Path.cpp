@@ -41,7 +41,7 @@ double Path::deltaT(double path_length) const {
 TVector3 Path::pointAtTime(double time) const {
   /// Returns the 3D point on the path at a given time'''
   TVector3 ppoint = m_origin + m_unitDirection * m_speed * time;
-  return ppoint;  // AJRTODO check this works OK
+  return ppoint;  //move
 }
 
 double Path::vZ() const {

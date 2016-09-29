@@ -40,8 +40,7 @@ public:
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more),
    *            an edge records the distance and links between two ids
    */
-  GraphBuilder(const Ids& ids, Edges&& edges);
-  GraphBuilder& operator=(const GraphBuilder&);
+  GraphBuilder(const Ids& ids, Edges&& edges); //edges are moved in
 
   /// returns a vector containing vectors of Ids each of which is a subgraph
   const std::vector<Ids>& subGraphs() const { return m_subGraphs; };

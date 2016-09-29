@@ -54,7 +54,7 @@ void Simulator::simulatePhoton(SimParticle& ptc) {
   propagate(ptc, ecal_sp->volumeCylinder().inner());
   auto detectorLayer = papas::Layer::kEcal;
   auto cluster = makeCluster(ptc, papas::Layer::kEcal);
-  auto storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
+  const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
   auto smeared = smearCluster(storedCluster, detectorLayer);
   if (acceptSmearedCluster(smeared, detectorLayer)) {
     storeSmearedCluster(std::move(smeared), cluster.id());
@@ -94,7 +94,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
     if (ecal_sp->volumeCylinder().contains(pointDecay)) {
       fracEcal = randomgen::RandUniform(0., 0.7).next();
       auto cluster = makeCluster(ptc, papas::Layer::kEcal,fracEcal);
-      auto storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
+      const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
       // addSmearedCluster(cluster(ecalId), papas::Layer::kHcal, papas::Layer::kEcal);
@@ -111,7 +111,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   propagate(ptc, hcal_sp->volumeCylinder().inner());
 
   auto hcalCluster = makeCluster(ptc, papas::Layer::kHcal, 1 - fracEcal);
-  auto storedHcalCluster = storeHcalCluster(std::move(hcalCluster), ptc.id());
+  const auto& storedHcalCluster = storeHcalCluster(std::move(hcalCluster), ptc.id());
   auto hcalSmeared = smearCluster(storedHcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared, papas::Layer::kHcal)) {
     storeSmearedCluster(std::move(hcalSmeared), hcalCluster.id());

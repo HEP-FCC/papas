@@ -15,13 +15,7 @@ class Track;
 class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
-  ~SimParticle() = default;
   SimParticle() = default;
-  SimParticle(SimParticle&&) = default;
-  SimParticle(SimParticle&) = default;        //{std::cout << "COPY SimParticle";};
-  SimParticle(const SimParticle&) = default;  //{std::cout << "COPY CONST SimParticle";};
-  // SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex = TVector3(0., 0., 0.), double field =
-  // 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.), double field = 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track);
 

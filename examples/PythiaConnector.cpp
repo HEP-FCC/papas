@@ -78,7 +78,8 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   const fcc::ParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
     papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
-    papasManager.simulateEvent(std::move(papasparticles));
+    papasManager.storeParticles(std::move(papasparticles));
+    papasManager.simulateEvent();
     papasManager.reconstructEvent();
     m_store.clear();
   }

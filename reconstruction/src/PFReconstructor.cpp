@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "BlockSplitter.h"
+#include "PFBlockBuilder.h"
 #include "Cluster.h"
 #include "Edge.h"
 #include "PDebug.h"
@@ -29,7 +30,7 @@ namespace papas {
 PFReconstructor::PFReconstructor(PFEvent& pfEvent)
     : m_pfEvent(pfEvent), m_historyNodes(pfEvent.historyNodes()), m_hasHistory(pfEvent.historyNodes().size() == 0) {}
 
-void PFReconstructor::reconstruct(Blocks& blocks) {
+void PFReconstructor::reconstruct() {
   // TODO sort m_blocks
 
   // simplify the blocks by editing the links
@@ -38,9 +39,15 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   // sort the blocks by id to ensure match with python
   std::vector<IdType> blockids;
   std::vector<IdType> newblockids;
-  for (const auto& b : blocks) {
+  
+  Ids ids = m_pfEvent.mergedElementIds();
+  
+  // create the blocks of linked ids
+  auto bBuilder = PFBlockBuilder(ids, m_pfEvent);
+  m_blocks = bBuilder.blocks();
+  
+  for (const auto& b : m_blocks) {
     blockids.push_back(b.first);
-    //std::cout<<Id::pretty(b.first)<< ":" << b.first <<std::endl;
   }
   #if WITHSORT
   std::sort(blockids.begin(), blockids.end());
@@ -50,13 +57,11 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
     //std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
-    Blocks newBlocks = simplifyBlock(blocks.at(bid));
+    Blocks newBlocks = simplifyBlock(bid);
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
         IdType id = b.first;
-        //std::cout<<Id::pretty(b.first)<< ":" <<b.first <<std::endl;
-        blocks.emplace(id, std::move(b.second));
-        //std::cout<<Id::pretty(b.first)<< ":" <<b.first <<std::endl;
+        m_blocks.emplace(id, std::move(b.second));
         newblockids.push_back(b.first);
       }
     }
@@ -64,7 +69,7 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   blockids.insert(std::end(blockids), std::begin(newblockids), std::end(newblockids));
  
   for (auto bid : blockids) {
-    PFBlock& block = blocks.at(bid);
+    PFBlock& block = m_blocks.at(bid);
     if (block.isActive()) {  // when blocks are split the original gets deactivated
       PDebug::write("Processing {}", block);
       reconstructBlock(block);
@@ -78,7 +83,7 @@ void PFReconstructor::reconstruct(Blocks& blocks) {
   }
 }
 
-Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
+Blocks PFReconstructor::simplifyBlock(IdType id) {
   /* Block: a block which contains list of element ids and set of edges that connect them
    history_nodes: optional dictionary of Nodes with element identifiers in each node
 
@@ -91,6 +96,7 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
    have the tracks and cluster elements as parents, and also the original block as a parent
    */
   Blocks splitBlocks;
+  auto& block = m_blocks.at(id);
   Ids ids = block.elementIds();
 
   if (ids.size() <= 1) {  // if block is just one element therer are no links to remove

@@ -29,16 +29,6 @@ PFEvent::PFEvent(Simulator& sim)
       m_historyNodes(sim.historyNodes()),
       m_reconstructedParticles() {}
 
-/*void PFEvent::setBlocks(PFBlockBuilder& builder) { m_blocks = std::move(builder.blocks()); }*/
-
-void PFEvent::mergeClusters() {
-  EventRuler ruler{*this};
-  MergedClusterBuilder ecalmerger{m_ecals, ruler, m_historyNodes};
-  MergedClusterBuilder hcalmerger{m_hcals, ruler, m_historyNodes};
-  m_mergedEcals = ecalmerger.mergedClusters(); //move (check)
-  m_mergedHcals = hcalmerger.mergedClusters(); //move (check)
-}
-
 const Track& PFEvent::track(IdType id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);

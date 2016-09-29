@@ -47,12 +47,7 @@ public:
   static spdlog::details::line_logger write(const T& t) {
     return log()->info(t);
   };
-  /*/// Write to output (this is either null or a file)
-  template <typename... Args>
-  static spdlog::details::line_logger write(const char* fmt, const Args&... args) {
-    return log()->info(fmt, args...);
-  };*/
-  
+    
   /// Write to output (this is either null or a file)
   template <typename... Args>
   static void write(const char* fmt, const Args&... args) {

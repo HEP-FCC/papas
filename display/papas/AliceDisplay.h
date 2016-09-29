@@ -2,7 +2,7 @@
 //  AliceDisplay.hpp
 //  papas
 //
-//  Created by Alice Robson on 19/05/16.
+//  Used for code experimentation
 //
 //
 
