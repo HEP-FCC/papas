@@ -48,7 +48,7 @@ void PapasManager::reconstructEvent() {
   Ids ids = m_pfEvent.mergedElementIds();
 
   // create the blocks of linked ids
-  auto bBuilder = PFBlockBuilder(m_pfEvent, ids);
+  auto bBuilder = PFBlockBuilder(ids, m_pfEvent);
 
   // do the reconstruction of the blocks
   auto pfReconstructor = PFReconstructor(m_pfEvent);

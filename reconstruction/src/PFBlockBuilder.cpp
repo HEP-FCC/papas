@@ -18,7 +18,7 @@
 
 namespace papas {
 
-PFBlockBuilder::PFBlockBuilder(PFEvent& pfevent, Ids& ids)
+PFBlockBuilder::PFBlockBuilder(const Ids& ids, PFEvent& pfevent)
     : m_pfEvent(pfevent), m_historyNodes(pfevent.historyNodes()), m_uniqueIds(ids) {
 
   if (m_historyNodes.size() == 0) {

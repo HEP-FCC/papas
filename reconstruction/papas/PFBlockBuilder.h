@@ -22,7 +22,7 @@ public:
    * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
    * @param[in] ids  list of element ids from which to construct a block
    */
-  PFBlockBuilder(PFEvent& pfevent, Ids& ids);
+  PFBlockBuilder(const Ids& ids, PFEvent& pfevent);
   Blocks& blocks() { return m_blocks; };  ///<return the unordered map of the resulting blocks;
 
 private:

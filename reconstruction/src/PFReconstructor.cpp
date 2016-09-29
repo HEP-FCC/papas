@@ -104,11 +104,9 @@ Blocks PFReconstructor::simplifyBlock(PFBlock& block) {
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   bool firstHCAL;
   double minDist = -1;
-
   for (auto id : ids) {
     if (Id::isTrack(id)) {
       linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kHcalTrack);
-
       if (linkedEdgeKeys.size() > 0) {
         firstHCAL = true;
         // find minimum distance

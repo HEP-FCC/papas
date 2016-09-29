@@ -83,7 +83,7 @@ int Gun()
     PFEvent pfEvent{siml};  // for python test
     pfEvent.mergeClusters();
     Ids ids = pfEvent.mergedElementIds();
-    PFBlockBuilder bBuilder{pfEvent, ids};
+    PFBlockBuilder bBuilder{ids, pfEvent};
     PFReconstructor pfReconstructor{pfEvent};
     pfReconstructor.reconstruct(bBuilder.blocks());
   }
