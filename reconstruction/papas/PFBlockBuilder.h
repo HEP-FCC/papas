@@ -22,15 +22,15 @@ public:
    * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
    * @param[in] ids  list of element ids from which to construct a block
    */
-  PFBlockBuilder(const Ids& ids, PFEvent& pfevent); //history inside PFEvent will be updated (improve this)
-  Blocks blocks() { return std::move(m_blocks); };  ///<return the unordered map of the resulting blocks;
+  PFBlockBuilder(const Ids& ids, PFEvent& pfevent);  // history inside PFEvent will be updated (improve this)
+  Blocks blocks() { return std::move(m_blocks); };   ///<return the unordered map of the resulting blocks;
 
 private:
-  void makeBlocks();      ///< does the main work of creating the blocks
-  Blocks m_blocks;        ///< the blocks made by blockbuilder
-  const PFEvent& m_pfEvent;     ///< contains the collections of tracks, clusters and historyNodes
-  Nodes& m_historyNodes;  ///< history will be updated to store block creation
-  Ids m_uniqueIds;        ///< list of element ids from which to construct the blocks
+  void makeBlocks();         ///< does the main work of creating the blocks
+  Blocks m_blocks;           ///< the blocks made by blockbuilder
+  const PFEvent& m_pfEvent;  ///< contains the collections of tracks, clusters and historyNodes
+  Nodes& m_historyNodes;     ///< history will be updated to store block creation
+  Ids m_uniqueIds;           ///< list of element ids from which to construct the blocks
 };
 }  // end namespace papas
 #endif /* PFBlockBuilder_hpp */

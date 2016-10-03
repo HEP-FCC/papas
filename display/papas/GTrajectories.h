@@ -32,10 +32,11 @@ public:
   GTrajectories(const SimParticle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
   void Draw(const std::string& projection) override;
-  void addStraight(const Path::Ptr path,const TVector3& tvec, int linestyle, int linecolor, int linewidth);
+  void addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
   void addHelix(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor);
   void addNamedPoints(const Path::Points& path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
-  void addPoints(const std::vector<TVector3>& points, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
+  void addPoints(const std::vector<TVector3>& points, const TVector3& tvec, int linestyle, int linecolor,
+                 int linewidth);
   void addPoints(const std::vector<TVector3>& points, double scale, int linestyle, int linecolor, int linewidth);
 
 private:

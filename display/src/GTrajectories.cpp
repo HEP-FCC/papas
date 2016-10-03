@@ -12,7 +12,8 @@
 
 namespace papas {
 
-void GTrajectories::addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth) {
+void GTrajectories::addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor,
+                                int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
 }
 
@@ -55,7 +56,7 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, double scale,
   std::vector<double> tY;  // for thetaphi graphs
 
   // Extract vectors of x, y and z values
-  //int i = 0;
+  // int i = 0;
   for (auto p : points) {
 
     X.push_back(p.X() * scale);
@@ -65,12 +66,12 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, double scale,
     tX.push_back(M_PI_2 - p.Theta());
     tY.push_back(p.Phi());
   }
-  //i += 1;
+  // i += 1;
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 0, 0, linestyle, linecolor, linewidth));
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.3, linestyle, linecolor, linewidth));
 }
 
-void GTrajectories::addNamedPoints(const Path::Points& points,const TVector3& tvec, int linestyle, int linecolor,
+void GTrajectories::addNamedPoints(const Path::Points& points, const TVector3& tvec, int linestyle, int linecolor,
                                    int linewidth) {
 
   std::vector<double> X;

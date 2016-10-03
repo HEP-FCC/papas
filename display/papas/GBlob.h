@@ -5,10 +5,10 @@
 #ifndef PAPAS_GBLOB_H
 #define PAPAS_GBLOB_H
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <memory>
 
 #include "TEllipse.h"
 

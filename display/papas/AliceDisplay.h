@@ -35,14 +35,14 @@ public:
     gPad->Modified();
     gPad->Update();
     gSystem->ProcessEvents();
-    //m_theApp.Run(k);
+    // m_theApp.Run(k);
   }
   void terminate() {
     std::cout << "Terminate";
     // m_theApp.Terminate();
   }
   void jpg();
-  
+
 private:
   std::shared_ptr<GDetector> m_gdetector;
   PFEventDisplay* m_display;

@@ -66,7 +66,7 @@ public:
    @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  //move this somewhere else
+  // move this somewhere else
   SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                               const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
@@ -84,7 +84,8 @@ private:
    @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
-  SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.))const;
+  SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv,
+                              const TVector3& vertex = TVector3(0., 0., 0.)) const;
 
   /**
    Makes a new SimParticle
@@ -106,14 +107,14 @@ private:
                             papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false) const;
   const Cluster& storeSmearedCluster(Cluster&& smearedCluster, IdType parentId);
   const Track& storeTrack(Track&& track, IdType parentId);  ///<move track into tracks collection and history
-  Track smearTrack(const Track& track) const;                     ///< randomisation of the energy of a track
+  Track smearTrack(const Track& track) const;               ///< randomisation of the energy of a track
   bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
   const Track& storeSmearedTrack(Track&& smearedtrack,
                                  IdType parentid);  ///<move into the smearedtracks collection and history
 
-  void propagate(const SurfaceCylinder& cylinder, SimParticle& ptc);     ///< find where particle hits cylinder
-  void propagateAllLayers(SimParticle& ptc);                    ///< find where particle hits detector cylinders
-  void addNode(const IdType newid, const IdType parentid = 0);  ///<update history nodes
+  void propagate(const SurfaceCylinder& cylinder, SimParticle& ptc);  ///< find where particle hits cylinder
+  void propagateAllLayers(SimParticle& ptc);                          ///< find where particle hits detector cylinders
+  void addNode(const IdType newid, const IdType parentid = 0);        ///<update history nodes
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
   void testing();                                        // temp
@@ -124,7 +125,6 @@ private:
   Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
   Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
 
- 
   Clusters m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters m_hcalClusters;         ///< hcal clusters (prior to smearing)
   Clusters m_smearedEcalClusters;  ///< smeared ecal clusters

@@ -32,8 +32,8 @@ PFEvent::PFEvent(Simulator& sim)
 const Track& PFEvent::track(IdType id) const {
   if (m_tracks.find(id) != m_tracks.end()) {
     return m_tracks.at(id);
-  } 
-    throw "problem with track not found "  ;
+  }
+  throw "problem with track not found ";
 }
 
 Ids PFEvent::elementIds() const {
@@ -101,13 +101,10 @@ const Cluster& PFEvent::HCALCluster(IdType id) const {
 
 const Cluster& PFEvent::cluster(IdType id) const {
   if (m_hcals.find(id) != m_hcals.end()) {
-    if (m_mergedHcals.find(id) != m_mergedHcals.end() )
-       throw "id is erroneously found in more than one collection";
-      if( m_mergedEcals.find(id) != m_mergedEcals.end())
-         throw "id is erroneously found in more than one collection";
-      if (m_ecals.find(id) != m_ecals.end())
-      throw "id is erroneously found in more than one collection";
-    
+    if (m_mergedHcals.find(id) != m_mergedHcals.end()) throw "id is erroneously found in more than one collection";
+    if (m_mergedEcals.find(id) != m_mergedEcals.end()) throw "id is erroneously found in more than one collection";
+    if (m_ecals.find(id) != m_ecals.end()) throw "id is erroneously found in more than one collection";
+
     return m_hcals.at(id);
   } else if (m_ecals.find(id) != m_ecals.end()) {
     return m_ecals.at(id);

@@ -16,7 +16,6 @@
 
 #include <iostream>
 
-
 #include <iostream>
 
 using namespace std;
@@ -58,10 +57,10 @@ int main(int argc, char* argv[]) {
       std::cout << "  " << p.second << std::endl;
     }
     // produce papas display
-    TApplication tApp("theApp", &argc, argv) ;
+    TApplication tApp("theApp", &argc, argv);
     papasManager.display(false);
     papasManager.show();
-    
+
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;

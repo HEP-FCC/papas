@@ -15,9 +15,9 @@
 #include "PythiaConnector.h"
 
 // STL
+#include <TApplication.h>
 #include <chrono>
 #include <iostream>
-#include <TApplication.h>
 
 using namespace papas;
 

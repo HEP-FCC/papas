@@ -9,25 +9,25 @@
 #ifndef PapasManager_hpp
 #define PapasManager_hpp
 
+#include "AliceDisplay.h"
 #include "PFEvent.h"
 #include "Simulator.h"
-#include "AliceDisplay.h"
 
 namespace papas {
 /// High level class to recieve a set of particles, run simulation and then reconstruction
 class PapasManager {
 public:
   PapasManager(Detector& detector);
-  void storeParticles(Particles&& particles) { m_particles = std::move(particles);}//move into PapasManager
+  void storeParticles(Particles&& particles) { m_particles = std::move(particles); }  // move into PapasManager
   void simulateEvent();
   void mergeClusters();
   void reconstructEvent();
   const Particles& reconstructedParticles() { return m_pfEvent.reconstructedParticles(); }
   const Particles& rawParticles() { return m_particles; }
   void clear();
-  void display(bool plot=false);  ///< relocate?
+  void display(bool plot = false);  ///< relocate?
   void show();
-  Simulator& simulator() { return m_simulator; } //history inside simulator can be changed
+  Simulator& simulator() { return m_simulator; }  // history inside simulator can be changed
 
 private:
   bool operator()(IdType i, IdType j);

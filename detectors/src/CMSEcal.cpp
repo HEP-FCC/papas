@@ -55,8 +55,9 @@ double CMSECAL::energyResolution(double energy, double eta) const {
 double CMSECAL::energyResponse(double energy, double eta) const {
   int location = kBarrel;
   if (fabs(eta) > m_etaCrack) location = kEndCap;  // endcap
-  //using fermi-dirac function : [0]/(1 + exp( (energy-[1]) /[2] );
-  return m_eresp[location][0]/(1+exp((energy-m_eresp[location][1])/m_eresp[location][2]));   return 1;
+  // using fermi-dirac function : [0]/(1 + exp( (energy-[1]) /[2] );
+  return m_eresp[location][0] / (1 + exp((energy - m_eresp[location][1]) / m_eresp[location][2]));
+  return 1;
 }
 
 }  // end namespace papas

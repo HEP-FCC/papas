@@ -29,15 +29,15 @@ class PDebug {
 public:
   /// Constructor  defaults to debugger being turned off/ logging only errors
   PDebug() {
-    s_fname ="";
-    slevel=spdlog::level::err;
-    s_On=false;
+    s_fname = "";
+    slevel = spdlog::level::err;
+    s_On = false;
   };
 
   /// Tells PDebug where to write output and sets output level to info
   /// @param[in] fname filename
   static void On(const std::string& fname) {
-    s_On=true;
+    s_On = true;
     s_fname = fname;
     slevel = spdlog::level::info;
   };
@@ -47,12 +47,11 @@ public:
   static spdlog::details::line_logger write(const T& t) {
     return log()->info(t);
   };
-    
+
   /// Write to output (this is either null or a file)
   template <typename... Args>
   static void write(const char* fmt, const Args&... args) {
-    if (s_On)
-      log()->info(fmt, args...);
+    if (s_On) log()->info(fmt, args...);
   };
 
   static void flush() { PDebug::log()->flush(); }

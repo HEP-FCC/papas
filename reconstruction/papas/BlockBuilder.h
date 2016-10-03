@@ -37,7 +37,7 @@ public:
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the existing history
    */
-  BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes); //edges are moved, history can be updated
+  BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes);  // edges are moved, history can be updated
   /// Move the unordered map of the resulting blocks - note that this can only be done once and will empty m_blocks
   Blocks moveBlocks() { return std::move(m_blocks); };
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?

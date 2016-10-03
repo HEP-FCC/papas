@@ -34,9 +34,10 @@ public:
    *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
    *                     if it is empty it will be ignored
    */
-  MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler, Nodes& historyNodes); //history will be updated
-  Clusters mergedClusters() { return std::move(m_merged); } //empties m_merged - is this best way?
-  Nodes& historyNodes() { return m_historyNodes; } //history nodes can be updated
+  MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler,
+                       Nodes& historyNodes);                 // history will be updated
+  Clusters mergedClusters() { return std::move(m_merged); }  // empties m_merged - is this best way?
+  Nodes& historyNodes() { return m_historyNodes; }           // history nodes can be updated
 
 private:
   Clusters m_merged;      ///< the merged Clusters

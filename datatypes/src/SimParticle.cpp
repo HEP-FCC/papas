@@ -32,7 +32,8 @@ else
 
 }*/
 
-SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex, double field)
+SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
+                         double field)
     : Particle(uniqueid, pdgid, charge, tlv), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
 
   if (m_isHelix)

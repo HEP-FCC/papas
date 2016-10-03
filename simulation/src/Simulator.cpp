@@ -93,7 +93,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().contains(pointDecay)) {
       fracEcal = randomgen::RandUniform(0., 0.7).next();
-      auto cluster = makeCluster(ptc, papas::Layer::kEcal,fracEcal);
+      auto cluster = makeCluster(ptc, papas::Layer::kEcal, fracEcal);
       const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
@@ -166,7 +166,8 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex) const {
+SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv,
+                                       const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
   IdType uniqueid = Id::makeParticleId();

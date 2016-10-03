@@ -40,7 +40,7 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
       mindist = *std::min_element(std::begin(linkedDistances), std::end(linkedDistances));
     else
       mindist = *std::min_element(std::begin(allDistances), std::end(allDistances));
-    return Distance{isLinked, mindist}; // will be moved
+    return Distance{isLinked, mindist};  // will be moved
   }
 }
 
@@ -64,7 +64,7 @@ Distance Ruler::clusterTrackDistance(const Cluster& cluster, const Track& track)
       mindist = *std::min_element(std::begin(distances), std::end(distances));
     return Distance{isLinked, mindist};
   } else
-    return Distance{cluster, track}; // will be moved
+    return Distance{cluster, track};  // will be moved
 }
 
 }  // end namespace papas

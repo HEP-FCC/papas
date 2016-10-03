@@ -25,12 +25,12 @@ public:
   Particle(int pdgid, double charge);
   Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   Particle(IdType id, int pdgid, double charge);
-  
+
   std::string stringDescription() const;              ///< String to describe the particle
-  const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
+  const TLorentzVector& p4() const { return m_tlv; }  ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz, returning a local object so is not const &
-  double e() const { return m_tlv.E(); }              ///<Energy
-  double pt() const { return m_tlv.Pt(); }            ///<transverse momentum (magnitude of p3 in transverse plane)
+  double e() const { return m_tlv.E(); }        ///<Energy
+  double pt() const { return m_tlv.Pt(); }      ///<transverse momentum (magnitude of p3 in transverse plane)
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane
   double eta() const { return m_tlv.Eta(); }                 ///<pseudo-rapidity (-ln(tan self._tlv.Theta()/2)).
   double phi() const { return m_tlv.Phi(); }                 ///<azymuthal angle (from x axis, in the transverse plane)
@@ -38,8 +38,8 @@ public:
   int pdgId() const { return m_particleId; }                 ///< particle type (an integer value)
   double charge() const { return m_charge; }                 ///< particle charge
   bool status() const { return m_status; }                   ///<status code, e.g. from generator. 1:stable.
-  const TVector3& startVertex() const { return m_startVertex; }     ///<start vertex (3d point)
-  const TVector3& endVertex() const { return m_endVertex; }         ///<end vertex (3d point)
+  const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
+  const TVector3& endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
   IdType id() const { return m_uniqueId; }
   std::string info() const;  ///< text descriptor of the particle
 

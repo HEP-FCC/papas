@@ -9,9 +9,9 @@
 #include <iostream>
 #include <stdio.h>
 
+#include "PDebug.h"
 #include "TApplication.h"
 #include "TROOT.h"
-#include "PDebug.h"
 //#include "gtest/gtest.h"
 
 #include "CMS.h"
@@ -67,18 +67,16 @@ int main(int argc, char* argv[]) {
   // return longrun(argc,argv);
 }
 
-
-int Gun()
-{
+int Gun() {
   PDebug::On("/Users/alice/work/Outputs/gun_cpp_output.txt");  // physics debug output
-  int nParticles=10;
+  int nParticles = 10;
   papas::CMS CMSDetector;
   Nodes history;
   for (int i = 0; i < nParticles; i++) {
     auto siml = Simulator(CMSDetector, history);
     SimParticle& ptc = siml.addGunParticle(211, 1, -1.5, 1.5, 0.1, 10);
     PDebug::write("Made {}", ptc);
-    //simulate Hadron
+    // simulate Hadron
     if (!(ptc.charge() && ptc.pt() < 0.2)) siml.simulateParticle(ptc);
     PFEvent pfEvent{siml};  // for python test
     pfEvent.mergeClusters();

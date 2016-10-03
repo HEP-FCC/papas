@@ -62,9 +62,7 @@ void ViewPane::draw() {
   m_canvas.Update();
   ;
 }
-  void ViewPane::saveAs(const char* fname) {
-    m_canvas.SaveAs(fname);
-  }
+void ViewPane::saveAs(const char* fname) { m_canvas.SaveAs(fname); }
 
 void ViewPane::zoom(double xmin, double xmax, double ymin, double ymax) {
   m_hist.GetXaxis()->SetRangeUser(xmin, xmax);

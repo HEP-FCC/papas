@@ -6,9 +6,9 @@
 //
 //
 
+#include "PythiaConnector.h"
 #include "PFReconstructor.h"
 #include "PapasManager.h"
-#include "PythiaConnector.h"
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"

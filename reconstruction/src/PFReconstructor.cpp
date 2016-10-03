@@ -13,11 +13,11 @@
 #include <vector>
 
 #include "BlockSplitter.h"
-#include "PFBlockBuilder.h"
 #include "Cluster.h"
 #include "Edge.h"
 #include "PDebug.h"
 #include "PFBlock.h"
+#include "PFBlockBuilder.h"
 #include "PFEvent.h"
 #include "ParticlePData.h"
 #include "Path.h"
@@ -39,24 +39,24 @@ void PFReconstructor::reconstruct() {
   // sort the blocks by id to ensure match with python
   std::vector<IdType> blockids;
   std::vector<IdType> newblockids;
-  
+
   Ids ids = m_pfEvent.mergedElementIds();
-  
+
   // create the blocks of linked ids
   auto bBuilder = PFBlockBuilder(ids, m_pfEvent);
   m_blocks = bBuilder.blocks();
-  
+
   for (const auto& b : m_blocks) {
     blockids.push_back(b.first);
   }
-  #if WITHSORT
+#if WITHSORT
   std::sort(blockids.begin(), blockids.end());
-  #endif
+#endif
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    //std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
+    // std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
     Blocks newBlocks = simplifyBlock(bid);
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
@@ -67,7 +67,7 @@ void PFReconstructor::reconstruct() {
     }
   }
   blockids.insert(std::end(blockids), std::begin(newblockids), std::end(newblockids));
- 
+
   for (auto bid : blockids) {
     PFBlock& block = m_blocks.at(bid);
     if (block.isActive()) {  // when blocks are split the original gets deactivated
@@ -145,14 +145,14 @@ Blocks PFReconstructor::simplifyBlock(IdType id) {
   if (toUnlink.size() > 0) {
     splitBlocks = BlockSplitter(toUnlink, block, m_historyNodes).blocks();
   }
-  return splitBlocks; //moves
+  return splitBlocks;  // moves
 }
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   /// see class description for summary of reconstruction approach
 
   Ids ids = block.elementIds();
-  #if WITHSORT
+#if WITHSORT
   std::sort(ids.begin(), ids.end());
 #endif
   for (auto id : ids) {
@@ -277,7 +277,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
 
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
-  #if WITHSORT
+#if WITHSORT
   std::sort(trackIds.begin(), trackIds.end());
 #endif
   for (auto trackId : trackIds) {
@@ -348,14 +348,14 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
 }
 
 SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy,
-                                               const TVector3& vertex) {
+                                                const TVector3& vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
   int pdgId = 0;
   if (energy < 0) {
     energy = cluster.energy();
   }
-  //double charge = ParticlePData::particleCharge(pdgId);
+  // double charge = ParticlePData::particleCharge(pdgId);
   if (layer == papas::Layer::kEcal) {
     pdgId = 22;  // photon
   } else if (layer == papas::Layer::kHcal) {

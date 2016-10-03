@@ -18,7 +18,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  //papas::PDebug::On("physics.txt");
+  // papas::PDebug::On("physics.txt");
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
 
   if (argc != 2) {
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
   try {
     auto pythiaConnector = PythiaConnector(fname);
 #if WITHSORT
-    std::cout  << "doing sorting" ;
+    std::cout << "doing sorting";
 #else
     std::cout << "nosort";
 #endif

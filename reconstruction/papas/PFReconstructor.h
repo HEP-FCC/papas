@@ -78,17 +78,19 @@ class PFReconstructor {
 public:
   // TODO consider if this is the best constructor function interface (could be the clusters tracks and history nodes)
   PFReconstructor(PFEvent& pfEvent);
-  void reconstruct();  ///< create reconstructed particles from the evnet
-  Particles particles() { return std::move(m_particles); } ///allow the particles collection to be moved out
-  Blocks blocks()  { return std::move(m_blocks); } ///allow the particles collection to be moved out
+  void reconstruct();                                       ///< create reconstructed particles from the evnet
+  Particles particles() { return std::move(m_particles); }  /// allow the particles collection to be moved out
+  Blocks blocks() { return std::move(m_blocks); }           /// allow the particles collection to be moved out
 
 private:
-  Blocks simplifyBlock(IdType id);  ///< checks whether a block can be simplified eg if two hcals are attached to one track
+  Blocks
+  simplifyBlock(IdType id);  ///< checks whether a block can be simplified eg if two hcals are attached to one track
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
-  SimParticle reconstructTrack(const Track& track);          ///< constructs and returns particle(s) starting from a track
-  SimParticle reconstructCluster(const Cluster& cluster, papas::Layer layer, double energy = -1,
-                                 const TVector3& vertex = TVector3());       ///< constructs and returns a particles starting from a cluster
+  SimParticle reconstructTrack(const Track& track);  ///< constructs and returns particle(s) starting from a track
+  SimParticle reconstructCluster(
+      const Cluster& cluster, papas::Layer layer, double energy = -1,
+      const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
   void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
@@ -96,7 +98,7 @@ private:
   PFEvent& m_pfEvent;
   Nodes& m_historyNodes;
   Particles m_particles;  ///< the reconstructed particles created by this class
-  Blocks m_blocks; //new try alice
+  Blocks m_blocks;        // new try alice
   bool m_hasHistory;
   Ids m_unused;
   std::unordered_map<Id::Type, bool> m_locked;

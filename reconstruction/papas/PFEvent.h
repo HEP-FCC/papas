@@ -23,8 +23,9 @@ class PFBlockBuilder;
  */
 class PFEvent {
 public:
-  PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes); //history gets added to
-  PFEvent(Simulator& sim); //improve this (history inside simulator gets updated)
+  PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks,
+          Nodes& historyNodes);  // history gets added to
+  PFEvent(Simulator& sim);       // improve this (history inside simulator gets updated)
   double energy(IdType id1) const;
   const Track& track(IdType id) const;      ///< find a track from an id
   const Cluster& cluster(IdType id) const;  ///< find a cluster from an id
@@ -42,14 +43,14 @@ public:
   void setMergedHcals(Clusters&& hcals) { m_mergedHcals = std::move(hcals); }
   void setReconstructedParticles(Particles&& particles) { m_reconstructedParticles = std::move(particles); }
   void setBlocks(Blocks&& blocks) { m_blocks = std::move(blocks); }
-  void clear();          ///< clear up everything before beginning a new event
+  void clear();  ///< clear up everything before beginning a new event
   friend std::ostream& operator<<(std::ostream& os, const PFEvent& pfevent);  // TODO move to helper class??
 
 private:
   const Clusters& m_ecals;
   const Clusters& m_hcals;
   const Tracks& m_tracks;
-  Nodes& m_historyNodes;  //history gets updated
+  Nodes& m_historyNodes;  // history gets updated
   Clusters m_mergedEcals;
   Clusters m_mergedHcals;
   Blocks m_blocks;

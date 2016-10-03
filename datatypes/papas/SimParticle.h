@@ -16,7 +16,8 @@ class SimParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
   SimParticle() = default;
-  SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.), double field = 0.);
+  SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv,
+              const TVector3& vertex = TVector3(0., 0., 0.), double field = 0.);
   SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track);
 
   const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer

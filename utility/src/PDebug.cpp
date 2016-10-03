@@ -16,7 +16,7 @@ spdlog::level::level_enum PDebug::slevel = spdlog::level::info;
 std::vector<spdlog::sink_ptr> PDebug::m_sinks;
 std::string PDebug::s_fname = "";
 bool PDebug::s_On = false;
-  
+
 void PDebug::init() {  // we either create a null sink or we sink to a file
   logInitialized = true;
   if (PDebug::s_fname == "") {  // no output

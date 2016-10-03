@@ -41,7 +41,7 @@ double Path::deltaT(double path_length) const {
 TVector3 Path::pointAtTime(double time) const {
   /// Returns the 3D point on the path at a given time'''
   TVector3 ppoint = m_origin + m_unitDirection * m_speed * time;
-  return ppoint;  //move
+  return ppoint;  // move
 }
 
 double Path::vZ() const {
@@ -61,6 +61,6 @@ const TVector3& Path::namedPoint(papas::Position layer) const {
     return m_points.at(layer);
   } else
     throw "Layer not found for path namedPoint";
-    }
+}
 
 }  // end namespace papas
