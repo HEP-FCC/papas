@@ -51,7 +51,7 @@ void Simulator::simulatePhoton(SimParticle& ptc) {
 
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagate(ptc, ecal_sp->volumeCylinder().inner());
+  propagate(ecal_sp->volumeCylinder().inner(), ptc);
   auto detectorLayer = papas::Layer::kEcal;
   auto cluster = makeCluster(ptc, papas::Layer::kEcal);
   const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
@@ -78,7 +78,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-  propagate(ptc, ecal_sp->volumeCylinder().inner());
+  propagate(ecal_sp->volumeCylinder().inner(), ptc);
   double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
 
   if (pathLength < std::numeric_limits<double>::max()) {
@@ -108,7 +108,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   }
 
   // now find where it reaches into HCAL
-  propagate(ptc, hcal_sp->volumeCylinder().inner());
+  propagate(hcal_sp->volumeCylinder().inner(), ptc);
 
   auto hcalCluster = makeCluster(ptc, papas::Layer::kHcal, 1 - fracEcal);
   const auto& storedHcalCluster = storeHcalCluster(std::move(hcalCluster), ptc.id());
@@ -121,10 +121,10 @@ void Simulator::simulateHadron(SimParticle& ptc) {
 void Simulator::propagateAllLayers(SimParticle& ptc) {
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   auto hcal_sp = m_detector.hcal();  // HCAL detector element
-  propagate(ptc, ecal_sp->volumeCylinder().inner());
-  propagate(ptc, ecal_sp->volumeCylinder().outer());
-  propagate(ptc, hcal_sp->volumeCylinder().inner());
-  propagate(ptc, hcal_sp->volumeCylinder().outer());
+  propagate(ecal_sp->volumeCylinder().inner(), ptc);
+  propagate(ecal_sp->volumeCylinder().outer(), ptc);
+  propagate(hcal_sp->volumeCylinder().inner(), ptc);
+  propagate(hcal_sp->volumeCylinder().outer(), ptc);
 }
 
 void Simulator::simulateNeutrino(SimParticle& ptc) {
@@ -137,7 +137,7 @@ void Simulator::smearElectron(SimParticle& ptc) {
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path());
   storeTrack(std::move(track), ptc.id());
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
-  propagate(ptc, ecal_sp->volumeCylinder().inner());
+  propagate(ecal_sp->volumeCylinder().inner(), ptc);
   // SimParticle smeared{ptc}; //this line to match deepcopy on python
   // PDebug::write("Made Smeared{}", smeared)
   // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
@@ -150,7 +150,7 @@ void Simulator::smearMuon(SimParticle& ptc) {
   propagateAllLayers(ptc);
 }
 
-void Simulator::propagate(SimParticle& ptc, const SurfaceCylinder& cylinder) {
+void Simulator::propagate(const SurfaceCylinder& cylinder, SimParticle& ptc) {
   bool isNeutral = fabs(ptc.charge()) < 0.5;
   if (isNeutral)
     m_propStraight.propagateOne(ptc, cylinder);

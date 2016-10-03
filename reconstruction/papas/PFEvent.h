@@ -23,13 +23,13 @@ class PFBlockBuilder;
  */
 class PFEvent {
 public:
-  PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes);
-  PFEvent(Simulator& sim);
+  PFEvent(const Clusters& ecals, const Clusters& hcals, const Tracks& tracks, Nodes& historyNodes); //history gets added to
+  PFEvent(Simulator& sim); //improve this (history inside simulator gets updated)
   double energy(IdType id1) const;
   const Track& track(IdType id) const;      ///< find a track from an id
   const Cluster& cluster(IdType id) const;  ///< find a cluster from an id
-  const class Cluster& ECALCluster(IdType id) const;
-  const class Cluster& HCALCluster(IdType id) const;
+  const Cluster& ECALCluster(IdType id) const;
+  const Cluster& HCALCluster(IdType id) const;
   Ids elementIds() const;                           ///< all element ids in this event (ecals, hcals, tracks)
   Ids mergedElementIds() const;                     ///< all merged element ids (merged ecal, merged hcals, tracks)
   Nodes& historyNodes() { return m_historyNodes; }  // allow these to be changed

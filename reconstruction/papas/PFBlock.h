@@ -33,16 +33,14 @@ public:
   /** Constructor
    @param[in] const Ids& element_ids:  vector of uniqueids of the elements to go in this block [id1,id2,...]
    @param[inout] Edges& edges: is an unordered map of edges, it must contain at least all needed edges. It is not a
-   problem
-   if it contains additional edges as only the ones needed will be extracted. Note that edges that are extracted will be
-   removed from the Edges object.
+   problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are 
+   extracted will be removed from the Edges object.
    */
-  PFBlock(const Ids& elementIds, Edges& edges);
+  PFBlock(const Ids& elementIds, Edges& edges); //relevant parts of edges will be removed by PFBlock
   PFBlock();
   PFBlock(PFBlock&& pfblock) = default; //allow move
 
   const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-                                                          //Edge& findEdge(Edge::EdgeKey key);
   const Edge& findEdge(Edge::EdgeKey key) const;
   /**
   Returns list of all edges of a given edge type that are connected to a given id.

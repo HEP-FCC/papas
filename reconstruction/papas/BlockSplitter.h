@@ -39,7 +39,7 @@ public:
    *                     if a history_nodes tree is non empty then
    *                     the new history will be added into the existing history
    */
-  BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes);
+  BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes); 
   Blocks blocks() { return std::move(m_blocks); }; //will move blocks out of Blocksplitter (better way?)
   friend std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder);  // todo move to helper class?
 

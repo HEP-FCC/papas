@@ -3,7 +3,7 @@
 //  papas
 //
 //  Used for code experimentation
-//
+//  (Colin you can ignore for now)
 //
 
 #ifndef AliceDisplay_hpp

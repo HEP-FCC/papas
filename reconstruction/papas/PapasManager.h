@@ -27,7 +27,7 @@ public:
   void clear();
   void display(bool plot=false);  ///< relocate?
   void show();
-  Simulator& simulator() { return m_simulator; }
+  Simulator& simulator() { return m_simulator; } //history inside simulator can be changed
 
 private:
   bool operator()(IdType i, IdType j);

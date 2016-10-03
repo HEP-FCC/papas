@@ -66,6 +66,7 @@ public:
    @param[in] const TVector3& vertex: start point of particle
    @return SimParticle& the newly created particle
    */
+  //move this somewhere else
   SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                               const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
@@ -110,7 +111,7 @@ private:
   const Track& storeSmearedTrack(Track&& smearedtrack,
                                  IdType parentid);  ///<move into the smearedtracks collection and history
 
-  void propagate(SimParticle& ptc, const SurfaceCylinder&);     ///< find where particle hits cylinder
+  void propagate(const SurfaceCylinder& cylinder, SimParticle& ptc);     ///< find where particle hits cylinder
   void propagateAllLayers(SimParticle& ptc);                    ///< find where particle hits detector cylinders
   void addNode(const IdType newid, const IdType parentid = 0);  ///<update history nodes
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;

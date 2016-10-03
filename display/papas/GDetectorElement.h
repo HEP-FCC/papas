@@ -22,7 +22,6 @@ public:
   GDetectorElement(std::shared_ptr<const DetectorElement> de);
   GDetectorElement(double radius, double dz);
   ~GDetectorElement() override = default;
-  // GDetectorElement(const DetectorElement& de);
   void Draw(const std::string& projection) override;
 
 private:
