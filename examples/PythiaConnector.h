@@ -28,9 +28,9 @@
 #include "podio/ROOTReader.h"
 #include "podio/ROOTWriter.h"
 
-#include "DefinitionsCollections.h"
-#include "PParticle.h"
-#include "PapasManager.h"
+#include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/Particle.h"
+#include "papas/reconstruction/PapasManager.h"
 
 class PapasManager;
 

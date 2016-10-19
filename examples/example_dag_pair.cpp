@@ -1,4 +1,4 @@
-#include "DirectedAcyclicGraph.h"
+#include "papas/graphtools/DirectedAcyclicGraph.h"
 
 class idpair {
 public:

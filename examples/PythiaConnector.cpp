@@ -7,16 +7,16 @@
 //
 
 #include "PythiaConnector.h"
-#include "PFReconstructor.h"
-#include "PapasManager.h"
+#include "papas/reconstruction/PFReconstructor.h"
+#include "papas/reconstruction/PapasManager.h"
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
 
-#include "PDebug.h"
-#include "PParticle.h"
-#include "Simulator.h"
+#include "papas/utility/PDebug.h"
+#include "papas/datatypes/Particle.h"
+#include "papas/simulation/Simulator.h"
 
 #include <exception>
 #include <string>

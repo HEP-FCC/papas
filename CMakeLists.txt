@@ -98,7 +98,7 @@ add_subdirectory(examples)
 #note there are a lot of R related warnings (originating from R)
 #add_subdirectory(tests/rtest)
 
-add_subdirectory(tests)
+add_subdirectory(papas/tests)
 
 
 

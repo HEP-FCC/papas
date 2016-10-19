@@ -1,13 +1,7 @@
 set (MAINDIR "${CMAKE_SOURCE_DIR}")
 
 include_directories(
-${MAINDIR}/utility/papas
-${MAINDIR}/detectors/papas
-${MAINDIR}/display/papas
-${MAINDIR}/datatypes/papas/
-${MAINDIR}/simulation/papas
-${MAINDIR}/reconstruction/papas
-${MAINDIR}/graphtools/papas
+${MAINDIR}
 ${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -30,8 +24,9 @@ target_link_libraries(example_pdebug papascpp ${ROOT_LIBRARIES} datamodel datamo
 add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )
 target_link_libraries(example_plot papascpp ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
 
-add_executable(example_gun example_gun.cpp )
-target_link_libraries(example_gun papascpp ${ROOT_LIBRARIES} datamodel datamodelDict utilities)
+#todo fix this
+#add_executable(example_gun example_gun.cpp )
+#target_link_libraries(example_gun papascpp ${ROOT_LIBRARIES} datamodel datamodelDict utilities)
 
 #add_executable(example_root example_root.cpp example_frame.cpp)
 #target_link_libraries(example_root  papascpp ${ROOT_LIBRARIES} datamodelDict )

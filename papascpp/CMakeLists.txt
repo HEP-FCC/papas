@@ -2,39 +2,31 @@
 
 
 #make this automated
-set (MAINDIR ${CMAKE_SOURCE_DIR})
+set (MAINDIR ${CMAKE_SOURCE_DIR}/papas)
 file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.cpp ${MAINDIR}/datatypes/papas/*.h
-${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/papas/*.h
-${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/papas/*.h
-${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/papas/*.h
-${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/papas/*.h
-${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/papas/*.h
-${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/papas/*.h
-${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/papas/*.h
+${MAINDIR}/datatypes/src/*.cpp
+${MAINDIR}/graphtools/src/*.cpp
+${MAINDIR}/utility/src/*.cpp
+${MAINDIR}/display/src/*.cpp
+${MAINDIR}/detectors/src/*.cpp
+${MAINDIR}/simulation/*.cpp
+${MAINDIR}/reconstruction/src/*.cpp
 )
 
 file(GLOB_RECURSE headers 
-${MAINDIR}/datatypes/papas/*.h
-${MAINDIR}/display/papas/*.h
-${MAINDIR}/detectors/papas/*.h
-${MAINDIR}/simulation/papas/*.h
-${MAINDIR}/graphtools/papas/*.h
-${MAINDIR}/utility/papas/*.h
-${MAINDIR}/reconstruction/papas/*.h
+${MAINDIR}/datatypes/*.h
+${MAINDIR}/display/*.h
+${MAINDIR}/detectors/*.h
+${MAINDIR}/simulation/*.h
+${MAINDIR}/graphtools/*.h
+${MAINDIR}/utility/*.h
+${MAINDIR}/reconstruction/*.h
 )
 
 project(papaslibrary)
 
 include_directories(
-${MAINDIR}/datatypes/papas/
-${MAINDIR}/display/papas/
-${MAINDIR}/detectors/papas/
-${MAINDIR}/simulation/papas/
-${MAINDIR}/graphtools/papas/
-${MAINDIR}/utility/papas/
-${MAINDIR}/reconstruction/papas/
-${MAINDIR}/spdlog)
+${CMAKE_SOURCE_DIR})
 
 message(status, "building papascpp library")
 
