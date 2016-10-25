@@ -1,26 +1,9 @@
 
-
-
-#make this automated
-set (MAINDIR ${CMAKE_SOURCE_DIR}/papas)
-file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.cpp
-${MAINDIR}/graphtools/src/*.cpp
-${MAINDIR}/utility/src/*.cpp
-${MAINDIR}/display/src/*.cpp
-${MAINDIR}/detectors/src/*.cpp
-${MAINDIR}/simulation/*.cpp
-${MAINDIR}/reconstruction/src/*.cpp
+file(GLOB_RECURSE sources
+${CMAKE_SOURCE_DIR}/papas/*.cpp
 )
-
-file(GLOB_RECURSE headers 
-${MAINDIR}/datatypes/*.h
-${MAINDIR}/display/*.h
-${MAINDIR}/detectors/*.h
-${MAINDIR}/simulation/*.h
-${MAINDIR}/graphtools/*.h
-${MAINDIR}/utility/*.h
-${MAINDIR}/reconstruction/*.h
+file(GLOB_RECURSE headers
+${CMAKE_SOURCE_DIR}/papas/*.h
 )
 
 project(papaslibrary)
