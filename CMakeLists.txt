@@ -10,8 +10,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-    #tell mac to use RPATH
-
 endif(APPLE)
 
 #--- Declare options -----------------------------------------------------------
@@ -24,16 +22,14 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 if(APPLE)
 	set(CMAKE_MACOSX_RPATH 1)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
-set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
-add_definitions(${ROOT_CXX_FLAGS})
-include("${ROOT_USE_FILE}")
+  find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
+  add_definitions(${ROOT_CXX_FLAGS})
+  include("${ROOT_USE_FILE}")
 else()
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(ROOT REQUIRED COMPONENTS RIO Tree)
-include_directories(${ROOT_INCLUDE_DIR})
+  set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+  find_package(ROOT REQUIRED COMPONENTS RIO Tree)
+  include_directories(${ROOT_INCLUDE_DIR})
 endif(APPLE)
-
 
 #---PODIO and FCC-EDM-----------------------------------------------------------
 find_package(podio REQUIRED HINTS $ENV{PODIO})
@@ -87,10 +83,10 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 
 
 add_subdirectory(papascpp)
-#add_subdirectory(main)
 add_subdirectory(examples)
-#add_subdirectory(graphtools)
+add_subdirectory(tests)
 
+#add_subdirectory(graphtools)
 #add_subdirectory(dageg)
 #add_subdirectory(papaslib)
 #
@@ -98,7 +94,7 @@ add_subdirectory(examples)
 #note there are a lot of R related warnings (originating from R)
 #add_subdirectory(tests/rtest)
 
-add_subdirectory(papas/tests)
+
 
 
 
