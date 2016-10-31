@@ -22,46 +22,55 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 
 
+include_directories(
+${CMAKE_SOURCE_DIR}
+)
 
 SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/install")
 Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
 
-#make this automated
-set (MAINDIR ${CMAKE_SOURCE_DIR})
-file(GLOB_RECURSE sources     
-${MAINDIR}/datatypes/src/*.cpp 
-${MAINDIR}/graphtools/src/*.cpp ${MAINDIR}/graphtools/papas/*.h
-${MAINDIR}/fastsim/src/*.cpp ${MAINDIR}/fastsim/papas/*.h
-${MAINDIR}/utility/src/*.cpp ${MAINDIR}/utility/papas/*.h
-${MAINDIR}/display/src/*.cpp ${MAINDIR}/display/papas/*.h
-${MAINDIR}/detectors/src/*.cpp ${MAINDIR}/detectors/papas/*.h
-${MAINDIR}/simulation/src/*.cpp ${MAINDIR}/simulation/papas/*.h
-${MAINDIR}/reconstruction/src/*.cpp ${MAINDIR}/reconstruction/papas/*.h
 
+file(GLOB_RECURSE sources
+         
+         ${CMAKE_SOURCE_DIR}/papas/datatypes/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/detectors/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/graphtools/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/display/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/reconstruction/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/simulation/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/utility/*.cpp
+         )
 
-)
+file(GLOB_RECURSE headers
+         
+         ${CMAKE_SOURCE_DIR}/papas/datatypes/*.h
+         ${CMAKE_SOURCE_DIR}/papas/detectors/*.h
+         ${CMAKE_SOURCE_DIR}/papas/graphtools/*.h
+         ${CMAKE_SOURCE_DIR}/papas/display/*.h
+         ${CMAKE_SOURCE_DIR}/papas/reconstruction/*.h
+         ${CMAKE_SOURCE_DIR}/papas/simulation/*.h
+         ${CMAKE_SOURCE_DIR}/papas/utility/*.h
+         )
 
-file(GLOB_RECURSE headers 
-${MAINDIR}/datatypes/papas/*.h
-${MAINDIR}/display/papas/*.h
-${MAINDIR}/detectors/papas/*.h
-${MAINDIR}/simulation/papas/*.h
-${MAINDIR}/graphtools/papas/*.h
-${MAINDIR}/utility/papas/*.h
-${MAINDIR}/reconstruction/papas/*.h
-${MAINDIR}/spdlog
-)
+message("${CMAKE_SOURCE_DIR}")
+#message("Headers: ${headers}")
+#message("Headers: ${sources}")
 
-include_directories(
-${MAINDIR}/datatypes/papas
-${MAINDIR}/display/papas
-${MAINDIR}/detectors/papas
-${MAINDIR}/simulation/papas
-${MAINDIR}/graphtools/papas
-${MAINDIR}/utility/papas
-${MAINDIR}/reconstruction/papas
-${MAINDIR}/spdlog
-)
+FILE(GLOB files "${CMAKE_SOURCE_DIR}/papas/datatypes/*.h")
+INSTALL(FILES ${files} DESTINATION include/papas/datatypes/)
+FILE(GLOB files2 "${CMAKE_SOURCE_DIR}/papas/simulation/*.h")
+INSTALL(FILES ${files2} DESTINATION include/papas/simulation/)
+FILE(GLOB files3 "${CMAKE_SOURCE_DIR}/papas/reconstruction/*.h")
+INSTALL(FILES ${files3} DESTINATION include/papas/reconstruction/)
+FILE(GLOB files4 "${CMAKE_SOURCE_DIR}/papas/detectors/*.h")
+INSTALL(FILES ${files4} DESTINATION include/papas/detectors/)
+FILE(GLOB files5 "${CMAKE_SOURCE_DIR}/papas/graphtools/*.h")
+INSTALL(FILES ${files5} DESTINATION include/papas/graphtools/)
+FILE(GLOB files6 "${CMAKE_SOURCE_DIR}/papas/display/*.h")
+INSTALL(FILES ${files6} DESTINATION include/papas/display/)
+FILE(GLOB files7 "${CMAKE_SOURCE_DIR}/papas/utility/*.h")
+INSTALL(FILES ${files7} DESTINATION include/papas/utility/)
+
 
 
 project(event)
@@ -78,32 +87,31 @@ project(event)
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 #include(${ROOT_USE_FILE}  )
 
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
-add_definitions(${ROOT_CXX_FLAGS})
+#include_directories(${CMAKE_SOURCE_DIR}/papas/datatypes/ 
+#${CMAKE_SOURCE_DIR}/papas/simulation
+#${CMAKE_SOURCE_DIR}/papas/reconstruction
+#${CMAKE_SOURCE_DIR}/papas/display
+#${CMAKE_SOURCE_DIR}/papas/graphtools
+#${CMAKE_SOURCE_DIR}/papas/detectors
+#${CMAKE_SOURCE_DIR}/papas/utility
+# ${ROOT_INCLUDE_DIRS})
+#add_definitions(${ROOT_CXX_FLAGS})
 
-#find_package(GTest)
-#include_directories(${GTEST_INCLUDE_DIRS})
-
-
-
-
-
-#include_directories(
-#  "${ROOT_INCLUDE_DIRS}"
-#  )
+include_directories(
+${CMAKE_SOURCE_DIR}
+)
 
 REFLEX_GENERATE_DICTIONARY(papascppstuffDict ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
 
-add_library(papascppstuff SHARED ${sources} 
-${MAINDIR}/graphtools/papas/directedacyclicgraph.h
-${MAINDIR}/utility/src/random.cpp
-${MAINDIR}/utility/papas/Random.h papascppstuffDict.cxx)
+add_library(papascppstuff SHARED ${sources} ${headers} papascppstuffDict.cxx)
 target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES}) 
-
 install(TARGETS papascppstuff DESTINATION lib)
+
+
+#install(DIRECTORY sources DESTINATION include)
 
 ### Install the dictionary
 if (${ROOT_VERSION} GREATER 6)
@@ -111,6 +119,8 @@ install(FILES
 "${PROJECT_BINARY_DIR}/papascppstuffDict_rdict.pcm"
 DESTINATION lib COMPONENT dev)
 endif()
+
+
 
 
 
