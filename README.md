@@ -1,10 +1,12 @@
-# PAPAS (PAramatrized PArticle Simulation)
+# PAPAS (PArametrized PArticle Simulation)
 
 UNDER Development and Testing
 
 # Introduction
 
-PAPAS (PAramatrized PArticle Simulation) provides simulation and reconstruction of a particle flow. It propagates stable generated particles through a simple detector model.
+PAPAS (PArametrized PArticle Simulation) provides simulation and reconstruction reconstruction algorithm which is designed to allow users to test the performance of detector design. The approach is fast simulation/ reconstruction. Users must provide simple C++ classes to define key detector parameters eg tracker acceptance and calorimeter radius and length. An implementation of the CMS detector is provided as a starting point.
+
+PAPAS propagates stable generated particles through a simple detector model.
 
 In the tracker, charged particles may be detected as tracks, taking into account the acceptance, efficiency, and momentum resolution of this detector.
 
@@ -12,9 +14,9 @@ In the calorimeters, particles are detected as energy deposits. The energy depos
 
 A particle flow algorithm then runs over the simulated tracks and clusters to identify and reconstruct charged hadrons, photons, and neutral hadrons. These particles can then be used as an input to higher-level algorithms like jet clustering, or directly in the analysis.
 
-Electrons and muons are passed through PAPAS without any modification, and the user is responsible for applying is own efficiency and resolution models. The hadronic decay products of tau leptons are simulated just like other hadrons and photons.
+TIP Electrons and muons are passed through PAPAS without any modification, and the user is responsible for applying is own efficiency and resolution models. The hadronic decay products of tau leptons are simulated just like other hadrons and photons.
 
-A CMS-like detector model is provided as an example, and used in example_simple.cpp.
+A CMS-like detector model is provided as an example.
 
 ## Installing
 
@@ -91,7 +93,7 @@ This should produce text outputs and also jgp display files.
 
 You should get a printout like:
 
-´´´
+```
     Generated Stable Particles
     Particle :p206     :17179869390: pdgid =    22, status =   1, q =  0, pt =   0.9, e =   0.9, eta = -0.13, theta = -0.13, phi =  0.08, mass =  0.00
     Particle :p202     :17179869386: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
@@ -105,23 +107,29 @@ You should get a printout like:
     Particle :r676     :21474837156: pdgid =   211, status =   1, q =  1, pt =   1.0, e =   1.0, eta = -0.21, theta = -0.21, phi = -2.72, mass =  0.14
     ...
     Particle :r631     :21474837111: pdgid =    22, status =   1, q =  0, pt =  16.1, e =  16.5, eta = -0.23, theta = -0.23, phi = -0.01, mass =  0.00
-´´´
+```
 
 jpg files like:
 
-TODO work out how to add in an image
-![Alt text](/Users/alice/fcc/papas/papas_cc/doc/file0.pdf?raw=true "Optional Title")
+#todo set up the correct output (temporary example just for now)
+
+![Output Image](https://raw.githubusercontent.com/alicerobson/papas_cc/master/doc/event_10_sim_rec.png)
 
 The example will also produce an output root file containing the reconstructed particles
-´´´
+```
           simpleeg.root
-´´´
+```
 
-###For Mac Xcode project use
---
+### For Mac Xcode project use
+
 ´´´
 mkdir xbuild
 cd xbuild
 cmake -G Xcode ../
 make
 ´´´
+
+NB for now will be necessary to set in edit screen/ run.
+```
+DYLD_LIBRARY_PATH=Users/alice/local/root/lib:/Users/alice/fccwork/fcc-edm/install/lib:/Users/alice/fccwork/podio/install/lib:/Users/alice/local/lib
+```

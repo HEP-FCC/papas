@@ -771,6 +771,7 @@ FILE_PATTERNS         += *.h *.hh *.hxx *.hpp *.h++
 FILE_PATTERNS         += *.py
 FILE_PATTERNS         += *.f90 *.f *.for
 FILE_PATTERNS         += *.dox *.md
+FILE_PATTERNS         += ./*.md
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
