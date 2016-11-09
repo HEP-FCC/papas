@@ -1,0 +1,23 @@
+# - Config file for the papas package
+# It defines the following variables
+#  papas_INCLUDE_DIRS - include directories
+#  papas_LIBRARIES    - libraries to link against
+#  papas_LIBRARY_DIR  - papas library dir
+#  papas_BINARY_DIR   - binary directory
+
+# Compute paths
+get_filename_component(papas_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(papas_INCLUDE_DIRS "${papas_CMAKE_DIR}/../include" ABSOLUTE)
+get_filename_component(papas_BINARY_DIR "${papas_CMAKE_DIR}/../bin" ABSOLUTE)
+get_filename_component(papas_LIBRARY_DIR "${papas_CMAKE_DIR}/../lib" ABSOLUTE)
+
+
+FIND_LIBRARY( papas_LIBRARIES NAMES papas PATHS
+             ${papas_LIBRARY_DIR}
+             NO_DEFAULT_PATH
+        )
+
+INCLUDE( FindPackageHandleStandardArgs )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( papas DEFAULT_MSG papas_LIBRARY_DIR papas_INCLUDE_DIRS papas_LIBRARIES )
+
+ADD_LIBRARY(examplelibrary SHARED IMPORTED)
