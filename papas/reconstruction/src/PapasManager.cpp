@@ -63,7 +63,7 @@ void PapasManager::clear() {
 
 void PapasManager::display(bool jpg) {
 
-  // PFApp myApp{}; // I think this should turn into a PapasManager member
+  //PFApp myApp{}; // I think this should turn into a PapasManager member
 
   m_app.display(m_simulator, m_pfEvent, m_particles, m_detector);
   if (jpg) m_app.jpg();

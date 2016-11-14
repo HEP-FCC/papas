@@ -47,16 +47,16 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
   int countp = 0;
   for (const auto& ptc : *ptcs) {
     countp += 1;
-    auto p4 = ptc.Core().P4;
-    tlv.SetXYZM(p4.Px, p4.Py, p4.Pz, p4.Mass);
-    int pdgid = ptc.Core().Type;
+    auto p4 = ptc.core().p4;
+    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    int pdgid = ptc.core().pdgId;
 
     papas::IdType id = papas::Id::makeParticleId();
-    papas::Particle particle{id, pdgid, (double)ptc.Core().Charge, tlv, 1};  // make every single one into a particle
+    papas::Particle particle{id, pdgid, (double)ptc.core().charge, tlv, 1};  // make every single one into a particle
     // so as to match python approach (for now)
     // otherwise ids do not align
 
-    if (ptc.Core().Status == 1) {  // only stable ones
+    if (ptc.core().status == 1) {  // only stable ones
 
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
 
@@ -101,18 +101,18 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   writer.registerForWrite<fcc::ParticleCollection>("GenParticle");
 
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
-  evinfo.Number(eventno);
+  evinfo.number(eventno);
   evinfocoll.push_back(evinfo);
   for (const auto& p : particles) {
     auto ptc = fcc::Particle();
-    ptc.Core().Type = p.second.pdgId();
-    auto& p4 = ptc.Core().P4;
-    p4.Px = p.second.p4().Px();
-    p4.Py = p.second.p4().Py();
-    p4.Pz = p.second.p4().Pz();
-    p4.Mass = p.second.p4().M();
-    ptc.Core().Status = 1;
-    ptc.Core().Charge = p.second.charge();
+    ptc.core().pdgId = p.second.pdgId();
+    auto& p4 = ptc.core().p4;
+    p4.px = p.second.p4().Px();
+    p4.py = p.second.p4().Py();
+    p4.pz = p.second.p4().Pz();
+    p4.mass = p.second.p4().M();
+    ptc.core().status = 1;
+    ptc.core().charge = p.second.charge();
     pcoll.push_back(ptc);
   }
   writer.writeEvent();
