@@ -8,7 +8,7 @@
 
 #include "papas/reconstruction/PFEvent.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PFBlock.h"
@@ -131,8 +131,8 @@ void PFEvent::clear() {
  {
  //sort by the type eg ecal hcal
  // and then in order of decreasing energy
- char c1 = Id::TypeShortCode(id1);
- char c2 = Id::TypeShortCode(id2);
+ char c1 = Identifier::typeLetter(id1);
+ char c2 = Identifier::typeLetter(id2);
  if ( c1 < c2)
  return true;
  else if (c2 > c1)

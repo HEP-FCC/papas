@@ -13,7 +13,7 @@
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/GraphBuilder.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
@@ -50,15 +50,17 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, const Event
     std::sort(ids.begin(), ids.end());
 #endif
     auto id = ids[0];
+    auto totalenergy = 0.;
     if (ids.size() > 1) {
       for (const auto& c : ids) {
+        totalenergy += clusters.at(c).energy();
         PDebug::write("Merged Cluster from Smeared{}",
                       clusters.at(c));  // hmmm not quite right we don't really know it is smeared
       }
     }
 
     auto mergedCluster =
-        Cluster(clusters.at(id), Id::makeId(Id::itemType(id)));  // create a new cluster based on old one
+        Cluster(clusters.at(id), Identifier::makeId(Identifier::itemType(id), 'm', totalenergy));  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }

@@ -10,27 +10,28 @@
  */
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "spdlog/details/format.h"
 #include <iostream>
 #include <sstream>  //AJRTODO temp
 
 namespace papas {
 
-Particle::Particle(int pdgid, double charge)
-    : m_uniqueId(Id::makeParticleId()), m_particleId(pdgid), m_charge(charge), m_status(0) {
+/*Particle::Particle(int pdgid, double charge, char subtype)
+  : m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype)), m_particleId(pdgid), m_charge(charge), m_status(0) {
   m_tlv = TLorentzVector{0., 0., 0., 0.};
-}
+}*/
 
 Particle::Particle() : m_uniqueId(0), m_particleId(0), m_charge(0), m_status(0) {}
 
-Particle::Particle(IdType id, int pdgid, double charge)
+/*Particle::Particle(IdType id, int pdgid, double charge)
     : m_uniqueId(id), m_particleId(pdgid), m_charge(charge), m_status(0) {
   m_tlv = TLorentzVector{0., 0., 0., 0.};
-}
+}*/
 
-Particle::Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status)
-    : m_uniqueId(id), m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status) {}
+Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, double status, char subtype)
+  : m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())),
+               m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status) {}
 
 std::string Particle::info() const {
   fmt::MemoryWriter out;
@@ -44,7 +45,7 @@ std::string Particle::info() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Particle& particle) {
-  os << "Particle :" << Id::pretty(particle.id()) << ":" << particle.id() << ": " << particle.info();
+  os << "Particle :" << Identifier::pretty(particle.id()) << ":" << particle.id() << ": " << particle.info();
   return os;
 }
 

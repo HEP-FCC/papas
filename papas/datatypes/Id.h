@@ -56,7 +56,7 @@ public:
   static ItemType itemType(Type id);             ///< Returns encoded ItemType eg kParticle etc;
   ///< Returns encoded unique id, normally starts at one and incremented by one for each new id
   static unsigned int uniqueId(Type id);
-  static char typeShortCode(Type id);    ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
+  static char typeLetter(Type id);    ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
   static std::string pretty(IdType id);  ///< Pretty string Id name eg e101 for an ecal wiht uniqueid 101;
   static void reset();  ///< Resets Id counter back to 0. NB care needed that Ids produced prior to this are thrown away
   static const unsigned int bitshift = 32;  ///< encoding parameter (used also by EdgeKey)

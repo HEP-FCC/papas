@@ -150,14 +150,15 @@ public:
    @return ItemType enumeration value papas::Layer eg kTracker
    */
   static papas::Layer layer(IdType id);
+  static int bitshift() { return m_bitshift;}
 
 private:
   // TODO consider how to deal with this for multithreading as it is not threadsafe
   // consider using boost:uuid or pthread_mutex_t lock;
   static unsigned int s_counter;             ///<starts at 1 and increments by 1 each time
-  static const unsigned int bitshift1 = 61;  ///< encoding parameter
-  static const unsigned int bitshift2 = 53;  ///< encoding parameter
-  static const unsigned int bitshift3 = 21;  ///< encoding parameter
+  static const unsigned int m_bitshift1 = 61;  ///< encoding parameter
+  static const unsigned int m_bitshift2 = 53;  ///< encoding parameter
+  static const unsigned int m_bitshift = 21;  ///< encoding parameter (max size of counter)
   /// returns the counter used for the unique id component
   static unsigned int counter() { return s_counter; };
   /// checks that the identifier can be correctly decoded

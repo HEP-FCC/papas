@@ -21,7 +21,7 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
     }
   }
 
-  DAG::FloodFill<Id::Type> FFill;
+  DAG::FloodFill<IdType> FFill;
 
   // traverse does the work and returns a vector of connected node groups
   for (auto& group : FFill.traverse(m_localNodes)) {
@@ -35,7 +35,7 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
   }
 }
 
-void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
+void GraphBuilder::sortIds(std::vector<IdType>& ids) {
 
 #if WITHSORT
   std::sort(ids.begin(), ids.end(), [](IdType a, IdType b) -> bool { return a < b; });
@@ -44,7 +44,7 @@ void GraphBuilder::sortIds(std::vector<Id::Type>& ids) {
 
 }  // end namespace papas
 
-/*void GraphBuilder::sortIds(std::vector<Id::Type>& ids) // sorts by type and energy
+/*void GraphBuilder::sortIds(std::vector<IdType>& ids) // sorts by type and energy
  {//TODO move to helper
  std::sort( ids.begin(), ids.end(), [this] (IdType a, IdType b) { return this->m_pfEvent.compare(a,b);});
  }*/

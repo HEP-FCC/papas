@@ -10,7 +10,7 @@
 
 //#include <boost/format.hpp>
 #include "papas/graphtools/Edge.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/utility/PDebug.h"
 #include "spdlog/details/format.h"
 #include <algorithm>
@@ -26,8 +26,9 @@ namespace papas {
 
 int PFBlock::tempBlockCount = 0;
 
-PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
-    : m_uniqueId(Id::makeBlockId()), m_isActive(true), m_elementIds(element_ids) {
+PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
+  : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
+  m_isActive(true), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
 
   // extract the relevant parts of the complete set of edges and store this within the block
@@ -47,9 +48,9 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges)
 PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_elementIds() {}
 
 /*PFBlock::~PFBlock() {
-  if(Id::pretty(m_uniqueId).compare(0,4, "b404")==0)
+  if(Identifier::pretty(m_uniqueId).compare(0,4, "b404")==0)
      std::cout<<*this;
-  PDebug::write("Delete block {} {} with Es{} & Ids{}", Id::pretty(m_uniqueId), m_uniqueId, m_edges.size(),
+  PDebug::write("Delete block {} {} with Es{} & Ids{}", Identifier::pretty(m_uniqueId), m_uniqueId, m_edges.size(),
 m_elementIds.size());
   //std::cout<<this;
   m_elementIds.clear();
@@ -59,30 +60,30 @@ m_elementIds.size());
 
 /*PFBlock::PFBlock(PFBlock&& pfblock) {
 
-  PDebug::write("Move block {} {} with Es{} & Ids{}", Id::pretty(pfblock.m_uniqueId), pfblock.m_uniqueId,
+  PDebug::write("Move block {} {} with Es{} & Ids{}", Identifier::pretty(pfblock.m_uniqueId), pfblock.m_uniqueId,
 pfblock.m_edges.size(), pfblock.m_elementIds.size());
   m_uniqueId=pfblock.m_uniqueId;
   m_elementIds= std::move(pfblock.m_elementIds);
   m_edges= std::move(pfblock.m_edges);
   m_isActive= pfblock.m_isActive;            // if a block is subsequently split it will be deactivated
   tempBlockCount= pfblock.tempBlockCount;
-  if(Id::pretty(pfblock.m_uniqueId).compare(0,4, "b404")==0)
+  if(Identifier::pretty(pfblock.m_uniqueId).compare(0,4, "b404")==0)
     std::cout<<*this;
 }*/
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Id::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -130,7 +131,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeTy
   return linkedEdgeKeys;
 }
 
-std::vector<Id::Type> PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
+std::vector<IdType> PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   /// TODO think about sorting
   Ids linkedIds;
@@ -157,7 +158,7 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9} ({})\n", Id::typeShortCode(id), count, Id::pretty(id), id);
+    out.write("{:>7}{} = {:9} ({})\n", Identifier::typeLetter(id), count, Identifier::pretty(id), id);
     count = count + 1;
   }
   return out.str();
@@ -184,7 +185,7 @@ std::string PFBlock::edgeMatrixString() const {
     out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
-      shortid = Id::typeShortCode(e1) + std::to_string(count);
+      shortid = Identifier::typeLetter(e1) + std::to_string(count);
       out.write("{:>8}", shortid);
       count += 1;
     }
@@ -193,7 +194,7 @@ std::string PFBlock::edgeMatrixString() const {
     int countrow = 0;
     for (auto e1 : m_elementIds) {  // each iteration produces the next row of the matrix
       // make short name for the row element eg E3, H5 etc
-      shortid = Id::typeShortCode(e1) + std::to_string(countrow);
+      shortid = Identifier::typeLetter(e1) + std::to_string(countrow);
       out.write("\n{:>8}", shortid);
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
@@ -223,7 +224,7 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
 }
 std::string PFBlock::info() const {
   fmt::MemoryWriter out;
-  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}", shortName(), Id::pretty(m_uniqueId), countEcal(),
+  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

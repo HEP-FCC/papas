@@ -10,13 +10,13 @@
 #define DefinitionsNodes_h
 
 #include "papas/graphtools/DirectedAcyclicGraph.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include <map>
 #include <vector>
 namespace papas {
 
-typedef DAG::Node<Id::Type> PFNode;
-typedef std::map<Id::Type, PFNode> Nodes;
+typedef DAG::Node<IdType> PFNode;
+typedef std::map<IdType, PFNode> Nodes;
 
 }  // end namespace papas
 

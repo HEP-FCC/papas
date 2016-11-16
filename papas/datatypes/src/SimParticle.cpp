@@ -32,9 +32,9 @@ else
 
 }*/
 
-SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
-                         double field)
-    : Particle(uniqueid, pdgid, charge, tlv), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
+SimParticle::SimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
+                         double field, char subtype)
+  : Particle( pdgid, charge, tlv, subtype), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
 
   if (m_isHelix)
     if (field > 0)
@@ -45,10 +45,10 @@ SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLoren
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-SimParticle::SimParticle(IdType uniqueid, int pdgid, double charge, const TLorentzVector& tlv, const Track& track)
+SimParticle::SimParticle( int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
     :  // for when particle is created via reconstruct track - it calls the above constructor
-      SimParticle(uniqueid, pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
-                  track.path()->field()) {
+      SimParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
+                  track.path()->field(), subtype) {
 
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
     if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);

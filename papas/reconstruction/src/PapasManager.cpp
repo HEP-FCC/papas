@@ -9,7 +9,7 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/display/AliceDisplay.h"
 #include "papas/graphtools/EventRuler.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
@@ -22,7 +22,7 @@ PapasManager::PapasManager(Detector& detector)
 
 void PapasManager::simulateEvent() {
   // order the particles according to id
-  std::vector<Id::Type> ids;
+  std::vector<IdType> ids;
   for (auto kv : m_particles) {
     ids.push_back(kv.first);
   }
@@ -58,7 +58,7 @@ void PapasManager::clear() {
   m_history.clear();
   m_particles.clear();
   m_simulator.clear();
-  Id::reset();
+  Identifier::reset();
 }
 
 void PapasManager::display(bool jpg) {

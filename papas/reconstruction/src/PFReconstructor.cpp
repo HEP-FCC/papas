@@ -56,7 +56,6 @@ void PFReconstructor::reconstruct() {
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    // std::cout<<Id::pretty(bid)<< ":" << bid <<std::endl;
     Blocks newBlocks = simplifyBlock(bid);
     if (newBlocks.size() > 0) {
       for (auto& b : newBlocks) {
@@ -111,7 +110,7 @@ Blocks PFReconstructor::simplifyBlock(IdType id) {
   bool firstHCAL;
   double minDist = -1;
   for (auto id : ids) {
-    if (Id::isTrack(id)) {
+    if (Identifier::isTrack(id)) {
       linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kHcalTrack);
       if (linkedEdgeKeys.size() > 0) {
         firstHCAL = true;
@@ -131,7 +130,7 @@ Blocks PFReconstructor::simplifyBlock(IdType id) {
           }
         }
       }
-    } else if (Id::isEcal(id)) {
+    } else if (Identifier::isEcal(id)) {
       // this is now handled  elsewhere in  Ruler::distance and so could be removed
       // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
       linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
@@ -161,23 +160,23 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
 
   if (ids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     IdType id = ids[0];
-    if (Id::isEcal(id)) {
+    if (Identifier::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id), papas::Layer::kEcal));
-    } else if (Id::isHcal(id)) {
+    } else if (Identifier::isHcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.HCALCluster(id), papas::Layer::kHcal));
-    } else if (Id::isTrack(id)) {
+    } else if (Identifier::isTrack(id)) {
       insertParticle(block, reconstructTrack(m_pfEvent.track(id)));
     } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
               // TODO
     }
   } else {
     for (auto id : ids) {
-      if (Id::isHcal(id)) {
+      if (Identifier::isHcal(id)) {
         reconstructHcal(block, id);
       }
     }
     for (auto id : ids) {
-      if (Id::isTrack(id) && !m_locked[id]) {
+      if (Identifier::isTrack(id) && !m_locked[id]) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons.
          # ELECTRONS TO BE DEALT WITH.*/
@@ -379,8 +378,8 @@ SimParticle PFReconstructor::reconstructCluster(const Cluster& cluster, papas::L
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
-  IdType newid = Id::makeRecParticleId();
-  SimParticle particle{newid, pdgId, 0., p4, vertex};
+  //IdType newid = Identifier::makeRecParticleId();
+  auto particle= SimParticle( pdgId, 0., p4, vertex, 'r');
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure
@@ -404,11 +403,11 @@ SimParticle PFReconstructor::reconstructTrack(const Track& track) {
   // , Clusters = None): cluster argument does not ever seem to be used at present
   /*construct a charged hadron from the track
    */
-  IdType newid = Id::makeRecParticleId();
+  
   int pdgId = 211 * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  SimParticle particle{newid, pdgId, track.charge(), p4, track};
+  auto particle= SimParticle(pdgId, track.charge(), p4, track, 'r');
 
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);

@@ -101,7 +101,7 @@ private:
   Blocks m_blocks;        // new try alice
   bool m_hasHistory;
   Ids m_unused;
-  std::unordered_map<Id::Type, bool> m_locked;
+  std::unordered_map<IdType, bool> m_locked;
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */

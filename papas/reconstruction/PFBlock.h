@@ -36,7 +36,7 @@ public:
    problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are
    extracted will be removed from the Edges object.
    */
-  PFBlock(const Ids& elementIds, Edges& edges);  // relevant parts of edges will be removed by PFBlock
+  PFBlock(const Ids& elementIds, Edges& edges, char subtype = 'u');  // relevant parts of edges will be removed by PFBlock
   PFBlock();
   PFBlock(PFBlock&& pfblock) = default;  // allow move
 

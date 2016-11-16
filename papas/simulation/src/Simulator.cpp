@@ -8,7 +8,7 @@
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/utility/PDebug.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
@@ -159,9 +159,9 @@ void Simulator::propagate(const SurfaceCylinder& cylinder, SimParticle& ptc) {
 }
 
 const Cluster& Simulator::cluster(IdType clusterId) const {
-  if (Id::isEcal(clusterId))
+  if (Identifier::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);
-  else if (Id::isHcal(clusterId))
+  else if (Identifier::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
   throw std::out_of_range("Cluster not found");
 }
@@ -170,8 +170,7 @@ SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzV
                                        const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
-  IdType uniqueid = Id::makeParticleId();
-  SimParticle simParticle{uniqueid, pdgid, charge, tlv, vertex, field};
+  auto simParticle=SimParticle( pdgid, charge, tlv, vertex, field, 's');
   return std::move(simParticle);
 }
 
@@ -219,7 +218,7 @@ Cluster Simulator::makeCluster(const SimParticle& ptc, papas::Layer layer, doubl
   if (csize == -1.) {  // ie value not provided
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
-  Cluster cluster{energy, pos, csize, Id::itemType(layer)};
+  Cluster cluster{energy, pos, csize, Identifier::itemType(layer)};
   return cluster;
 }
 
@@ -241,12 +240,12 @@ const Cluster& Simulator::storeHcalCluster(Cluster&& cluster, IdType parentId) {
 Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLayer) {
   // detectorLayer will be used to choose which detector layer is used for energy resolution etc.
   // NB It is not always the same layer as the new smeared cluster
-  if (detectorLayer == papas::Layer::kNone) detectorLayer = Id::layer(parent.id());  // default to same layer as cluster
+  if (detectorLayer == papas::Layer::kNone) detectorLayer = Identifier::layer(parent.id());  // default to same layer as cluster
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detectorLayer);
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
-  auto cluster = Cluster{energy, parent.position(), parent.size(), Id::itemType(parent.id())};
+  auto cluster = Cluster{energy, parent.position(), parent.size(), Identifier::itemType(parent.id())};
   PDebug::write("Made Smeared{}", cluster);
   return std::move(cluster);
 }
@@ -268,7 +267,7 @@ const Cluster& Simulator::storeSmearedCluster(Cluster&& smearedCluster, IdType p
 
   auto id = smearedCluster.id();
   addNode(id, parentId);
-  if (Id::layer(parentId) == papas::Layer::kEcal) {
+  if (Identifier::layer(parentId) == papas::Layer::kEcal) {
     m_smearedEcalClusters.emplace(id, std::move(smearedCluster));
     return m_smearedEcalClusters[id];
   } else {
@@ -340,7 +339,7 @@ void Simulator::testing() {
     std::cout << "Connected to " << p.first << std::endl;
     auto res = bfs.traverseUndirected(m_nodes[p.first]);
     for (auto r : res)
-      std::cout << "  " << r->value() << ": " << Id::itemType(r->value()) << std::endl;
+      std::cout << "  " << r->value() << ": " << Identifier::itemType(r->value()) << std::endl;
   }
 }
 
@@ -358,7 +357,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 /*
  Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
  return matchingIds(nodeid,
- Id::DataType::kCluster,
+ Identifier::DataType::kCluster,
  papas::Layer::kEcal,
  papas::SubType::SMEARED,
  papas::enumSource::SIMULATION);
@@ -366,7 +365,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 
  Ids  Simulator::linkedRawTrackIds(long nodeid) const {
  return matchingIds(nodeid,
- Id::DataType::kTrack,
+ Identifier::DataType::kTrack,
  papas::Layer::kNone,
  papas::SubType::RAW,
  papas::enumSource::SIMULATION);
@@ -374,7 +373,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 
  Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
  return matchingIds(nodeid,
- Id::DataType::kTrack,
+ Identifier::DataType::kTrack,
  papas::Layer::kNone,
  papas::SubType::SMEARED,
  papas::enumSource::SIMULATION);
@@ -382,7 +381,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 
  Ids Simulator::linkedParticleIds(long nodeid) const {
  return matchingIds(nodeid,
- Id::DataType::kParticle,
+ Identifier::DataType::kParticle,
  papas::Layer::kNone,
  papas::SubType::RAW,
  papas::enumSource::SIMULATION);
@@ -390,14 +389,14 @@ Ids Simulator::linkedIds(IdType nodeid) const {
 
  Ids Simulator::parentParticleIds(long nodeid) const {
  return getMatchingParentIds(nodeid,
- Id::DataType::kParticle,
+ Identifier::DataType::kParticle,
  papas::Layer::kNone,
  papas::SubType::RAW,
  papas::enumSource::SIMULATION);
  }*/
 
 /*
- Ids Simulator::matchingIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType type,
+ Ids Simulator::matchingIds(long nodeid, Identifier::DataType datatype, papas::Layer layer, papas::SubType type,
  papas::enumSource source) const
  {
  DAG::BFSVisitor<PFNode> bfs;
@@ -406,14 +405,14 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  for (auto r : res)
  {
  long id=r->value();
- if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
+ if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
  foundids.push_back(id);
  }
  }
  return foundids;
  }
 
- Ids Simulator::getMatchingParentIds(long nodeid, Id::DataType datatype, papas::Layer layer, papas::SubType
+ Ids Simulator::getMatchingParentIds(long nodeid, Identifier::DataType datatype, papas::Layer layer, papas::SubType
  type,papas::enumSource source) const
  {
  DAG::BFSVisitor<PFNode> bfs;
@@ -423,7 +422,7 @@ Ids Simulator::linkedIds(IdType nodeid) const {
  for (auto r : res)
  {
  long id=r->value();
- if(Id::isUniqueIdMatch(id, datatype, layer, type, source)) {
+ if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
  foundids.push_back(id);
  }
  }

@@ -70,11 +70,11 @@ papas::Layer Id::layer(Type id) {
     return ItemType::kNone;
 }*/
 
-char Id::typeShortCode(IdType id) {
+char Id::typeLetter(IdType id) {
   std::string typelist = ".ehtprb....";
   return typelist[(unsigned int)Id::itemType(id)];
   // TODO error handling
 }
 
-std::string Id::pretty(IdType id) { return string_format("%1c%-8d", Id::typeShortCode(id), Id::uniqueId(id)); }
+std::string Id::pretty(IdType id) { return string_format("%1c%-8d", Id::typeLetter(id), Id::uniqueId(id)); }
 }  // end namespace papas

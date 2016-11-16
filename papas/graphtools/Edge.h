@@ -1,7 +1,7 @@
 #ifndef RECONSTRUCTION_EDGE_H
 #define RECONSTRUCTION_EDGE_H
 
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include <iostream>
 
 namespace papas {
@@ -49,7 +49,7 @@ public:
   IdType otherid(IdType id) const;  /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
   /**
-    *   @brief  Static function that creates a unique key given two Id::Types
+    *   @brief  Static function that creates a unique key given two IdTypes
     *
     *   @description
     *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids

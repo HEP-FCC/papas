@@ -10,7 +10,7 @@
 #define Cluster_h
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "TVector3.h"
 #include <stdio.h>
 
@@ -25,15 +25,17 @@ public:
    @param[in]  position  location of Cluster
    @param[in]  size_m  size of cluster (units?)
    @param[in]  id type of cluster eg kEcalCluster or kHcalCluster
+   @param[in]  subtype: single char eg 's' describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, Id::ItemType id);
+  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype ='u');
+  
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster to be copied
    @param[in]  id new unique id to be provided by user
 
    example usage:
 
-   IdType newid =Id::makeId(Id::kEcalCluster)
+   IdType newid =Identifier::makeId(Identifier::kEcalCluster)
    auto mergedCluster = Cluster(clusters.at(id), newid);
    */
   Cluster(const Cluster& cluster, IdType id);

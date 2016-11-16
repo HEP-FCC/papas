@@ -17,7 +17,7 @@
 namespace papas {
 
 // s_counter is a static counter which will be used to create a unique long
-// max value is 2** bitshift3
+// max value is 2** m_bitshift
 unsigned int Identifier::s_counter = 1;
 
 void Identifier::reset() { s_counter = 1; }
@@ -28,15 +28,15 @@ IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniq
     throw "Id must have a valid type";
   }
   s_counter++;
-  if (uniqueid >= pow(2, bitshift3) - 1) throw "Identifier unique id is too big: too many identifiers";
+  if (uniqueid >= pow(2, m_bitshift) - 1) throw "Identifier unique id is too big: too many identifiers";
 
   // Shift all the parts and join together
   // NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
-  // if the bitshift is 32 or more the shift is undefined and can return 0
+  // if the m_bitshift is 32 or more the shift is undefined and can return 0
 
-  IdType typeShift = (uint64_t)type << bitshift1;
-  IdType valueShift = (uint64_t)Identifier::floatToBits(val) << bitshift3;
-  IdType subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << bitshift2;
+  IdType typeShift = (uint64_t)type << m_bitshift1;
+  IdType valueShift = (uint64_t)Identifier::floatToBits(val) << m_bitshift;
+  IdType subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << m_bitshift2;
   IdType uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | uniqueid;
 
   if (!checkValid(uid, type, subt, val, uniqueid)) throw "Error occured constructing identifier";
@@ -44,21 +44,21 @@ IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniq
 }
 
 Identifier::ItemType Identifier::itemType(IdType id) {
-  return static_cast<ItemType>((id >> bitshift1) & (uint64_t)(pow(2, 3) - 1));
+  return static_cast<ItemType>((id >> m_bitshift1) & (uint64_t)(pow(2, 3) - 1));
 }
 
 char Identifier::subtype(IdType id) {
-  return static_cast<char>((id >> bitshift2) & (uint64_t)(pow(2, bitshift1 - bitshift2) - 1));
+  return static_cast<char>((id >> m_bitshift2) & (uint64_t)(pow(2, m_bitshift1 - m_bitshift2) - 1));
 }
 
 float Identifier::value(IdType id) {
   // shift to extract the required bits
-  int bitvalue = id >> bitshift3 & (uint64_t)(pow(2, bitshift2 - bitshift3) - 1);
+  int bitvalue = id >> m_bitshift & (uint64_t)(pow(2, m_bitshift2 - m_bitshift) - 1);
   // convert bits back to float
   return bitsToFloat(bitvalue);
 }
 
-unsigned int Identifier::uniqueId(IdType id) { return id & (uint64_t)(pow(2, bitshift3) - 1); }
+unsigned int Identifier::uniqueId(IdType id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
 
 char Identifier::typeLetter(IdType id) {
   std::string typelist = ".ehtpb....";

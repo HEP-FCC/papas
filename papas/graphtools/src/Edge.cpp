@@ -15,13 +15,13 @@ Edge::Edge(IdType id1, IdType id2, bool isLinked, double distance)
 Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
 
   EdgeKey key;
-  IdType uid1 = Id::uniqueId(id1);
-  IdType uid2 = Id::uniqueId(id2);
+  IdType uid1 = Identifier::uniqueId(id1);
+  IdType uid2 = Identifier::uniqueId(id2);
 
   if (id1 > id2)  // ensure that the order of the ids does not matter
-    key = (((uint64_t)uid1) << Id::bitshift) | ((uint64_t)uid2);
+    key = (((uint64_t)uid1) << Identifier::bitshift()) | ((uint64_t)uid2);
   else
-    key = (((uint64_t)uid2) << Id::bitshift) | ((uint64_t)uid1);
+    key = (((uint64_t)uid2) << Identifier::bitshift()) | ((uint64_t)uid1);
 
   return key;
 }
@@ -40,10 +40,10 @@ Edge::EdgeType Edge::makeEdgeType() const {
   // eg for one track and one ecal the type will always be kEcalTrack (and never be a kTrackEcal)
 
   // get one letter abbreviation of type eg 't' for a track
-  auto shortid1 = Id::typeShortCode(m_id1);
-  auto shortid2 = Id::typeShortCode(m_id2);
+  auto shortid1 = Identifier::typeLetter(m_id1);
+  auto shortid2 = Identifier::typeLetter(m_id2);
 
-  /*if (Id::pretty(m_id1).compare(0,4, "h829")==0)
+  /*if (Identifier::pretty(m_id1).compare(0,4, "h829")==0)
     std::cout <<"id1";
   */
   if (shortid1 == shortid2) {

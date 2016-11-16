@@ -51,8 +51,8 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     int pdgid = ptc.core().pdgId;
 
-    papas::IdType id = papas::Id::makeParticleId();
-    papas::Particle particle{id, pdgid, (double)ptc.core().charge, tlv, 1};  // make every single one into a particle
+    //papas::IdType id = papas::Id::makeParticleId();
+    auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv, 1, 'g');  // make every single one into a particle
     // so as to match python approach (for now)
     // otherwise ids do not align
 

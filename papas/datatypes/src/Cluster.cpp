@@ -7,15 +7,15 @@
 //
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, Id::ItemType idtype)
-    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters() {
+Cluster::Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType idtype, char subtype)
+    : m_uniqueId(Identifier::makeId(idtype, subtype, energy)), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
@@ -79,9 +79,9 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  // if(Id::pretty(m_uniqueId)=="e299     ")
+  // if(Identifier::pretty(m_uniqueId)=="e299     ")
   //  std::cout<<*this;
-  if (Id::itemType(m_uniqueId) != Id::itemType(rhs.id())) {
+  if (Identifier::itemType(m_uniqueId) != Identifier::itemType(rhs.id())) {
     std::cout << "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
@@ -100,11 +100,11 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
+  os << "Cluster :" << Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
   os << " sub(";
   if (cluster.subClusters().size() == 0) std::cout << "hmmm";
   for (auto c : cluster.subClusters()) {
-    os << Id::pretty(c->id()) << ", ";
+    os << Identifier::pretty(c->id()) << ", ";
   }
   os << ")";
   return os;
@@ -146,12 +146,12 @@ return *this;
 };
 
 Cluster::Cluster(const Cluster&) {
-  PDebug::write("copy cluster {}" , Id::pretty(m_uniqueId));
+  PDebug::write("copy cluster {}" , Identifier::pretty(m_uniqueId));
 std::cout<< "copy cluster" ;
 } ;*/
 
 /*Cluster::~Cluster() {
-  PDebug::write("delete cluster {}" , Id::pretty(m_uniqueId));
+  PDebug::write("delete cluster {}" , Identifier::pretty(m_uniqueId));
   std::cout<< "delete cluster" ;
 } ;*/
 

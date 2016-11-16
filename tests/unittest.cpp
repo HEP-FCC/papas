@@ -34,7 +34,6 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/Id.h"
 #include "papas/datatypes/Identifier.h"
 #include "papas/detectors/Material.h"
 #include "papas/datatypes/Particle.h"
@@ -89,7 +88,7 @@ TEST_CASE("Identifier") {  /// ID test
   }
 }
 
-TEST_CASE("Id") {  /// ID test
+/*TEST_CASE("Id") {  /// ID test
   using namespace papas;
   IdType id(Id::ItemType::kEcalCluster);
   auto uid = Id::uniqueId(id);
@@ -107,7 +106,7 @@ TEST_CASE("Id") {  /// ID test
       REQUIRE(uid == n);
     }
   }
-}
+}*/
 
 TEST_CASE("Helix") {  /// Helix path test
   TLorentzVector p4 = TLorentzVector();
@@ -127,12 +126,12 @@ TEST_CASE("Helixpath") {  /// Helix path test
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1., 2.);
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
-  auto particle = SimParticle(0, 211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
+  auto particle = SimParticle( 211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
   auto helixprop = HelixPropagator(3.8);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
   auto tvec = particle.pathPosition(cyl1.layer());
-  auto particle2 = SimParticle(0, 211, -1, TLorentzVector{0., 2, 1, 5}, TVector3{0, 0, 0}, field);
+  auto particle2 = SimParticle(211, -1, TLorentzVector{0., 2, 1, 5}, TVector3{0, 0, 0}, field);
   helixprop.propagateOne(particle2, cyl1);
   auto tvec2 = particle2.pathPosition(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
@@ -163,7 +162,7 @@ TEST_CASE("Cylinder") {
 TEST_CASE("ClusterPT") {
 
   /// Test that pT is correctly set
-  Cluster cluster = Cluster(10., TVector3(1, 0, 0), 1, Id::ItemType::kEcalCluster);
+  Cluster cluster = Cluster(10., TVector3(1, 0, 0), 1, Identifier::ItemType::kEcalCluster);
   REQUIRE(cluster.pt() == Approx(10.000));
 
   cluster.setEnergy(5.);
@@ -174,7 +173,7 @@ TEST_CASE("ClusterSmear") {
 
   // Make a cluster
   double energy = 10.;
-  auto cluster = Cluster(energy, TVector3(1, 0, 0), 1., Id::kEcalCluster);  // #alice made this use default layer
+  auto cluster = Cluster(energy, TVector3(1, 0, 0), 1., Identifier::kEcalCluster);  // #alice made this use default layer
   auto CMSDetector = CMS();
   auto ecal = CMSDetector.ecal();
   PapasManager papasManager{CMSDetector};
@@ -236,8 +235,7 @@ TEST_CASE("StraightLine") {
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  long uid = Id::makeId(Id::ItemType::kParticle);
-  SimParticle photon = SimParticle(uid, 22, 0, tlv);
+  SimParticle photon = SimParticle(22, 0, tlv);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -251,8 +249,8 @@ TEST_CASE("StraightLine") {
 
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
-  uid = Id::makeId(Id::ItemType::kParticle);
-  SimParticle photon2 = SimParticle(uid, 22, 0, tlv);
+  
+  SimParticle photon2 = SimParticle( 22, 0, tlv);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -264,21 +262,21 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  SimParticle photon3 = SimParticle(uid, 22, 0, tlv, {0, 0, 1.5}, 0.);
+  SimParticle photon3 = SimParticle( 22, 0, tlv, {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector(1, 0, -1, 2.);
-  SimParticle photon4 = SimParticle(uid, 22, 0, tlv, {0, 0, -1.5}, 0.);
+  SimParticle photon4 = SimParticle( 22, 0, tlv, {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
-  SimParticle photon5 = SimParticle(uid, 22, 0, tlv,
+  SimParticle photon5 = SimParticle( 22, 0, tlv,
                                     {
                                         0., 0.5, 0,
                                     },
@@ -339,8 +337,8 @@ TEST_CASE("randomgen") {
 }
 
 TEST_CASE("Distance") {
-  auto c1 = Cluster(1, TVector3(1, 0, 0), 1., Id::ItemType::kEcalCluster);
-  auto c2 = Cluster(2, TVector3(1, 0, 0), 1., Id::ItemType::kHcalCluster);
+  auto c1 = Cluster(1, TVector3(1, 0, 0), 1., Identifier::kEcalCluster);
+  auto c2 = Cluster(2, TVector3(1, 0, 0), 1., Identifier::kHcalCluster);
   auto p3 = c1.position().Unit() * 100.;
   auto p4 = TLorentzVector();
   p4.SetVectM(p3, 1.);
@@ -357,15 +355,15 @@ TEST_CASE("Distance") {
 }
 
 TEST_CASE("Distance2") {
-  auto c1 = Cluster(10, TVector3(1, 0, 0), 4., Id::ItemType::kEcalCluster);
-  auto c2 = Cluster(20, TVector3(1, 0, 0), 4., Id::ItemType::kHcalCluster);
+  auto c1 = Cluster(10, TVector3(1, 0, 0), 4., Identifier::ItemType::kEcalCluster);
+  auto c2 = Cluster(20, TVector3(1, 0, 0), 4., Identifier::ItemType::kHcalCluster);
   auto dist1 = Distance(c1, c2);
   REQUIRE(dist1.isLinked());
   REQUIRE(dist1.distance() == 0);
 
   auto pos3 = TVector3(c1.position());
   pos3.RotateZ(0.059);
-  auto c3 = Cluster(30, pos3, 5., Id::ItemType::kHcalCluster);
+  auto c3 = Cluster(30, pos3, 5., Identifier::ItemType::kHcalCluster);
   auto dist2 = Distance(c1, c3);
   REQUIRE(dist2.isLinked());
   REQUIRE(dist2.distance() == 0.059);
@@ -382,7 +380,7 @@ void test_graphs() {  // Testing graphics
   // ,papas::ViewPane::Projection::HCAL_thetaphi });
 
   TVector3 vpos(1., .5, .3);
-  Cluster cluster = Cluster(10., vpos, 1., Id::ItemType::kEcalCluster);
+  Cluster cluster = Cluster(10., vpos, 1., Identifier::ItemType::kEcalCluster);
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0., 0., 0.));
   tvec.push_back(TVector3(1., 1., 1.));
@@ -422,9 +420,9 @@ void test_graphs() {  // Testing graphics
 
 TEST_CASE("Edges") {
   using namespace papas;
-  IdType id1 = Id::makeEcalId();
-  IdType id2 = Id::makeHcalId();
-  IdType id3 = Id::makeTrackId();
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
+  IdType id3 = Identifier::makeId(Identifier::kTrack);
 
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
@@ -438,13 +436,13 @@ TEST_CASE("Edges") {
 
 TEST_CASE("PFBlocks") {
   using namespace papas;
-  IdType id1 = Id::makeEcalId();
-  IdType id2 = Id::makeHcalId();
-  IdType id3 = Id::makeTrackId();
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
+  IdType id3 = Identifier::makeId(Identifier::kTrack);
 
-  IdType id4 = Id::makeEcalId();
-  IdType id5 = Id::makeHcalId();
-  IdType id6 = Id::makeTrackId();
+  IdType id4 = Identifier::makeId(Identifier::kEcalCluster);
+  IdType id5 = Identifier::makeId(Identifier::kHcalCluster);
+  IdType id6 = Identifier::makeId(Identifier::kTrack);
 
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
@@ -477,7 +475,7 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.isActive() == true);
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
-  REQUIRE(Id::isBlock(block2.uniqueId()) == true);
+  REQUIRE(Identifier::isBlock(block2.uniqueId()) == true);
   REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()));
@@ -488,11 +486,10 @@ TEST_CASE("PFBlocks") {
 }
 
 TEST_CASE("BlockSplitter") {
-  IdType id1 = Id::makeEcalId();
-  IdType id2 = Id::makeHcalId();
-  IdType id3 = Id::makeTrackId();
-
-  const std::vector<Id::Type> ids{id1, id2, id3};
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
+  IdType id3 = Identifier::makeId(Identifier::kTrack);
+  const std::vector<IdType> ids{id1, id2, id3};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
@@ -525,8 +522,8 @@ TEST_CASE("BlockSplitter") {
 
 TEST_CASE("Merge") {
 
-  auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, Id::kEcalCluster);
-  auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, Id::kEcalCluster);
+  auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, Identifier::kEcalCluster);
+  auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, Identifier::kEcalCluster);
   Clusters eclusters;
   eclusters.emplace(cluster1.id(), cluster1);
   eclusters.emplace(cluster2.id(), cluster2);
@@ -551,8 +548,8 @@ TEST_CASE("Merge") {
 
 TEST_CASE("merge_pair") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, Id::kHcalCluster);
-  auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, Id::kHcalCluster);
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, Identifier::kHcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, Identifier::kHcalCluster);
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
@@ -568,8 +565,8 @@ TEST_CASE("merge_pair") {
 
 TEST_CASE("merge_pair_away") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kHcalCluster);
-  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Identifier::kHcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Identifier::kHcalCluster);
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
@@ -585,8 +582,8 @@ TEST_CASE("merge_pair_away") {
 
 TEST_CASE("merge_different_layers") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Id::kEcalCluster);
-  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Id::kHcalCluster);
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, Identifier::kEcalCluster);
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, Identifier::kHcalCluster);
   Clusters hclusters;
   Clusters eclusters;
   hclusters.emplace(cluster1.id(), cluster1);

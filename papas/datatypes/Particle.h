@@ -21,10 +21,10 @@ class Particle {
 public:
   Particle();
   // Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1, char subtype = 'u');
   Particle(int pdgid, double charge);
-  Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
-  Particle(IdType id, int pdgid, double charge);
+  //Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
+  //Particle(IdType id, int pdgid, double charge);
 
   std::string stringDescription() const;              ///< String to describe the particle
   const TLorentzVector& p4() const { return m_tlv; }  ///< 4-momentum, px, py, pz, E

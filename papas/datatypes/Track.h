@@ -10,7 +10,7 @@ namespace papas {
 ///
 class Track {
 public:
-  Track(const TVector3& p3, double charge, Path::Ptr path);
+  Track(const TVector3& p3, double charge, Path::Ptr path, char subtype = 'u');
   Track() : m_uniqueId(0), m_path(std::make_shared<Path>()){};
   ~Track() = default;
   Track(Track&& t) = default;
