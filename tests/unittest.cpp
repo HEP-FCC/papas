@@ -162,7 +162,7 @@ TEST_CASE("Cylinder") {
 TEST_CASE("ClusterPT") {
 
   /// Test that pT is correctly set
-  Cluster cluster = Cluster(10., TVector3(1, 0, 0), 1, Identifier::ItemType::kEcalCluster);
+  Cluster cluster = Cluster(10., TVector3(1, 0, 0), 1, Identifier::ItemType::kEcalCluster, 't');
   REQUIRE(cluster.pt() == Approx(10.000));
 
   cluster.setEnergy(5.);
@@ -346,7 +346,7 @@ TEST_CASE("Distance") {
   path->addPoint(papas::Position::kEcalIn, c1.position());
   path->addPoint(papas::Position::kHcalIn, c2.position());
   double charge = 1.;
-  auto tr = Track(p3, charge, path);
+  auto tr = Track(p3, charge, path, 't');
 
   auto dist1 = Distance(c1, tr);
   REQUIRE(dist1.isLinked());
@@ -420,9 +420,9 @@ void test_graphs() {  // Testing graphics
 
 TEST_CASE("Edges") {
   using namespace papas;
-  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
-  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
-  IdType id3 = Identifier::makeId(Identifier::kTrack);
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster, 't');
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster, 't');
+  IdType id3 = Identifier::makeId(Identifier::kTrack, 't');
 
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
@@ -436,13 +436,13 @@ TEST_CASE("Edges") {
 
 TEST_CASE("PFBlocks") {
   using namespace papas;
-  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
-  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
-  IdType id3 = Identifier::makeId(Identifier::kTrack);
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster, 't');
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster, 't');
+  IdType id3 = Identifier::makeId(Identifier::kTrack, 't');
 
-  IdType id4 = Identifier::makeId(Identifier::kEcalCluster);
-  IdType id5 = Identifier::makeId(Identifier::kHcalCluster);
-  IdType id6 = Identifier::makeId(Identifier::kTrack);
+  IdType id4 = Identifier::makeId(Identifier::kEcalCluster, 't');
+  IdType id5 = Identifier::makeId(Identifier::kHcalCluster, 't');
+  IdType id6 = Identifier::makeId(Identifier::kTrack, 't');
 
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
@@ -466,8 +466,8 @@ TEST_CASE("PFBlocks") {
   edges.emplace(edge5.key(), std::move(edge5));
   edges.emplace(edge6.key(), std::move(edge6));
 
-  REQUIRE_NOTHROW(PFBlock(ids, edges));
-  PFBlock block2(ids2, edges);
+  REQUIRE_NOTHROW(PFBlock(ids, edges, 'r'));
+  PFBlock block2(ids2, edges,'r');
   REQUIRE(block2.countEcal() == 1);
   REQUIRE(block2.countHcal() == 1);
   REQUIRE(block2.countTracks() == 1);
@@ -486,9 +486,9 @@ TEST_CASE("PFBlocks") {
 }
 
 TEST_CASE("BlockSplitter") {
-  IdType id1 = Identifier::makeId(Identifier::kEcalCluster);
-  IdType id2 = Identifier::makeId(Identifier::kHcalCluster);
-  IdType id3 = Identifier::makeId(Identifier::kTrack);
+  IdType id1 = Identifier::makeId(Identifier::kEcalCluster, 't');
+  IdType id2 = Identifier::makeId(Identifier::kHcalCluster, 't');
+  IdType id3 = Identifier::makeId(Identifier::kTrack, 't');
   const std::vector<IdType> ids{id1, id2, id3};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
@@ -507,7 +507,7 @@ TEST_CASE("BlockSplitter") {
     historyNodes.emplace(id, std::move(PFNode(id)));
 
   Nodes emptyNodes;
-  auto blockbuilder = BlockBuilder(ids, std::move(edges), historyNodes);
+  auto blockbuilder = BlockBuilder(ids, std::move(edges), historyNodes, 'r');
   REQUIRE(blockbuilder.subGraphs().size() == 1);
 
   Edges to_unlink;
@@ -521,7 +521,7 @@ TEST_CASE("BlockSplitter") {
 }
 
 TEST_CASE("Merge") {
-
+  //Identifier::reset();
   auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, Identifier::kEcalCluster);
   auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, Identifier::kEcalCluster);
   Clusters eclusters;

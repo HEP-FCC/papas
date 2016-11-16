@@ -27,7 +27,7 @@ public:
    @param[in]  id type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype: single char eg 's' describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype ='u');
+  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype ='t');
   
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster to be copied
@@ -38,7 +38,7 @@ public:
    IdType newid =Identifier::makeId(Identifier::kEcalCluster)
    auto mergedCluster = Cluster(clusters.at(id), newid);
    */
-  Cluster(const Cluster& cluster, IdType id);
+  Cluster(const Cluster& cluster, Identifier::ItemType type, char subtype= 'u', float val =0.0);
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map

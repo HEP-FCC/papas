@@ -24,6 +24,10 @@ void Identifier::reset() { s_counter = 1; }
 
 IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniqueid) {
 
+  if (subt =='u'){
+    std::cout<<"here";
+  }
+  
   if (type == kNone) {
     throw "Id must have a valid type";
   }

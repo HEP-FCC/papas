@@ -14,12 +14,12 @@
 
 namespace papas {
 
-BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes)
+BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes, char subtype)
     : GraphBuilder(ids, std::move(edges)), m_historyNodes(historynodes), m_blocks() {
-  makeBlocks();
+  makeBlocks(subtype);
 }
 
-void BlockBuilder::makeBlocks() {
+void BlockBuilder::makeBlocks(char subtype) {
   /** uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
    Each subGraph will be used to make a new PFBlock
    */
@@ -28,7 +28,7 @@ void BlockBuilder::makeBlocks() {
     if (elementIds.size() > 1) {
       sortIds(elementIds);  // TODO allow sorting by energy using a helper class
     }
-    auto block = PFBlock(elementIds, m_edges);  // make the block
+    auto block = PFBlock(elementIds, m_edges, subtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.uniqueId();

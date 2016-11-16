@@ -21,8 +21,8 @@ Cluster::Cluster(double energy, const TVector3& position, double size_m, Identif
   m_subClusters.push_back(this);
 }
 
-Cluster::Cluster(const Cluster& c, IdType id)
-    : m_uniqueId(id),
+  Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
+    : m_uniqueId(Identifier::makeId(type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),

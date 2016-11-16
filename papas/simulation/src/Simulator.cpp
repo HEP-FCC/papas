@@ -211,14 +211,14 @@ SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin
   return storeSimParticle(std::move(simParticle), 0);
 }
 
-Cluster Simulator::makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction, double csize) const {
+Cluster Simulator::makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction, double csize, char subtype) const {
   double energy = ptc.p4().E() * fraction;
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();
   TVector3 pos = ptc.pathPosition(clayer);
   if (csize == -1.) {  // ie value not provided
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
-  Cluster cluster{energy, pos, csize, Identifier::itemType(layer)};
+  auto cluster= Cluster(energy, pos, csize, Identifier::itemType(layer), subtype);
   return cluster;
 }
 
@@ -245,7 +245,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
-  auto cluster = Cluster{energy, parent.position(), parent.size(), Identifier::itemType(parent.id())};
+  auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return std::move(cluster);
 }
@@ -287,7 +287,7 @@ const Track& Simulator::storeTrack(Track&& track, IdType parentid) {
 Track Simulator::smearTrack(const Track& track) const {
   double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = randomgen::RandNormal(1, ptResolution).next();
-  Track smeared = Track{track.p3() * scale_factor, track.charge(), track.path()};
+  auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(),'s');
   PDebug::write("Made Smeared{}", smeared);
   return smeared;
 }
@@ -296,7 +296,6 @@ const Track& Simulator::storeSmearedTrack(Track&& smearedtrack, IdType parentid)
   auto id = smearedtrack.id();
   addNode(id, parentid);
   m_smearedTracks.emplace(smearedtrack.id(), std::move(smearedtrack));
-
   return m_smearedTracks[id];
 }
 

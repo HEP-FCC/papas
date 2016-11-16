@@ -21,7 +21,7 @@ class Particle {
 public:
   Particle();
   // Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1, char subtype = 'u');
+  Particle(int pdgid, double charge, const TLorentzVector& tlv,  char subtype = 'u', double status = 1);
   Particle(int pdgid, double charge);
   //Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   //Particle(IdType id, int pdgid, double charge);

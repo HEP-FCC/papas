@@ -100,7 +100,7 @@ private:
   SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
                               const TVector3& vertex = TVector3(0., 0., 0.)) const;
   SimParticle& storeSimParticle(SimParticle&& simParticle, IdType parentId);
-  Cluster makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.) const;
+  Cluster makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1., char subtype='t') const;
   const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
   const Cluster& storeHcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
   bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer = papas::Layer::kNone,

@@ -29,7 +29,7 @@ Particle::Particle() : m_uniqueId(0), m_particleId(0), m_charge(0), m_status(0) 
   m_tlv = TLorentzVector{0., 0., 0., 0.};
 }*/
 
-Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, double status, char subtype)
+Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, char subtype, double status )
   : m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())),
                m_tlv(tlv), m_particleId(pdgid), m_charge(charge), m_status(status) {}
 
