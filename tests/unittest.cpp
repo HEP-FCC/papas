@@ -4,7 +4,7 @@
 
 // catch
 #define CATCH_CONFIG_MAIN
-#include "papas/datatypes/Id.h"
+
 #include "tests/catch.hpp"
 
 // C++
@@ -35,6 +35,7 @@
 #include "papas/graphtools/Edge.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/detectors/Material.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
@@ -50,6 +51,43 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/Random.h"
 using namespace papas;
+
+
+TEST_CASE("Identifier") {  /// ID test
+  using namespace papas;
+  Identifier::reset();
+  auto uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', 1.23456);
+  auto id1 = Identifier::makeId(Identifier::ItemType::kTrack, 's', 12.782);
+  
+  REQUIRE(Identifier::pretty(id1) == "ts2");
+  std::vector<IdType> idvec;
+  for (int i = -2; i<2 ; i++) {
+    uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', pow(2,i) );
+    idvec.push_back(uid);
+  }
+  std::sort(idvec.begin(), idvec.end(),std::greater<int>());
+  REQUIRE(Identifier::pretty(idvec[0]) == "ts6");
+  REQUIRE(Identifier::value(idvec[0]) == 2.0);
+  REQUIRE(Identifier::pretty(idvec[3]) == "ts3");
+  REQUIRE(Identifier::value(idvec[3]) == 0.25);
+  
+  
+  auto id = Identifier::makeId(Identifier::ItemType::kEcalCluster, 'g', 3.1);
+  
+  for (int j = 0; j < 6; j++) {
+    
+    Identifier::ItemType e = Identifier::ItemType::kEcalCluster;
+    for (int i = 1; i < 21; i++) {
+      int n = pow(2, i);
+      //makeId is self testing
+      id = Identifier::makeId(e, 't', (float)(1./n),  n);
+      //REQUIRE(Identifier::itemType(id) == e);
+      //REQUIRE(Identifier::subtype(id) == 't');
+      //REQUIRE(Identifier::value(id) == (float)n);
+      //REQUIRE(Identifier::uniqueId(id)== n);
+    }
+  }
+}
 
 TEST_CASE("Id") {  /// ID test
   using namespace papas;
