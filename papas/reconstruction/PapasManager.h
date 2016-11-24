@@ -11,7 +11,7 @@
 
 #include "papas/display/AliceDisplay.h"
 #include "papas/reconstruction/PFEvent.h"
-#include "papas/simulation/simulator.h"
+#include "papas/simulation/Simulator.h"
 
 namespace papas {
 /// High level class to recieve a set of particles, run simulation and then reconstruction
