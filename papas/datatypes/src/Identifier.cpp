@@ -69,6 +69,16 @@ char Identifier::typeLetter(IdType id) {
   return typelist[(unsigned int)Identifier::itemType(id)];
   // TODO error handling
 }
+  
+  Identifier::ItemType Identifier::itemType(char s) {
+    
+    std::string typelist = ".ehtpb";
+    auto found = typelist.find(s);
+    if (found == typelist.npos)
+       throw "type not found";
+    return (ItemType)found;
+  }
+
   std::string Identifier::typeAndSubtype(IdType id) {
     // two letter string such as 'em'
     std::string typeSubType = std::string(1, typeLetter(id)) + std::string(1, subtype(id));

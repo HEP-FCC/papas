@@ -73,6 +73,8 @@ TEST_CASE("Identifier") {  /// ID test
   
   auto id = Identifier::makeId(Identifier::ItemType::kEcalCluster, 'g', 3.1);
   
+  REQUIRE(Identifier::itemType('e')==Identifier::kEcalCluster);
+  
   for (int j = 0; j < 6; j++) {
     
     Identifier::ItemType e = Identifier::ItemType::kEcalCluster;

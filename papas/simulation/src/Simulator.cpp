@@ -70,7 +70,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
 
   // make a track if it is charged
   if (ptc.charge() != 0) {
-    auto track = Track(ptc.p3(), ptc.charge(), ptc.path());
+    auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
     auto storedtrack = storeTrack(std::move(track), ptc.id());
     auto smeared = smearTrack(storedtrack);  // smear it
     if (acceptSmearedTrack(smeared)) {
@@ -134,7 +134,7 @@ void Simulator::simulateNeutrino(SimParticle& ptc) {
 
 void Simulator::smearElectron(SimParticle& ptc) {
   PDebug::write("Smearing Electron");
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path());
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
   storeTrack(std::move(track), ptc.id());
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
@@ -145,7 +145,7 @@ void Simulator::smearElectron(SimParticle& ptc) {
 
 void Simulator::smearMuon(SimParticle& ptc) {
   PDebug::write("Smearing Muon");
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path());
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
   storeTrack(std::move(track), ptc.id());
   propagateAllLayers(ptc);
 }
@@ -245,6 +245,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
+  energy = fmax(0., energy); // energy always positive
   auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return std::move(cluster);

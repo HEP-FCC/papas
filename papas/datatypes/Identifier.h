@@ -144,6 +144,7 @@ public:
    @return ItemType enumeration value eg kEcalCluster
    */
   static ItemType itemType(papas::Layer layer);  ///< Uses detector layer to work out itemType
+  static ItemType itemType(char s);
 
   /** Uses identifier type to work out what detector leyer the item belongs to, may be kNone
    @param id: unique identifier

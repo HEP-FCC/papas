@@ -60,8 +60,8 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
 
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
 
-        particles.emplace(id, std::move(particle));
-        papas::PDebug::write("Selected Papas{}", particles.at(id));
+        particles.emplace(particle.id(), std::move(particle));
+        papas::PDebug::write("Selected Papas{}", particle);
       }
     }
   }
