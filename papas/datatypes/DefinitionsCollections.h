@@ -10,6 +10,12 @@
 #define DefinitionsCollections_h
 
 #include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/Cluster.h"
+ #include "papas/datatypes/Particle.h"
+ #include "papas/datatypes/Track.h"
+ #include "papas/datatypes/SimParticle.h"
+// #include "papas/reconstruction/PFBlock.h"
+ #include "papas/graphtools/Edge.h"
 //#include <map>
 #include <unordered_map>
 #include <vector>

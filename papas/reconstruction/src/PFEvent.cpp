@@ -15,7 +15,7 @@
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/datatypes/Path.h"
 #include "papas/utility/PrettyPrinter.h"
-#include "papas/simulation/simulator.h"  //temp
+#include "papas/simulation/Simulator.h"  //temp
 #include "papas/datatypes/Track.h"
 namespace papas {
 

@@ -124,7 +124,7 @@ bool Identifier::checkValid(IdType uid, ItemType type, char subt, float val, uns
 }
 
 uint64_t Identifier::floatToBits(float value) {
-  assert(CHAR_BIT * sizeof(float) == 32);  // TODO think of somewhere better to put this
+  // CHAR_BIT not known on lxplus assert(CHAR_BIT * sizeof(float) == 32);  // TODO think of somewhere better to put this
   union {
     float value;  // assumes sizeof(float) == sizeof(int)
     int bits;
