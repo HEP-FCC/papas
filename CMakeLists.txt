@@ -82,8 +82,8 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
         DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 
-add_subdirectory(papascpp)
-#add_subdirectory(papaslib)
+#add_subdirectory(papascpp)
+add_subdirectory(papaslib)
 add_subdirectory(examples)
 add_subdirectory(tests)
 #
