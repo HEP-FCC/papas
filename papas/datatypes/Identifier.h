@@ -167,6 +167,6 @@ private:
   static uint64_t floatToBits(float value);  /// convert float into binary
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };
-}  // end nam
+}  // end namespace
 
 #endif /* Identifier_h */

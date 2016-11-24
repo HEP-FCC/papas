@@ -1,11 +1,14 @@
 #ifndef RECONSTRUCTION_PFBLOCK_H
 #define RECONSTRUCTION_PFBLOCK_H
 
-#include "papas/datatypes/DefinitionsCollections.h"
+//#include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/graphtools/Edge.h"
 #include <iostream>
 #include <string>
+#include "papas/datatypes/DefinitionsCollections.h"
+
 
 namespace papas {
 
@@ -26,6 +29,8 @@ namespace papas {
  block = PFBlock(element_ids,  edges, pfevent)
  os << block;
  */
+  
+
 
 class PFBlock {
 
@@ -86,6 +91,9 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block);
-}  // end namespace papas
 
+
+typedef std::unordered_map<IdType, PFBlock> Blocks;            ///< collection of Blocks
+}  // end namespace papas
 #endif /* PFBlock_h */
+
