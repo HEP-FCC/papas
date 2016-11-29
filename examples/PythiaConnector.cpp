@@ -12,6 +12,7 @@
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
+#include "datamodel/CaloClusterCollection.h"
 #include "utilities/ParticleUtils.h"
 
 #include "papas/utility/PDebug.h"
@@ -80,6 +81,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.storeParticles(std::move(papasparticles));
     papasManager.simulateEvent();
+    papasManager.mergeClusters();
     papasManager.reconstructEvent();
     m_store.clear();
   }
@@ -119,3 +121,37 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   m_store.clearCollections();
   writer.finish();
 }
+
+
+void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
+  
+  podio::ROOTWriter writer(fname, &m_store);
+  
+  unsigned int nevents = 1;
+  unsigned int eventno = 0;
+  
+  auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
+  auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
+  
+  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
+  writer.registerForWrite<fcc::CaloClusterCollection>("Cluster");
+  
+  auto evinfo = fcc::EventInfo();  // evinfocoll.create();
+  evinfo.number(eventno);
+  evinfocoll.push_back(evinfo);
+  for (const auto& p : clusters) {
+    auto clust = fcc::CaloCluster();
+    clust.core().energy = p.second.energy();
+    auto& p3 = clust.core().position;
+    p3.x = p.second.position().X();
+    p3.y = p.second.position().Y();
+    p3.z = p.second.position().Z();
+   
+    ccoll.push_back(clust);
+  }
+  writer.writeEvent();
+  m_store.clearCollections();
+  writer.finish();
+}
+
+

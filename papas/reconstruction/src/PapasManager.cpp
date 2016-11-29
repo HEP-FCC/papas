@@ -51,6 +51,7 @@ void PapasManager::reconstructEvent() {
   // return the blocks and particles to the event
   m_pfEvent.setReconstructedParticles(std::move(pfReconstructor.particles()));
   m_pfEvent.setBlocks(std::move(pfReconstructor.blocks()));
+  std::cout << "rec size" << reconstructedParticles().size();
 }
 
 void PapasManager::clear() {

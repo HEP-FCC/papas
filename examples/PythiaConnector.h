@@ -30,6 +30,7 @@
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Particle.h"
+#include "papas/datatypes/Cluster.h"
 #include "papas/reconstruction/PapasManager.h"
 
 class PapasManager;
@@ -39,6 +40,7 @@ class PythiaConnector {
 public:
   PythiaConnector(const char* fname);
   void writeParticlesROOT(const char* fname, const papas::Particles& particles);
+  void writeClustersROOT(const char* fname, const papas::Clusters& clusters);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
   papas::Particles makePapasParticlesFromGeneratedParticles(
       const fcc::ParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles

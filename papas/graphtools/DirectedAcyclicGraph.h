@@ -177,7 +177,7 @@ void Node<T>::addChild(Node& node) {
 template <typename T>
 void Node<T>::accept(Visitor<TNode>& visitor) const {
   visitor.visit(this);
-};
+}
 
 /// Constructor
 template <typename N>

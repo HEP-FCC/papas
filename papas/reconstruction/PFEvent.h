@@ -36,6 +36,8 @@ public:
   Nodes& historyNodes() { return m_historyNodes; }  // allow these to be changed
   const Clusters& ecalClusters() const { return m_ecals; }
   const Clusters& hcalClusters() const { return m_hcals; }
+  const Clusters& ecalMergedClusters() const { return m_mergedEcals; }
+  const Clusters& hcalMergedClusters() const { return m_mergedHcals; }
   const Tracks& tracks() const { return m_tracks; }
   const Blocks& blocks() const { return m_blocks; }
   const Particles& reconstructedParticles() const { return m_reconstructedParticles; }

@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
 
     // write out the reconstructed particles to a root file
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
+    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.pfEvent().ecalMergedClusters());
 
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;

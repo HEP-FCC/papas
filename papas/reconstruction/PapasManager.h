@@ -24,6 +24,7 @@ public:
   void reconstructEvent();
   const Particles& reconstructedParticles() { return m_pfEvent.reconstructedParticles(); }
   const Particles& rawParticles() { return m_particles; }
+  const PFEvent& pfEvent() { return m_pfEvent; }
   void clear();
   void display(bool plot = false);  ///< relocate?
   void show();
