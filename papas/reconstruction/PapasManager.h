@@ -18,6 +18,7 @@ namespace papas {
 class PapasManager {
 public:
   PapasManager(Detector& detector);
+  PapasManager(PFEvent&& pfevent);
   void storeParticles(Particles&& particles) { m_particles = std::move(particles); }  // move into PapasManager
   void simulateEvent();
   void mergeClusters();

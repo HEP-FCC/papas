@@ -32,6 +32,7 @@
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/datatypes/Identifier.h"
 
 class PapasManager;
 
@@ -44,7 +45,9 @@ public:
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
   papas::Particles makePapasParticlesFromGeneratedParticles(
       const fcc::ParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
+  papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size, papas::Identifier::ItemType itemtype, char subtype) const;
 
+  void AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters );
 private:
   podio::EventStore m_store;
   podio::ROOTReader m_reader;

@@ -1,3 +1,4 @@
+
 //
 //  PythiaConnector.cpp
 //  papas
@@ -139,19 +140,57 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
   evinfocoll.push_back(evinfo);
-  for (const auto& p : clusters) {
-    auto clust = fcc::CaloCluster();
-    clust.core().energy = p.second.energy();
-    auto& p3 = clust.core().position;
-    p3.x = p.second.position().X();
-    p3.y = p.second.position().Y();
-    p3.z = p.second.position().Z();
-   
-    ccoll.push_back(clust);
-  }
+  AddClustersToEDM(clusters, ccoll );
+  
+  auto checkClusters=ConvertClustersToPapas(ccoll,
+                                            clusters.begin()->second.size(),
+                                            papas::Identifier::ItemType::kEcalCluster,
+                                            's' );
+  
   writer.writeEvent();
   m_store.clearCollections();
   writer.finish();
 }
+
+papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size, papas::Identifier::ItemType itemtype, char subtype) const {
+  papas::Clusters clusters;
+  for (const auto& c : fccClusters) {
+    const auto position = c.core().position;
+    const auto energy = c.core().energy;
+    auto cluster = papas::Cluster(energy, TVector3(position.x, position.y, position.z), size, itemtype, subtype);
+    clusters.emplace(cluster.id(), std::move(cluster));
+  }
+  return clusters;
+}
+
+void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters ) {
+  for (const auto& c : papasClusters) {
+    auto clust = fccClusters.create();
+    clust.core().energy = c.second.energy();
+    auto& p3 = clust.core().position;
+    p3.x = c.second.position().X();
+    p3.y = c.second.position().Y();
+    p3.z = c.second.position().Z();
+  }
+
+}
+
+
+/*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
+  
+  const fcc::ParticleCollection* ptcs(nullptr);
+  if (m_store.get("GenParticle", ptcs)) {
+    papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
+    papasManager.storeParticles(std::move(papasparticles));
+    papasManager.simulateEvent();
+    papasManager.mergeClusters();
+    papasManager.reconstructEvent();
+    m_store.clear();
+  }
+  
+  m_reader.endOfEvent();
+}*/
+
+
 
 

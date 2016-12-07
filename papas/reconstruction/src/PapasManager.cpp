@@ -43,9 +43,17 @@ void PapasManager::mergeClusters() {
   MergedClusterBuilder hcalmerger{m_pfEvent.hcalClusters(), ruler, m_history};
   m_pfEvent.setMergedHcals(hcalmerger.mergedClusters());  // move
 }
+  
+/*void PapasManager::testmergeClusters() {
+    EventRuler ruler{m_pfEvent};
+    MergedClusterBuilder ecalmerger{m_pfEvent.ecalClusters(), ruler, m_history};
+    m_pfEvent.setMergedEcals(ecalmerger.mergedClusters());  // move
+    MergedClusterBuilder hcalmerger{m_pfEvent.hcalClusters(), ruler, m_history};
+    m_pfEvent.setMergedHcals(hcalmerger.mergedClusters());  // move
+}*/
+
 
 void PapasManager::reconstructEvent() {
-
   auto pfReconstructor = PFReconstructor(m_pfEvent);
   pfReconstructor.reconstruct();
   // return the blocks and particles to the event
