@@ -11,6 +11,7 @@
 
 #include "papas/display/AliceDisplay.h"
 #include "papas/reconstruction/PFEvent.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/simulation/Simulator.h"
 
 namespace papas {
@@ -22,6 +23,7 @@ public:
   void storeParticles(Particles&& particles) { m_particles = std::move(particles); }  // move into PapasManager
   void simulateEvent();
   void mergeClusters();
+  void testMergeClusters();
   void reconstructEvent();
   const Particles& reconstructedParticles() { return m_pfEvent.reconstructedParticles(); }
   const Particles& rawParticles() { return m_particles; }
@@ -36,6 +38,7 @@ private:
   const Detector& m_detector;
   Simulator m_simulator;
   PFEvent m_pfEvent;
+  PapasEvent m_papasEvent;
   Nodes m_history;
   Particles m_particles;
   PFApp m_app;

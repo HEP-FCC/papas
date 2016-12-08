@@ -83,6 +83,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.storeParticles(std::move(papasparticles));
     papasManager.simulateEvent();
     papasManager.mergeClusters();
+    papasManager.testMergeClusters();
     papasManager.reconstructEvent();
     m_store.clear();
   }
@@ -143,7 +144,7 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
   AddClustersToEDM(clusters, ccoll );
   
   auto checkClusters=ConvertClustersToPapas(ccoll,
-                                            clusters.begin()->second.size(),
+                                            0, //size or 0 for merged
                                             papas::Identifier::ItemType::kEcalCluster,
                                             's' );
   

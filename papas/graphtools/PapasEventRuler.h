@@ -24,7 +24,7 @@ class PapasEvent;
 /// as identified by id to be found. It contains a reference to the event, which allows location of the underlying
 /// element (cluster, track) from the id. The EventRuler measures distances/links between items(ids) that belong to
 /// an event (eg cluster-cluster)
-class EventRuler {
+class PapasEventRuler {
 
 public:
   PapasEventRuler(const PapasEvent& papasEvent);

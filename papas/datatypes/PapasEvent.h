@@ -24,14 +24,14 @@ namespace papas {
     
     PapasEvent();
     
-    void addCollection(const Clusters* clusters); //move into papasevent
+    void addCollection(const Clusters& clusters); //move into papasevent
                                                   //void addCollection(const Tracks* tracks);
     //void addCollection(Blocks&& blocks);
     //void addCollection(SimParticles&& particles);
     
     //Nodes& getHistory() { return m_history;};
-    const Clusters* clusters(IdType id) const;
-    const Clusters* clusters(const Identifier::ItemType type, const CollectionType name) const;
+    const Clusters& clusters(IdType id) const;
+    const Clusters& clusters(const Identifier::ItemType type, const CollectionType name) const;
     
     bool hasClusters(const Identifier::ItemType type, const CollectionType name) const;
     bool hasClusters(IdType id) const;

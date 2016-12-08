@@ -9,7 +9,7 @@
 #include "papas/graphtools/PapasEventRuler.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/graphtools/Distance.h"
-#include "papas/reconstruction/PFEvent.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/Track.h"
 
 namespace papas {
@@ -34,7 +34,6 @@ Distance PapasEventRuler::distance(IdType id1, IdType id2) const {
 }
 
 Distance PapasEventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
-  if (identifier::isEcal(id1))
   const Cluster& cluster1 = m_papasEvent.cluster(id1);
   const Cluster& cluster2 = m_papasEvent.cluster(id2);
   return m_ruler.clusterClusterDistance(cluster1, cluster2);
@@ -42,8 +41,10 @@ Distance PapasEventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
 
 Distance PapasEventRuler::clusterTrackDistance(IdType clustId, IdType trackId) const {
   const Cluster& cluster = m_papasEvent.cluster(clustId);
-  const Track& track = m_papasEvent.track(trackId);
-  return m_ruler.clusterTrackDistance(cluster, track);
+  //const Track& track = m_papasEvent.track(trackId);
+  throw "TODO track";
+  return Distance();
+  //return m_ruler.clusterTrackDistance(cluster, track);
 }
 
 }  // end namespace papas

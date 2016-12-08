@@ -11,7 +11,7 @@
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
-#include "papas/graphtools/EventRuler.h"
+#include "papas/graphtools/Ruler.h"
 #include <iostream>
 
 namespace papas {
@@ -34,9 +34,8 @@ public:
    *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
    *                     if it is empty it will be ignored
    */
-  MergedClusterBuilder(const Clusters& clusters, const EventRuler& ruler,
-                       Nodes& historyNodes);                 // history will be updated
-  Clusters mergedClusters() { return std::move(m_merged); }  // empties m_merged - is this best way?
+  MergedClusterBuilder(const Clusters& clusters, const Ruler& ruler, Nodes& historyNodes);                 // history will be updated
+  Clusters mergedClusters() { return m_merged; }  // empties m_merged - is this best way?
   Nodes& historyNodes() { return m_historyNodes; }           // history nodes can be updated
 
 private:

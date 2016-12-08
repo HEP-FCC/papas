@@ -11,6 +11,7 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/datatypes/Identifier.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
+#include "papas/reconstruction/TestMergedClusterBuilder.h"
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFReconstructor.h"
@@ -18,7 +19,7 @@
 namespace papas {
 
 PapasManager::PapasManager(Detector& detector)
-    : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator) {}
+    : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator), m_papasEvent() {}
 
 void PapasManager::simulateEvent() {
   // order the particles according to id
@@ -37,21 +38,30 @@ void PapasManager::simulateEvent() {
 }
 
 void PapasManager::mergeClusters() {
-  EventRuler ruler{m_pfEvent};
-  MergedClusterBuilder ecalmerger{m_pfEvent.ecalClusters(), ruler, m_history};
+  Ruler ruler;
+  auto ecalmerger = MergedClusterBuilder(m_pfEvent.ecalClusters(), ruler, m_history);
   m_pfEvent.setMergedEcals(ecalmerger.mergedClusters());  // move
   MergedClusterBuilder hcalmerger{m_pfEvent.hcalClusters(), ruler, m_history};
   m_pfEvent.setMergedHcals(hcalmerger.mergedClusters());  // move
 }
   
-/*void PapasManager::testmergeClusters() {
-    EventRuler ruler{m_pfEvent};
-    MergedClusterBuilder ecalmerger{m_pfEvent.ecalClusters(), ruler, m_history};
-    m_pfEvent.setMergedEcals(ecalmerger.mergedClusters());  // move
-    MergedClusterBuilder hcalmerger{m_pfEvent.hcalClusters(), ruler, m_history};
-    m_pfEvent.setMergedHcals(hcalmerger.mergedClusters());  // move
-}*/
+void PapasManager::testMergeClusters() {
+  Ruler ruler;
+  auto mergedEClusters = new Clusters();
+  auto ecalmerger = TestMergedClusterBuilder(m_pfEvent.ecalClusters(), ruler, *mergedEClusters, m_history);
+  m_papasEvent.addCollection(ecalmerger.mergedClusters());
+  
+}
+  
+  //Ruler ruler;
+  //auto mergedEClusters = new Clusters();
+  
 
+  //auto  ecalmerger = TestMergedClusterBuilder(m_pfEvent.ecalClusters(), ruler /*, *mergedEClusters,, m_history);
+                                                                                //m_papasEvent.addCollection(&ecalmerger.mergedClusters());
+  //auto  hcalmerger = TestMergedClusterBuilder(m_pfEvent.hcalClusters(), ruler, *mergedHClusters, m_history);
+  //m_papasEvent.addCollection(&hcalmerger.mergedClusters());
+  //
 
 void PapasManager::reconstructEvent() {
   auto pfReconstructor = PFReconstructor(m_pfEvent);
