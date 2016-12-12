@@ -36,12 +36,9 @@ typedef std::unordered_map<IdType, Track> Tracks;              ///< collection o
 // typedef std::unordered_map<IdType, PFBlock> Blocks;            ///< collection of Blocks
 typedef std::unordered_map<IdType, Cluster> Clusters;  ///< collection of Clusters
 
-typedef char CollectionType;
-// typedef struct CollectionType { char x; } CollectionType; ///two char descriptor of a collection eg 'em' for merged
-// ecals
-typedef std::unordered_map<CollectionType, SimParticles> CollectionParticles;  ///< collection of Particles
-// typedef std::unordered_map<CollectionType, Tracks> CollectionTracks;              ///< collection of Tracks
-// typedef std::unordered_map<CollectionType, Blocks> CollectionBlocks;            ///< collection of Blocks
-typedef std::unordered_map<CollectionType, const Clusters*> CollectionClusters;  ///< collection of Clusters
+typedef std::unordered_map<Identifier::SubType, SimParticles> CollectionParticles;  ///< collection of Particles
+// typedef std::unordered_map<Identifier::SubType, Tracks> CollectionTracks;              ///< collection of Tracks
+// typedef std::unordered_map<Identifier::SubType, Blocks> CollectionBlocks;            ///< collection of Blocks
+typedef std::unordered_map<Identifier::SubType, const Clusters*> CollectionClusters;  ///< collection of Clusters
 }
 #endif /* DefinitionsCollections_h */

@@ -38,6 +38,7 @@ public:
    IdType newid =Identifier::makeId(Identifier::kEcalCluster)
    auto mergedCluster = Cluster(clusters.at(id), newid);
    */
+  //~Cluster(); //temp
   Cluster(const Cluster& cluster, Identifier::ItemType type, char subtype= 'u', float val =0.0);
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map

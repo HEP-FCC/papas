@@ -19,7 +19,7 @@
 namespace papas {
 
 PapasManager::PapasManager(Detector& detector)
-    : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator), m_papasEvent() {}
+    : m_detector(detector), m_simulator(detector, m_history), m_pfEvent(m_simulator), m_papasEvent(m_history) {}
 
 void PapasManager::simulateEvent() {
   // order the particles according to id
@@ -48,8 +48,9 @@ void PapasManager::mergeClusters() {
 void PapasManager::testMergeClusters() {
   Ruler ruler;
   auto mergedEClusters = new Clusters();
+  m_newClusters.push_back(mergedEClusters);
   auto ecalmerger = TestMergedClusterBuilder(m_pfEvent.ecalClusters(), ruler, *mergedEClusters, m_history);
-  m_papasEvent.addCollection(ecalmerger.mergedClusters());
+  m_papasEvent.addCollection(*mergedEClusters);
   
 }
   
@@ -74,10 +75,14 @@ void PapasManager::reconstructEvent() {
 
 void PapasManager::clear() {
   m_pfEvent.clear();
+  m_papasEvent.clear();
   m_history.clear();
   m_particles.clear();
   m_simulator.clear();
   Identifier::reset();
+  for (auto c : m_newClusters)
+    c->clear();
+  m_newClusters.clear();
 }
 
 void PapasManager::display(bool jpg) {

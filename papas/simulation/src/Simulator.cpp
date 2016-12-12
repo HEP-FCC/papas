@@ -248,7 +248,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   energy = fmax(0., energy); // energy always positive
   auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
-  return std::move(cluster);
+  return cluster;
 }
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer,

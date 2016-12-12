@@ -17,49 +17,46 @@
 #include <stdio.h>
 
 namespace papas {
-/// PapasEvent holds collections of particles, clusters etc and the history associated with an event
+/// PapasEvent holds pointers to collections of particles, clusters etc and the address of the history associated with an event
 /**
 
  @author  Alice Robson
  @date    2016-04-05
  */
 
-PapasEvent::PapasEvent()
+PapasEvent::PapasEvent(Nodes& history)
     : m_ecalClusterCollections{},
       m_hcalClusterCollections{},
-      /*, m_trackCollections{}, m_particleCollections{}, m_blockCollections{}, */ m_history{} {};
+      /*, m_trackCollections{}, m_particleCollections{}, m_blockCollections{}, */ m_history{history} {};
 
 void PapasEvent::addCollection(const papas::Clusters& clusters) {
-
+  
+  
+  
+  
   // check that everything in clusters is of same type and subtype
-  std::string collectionname = "uu";  // unset
-  std::string nexttype;
-  bool isEcal;
-  auto first = true;
+  IdType firstId = 0;
   for (const auto& it : clusters) {
-    nexttype = Identifier::typeAndSubtype(it.first);
-    if (first) {
-      first = false;
-      collectionname = nexttype;
-      if (hasClusters(it.first)) throw "Clusters Collection already exists";
-      isEcal = Identifier::isEcal(it.first);
+      if (!firstId) {
+        firstId = it.first;
+        if (hasClusters(firstId)) {
+          std::cout << Identifier::pretty(firstId) << std::endl;
+          throw "Clusters Collection already exists";
+        }
     }
-    if (nexttype != collectionname) throw "more than one typeandSubtype found in collection";
+    if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) throw "more than one typeandSubtype found in collection";
   }
-  /*if (m_clusterCollections.find(name)) {
-         throw "this CollectionType already exists";
-  }*/
-  if (collectionname[0] == 'e')
-    m_ecalClusterCollections.emplace(collectionname[2], &clusters);
+  if (Identifier::itemType(firstId)==Identifier::kEcalCluster)
+    m_ecalClusterCollections.emplace(Identifier::subtype(firstId), &clusters);
   else
-    m_hcalClusterCollections.emplace(collectionname[2], &clusters);
+    m_hcalClusterCollections.emplace(Identifier::subtype(firstId), &clusters);
 };
 // move into papasevent
 // void PapasEvent::addCollection(CollectionType name, Tracks&& tracks);
 // void PapasEvent::addCollection(CollectionType name, Blocks&& blocks);
 // void PapasEvent::addCollection(CollectionType name, SimParticles&& particles);
 
-const Clusters& PapasEvent::clusters(Identifier::ItemType type, const CollectionType name) const {
+  const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType name) const {
   if (type == Identifier::ItemType::kEcalCluster)
     return *m_ecalClusterCollections.at(name);
   else
@@ -80,7 +77,7 @@ bool PapasEvent::hasClusters(IdType id) const {
     return m_hcalClusterCollections.find(Identifier::subtype(id)) != m_hcalClusterCollections.end();
 };
 
-bool PapasEvent::hasClusters(Identifier::ItemType type, const CollectionType name) const {
+bool PapasEvent::hasClusters(Identifier::ItemType type, const Identifier::SubType name) const {
   if (type == Identifier::ItemType::kEcalCluster)
     return m_ecalClusterCollections.find(name) != m_ecalClusterCollections.end();
   else
@@ -99,4 +96,11 @@ bool PapasEvent::hasCluster(IdType id) const {
   else
     return false;};
 // const Track& PapasEvent::getTrack(IdType id) const;
+
+  void PapasEvent::clear() {
+    m_ecalClusterCollections.clear(); //deletes pointers not object (which is const)
+    m_hcalClusterCollections.clear();
+  }
+
 }
+

@@ -59,6 +59,7 @@ public:
   
   /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock };
+  typedef char SubType;
 
   static void reset();  ///< Resets Id counter back to 0. NB care needed that Ids produced prior to this are thrown away
 

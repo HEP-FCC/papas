@@ -40,6 +40,7 @@ Cluster::Cluster(Cluster&& c)
       m_energy(c.m_energy),
       m_subClusters() {
   m_p3 = c.m_p3;
+        //std::cout<< "Move Cluster " << Identifier::pretty(m_uniqueId) << std::endl;
 
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
@@ -110,7 +111,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   return os;
 }
 
-/*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
+  /*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
 Cluster::Cluster( Cluster && c) :
 m_size(c.m_size),
 m_angularSize(c.m_angularSize),
@@ -152,7 +153,7 @@ std::cout<< "copy cluster" ;
 
 /*Cluster::~Cluster() {
   PDebug::write("delete cluster {}" , Identifier::pretty(m_uniqueId));
-  std::cout<< "delete cluster" ;
+  std::cout<< " delete cluster " <<  Identifier::pretty(m_uniqueId) ;
 } ;*/
 
 }  // end namespace papas

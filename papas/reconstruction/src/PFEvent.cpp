@@ -121,7 +121,7 @@ const Cluster& PFEvent::cluster(IdType id) const {
 void PFEvent::clear() {
   m_mergedEcals.clear();
   m_mergedHcals.clear();
-  m_reconstructedParticles.clear();
+  m_historyNodes.clear();
 }
 
 }  // end namespace papas

@@ -21,32 +21,41 @@ namespace papas {
  */
 class PapasEvent {
 public:
-  PapasEvent();
-
+  //History is owned elsewhere
+  PapasEvent(Nodes& history);
+  
+  //store the address of the clusters object into PapasEvent
   void addCollection(const Clusters& clusters);
-
-  // void addCollection(const Tracks* tracks);
-  // void addCollection(Blocks&& blocks);
-  // void addCollection(SimParticles&& particles);
+  //TODO void addCollection(const Tracks& tracks);
+  //TODO void addCollection(const Blocks& blocks);
+  //TODO void addCollection(const Particles& particles);
+  
   const Nodes& getHistory() const {return m_history;};
   
+   //get clusters collection matching type and subType of id
   const Clusters& clusters(IdType id) const;
-  const Clusters& clusters(const Identifier::ItemType type, const CollectionType name) const;
+  
+  //get clusters collection matching Type and subtype
+  const Clusters& clusters(const Identifier::ItemType type, const Identifier::SubType name) const;
   bool hasClusters(IdType id) const;
-  bool hasClusters(const Identifier::ItemType type, const CollectionType name) const;
+  bool hasClusters(const Identifier::ItemType type, const Identifier::SubType name) const;
   
+  //return cluster matching id
   const Cluster& cluster(IdType id) const;
+  //check if cluster matching id exists
   bool hasCluster(IdType id) const;
+  void clear();
   
-  // const Track& getTrack(IdType id) const;
+  //TODO const Track& getTrack(IdType id) const;
 
 private:
+  //Unordered map of pointers to unordered map of (concrete) Clusters
   CollectionClusters m_ecalClusterCollections;
   CollectionClusters m_hcalClusterCollections;
-  // CollectionTracks m_trackCollections
-  // CollectionParticles m_particleCollections;
-  // CollectionBlocks m_blockCollections;
-  Nodes m_history;
+  //TODO CollectionTracks m_trackCollections
+  //TODO CollectionParticles m_particleCollections;
+  //TODO CollectionBlocks m_blockCollections;
+  Nodes& m_history;
 };
 }
 
