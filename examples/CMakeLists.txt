@@ -43,6 +43,6 @@ install(TARGETS example_plot DESTINATION bin)
 
 # --- adding tests for examples ------------------------------
 add_test(NAME fcc-generate COMMAND $ENV{FCCPHYSICS}/bin/fcc-pythia8-generate $ENV{FCCPHYSICS}/share/ee_ZH_Zmumu_Hbb.txt WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-add_test(NAME example_loop  COMMAND $ENV{FCCpapascpp}/bin/example_loop ee_ZH_Zmumu_Hbb.root  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
+add_test(NAME example_loop  COMMAND $ENV{FCCPAPASCPP}/bin/example_loop ee_ZH_Zmumu_Hbb.root  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
 
 #set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)

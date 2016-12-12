@@ -533,7 +533,7 @@ TEST_CASE("Merge") {
   Tracks tracks;
   Nodes nodes;
   auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
-  auto ruler = papas::EventRuler(testevent);
+  auto ruler = papas::Ruler();
   auto builder = MergedClusterBuilder(eclusters, ruler, nodes);
   REQUIRE(builder.mergedClusters().size() == 1);
   for (auto mergedCluster : builder.mergedClusters()) {
@@ -559,7 +559,7 @@ TEST_CASE("merge_pair") {
   Tracks tracks;
   Nodes nodes;
   auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
-  auto ruler = papas::EventRuler(testevent);
+  auto ruler = papas::Ruler();
   auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
   REQUIRE(builder.mergedClusters().size() == 1);
   return;
@@ -576,7 +576,7 @@ TEST_CASE("merge_pair_away") {
   Tracks tracks;
   Nodes nodes;
   auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
-  auto ruler = papas::EventRuler(testevent);
+  auto ruler = papas::Ruler();
   auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
   REQUIRE(builder.mergedClusters().size() == 2);
   return;
@@ -594,7 +594,7 @@ TEST_CASE("merge_different_layers") {
   Tracks tracks;
   Nodes nodes;
   auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
-  auto ruler = papas::EventRuler(testevent);
+  auto ruler = papas::Ruler();
   auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
   REQUIRE(builder.mergedClusters().size() == 2);
 
