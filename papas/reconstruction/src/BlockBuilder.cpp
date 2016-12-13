@@ -7,6 +7,7 @@
 //
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/datatypes/Definitions.h"
+#include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 #include "papas/graphtools/FloodFill.h"
 #include "papas/utility/PDebug.h"

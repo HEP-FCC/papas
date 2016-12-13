@@ -47,22 +47,13 @@ void PapasManager::mergeClusters() {
   
 void PapasManager::testMergeClusters() {
   Ruler ruler;
-  auto mergedEClusters = new Clusters();
+  auto mergedEClusters = new Clusters(); // will be owned and managed by PapasManager
   m_newClusters.push_back(mergedEClusters);
   auto ecalmerger = TestMergedClusterBuilder(m_pfEvent.ecalClusters(), ruler, *mergedEClusters, m_history);
   m_papasEvent.addCollection(*mergedEClusters);
   
 }
   
-  //Ruler ruler;
-  //auto mergedEClusters = new Clusters();
-  
-
-  //auto  ecalmerger = TestMergedClusterBuilder(m_pfEvent.ecalClusters(), ruler /*, *mergedEClusters,, m_history);
-                                                                                //m_papasEvent.addCollection(&ecalmerger.mergedClusters());
-  //auto  hcalmerger = TestMergedClusterBuilder(m_pfEvent.hcalClusters(), ruler, *mergedHClusters, m_history);
-  //m_papasEvent.addCollection(&hcalmerger.mergedClusters());
-  //
 
 void PapasManager::reconstructEvent() {
   auto pfReconstructor = PFReconstructor(m_pfEvent);
@@ -70,7 +61,7 @@ void PapasManager::reconstructEvent() {
   // return the blocks and particles to the event
   m_pfEvent.setReconstructedParticles(std::move(pfReconstructor.particles()));
   m_pfEvent.setBlocks(std::move(pfReconstructor.blocks()));
-  std::cout << "rec size" << reconstructedParticles().size();
+  //std::cout << "rec size" << reconstructedParticles().size();
 }
 
 void PapasManager::clear() {

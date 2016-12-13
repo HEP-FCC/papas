@@ -1,7 +1,6 @@
 #ifndef RECONSTRUCTION_PFBLOCK_H
 #define RECONSTRUCTION_PFBLOCK_H
 
-//#include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/graphtools/Edge.h"
