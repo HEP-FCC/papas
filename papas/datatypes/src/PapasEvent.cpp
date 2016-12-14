@@ -25,67 +25,32 @@ namespace papas {
  @date    2016-04-05
  */
 
-PapasEvent::PapasEvent(Nodes& history)
+PapasEvent::PapasEvent()
     : m_ecalClustersCollection{},
       m_hcalClustersCollection{},
       m_tracksCollection{},
       m_particlesCollection{},
       // m_blocksCollection{},
-      m_history{history} {};
+      m_historyCollection{}
+  {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
-  // check that everything in clusters is of same type and subtype
-  IdType firstId = 0;
-  for (const auto& it : clusters) {
-    if (!firstId) {
-      firstId = it.first;
-      if (hasCollection(firstId)) {
-        throw "Clusters Collection already exists";
-      }
-    }
-    if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId))
-      throw "more than one typeandSubtype found in collection";
-  }
-  if (Identifier::isEcal(firstId))
-    m_ecalClustersCollection.emplace(Identifier::subtype(firstId), &clusters);
+  if (Identifier::isEcal(clusters.begin()->first))
+    addCollectionInternal(clusters, m_ecalClustersCollection);
   else
-    m_hcalClustersCollection.emplace(Identifier::subtype(firstId), &clusters);
-};
-  
-void PapasEvent::addCollection(const Tracks& tracks)
-  {
-    // check that everything is of same type and subtype
-    IdType firstId = 0;
-    for (const auto& it : tracks) {
-      if (!firstId) {
-        firstId = it.first;
-        if (hasCollection(firstId)) {
-          throw "Tracks Collection already exists";
-        }
-      }
-      if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId))
-        throw "more than one typeandSubtype found in collection";
-    }
-    m_tracksCollection.emplace(Identifier::subtype(firstId), &tracks);
-  };
-  
-  void PapasEvent::addCollection(const SimParticles& particles)
-  {
-    // check that everything is of same type and subtype
-    IdType firstId = 0;
-    for (const auto& it : particles) {
-      if (!firstId) {
-        firstId = it.first;
-        if (hasCollection(firstId)) {
-          throw "Particless Collection already exists";
-        }
-      }
-      if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId))
-        throw "more than one typeandSubtype found in collection";
-    }
-    m_particlesCollection.emplace(Identifier::subtype(firstId), &particles);
-  };
+    addCollectionInternal(clusters, m_hcalClustersCollection);
+}
 
+  void PapasEvent::addCollection(const Nodes& history) {
+    m_historyCollection.push_back(&history);
+  }
+  
+  
+void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal(tracks, m_tracksCollection); };
+
+void PapasEvent::addCollection(const SimParticles& particles) {
+  addCollectionInternal(particles, m_particlesCollection);
+};
 
 // void PapasEvent::addCollection(CollectionType name, Blocks&& blocks);
 
@@ -102,6 +67,10 @@ const Clusters& PapasEvent::clusters(IdType id) const {
   else
     return *m_hcalClustersCollection.at(Identifier::subtype(id));
 };
+  
+  const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
+    return clusters(Identifier::itemType(typeAndSubtype[1]), typeAndSubtype[1]);
+  }
 
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
   auto found = false;
@@ -158,12 +127,12 @@ bool PapasEvent::hasObject(IdType id) const {
   return found;
 };
 
-
 void PapasEvent::clear() {
   m_ecalClustersCollection.clear();  // deletes pointers not object (which is const)
   m_hcalClustersCollection.clear();
   m_tracksCollection.clear();
   m_particlesCollection.clear();
   // m_blocksCollection.clear();
+  m_historyCollection.clear();
 }
 }

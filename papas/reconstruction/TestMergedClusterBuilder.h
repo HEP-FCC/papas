@@ -12,6 +12,7 @@
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/graphtools/Ruler.h"
+#include "papas/datatypes/PapasEvent.h"
 #include <iostream>
 
 
@@ -35,9 +36,9 @@ namespace papas {
      *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
      *                     if it is empty it will be ignored
      */
-    TestMergedClusterBuilder(const Clusters& clusters, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);                 // history will be updated
-    const Clusters& mergedClusters() { return m_merged; }  // empties m_merged - is this best way?
-    Nodes& historyNodes() { return m_historyNodes; }           // history nodes can be updated
+    TestMergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);                 // history will be updated
+    const Clusters& mergedClusters() const { return m_merged; }
+    const Nodes& historyNodes() const { return m_historyNodes; }           // history nodes can be updated
     
   private:
     Clusters& m_merged;      ///< the merged Clusters

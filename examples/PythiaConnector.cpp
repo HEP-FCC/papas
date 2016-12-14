@@ -82,8 +82,8 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.storeParticles(std::move(papasparticles));
     papasManager.simulateEvent();
-    //papasManager.mergeClusters();
-    papasManager.testMergeClusters();
+    papasManager.mergeClusters();
+    //papasManager.testMergeClusters();
     papasManager.reconstructEvent();
     m_store.clear();
   }
