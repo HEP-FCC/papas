@@ -15,6 +15,7 @@
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <vector>
+#include <list>
 
 namespace papas {
   /// High level class to recieve a set of particles, run simulation and then reconstruction
@@ -33,11 +34,16 @@ namespace papas {
     void clear();
     
   private:
+    Clusters& createClusters();
+    Tracks& createTracks();
+    Blocks& createBlocks();
+    SimParticles& createParticles();
+    Nodes& createHistory();
     //bool operator()(IdType i, IdType j);//used for sorting ids
     const Detector& m_detector;
     PapasEvent m_papasEvent;
     
-    std::vector<Clusters> m_ownedClusters;
+    std::list<Clusters> m_ownedClusters;
     std::vector<Tracks> m_ownedTracks;
     std::vector<Blocks> m_ownedBlocks;
     std::vector<SimParticles> m_ownedParticles;

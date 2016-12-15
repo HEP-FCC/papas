@@ -25,56 +25,41 @@ TestPapasManager::TestPapasManager(Detector& detector) : m_detector(detector), m
 
 void TestPapasManager::simulate(const Particles& particles) {
 
-  auto ecalClusters = new Clusters();
+  /*auto ecalClusters = new Clusters();
   auto hcalClusters = new Clusters();
-  auto smearedEcalClusters = new  Clusters();
+  //auto smearedEcalClusters = new  Clusters();
   auto smearedHcalClusters =new  Clusters();
   auto tracks =new  Tracks();
   auto smearedTracks =new  Tracks();
   auto simParticles = new SimParticles();
-  auto history =new  Nodes();
-
-  // keep track of what is owned
-  /*m_ownedClusters.emplace_back();
-  auto & ecalClusters = m_ownedClusters.at(m_ownedClusters.size()-1);
-  m_ownedClusters.emplace_back();
-  auto & smearedEcalClusters = m_ownedClusters.at(m_ownedClusters.size()-1);
-  std::cout <<m_ownedClusters.size() <<std::endl;
-  m_ownedClusters.emplace_back();
-  auto & hcalClusters = m_ownedClusters.at(m_ownedClusters.size()-1);
-  m_ownedClusters.emplace_back();
-  auto & smearedHcalClusters = m_ownedClusters.at(m_ownedClusters.size()-1);
-
-  m_ownedTracks.emplace_back();
-  auto & tracks = m_ownedTracks.at(m_ownedTracks.size()-1);
-  m_ownedTracks.emplace_back();
-  auto & smearedTracks = m_ownedTracks.at(m_ownedTracks.size()-1);
-  m_ownedParticles.emplace_back();
-  auto & simParticles = m_ownedParticles.at(m_ownedParticles.size()-1);
-
-  m_ownedHistory.emplace_back();
-  auto & history = m_ownedHistory.at(m_ownedHistory.size()-1);*/
-
-  /*m_ownedHistory.push_back(std::move(history));
-  m_ownedTracks.push_back(std::move(tracks));
-  m_ownedTracks.push_back(std::move(smearedTracks));
-  m_ownedParticles.push_back(std::move(simParticles));
-  m_ownedHistory.push_back(std::move(history));*/
-
-  auto simulator = TestSimulator(particles, m_detector, *ecalClusters,
-                              *hcalClusters,  *smearedEcalClusters,  *smearedHcalClusters,
-                              *tracks,  *smearedTracks,  *simParticles,  *history);
-  m_papasEvent.addCollection( *ecalClusters);
-  m_papasEvent.addCollection( *hcalClusters);
-  m_papasEvent.addCollection( *smearedEcalClusters);
-  m_papasEvent.addCollection ( *smearedHcalClusters);
+  auto history =new  Nodes();*/
+  auto& ecalClusters = createClusters();
+  auto& hcalClusters = createClusters();
+  auto& smearedEcalClusters = createClusters();
+  auto& smearedHcalClusters = createClusters( );
+  auto& tracks =createTracks();
+  auto& smearedTracks =createTracks();
+  auto& history = createHistory();
+  auto& simParticles = createParticles();
   
- /* auto simulator = TestSimulator(particles, m_detector, m_ecalClusters,
+  
+  auto simulator = TestSimulator(particles, m_detector, ecalClusters,
+                              hcalClusters,  smearedEcalClusters,  smearedHcalClusters,
+                              tracks,  smearedTracks,  simParticles,  history);
+  m_papasEvent.addCollection( ecalClusters);
+  m_papasEvent.addCollection( hcalClusters);
+  m_papasEvent.addCollection( smearedEcalClusters);
+  m_papasEvent.addCollection ( smearedHcalClusters);
+  std::cout << smearedEcalClusters.size() << "Y" << std::endl;
+  for (auto i : m_ownedClusters)
+    std::cout << i.size() << "X" << std::endl;
+  
+  /*auto simulator = TestSimulator(particles, m_detector, m_ecalClusters,
                                  m_hcalClusters,  m_smearedEcalClusters,  m_smearedHcalClusters,
-                                 m_tracks,  m_smearedTracks,  m_simParticles,  m_history);*/
+                                 m_tracks,  m_smearedTracks,  m_simParticles,  m_history);
 
 
-  /*m_papasEvent.addCollection( m_ecalClusters);
+  m_papasEvent.addCollection( m_ecalClusters);
   m_papasEvent.addCollection( m_hcalClusters);
   m_papasEvent.addCollection( m_smearedEcalClusters);
   m_papasEvent.addCollection ( m_smearedHcalClusters);*/
@@ -120,12 +105,19 @@ void TestPapasManager::mergeClusters(const std::string& typeAndSubtype) {
   Ruler ruler;
   auto mergedEClusters = new Clusters();  // will be owned and managed by TestPapasManager
   auto history = new Nodes();
+  
+  for (auto i : m_ownedClusters)
+    std::cout << i.size() << "X" << std::endl;
 
   // keep track of what is owned
   //m_ownedClusters.push_back(std::move(m_mergedEClusters));
   //m_ownedHistory.push_back(std::move(m_history2));
 
   auto ecalmerger = TestMergedClusterBuilder(m_papasEvent, typeAndSubtype, ruler, *mergedEClusters, *history);
+  
+  for (auto i : m_ownedClusters)
+    std::cout << i.size() << "X" << std::endl;
+  
   m_papasEvent.addCollection(*mergedEClusters);
   //m_papasEvent.addHistory(m_history2);
 }
@@ -166,5 +158,28 @@ void TestPapasManager::clear() {
     c.clear();
   m_ownedClusters.clear();
 }
+  
+  Clusters& TestPapasManager::createClusters() {
+    auto clusters = Clusters();
+    m_ownedClusters.emplace_back(std::move(clusters));
+    return m_ownedClusters.back();
+  }
+  
+  Tracks& TestPapasManager::createTracks() {
+    m_ownedTracks.emplace_back(Tracks());
+    return m_ownedTracks.back();
+  }
+Blocks& TestPapasManager::createBlocks() {
+    m_ownedBlocks.emplace_back(Blocks());
+    return m_ownedBlocks.back();
+  }
+  SimParticles& TestPapasManager::createParticles() {
+    m_ownedParticles.emplace_back(SimParticles());
+    return m_ownedParticles.back();
+  }
+  Nodes& TestPapasManager::createHistory() {
+    m_ownedHistory.emplace_back(Nodes());
+    return m_ownedHistory.back();
+  }
 
 }  // end namespace papas

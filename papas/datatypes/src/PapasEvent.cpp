@@ -52,7 +52,7 @@ void PapasEvent::addCollection(const Clusters& clusters) {
   }
   
   
-void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal(tracks, m_tracksCollection); };
+void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
 void PapasEvent::addCollection(const SimParticles& particles) {
   addCollectionInternal<SimParticle>(particles, m_particlesCollection);
