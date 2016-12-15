@@ -16,7 +16,7 @@ namespace papas {
 
 class Distance;
 
-/// Used to calculate distances between Particle flow elements (clusters and track)
+/// Used to calculate distances between particle flow elements (clusters and track)
 class Ruler {
 
 public:

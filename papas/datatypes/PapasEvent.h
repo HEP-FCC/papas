@@ -29,10 +29,10 @@ public:
   //TODO think if there is anyway to help this with templating?
   void addCollection(const Clusters& clusters);
   void addCollection(const Tracks& tracks);
-  //void addCollection(const Blocks& blocks);
+  void addCollection(const Blocks& blocks);
   void addCollection(const SimParticles& particles);
   
-  void addCollection(const Nodes& history);
+  void addHistory(const Nodes& history);
   const CollectionNodes& history() const {return m_historyCollection; };
   
   
@@ -66,18 +66,18 @@ public:
 
 private:
   template <class T>
-  void addCollectionInternal(std::unordered_map<IdType, T> collection,
+  void addCollectionInternal(const std::unordered_map<IdType, T>& collection,
                              std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T> *>& collections);  // Unordered map of pointers to unordered map of (concrete) Clusters
   CollectionClusters m_ecalClustersCollection;
   CollectionClusters m_hcalClustersCollection;
   CollectionTracks m_tracksCollection;
   CollectionParticles m_particlesCollection;
-  //CollectionBlocks m_blocksCollection;
+  CollectionBlocks m_blocksCollection;
   CollectionNodes m_historyCollection;
 };
   
   template <class T>
-  void PapasEvent::addCollectionInternal(std::unordered_map<IdType, T> collection,
+  void PapasEvent::addCollectionInternal(const std::unordered_map<IdType, T>& collection,
                                  std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T> *>& collections) {
     // check that everything in clusters is of same type and subtype
     IdType firstId = 0;

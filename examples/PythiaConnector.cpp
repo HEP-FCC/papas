@@ -10,6 +10,7 @@
 #include "PythiaConnector.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/reconstruction/TestPapasManager.h"
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
@@ -88,6 +89,27 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     m_store.clear();
   }
 
+  m_reader.endOfEvent();
+}
+
+void PythiaConnector::processEvent(unsigned int eventNo, papas::TestPapasManager& papasManager) {
+  // make a papas particle collection from the next event
+  // then run simulate and reconstruct
+  m_reader.goToEvent(eventNo);
+  papasManager.clear();
+  const fcc::ParticleCollection* ptcs(nullptr);
+  if (m_store.get("GenParticle", ptcs)) {
+    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
+    papasManager.simulate(papasparticles);
+    papasManager.mergeClusters("es");
+    //papasManager.mergeClusters("hs");
+    //todo blockbuilder and reconstruct
+    //papasManager.testMergeClusters();
+    //papasManager.reconstructEvent();
+    
+    m_store.clear();
+  }
+  
   m_reader.endOfEvent();
 }
 

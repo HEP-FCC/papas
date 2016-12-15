@@ -11,6 +11,7 @@
 #include "papas/detectors/CMS.h"
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/reconstruction/TestPapasManager.h"
 #include "PythiaConnector.h"
 
 // STL
@@ -36,7 +37,8 @@ int main(int argc, char* argv[]) {
 #endif
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    papas::PapasManager papasManager{CMSDetector};
+    //papas::PapasManager papasManager{CMSDetector};
+    papas::TestPapasManager papasManager{CMSDetector};
 
     unsigned int eventNo = 0;
     unsigned int nEvents = 1000;

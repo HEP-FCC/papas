@@ -28,6 +28,7 @@ void PapasManager::simulateEvent() {
     ids.push_back(kv.first);
   }
 #if WITHSORT
+  bool operator()(IdType i, IdType j);
   std::sort(ids.begin(), ids.end(),
             [&](IdType i, IdType j) { return (m_particles.at(i).e() > m_particles.at(j).e()); });
 #endif

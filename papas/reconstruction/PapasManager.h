@@ -36,7 +36,7 @@ public:
   Simulator& simulator() { return m_simulator; }  // history inside simulator can be changed
   
 private:
-  bool operator()(IdType i, IdType j);
+  
   const Detector& m_detector;
   Simulator m_simulator;
   PFEvent m_pfEvent;

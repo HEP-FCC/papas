@@ -24,10 +24,10 @@ void Identifier::reset() { s_counter = 1; }
 
 IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniqueid) {
 
-  if (subt =='u'){
-    std::cout<<"here";
+  if (subt == 'u') {
+    std::cout << "here";
   }
-  
+
   if (type == kNone) {
     throw "Id must have a valid type";
   }
@@ -69,27 +69,24 @@ char Identifier::typeLetter(IdType id) {
   return typelist[(unsigned int)Identifier::itemType(id)];
   // TODO error handling
 }
-  
-  Identifier::ItemType Identifier::itemType(char s) {
-    
-    std::string typelist = ".ehtpb";
-    auto found = typelist.find(s);
-    if (found == typelist.npos)
-       throw "type not found";
-    return (ItemType)found;
-  }
 
-  std::string Identifier::typeAndSubtype(IdType id) {
-    // two letter string such as 'em'
-    std::string typeSubType = std::string(1, typeLetter(id)) + std::string(1, subtype(id));
-    return typeSubType;
-  }
+Identifier::ItemType Identifier::itemType(char s) {
+
+  std::string typelist = ".ehtpb";
+  auto found = typelist.find(s);
+  if (found == typelist.npos) throw "type not found";
+  return (ItemType)found;
+}
+
+std::string Identifier::typeAndSubtype(IdType id) {
+  // two letter string such as 'em'
+  std::string typeSubType = std::string(1, typeLetter(id)) + std::string(1, subtype(id));
+  return typeSubType;
+}
 
 std::string Identifier::pretty(IdType id) {
   return Identifier::typeAndSubtype(id) + std::to_string(Identifier::uniqueId(id));
 }
-
-
 
 papas::Layer Identifier::layer(IdType id) {
   if (Identifier::isEcal(id))
@@ -117,8 +114,7 @@ bool Identifier::checkValid(IdType uid, ItemType type, char subt, float val, uns
   // verify that it all works, the id should match the items from which it was constructed
   if (uniqueId(uid) != uniqueid) return false;
   if (val != 0) {
-    if ((fabs(value(uid) - val) >= fabs(val) * 10e-6) | (itemType(uid) != type) | (subtype(uid) != subt))
-      return false;
+    if ((fabs(value(uid) - val) >= fabs(val) * 10e-6) | (itemType(uid) != type) | (subtype(uid) != subt)) return false;
   }
   return true;
 }

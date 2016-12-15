@@ -11,7 +11,7 @@
 #include "papas/display/AliceDisplay.h"
 #include "papas/reconstruction/PFEvent.h"
 #include "papas/datatypes/PapasEvent.h"
-#include "papas/simulation/Simulator.h"
+//#include "papas/simulation/Simulator.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <vector>
@@ -22,22 +22,39 @@ namespace papas {
   public:
     TestPapasManager(Detector& detector);
     
-    //todo void simulate();
-    void mergeClusters(std::string typeAndSubtype);
-    void buildBlocks(std::string ecalTypeAndSubtype = "em",
-                     std::string hcalTypeAndSubtype = "hm",
-                     std::string trackTypeAndSubtype = "ts");
-    void reconstruct(std::string blockTypeAndSubtype = "br");
+    void simulate(const Particles& particles);
+    void mergeClusters(const std::string& typeAndSubtype);
+    void buildBlocks(const std::string& ecalTypeAndSubtype = "em",
+                     const std::string& hcalTypeAndSubtype = "hm",
+                     const std::string& trackTypeAndSubtype = "ts");
+    void reconstruct(const std::string& blockTypeAndSubtype = "br");
     
     const PapasEvent& papasEvent() { return m_papasEvent; }
     void clear();
     
   private:
+    //bool operator()(IdType i, IdType j);//used for sorting ids
     const Detector& m_detector;
     PapasEvent m_papasEvent;
     
-    std::vector<Clusters*> m_ownedClusters;
-    std::vector<Nodes*> m_ownedHistory;
+    std::vector<Clusters> m_ownedClusters;
+    std::vector<Tracks> m_ownedTracks;
+    std::vector<Blocks> m_ownedBlocks;
+    std::vector<SimParticles> m_ownedParticles;
+    std::vector<Nodes> m_ownedHistory;
+    
+    Clusters m_ecalClusters  ;
+    Clusters m_hcalClusters ;
+    Clusters m_smearedEcalClusters  ;
+    Clusters m_smearedHcalClusters ;
+    Tracks m_tracks ;
+    Tracks m_smearedTracks ;
+    SimParticles m_simParticles ;
+    Nodes  m_history;
+    
+    Clusters m_mergedEClusters;
+    Nodes m_history2;
+    
   };
 }
 

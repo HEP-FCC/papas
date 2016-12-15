@@ -30,18 +30,24 @@ PapasEvent::PapasEvent()
       m_hcalClustersCollection{},
       m_tracksCollection{},
       m_particlesCollection{},
-      // m_blocksCollection{},
+      m_blocksCollection{},
       m_historyCollection{}
   {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
+  std::cout << "clusters "<< clusters.size();
   if (Identifier::isEcal(clusters.begin()->first))
-    addCollectionInternal(clusters, m_ecalClustersCollection);
+    addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
-    addCollectionInternal(clusters, m_hcalClustersCollection);
+    addCollectionInternal<Cluster>(clusters, m_hcalClustersCollection);
+  
+  for (auto i : m_ecalClustersCollection) {
+    std::cout << i.first <<std::endl;
+    std::cout <<i.second->size() << std::endl;;
+  }
 }
 
-  void PapasEvent::addCollection(const Nodes& history) {
+  void PapasEvent::addHistory(const Nodes& history) {
     m_historyCollection.push_back(&history);
   }
   
@@ -49,27 +55,33 @@ void PapasEvent::addCollection(const Clusters& clusters) {
 void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal(tracks, m_tracksCollection); };
 
 void PapasEvent::addCollection(const SimParticles& particles) {
-  addCollectionInternal(particles, m_particlesCollection);
+  addCollectionInternal<SimParticle>(particles, m_particlesCollection);
 };
 
 // void PapasEvent::addCollection(CollectionType name, Blocks&& blocks);
 
-const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType name) const {
+const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
+  for (auto i : m_ecalClustersCollection) {
+    std::cout << i.first <<std::endl;
+    std::cout <<i.second->size() << std::endl;;
+  }
+  std::cout << "subtype" <<subtype<<std::endl;
+
   if (type == Identifier::ItemType::kEcalCluster)
-    return *m_ecalClustersCollection.at(name);
+    return *(m_ecalClustersCollection.at(subtype));
   else
-    return *m_hcalClustersCollection.at(name);
+    return *(m_hcalClustersCollection.at(subtype));
 };
 
 const Clusters& PapasEvent::clusters(IdType id) const {
-  if (Identifier::isEcal(id))
+    if (Identifier::isEcal(id))
     return *m_ecalClustersCollection.at(Identifier::subtype(id));
   else
     return *m_hcalClustersCollection.at(Identifier::subtype(id));
 };
   
   const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
-    return clusters(Identifier::itemType(typeAndSubtype[1]), typeAndSubtype[1]);
+    return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
   }
 
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
