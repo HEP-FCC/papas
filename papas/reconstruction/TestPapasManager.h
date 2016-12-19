@@ -49,18 +49,7 @@ namespace papas {
     std::vector<SimParticles> m_ownedParticles;
     std::vector<Nodes> m_ownedHistory;
     
-    Clusters m_ecalClusters  ;
-    Clusters m_hcalClusters ;
-    Clusters m_smearedEcalClusters  ;
-    Clusters m_smearedHcalClusters ;
-    Tracks m_tracks ;
-    Tracks m_smearedTracks ;
-    SimParticles m_simParticles ;
-    Nodes  m_history;
-    
-    Clusters m_mergedEClusters;
-    Nodes m_history2;
-    
+        
   };
 }
 

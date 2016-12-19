@@ -27,6 +27,7 @@ IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniq
   if (subt == 'u') {
     std::cout << "here";
   }
+  
 
   if (type == kNone) {
     throw "Id must have a valid type";
@@ -44,6 +45,8 @@ IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniq
   IdType uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | uniqueid;
 
   if (!checkValid(uid, type, subt, val, uniqueid)) throw "Error occured constructing identifier";
+  if (uniqueid == 459 || uniqueid == 444 || uniqueid == 433)
+      std::cout <<Identifier::pretty(uid)<<std::endl;
   return uid;
 }
 

@@ -5,11 +5,10 @@
 //  Created by Alice Robson on 18/11/16.
 //
 //
-
-#include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/SimParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
@@ -31,43 +30,33 @@ PapasEvent::PapasEvent()
       m_tracksCollection{},
       m_particlesCollection{},
       m_blocksCollection{},
-      m_historyCollection{}
+      m_historys{}
   {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
-  std::cout << "clusters "<< clusters.size();
   if (Identifier::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
     addCollectionInternal<Cluster>(clusters, m_hcalClustersCollection);
-  
-  for (auto i : m_ecalClustersCollection) {
-    std::cout << i.first <<std::endl;
-    std::cout <<i.second->size() << std::endl;;
-  }
 }
 
   void PapasEvent::addHistory(const Nodes& history) {
-    m_historyCollection.push_back(&history);
+    m_historys.push_back(&history);
   }
   
   
-void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
+void PapasEvent::addCollection(const Tracks& tracks) {
+  addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
 void PapasEvent::addCollection(const SimParticles& particles) {
   addCollectionInternal<SimParticle>(particles, m_particlesCollection);
 };
 
-// void PapasEvent::addCollection(CollectionType name, Blocks&& blocks);
+  void PapasEvent::addCollection(const Blocks&  blocks) {
+    addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
 
 const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
-  for (auto i : m_ecalClustersCollection) {
-    std::cout << i.first <<std::endl;
-    std::cout <<i.second->size() << std::endl;;
-  }
-  std::cout << "subtype" <<subtype<<std::endl;
-
-  if (type == Identifier::ItemType::kEcalCluster)
+    if (type == Identifier::ItemType::kEcalCluster)
     return *(m_ecalClustersCollection.at(subtype));
   else
     return *(m_hcalClustersCollection.at(subtype));
@@ -97,7 +86,7 @@ bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubT
     found = (m_tracksCollection.find(subtype) != m_tracksCollection.end());
     break;
   case Identifier::kBlock:
-    // found= (m_BlocksCollection.find(subtype) != m_blocksCollection.end());
+     found= (m_blocksCollection.find(subtype) != m_blocksCollection.end());
     break;
   case Identifier::kParticle:
     found = (m_particlesCollection.find(subtype) != m_particlesCollection.end());
@@ -124,13 +113,16 @@ bool PapasEvent::hasObject(IdType id) const {
       found = (clusters(id).find(id) != clusters(id).end());
       break;
     case Identifier::kTrack:
-      found = (tracks(id).find(id) != tracks(id).end());
+        //TODO
+        //found = (tracks(id).find(id) != tracks(id).end());
       break;
     case Identifier::kBlock:
-      // found= (m_BlocksCollection.find(subtype) != m_blocksCollection.end());
+        //TODO
+        //found= (blocks(id).find(id))!= blocks(id).end());
       break;
     case Identifier::kParticle:
-      found = (particles(id).find(id) != particles(id).end());
+        //TODO
+        //found = (particles(id).find(id) != particles(id).end());
       break;
     default:
       break;
@@ -140,11 +132,11 @@ bool PapasEvent::hasObject(IdType id) const {
 };
 
 void PapasEvent::clear() {
-  m_ecalClustersCollection.clear();  // deletes pointers not object (which is const)
+  m_ecalClustersCollection.clear();
   m_hcalClustersCollection.clear();
   m_tracksCollection.clear();
   m_particlesCollection.clear();
-  // m_blocksCollection.clear();
-  m_historyCollection.clear();
+  m_blocksCollection.clear();
+  m_historys.clear();
 }
 }

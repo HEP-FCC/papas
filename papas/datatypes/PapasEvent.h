@@ -8,6 +8,7 @@
 //
 #ifndef PapasEvent_h
 #define PapasEvent_h
+
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
 #include "papas/graphtools/DefinitionsNodes.h"
@@ -33,8 +34,7 @@ public:
   void addCollection(const SimParticles& particles);
   
   void addHistory(const Nodes& history);
-  const CollectionNodes& history() const {return m_historyCollection; };
-  
+  const VectorNodes& history() const {return m_historys; };
   
   bool hasCollection(IdType id) const;
   bool hasCollection(const Identifier::ItemType type, const Identifier::SubType subtype) const;
@@ -73,22 +73,29 @@ private:
   CollectionTracks m_tracksCollection;
   CollectionParticles m_particlesCollection;
   CollectionBlocks m_blocksCollection;
-  CollectionNodes m_historyCollection;
+  VectorNodes m_historys;
 };
   
   template <class T>
   void PapasEvent::addCollectionInternal(const std::unordered_map<IdType, T>& collection,
                                  std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T> *>& collections) {
-    // check that everything in clusters is of same type and subtype
+    // check that everything is of same type and subtype
     IdType firstId = 0;
     for (const auto& it : collection) {
+      std::cout <<Identifier::pretty(it.first)<<std::endl;
+
       if (!firstId) {
+        std::cout <<Identifier::pretty(it.first)<<std::endl;
+
         firstId = it.first;
         if (hasCollection(firstId))
           throw "Collection already exists";
       }
-      if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId))
+      if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) {
+        std::cout <<Identifier::pretty(firstId)<<std::endl;
+        std::cout <<Identifier::pretty(it.first)<<std::endl;
        throw "more than one typeandSubtype found in collection";
+      }
     }
   
   collections.emplace(Identifier::subtype(firstId), &collection);

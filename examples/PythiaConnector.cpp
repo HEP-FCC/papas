@@ -55,7 +55,7 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
     int pdgid = ptc.core().pdgId;
 
     //papas::IdType id = papas::Id::makeParticleId();
-    auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv, 1, 'g');  // make every single one into a particle
+    auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv,  'g');  // make every single one into a particle
     // so as to match python approach (for now)
     // otherwise ids do not align
 
@@ -102,11 +102,10 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::TestPapasManager
     papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
-    //papasManager.mergeClusters("hs");
+    papasManager.mergeClusters("hs");
     //todo blockbuilder and reconstruct
     //papasManager.testMergeClusters();
     //papasManager.reconstructEvent();
-    
     m_store.clear();
   }
   

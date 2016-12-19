@@ -17,7 +17,7 @@ namespace papas {
 
 typedef DAG::Node<IdType> PFNode;
 typedef std::map<IdType, PFNode> Nodes;
-typedef std::vector< const Nodes*> CollectionNodes;  ///< collection of Nodes
+typedef std::vector< const Nodes*> VectorNodes;  ///< collection of Nodes
 
 }  // end namespace papas
 

@@ -46,15 +46,15 @@ void PapasManager::mergeClusters() {
   m_pfEvent.setMergedHcals(hcalmerger.mergedClusters());  // move
 }
   
-/*void PapasManager::testMergeClusters() {
+void PapasManager::testMergeClusters() {
   Ruler ruler;
   auto mergedEClusters = new Clusters(); // will be owned and managed by PapasManager
   m_newClusters.push_back(mergedEClusters);
   auto ecalmerger = TestMergedClusterBuilder(m_papasEvent, "es", ruler, *mergedEClusters, m_history);
   m_papasEvent.addCollection(*mergedEClusters);
-  m_papasEvent.addCollection(*m_hsitory);
+  m_papasEvent.addCollection(*m_history);
   
-}*/
+}
   
 
 void PapasManager::reconstructEvent() {
