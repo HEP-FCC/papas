@@ -10,6 +10,58 @@
 #define pdebug_h
 
 #include "papas/utility/StringFormatter.h"
+
+#include <iostream>
+
+namespace papas {
+  /** Produces Physics debug output and writes to file
+   *
+   * Usage:
+   * @code
+   *  PDebug::On("papas.log");  //If not turned on nothing will be produced
+   *  PDebug::write("problem with track not found :{}", id);
+   * @endcode
+   */
+  class PDebug {
+    // produce physics debug output
+  public:
+    /// Constructor  defaults to debugger being turned off/ logging only errors
+    PDebug() {
+      s_fname = "";
+      //slevel = spdlog::level::err;
+      s_On = false;
+    }
+    
+    /// Tells PDebug where to write output and sets output level to info
+    /// @param[in] fname filename
+    static void On(const std::string& fname) {
+      s_On = true;
+      //s_fname = fname;
+      //slevel = spdlog::level::info;
+    }
+    
+    
+    
+    /// Write to output (this is either null or a file)
+    template <typename... Args>
+    static void write(const char* fmt, const Args&... args) {
+      //std::cout << "PDEBUG" << std::endl ;
+    }
+    
+    static void flush() {  }
+    
+    
+  private:
+    
+    static std::string s_fname;
+    static bool s_On;
+  };
+}
+
+
+
+#if 0
+#include "papas/utility/StringFormatter.h"
 #include "spdlog/sinks/null_sink.h"
 #include "spdlog/spdlog.h"
 
@@ -58,9 +110,9 @@ public:
   static std::shared_ptr<spdlog::logger> log();
 
 private:
-  static spdlog::details::line_logger info() { return log()->info(); }
+  static spdlog::details::line_logger info()  { return log()->info(); }
   static spdlog::details::line_logger write() { return log()->info(); }
-  static spdlog::details::line_logger warn() { return log()->warn(); }
+  static spdlog::details::line_logger warn()  { return log()->warn(); }
   static spdlog::details::line_logger error() { return log()->error(); }
   static spdlog::details::line_logger debug() { return log()->debug(); }
   static void init();          ///< called when a log message is first encountered
@@ -72,5 +124,6 @@ private:
   static bool s_On;
 };
 }
+#endif
 
 #endif /* pdebug_h */
