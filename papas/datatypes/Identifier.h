@@ -28,7 +28,7 @@ namespace papas {
  They are also used in Nodes which store the history (linkages) between items.
 
  Given an identifier, we can determine the type of an object, for example an ecal_cluster.
- and then use this to retrieve the cluster from a cluster dict.
+ and then use this to retrieve the cluster from a cluster collection.
 
  The Identifier class consists of a set of static methods that can be used
  to create(encode) and to dissect(decode) identifiers.
@@ -157,6 +157,7 @@ public:
 private:
   // TODO consider how to deal with this for multithreading as it is not threadsafe
   // consider using boost:uuid or pthread_mutex_t lock;
+  // or move the s_counter out of here eg perhaps into the PapasEvent
   static unsigned int s_counter;             ///<starts at 1 and increments by 1 each time
   static const unsigned int m_bitshift1 = 61;  ///< encoding parameter
   static const unsigned int m_bitshift2 = 53;  ///< encoding parameter

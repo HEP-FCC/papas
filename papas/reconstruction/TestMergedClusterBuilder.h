@@ -29,20 +29,23 @@ namespace papas {
   class TestMergedClusterBuilder {
   public:
     /** Constructor
-     TODO update docs
-     * @param[in] clusters : collections of clusters
+     * @param[in] PapasEvent : much contain the Clusters collection that is to be merged
+     * @param[in] typeAndSubtype : the tyepAndSubType of the clusters collection that is to be merged (as a string)
      * @param[in] ruler : measures distance between clusters
-     * @param[inout] historyNodes : unordered_map that describes which elements are parents of which blocks
-     *                     if  historyNodes is provided it must contain nodes corresponding to each cluster
-     *                     if it is empty it will be ignored
+     * @param[in] merged : an empty unordered_amp into which the merged Clusters will be place
+     * @param[inout] historyNodes : an unordered_map into which new history will be added
      */
-    TestMergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);                 // history will be updated
-    const Clusters& mergedClusters() const { return m_merged; }
-    const Nodes& historyNodes() const { return m_historyNodes; }           // history nodes can be updated
+    TestMergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);
+    /** returns reference to the merged Clusters collection
+     */
+    const Clusters& mergedClusters() const { return m_merged; }  //remove this?
+    /** returns reference to the history
+     */
+    const Nodes& historyNodes() const { return m_historyNodes; }    //remove this?
     
   private:
-    Clusters& m_merged;      ///< the merged Clusters
-    Nodes& m_historyNodes;  ///<optional, allows history to be updated
+    Clusters& m_merged;      ///< the merged Clusters //remove this?
+    Nodes& m_historyNodes;  ///history is appended to this //remove this?
   };
 }  // end namespace papas
 

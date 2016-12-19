@@ -139,7 +139,7 @@ namespace papas {
     Ids linkedRawTrackIds(IdType nodeid) const;            // TODO move to helper/history class?
     Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
     Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
-    
+    const Detector& m_detector;
     Clusters& m_ecalClusters;         ///< ecal clusters (prior to smearing)
     Clusters& m_hcalClusters;         ///< hcal clusters (prior to smearing)
     Clusters& m_smearedEcalClusters;  ///< smeared ecal clusters
@@ -149,7 +149,7 @@ namespace papas {
     SimParticles& m_particles;        ///< all particles
     
     Nodes& m_history;  ///< Records relationships of everything that is simulated
-    const Detector& m_detector;
+    
     StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
     HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
   };

@@ -1,13 +1,14 @@
 //
-//  TestPapasManager.h
+//  TestNewPapasManager.h
 //  papas
 //
-//  Created by Alice Robson on 14/12/16.
+//  Created by Alice Robson on 19/12/16.
 //
 //
 
-#ifndef TestPapasManager_h
-#define TestPapasManager_h
+#ifndef TestNewPapasManager_h
+#define TestNewPapasManager_h
+
 #include "papas/display/AliceDisplay.h"
 #include "papas/reconstruction/PFEvent.h"
 #include "papas/datatypes/PapasEvent.h"
@@ -16,7 +17,7 @@
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <vector>
 #include <list>
-/*
+
 namespace papas {
   /// High level class to recieve a set of particles, run simulation and then reconstruction
   class TestPapasManager {
@@ -34,21 +35,25 @@ namespace papas {
     void clear();
     
   private:
-    Clusters& createClusters();
-    Tracks& createTracks();
-    Blocks& createBlocks();
-    SimParticles& createParticles();
-    Nodes& createHistory();
+    Clusters* createClusters();
+    Tracks* createTracks();
+    Blocks* createBlocks();
+    SimParticles* createParticles();
+    Nodes* createHistory();
     //bool operator()(IdType i, IdType j);//used for sorting ids
     const Detector& m_detector;
     PapasEvent m_papasEvent;
     
-    std::list<Clusters> m_ownedClusters;
-    std::vector<Tracks> m_ownedTracks;
-    std::vector<Blocks> m_ownedBlocks;
-    std::vector<SimParticles> m_ownedParticles;
-    std::vector<Nodes> m_ownedHistory;
+    std::list<Clusters*> m_ownedClusters;
+    std::vector<Tracks*> m_ownedTracks;
+    std::vector<Blocks*> m_ownedBlocks;
+    std::vector<SimParticles*> m_ownedParticles;
+    std::vector<Nodes*> m_ownedHistory;
+    
+    
   };
 }
-*/
-#endif /* TestPapasManager_h */
+
+
+
+#endif /* TestNewPapasManager_h */

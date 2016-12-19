@@ -19,6 +19,7 @@
 #include "papas/reconstruction/TestPapasManager.h"
 #include "papas/utility/PDebug.h"
 
+#if 0
 namespace papas {
 
 TestPapasManager::TestPapasManager(Detector& detector) : m_detector(detector), m_papasEvent() {}
@@ -153,4 +154,6 @@ Blocks& TestPapasManager::createBlocks() {
     return m_ownedHistory.back();
   }
 
+
 }  // end namespace papas
+#endif
