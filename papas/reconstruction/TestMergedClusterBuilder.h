@@ -36,10 +36,12 @@ namespace papas {
      * @param[inout] historyNodes : an unordered_map into which new history will be added
      */
     TestMergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);
-    /** returns reference to the merged Clusters collection
+    /** Access mergedCluster collection
+        @return reference to the merged Clusters collection
      */
     const Clusters& mergedClusters() const { return m_merged; }  //remove this?
-    /** returns reference to the history
+    /** Access history nodes
+        @return reference to the history
      */
     const Nodes& historyNodes() const { return m_historyNodes; }    //remove this?
     

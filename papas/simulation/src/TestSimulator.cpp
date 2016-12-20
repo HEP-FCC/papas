@@ -12,9 +12,6 @@
 //
 //
 #include "papas/simulation/TestSimulator.h"
-
-#include <iostream>  //TODOAJR remove
-
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Identifier.h"
@@ -24,7 +21,7 @@
 #include "papas/utility/Random.h"
 #include "papas/datatypes/SimParticle.h"
 #include "papas/datatypes/Track.h"
-
+class Detector;
 
 namespace papas {
   

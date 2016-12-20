@@ -5,7 +5,7 @@
 //  Created by Alice Robson on 19/12/16.
 //
 //
-
+#if 0
 #ifndef TestNewPapasManager_h
 #define TestNewPapasManager_h
 
@@ -53,7 +53,7 @@ namespace papas {
     
   };
 }
-
+#endif
 
 
 #endif /* TestNewPapasManager_h */

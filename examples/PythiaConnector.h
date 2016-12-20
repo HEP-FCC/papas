@@ -32,7 +32,7 @@
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/reconstruction/TestNewPapasManager.h"
+#include "papas/reconstruction/TestPapasManager.h"
 #include "papas/datatypes/Identifier.h"
 
 class PapasManager;

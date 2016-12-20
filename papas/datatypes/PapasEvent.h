@@ -42,8 +42,13 @@ namespace papas {
  *        g = generated
  *        r = reconstructed
  *        m = merged
- *
- *
+ Usage example:
+ @code
+  m_papasEvent.addCollection(ecalClusters);
+  m_papasEvent.addCollection(hcalClusters);
+  ...
+  const Cluster& cluster1 = m_papasEvent.cluster(id1);
+ @endcode
  *
  * @author  Alice Robson
  * @date    2016-12-01
@@ -85,7 +90,7 @@ public:
    */
   void addHistory(const Nodes& history);
 
-  const VectorNodes& history() const { return m_historys; };
+  const ListNodes& history() const { return m_historys; };
   /**
    *   @brief  returns true if a collection with the same typeAndSubtype as the identifier is found
    *   @param[in]  id: The identifier of an object
@@ -159,7 +164,7 @@ private:
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
   /// Vector of History objects.
-  VectorNodes m_historys;
+  ListNodes m_historys;
 };
 
   

@@ -22,8 +22,10 @@
 #include <iostream>
 
 namespace papas {
-/// An Identifier is a uniqueid that contains encoded information about an element
+
 /**
+  An Identifier is a uniqueid that contains encoded information about an element
+ 
  Identifiers are used to uniquely identify all clusters, tracks, blocks etc in PAPAS
  They are also used in Nodes which store the history (linkages) between items.
 
@@ -47,12 +49,14 @@ namespace papas {
  reverses sorting will result in items sorted into groups of type and subtype with largest values first in
  each type and subtype group.
 
-
- Example usage: IdType uid=Identifier::MakeId(kEcalCluster, 's', 4.35)
-
- @author  Alice Robson
- @date    2016-04-05
-*/
+ Usage example:
+ @code
+ IdType uid=Identifier::MakeId(kEcalCluster, 's', 4.35);
+ @endcode
+ *
+ *  @author  Alice Robson
+ *  @date    2016-04-06
+ */
 class Identifier {
 public:
   Identifier(){};

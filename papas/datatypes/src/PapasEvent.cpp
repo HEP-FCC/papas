@@ -5,12 +5,12 @@
 //  Created by Alice Robson on 18/11/16.
 //
 //
-#include "papas/datatypes/PapasEvent.h"
-#include <stdio.h>
 #include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/SimParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
+#include <stdio.h>
 
 namespace papas {
 /// PapasEvent holds pointers to collections of particles, clusters etc and the address of the history associated with
@@ -30,6 +30,7 @@ PapasEvent::PapasEvent()
       m_historys{} {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
+  // decide if the clusters are from Ecal or Hcal and add to appropriate collection
   if (Identifier::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
@@ -47,6 +48,7 @@ void PapasEvent::addCollection(const SimParticles& particles) {
 void PapasEvent::addCollection(const Blocks& blocks) { addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
 
 const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
+  // return the corresponding collection
   if (type == Identifier::ItemType::kEcalCluster)
     return *(m_ecalClustersCollection.at(subtype));
   else
@@ -54,17 +56,17 @@ const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier
 };
 
 const Clusters& PapasEvent::clusters(IdType id) const {
-  if (Identifier::isEcal(id))
-    return *m_ecalClustersCollection.at(Identifier::subtype(id));
-  else
-    return *m_hcalClustersCollection.at(Identifier::subtype(id));
+  // return the corresponding collection with the same type and subtype as this id
+  return clusters(Identifier::itemType(id), Identifier::subtype(id));
 };
 
 const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
+  // return the corresponding collection with this type and subtype 
   return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
+  // Check if this collection is present
   auto found = false;
   switch (type) {
   case Identifier::kEcalCluster:
@@ -93,6 +95,7 @@ bool PapasEvent::hasCollection(IdType id) const {
 };
 
 bool PapasEvent::hasObject(IdType id) const {
+  // check if this object id is present
   auto found = false;
   auto type = Identifier::itemType(id);
   if (hasCollection(id)) {
@@ -104,16 +107,12 @@ bool PapasEvent::hasObject(IdType id) const {
       found = (clusters(id).find(id) != clusters(id).end());
       break;
     case Identifier::kTrack:
-      // TODO
-      // found = (tracks(id).find(id) != tracks(id).end());
+      found = (tracks(id).find(id) != tracks(id).end());
       break;
-    case Identifier::kBlock:
-      // TODO
-      // found= (blocks(id).find(id))!= blocks(id).end());
+      found = (blocks(id).find(id) != blocks(id).end());
       break;
     case Identifier::kParticle:
-      // TODO
-      // found = (particles(id).find(id) != particles(id).end());
+      found = (particles(id).find(id) != particles(id).end());
       break;
     default:
       break;

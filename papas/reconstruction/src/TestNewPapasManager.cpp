@@ -28,6 +28,8 @@
 #include "papas/reconstruction/TestNewPapasManager.h"
 #include "papas/utility/PDebug.h"
 
+
+#if 0
 namespace papas {
   
   TestPapasManager::TestPapasManager(Detector& detector) : m_detector(detector), m_papasEvent() {}
@@ -167,3 +169,4 @@ namespace papas {
   }
   
 }  // end namespace papas
+#endif

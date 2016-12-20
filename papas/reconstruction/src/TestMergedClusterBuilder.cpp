@@ -81,9 +81,10 @@ namespace papas {
         m_historyNodes.at(id).addChild(snode);
         
         //merge the original clusters into the new merged cluster
+        //also add in the links between the block elements and the block into the history_nodes
         if (ids.size() > 1) {
           for (auto elemid : ids) {
-            // now add in the links between the block elements and the block into the history_nodes
+           
             if (elemid != id) {  // we have already handled the first element
               PFNode snode = m_historyNodes[mid];
               if (m_historyNodes.find(elemid)==m_historyNodes.end())
