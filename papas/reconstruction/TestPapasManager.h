@@ -89,10 +89,11 @@ public:
   /**
    *   @brief  return PapasEvent object
    *   @return  PapasEvent     */
-  const PapasEvent& papasEvent() { return m_papasEvent; }  //> Access the papasEvent
-                                                           /**
-                                                            *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
-                                                            */
+  const PapasEvent& papasEvent() { return m_papasEvent; }  //< Access the papasEvent
+
+  /**
+   *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
+   */
   void clear();
 
 private:
