@@ -21,7 +21,7 @@ TestPapasManager::TestPapasManager(Detector& detector) : m_detector(detector), m
 
 void TestPapasManager::simulate(const Particles& particles) {
 
-  //create empty collections that will be passed to simulator to fill
+  // create empty collections that will be passed to simulator to fill
   auto& ecalClusters = createClusters();
   auto& hcalClusters = createClusters();
   auto& smearedEcalClusters = createClusters();
@@ -31,11 +31,11 @@ void TestPapasManager::simulate(const Particles& particles) {
   auto& history = createHistory();
   auto& simParticles = createParticles();
 
-  //run the simulator which will fill the above objects
+  // run the simulator which will fill the above objects
   auto simulator = TestSimulator(particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
                                  smearedHcalClusters, tracks, smearedTracks, simParticles, history);
 
-  //store the addresses of the filled collections to the PapasEvent
+  // store the addresses of the filled collections to the PapasEvent
   m_papasEvent.addCollection(ecalClusters);
   m_papasEvent.addCollection(hcalClusters);
   m_papasEvent.addCollection(smearedEcalClusters);
@@ -60,15 +60,18 @@ void TestPapasManager::simulate(const Particles& particles) {
 
 void TestPapasManager::mergeClusters(const std::string& typeAndSubtype) {
   Ruler ruler;
+  // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
   auto ecalmerger = TestMergedClusterBuilder(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
+  // add outputs into papasEvent
   m_papasEvent.addCollection(mergedClusters);
   m_papasEvent.addHistory(history);
 }
 
 /*TODO
- void TestPapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,  const std::string& trackTypeAndSubtype) {
+ void TestPapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,  const
+std::string& trackTypeAndSubtype) {
   //create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();
@@ -102,6 +105,9 @@ void TestPapasManager::clear() {
 }
 
 Clusters& TestPapasManager::createClusters() {
+  // when the Clusters collection is added to the list its address changes
+  // we must return the address of the created Clusters collection after it
+  // has been added into the list
   m_ownedClusters.emplace_back(Clusters());
   return m_ownedClusters.back();
 }
@@ -115,12 +121,12 @@ Blocks& TestPapasManager::createBlocks() {
   m_ownedBlocks.emplace_back(Blocks());
   return m_ownedBlocks.back();
 }
-  
+
 SimParticles& TestPapasManager::createParticles() {
   m_ownedParticles.emplace_back(SimParticles());
   return m_ownedParticles.back();
 }
-  
+
 Nodes& TestPapasManager::createHistory() {
   m_ownedHistory.emplace_back(Nodes());
   return m_ownedHistory.back();
