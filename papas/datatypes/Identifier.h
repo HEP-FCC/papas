@@ -24,8 +24,8 @@
 namespace papas {
 
 /**
-  An Identifier is a uniqueid that contains encoded information about an element
- 
+  @brief An Identifier is a uniqueid that contains encoded information about an element
+
  Identifiers are used to uniquely identify all clusters, tracks, blocks etc in PAPAS
  They are also used in Nodes which store the history (linkages) between items.
 
@@ -60,7 +60,7 @@ namespace papas {
 class Identifier {
 public:
   Identifier(){};
-  
+
   /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock };
   typedef char SubType;
@@ -112,8 +112,8 @@ public:
   static unsigned int uniqueId(IdType id);  ///< Returns encoded unique id
 
   static char typeLetter(IdType id);  ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static std::string typeAndSubtype(IdType id);
-  static std::string pretty(IdType id);  ///< Pretty string Id name eg es101 for a smeared ecal with uniqueid 101;
+  static std::string typeAndSubtype(IdType id);  ///< Two letter string of type and subtype eg "em"
+  static std::string pretty(IdType id);  ///< Pretty string Id name eg "es101" for a smeared ecal with uniqueid 101;
   /** boolean test of whether identifier is from an ecal cluster
   @param ident: unique identifier
    */
@@ -151,21 +151,23 @@ public:
   static ItemType itemType(papas::Layer layer);  ///< Uses detector layer to work out itemType
   static ItemType itemType(char s);
 
-  /** Uses identifier type to work out what detector leyer the item belongs to, may be kNone
+  /** Uses identifier type to work out what detector layer the item belongs to, may be kNone
    @param id: unique identifier
    @return ItemType enumeration value papas::Layer eg kTracker
    */
   static papas::Layer layer(IdType id);
-  static int bitshift() { return m_bitshift;}
+
+  // Used by Edge, must be better way to do this?
+  static int bitshift() { return m_bitshift; }
 
 private:
   // TODO consider how to deal with this for multithreading as it is not threadsafe
   // consider using boost:uuid or pthread_mutex_t lock;
   // or move the s_counter out of here eg perhaps into the PapasEvent
-  static unsigned int s_counter;             ///<starts at 1 and increments by 1 each time
+  static unsigned int s_counter;               ///<starts at 1 and increments by 1 each time
   static const unsigned int m_bitshift1 = 61;  ///< encoding parameter
   static const unsigned int m_bitshift2 = 53;  ///< encoding parameter
-  static const unsigned int m_bitshift = 21;  ///< encoding parameter (max size of counter)
+  static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
   /// returns the counter used for the unique id component
   static unsigned int counter() { return s_counter; };
   /// checks that the identifier can be correctly decoded

@@ -1,12 +1,10 @@
 #include "papas/datatypes/Identifier.h"
-
 #include "papas/utility/StringFormatter.h"
 #include <assert.h>
 #include <cmath>
 #include <inttypes.h>
 #include <iostream>
-// temp
-//  Created by Alice Robson on 05/01/16.
+
 //
 // Encode information into a unique identifier
 //
@@ -18,16 +16,12 @@ namespace papas {
 
 // s_counter is a static counter which will be used to create a unique long
 // max value is 2** m_bitshift
+// TODO move this and reset elsewhere to allow this class to be parallelized
 unsigned int Identifier::s_counter = 1;
 
 void Identifier::reset() { s_counter = 1; }
 
 IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniqueid) {
-
-  if (subt == 'u') {
-    std::cout << "here";
-  }
-  
 
   if (type == kNone) {
     throw "Id must have a valid type";
@@ -66,13 +60,14 @@ float Identifier::value(IdType id) {
 unsigned int Identifier::uniqueId(IdType id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
 
 char Identifier::typeLetter(IdType id) {
+  // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
   std::string typelist = ".ehtpb....";
   return typelist[(unsigned int)Identifier::itemType(id)];
   // TODO error handling
 }
 
 Identifier::ItemType Identifier::itemType(char s) {
-
+  // converts from the a single letter decriptor eg 'e' into the type enumeration such as kEcalCluster
   std::string typelist = ".ehtpb";
   auto found = typelist.find(s);
   if (found == typelist.npos) throw "type not found";
@@ -80,12 +75,13 @@ Identifier::ItemType Identifier::itemType(char s) {
 }
 
 std::string Identifier::typeAndSubtype(IdType id) {
-  // two letter string such as 'em'
+  // produce the two letter type and subtype string such as 'em'
   std::string typeSubType = std::string(1, typeLetter(id)) + std::string(1, subtype(id));
   return typeSubType;
 }
 
 std::string Identifier::pretty(IdType id) {
+  // pretty version of the identifier
   return Identifier::typeAndSubtype(id) + std::to_string(Identifier::uniqueId(id));
 }
 

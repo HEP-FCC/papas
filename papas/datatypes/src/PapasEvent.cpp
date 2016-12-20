@@ -15,11 +15,6 @@
 namespace papas {
 /// PapasEvent holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
-/**
-
- @author  Alice Robson
- @date    2016-04-05
- */
 
 PapasEvent::PapasEvent()
     : m_ecalClustersCollection{},
@@ -61,7 +56,7 @@ const Clusters& PapasEvent::clusters(IdType id) const {
 };
 
 const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
-  // return the corresponding collection with this type and subtype 
+  // return the corresponding collection with this type and subtype
   return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 

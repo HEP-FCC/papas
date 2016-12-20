@@ -24,7 +24,8 @@ namespace papas {
  *  The PapasEvent is a lightweight obejct that can be used from Papas Standalone or from
  *  Gaudi modules.
  *    The collections stored in the PapasEvent are unordered_maps of unordered_maps eg an unordered map of Clusters.
- *    The collections are indexed by the typeAndSubtype of the identifiers of each item (eg of each Cluster in Clusters)
+ *    The collections are indexed by the typeAndSubtype of the identifiers of each item 
+ *    (eg of each Cluster in Clusters)
  *       Therefore each collection to be stored must contain only one typeAndSubtype
  *       Examples of typeAndSubtype are:
  *       "es" ecal-smeared
@@ -60,36 +61,39 @@ public:
    */
   PapasEvent();
   /**
-   *   @brief  adds a pointer to an collection (unordered map) of Clusters into the PapasEvent
-   *   @param[in]  clusters: unordered map of Clusters all of which have the same Identifier typeAndSubtype
-   *               which will be used as the map index, eg "em" for ecals-merged.
+   *   @brief  adds a pointer to a Clusters collection (unordered map) into the PapasEvent
+   *   @param[in]  clusters: unordered map of Clusters, all of which have the same Identifier typeAndSubtype
+   *               typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
   void addCollection(const Clusters& clusters);
   /**
-   *   @brief  adds a pointer to an collection (unordered map) of Tracks into the PapasEvent
-   *   @param[in]  tracks: unordered map of Tracks all of which have the same Identifier typeAndSubtype
-   *               which will be used as the map index, eg "tt" for track-true.
+   *   @brief  adds a pointer to a Tracks collection (unordered map) into the PapasEvent
+   *   @param[in]  tracks: unordered map of Tracks, all of which have the same Identifier typeAndSubtype
+   *               typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
   void addCollection(const Tracks& tracks);
   /**
-   *   @brief  adds a pointer to an collection (unordered map) of Blocks into the PapasEvent
-   *   @param[in]  blocks: unordered map of Blocks all of which have the same Identifier typeAndSubtype
-   *               which will be used as the map index, eg "br" for blocks-raw.
+   *   @brief  adds a pointer to a Blocks collection (unordered map) into the PapasEvent
+   *   @param[in]  blocks: unordered map of Blocks, all of which have the same Identifier typeAndSubtype
+   *               typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
   void addCollection(const Blocks& blocks);
   /**
-   *   @brief  adds a pointer to an collection (unordered map) of SimParticles into the PapasEvent
-   *   @param[in]  blocks: unordered map of SimParticles all of which have the same Identifier typeAndSubtype
-   *               which will be used as the map index, eg "pr" for particles-reconstructed.
+   *   @brief  adds a pointer to a  SimParticles collection (unordered map) into the PapasEvent
+   *   @param[in]  blocks: unordered map of SimParticles, all of which have the same Identifier typeAndSubtype
+   *               typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const SimParticles& particles);
   /**
-   *   @brief  adds a pointer to an collection (unordered map) of history Nodes into the PapasEvent
-   *   @param[in]  hsistory: unordered map of Nodes all of which have the same Identifier typeAndSubtype
-   *               which will be used as the map index, eg "pr" for particles-reconstructed.
+   *   @brief  adds a pointer to a hsitory Nodes collection (unordered map) into the PapasEvent
+   *   @param[in]  history: unordered map of Nodes, all of which have the same Identifier typeAndSubtype.
+   *               typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addHistory(const Nodes& history);
-
+  /**
+   *   @brief  returns list of historys as a const reference
+   *
+   */
   const ListNodes& history() const { return m_historys; };
   /**
    *   @brief  returns true if a collection with the same typeAndSubtype as the identifier is found
@@ -103,7 +107,7 @@ public:
    */
   bool hasCollection(const Identifier::ItemType type, const Identifier::SubType subtype) const;
   /**
-   *   @brief  returns true if a an object matching the Identifier is found in the PapasEvent collections
+   *   @brief  returns true if an object matching the Identifier is found in the PapasEvent collections
    *   @param[in]  id: the Identifier of an object
    */
   bool hasObject(IdType id) const;
@@ -129,7 +133,7 @@ public:
    */
   const Cluster& cluster(IdType id) const { return clusters(id).at(id); };
 
-  //TODO doxygen as above
+  // TODO doxygen as above
   const Tracks& tracks(const Identifier::SubType subtype) const { return *m_tracksCollection.at(subtype); };
   const Tracks& tracks(IdType id) const { return tracks(Identifier::subtype(id)); };
   const Track& track(IdType id) const { return tracks(id).at(id); };
@@ -140,19 +144,20 @@ public:
 
   const Blocks& blocks(const Identifier::SubType subtype) const { return *m_blocksCollection.at(subtype); };
   const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
-  const PFBlock& block(IdType id) const {return blocks(id).at(id);};;
+  const PFBlock& block(IdType id) const { return blocks(id).at(id); };
+  ;
 
   void clear();
 
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
-   *           this collection type does not already exist and then add the collection into the PapasEvent
+   *           this collection type does not already exist. It then adds the collection into the PapasEvent.
    */
   template <class T>
-  void addCollectionInternal(const std::unordered_map<IdType, T>& collection,
-                             std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>&
-                                 collections);
+  void
+  addCollectionInternal(const std::unordered_map<IdType, T>& collection,
+                        std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections);
   /// Unordered map of pointers to unordered map of (concrete) Ecal Clusters
   CollectionClusters m_ecalClustersCollection;
   /// Unordered map of pointers to unordered map of (concrete) Hcal Clusters
@@ -167,7 +172,6 @@ private:
   ListNodes m_historys;
 };
 
-  
 template <class T>
 void PapasEvent::addCollectionInternal(
     const std::unordered_map<IdType, T>& collection,
@@ -175,7 +179,7 @@ void PapasEvent::addCollectionInternal(
   IdType firstId = 0;
   for (const auto& it : collection) {
     if (!firstId) {
-           firstId = it.first;
+      firstId = it.first;
       if (hasCollection(firstId)) throw "Collection already exists";
     }
     if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) {
