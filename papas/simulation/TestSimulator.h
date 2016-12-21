@@ -1,11 +1,3 @@
-//
-//  TestSimulator.h
-//  papas
-//
-//  Created by Alice Robson on 15/12/16.
-//
-//
-
 #ifndef TestSimulator_h
 #define TestSimulator_h
 

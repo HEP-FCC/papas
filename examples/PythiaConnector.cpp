@@ -84,7 +84,6 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.storeParticles(std::move(papasparticles));
     papasManager.simulateEvent();
     papasManager.mergeClusters();
-    //papasManager.testMergeClusters();
     papasManager.reconstructEvent();
     m_store.clear();
   }
@@ -145,14 +144,11 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   writer.finish();
 }
 
-
 void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
   
   podio::ROOTWriter writer(fname, &m_store);
-  
   unsigned int nevents = 1;
   unsigned int eventno = 0;
-  
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
   
@@ -212,7 +208,3 @@ void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc
   
   m_reader.endOfEvent();
 }*/
-
-
-
-

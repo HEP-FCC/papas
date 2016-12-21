@@ -1,11 +1,3 @@
-//
-//  MergedClusterBuilder.h
-//  papas
-//
-//  Created by Alice Robson on 07/06/16.
-//
-//
-
 #ifndef TestMergedClusterBuilder_h
 #define TestMergedClusterBuilder_h
 

@@ -10,7 +10,7 @@
 #include <string>
 
 namespace papas {
-/*
+
 bool PDebug::logInitialized = false;
 spdlog::level::level_enum PDebug::slevel = spdlog::level::info;
 std::vector<spdlog::sink_ptr> PDebug::m_sinks;
@@ -44,5 +44,5 @@ std::shared_ptr<spdlog::logger> PDebug::log() {
     PDebug::init();
   }
   return spdlog::get("pdebug");
-}*/
+}
 }  // namespace papas

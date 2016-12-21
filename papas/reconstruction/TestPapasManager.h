@@ -1,11 +1,3 @@
-//
-//  TestPapasManager.h
-//  papas
-//
-//  Created by Alice Robson on 14/12/16.
-//
-//
-
 #ifndef TestPapasManager_h
 #define TestPapasManager_h
 #include "papas/datatypes/DefinitionsCollections.h"
@@ -95,7 +87,6 @@ public:
    *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
    */
   void clear();
-
 private:
   Clusters& createClusters();       // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();           // Create an empty concrete collection of tracks ready for filling by an algorithm
@@ -103,10 +94,8 @@ private:
   SimParticles& createParticles();  // Create an empty concrete collection of particles ready for filling by an
                                     // algorithm
   Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
-
   const Detector& m_detector;
   PapasEvent m_papasEvent;  // object that can be passed to algorithms to allow access to objects such as a track
-
   std::list<Clusters> m_ownedClusters;       //<Holds all the clusters collections created during an event
   std::list<Tracks> m_ownedTracks;           //<Holds all the tracks collections created during an event
   std::list<Blocks> m_ownedBlocks;           //<Holds all the blocks collections created during an event

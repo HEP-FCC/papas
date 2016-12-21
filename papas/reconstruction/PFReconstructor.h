@@ -1,11 +1,3 @@
-//
-//  PFReconstructor.hpp
-//  fastsim
-//
-//  Created by Alice Robson on 20/04/16.
-//
-//
-
 #ifndef PFReconstructor_h
 #define PFReconstructor_h
 

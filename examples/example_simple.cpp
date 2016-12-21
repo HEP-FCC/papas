@@ -16,41 +16,11 @@
 #include "ConvertEDMPapas.h"
 
 #include <iostream>
-
-#include <iostream>
-
-using namespace std;
-
 #include <TApplication.h>
 #include <TCanvas.h>
 
-
-#include "papas/datatypes/Cluster.h"
-void test1(const papas::Cluster& myclust){
-  std::cout <<myclust.energy();
-}
-
-void test() {
-  auto myclust = new  papas::Cluster();
-  test1(*myclust);
-}
-
-void test3(const papas::Cluster* myclust){
-  std::cout <<myclust->energy();
-}
-
-void test4() {
-  const auto myclust = papas::Cluster();
-  test3(&myclust);
-}
-
 int main(int argc, char* argv[]) {
-  
-  //test();
-  //test4();
-
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
-
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -70,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     // write out the reconstructed particles to a root file
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
-    
+
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;
     for (const auto& p : papasManager.rawParticles()) {
@@ -81,14 +51,9 @@ int main(int argc, char* argv[]) {
       std::cout << "  " << p.second << std::endl;
     }
     
-    
-    
     //testing (move elsewhere)
     pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.pfEvent().ecalMergedClusters());
-    
-    
-    
-    
+
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
     papasManager.display(false);

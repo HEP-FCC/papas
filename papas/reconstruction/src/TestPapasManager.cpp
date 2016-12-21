@@ -1,11 +1,3 @@
-//
-//  TestPapasManager.cpp
-//  papas
-//
-//  Created by Alice Robson on 14/12/16.
-//
-//
-
 #include "papas/datatypes/Identifier.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/reconstruction/PFBlockBuilder.h"

@@ -1,10 +1,3 @@
-//
-//  TesMergedClusterBuilder.cpp
-//  papas
-//
-//  Created by Alice Robson on 07/06/16.
-//
-//
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"

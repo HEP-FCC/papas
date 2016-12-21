@@ -1,21 +1,5 @@
-//
-//  Identifier.h
-//  papas
-//
-//  Created by Alice Robson on 15/11/16.
-//
-//
-
 #ifndef Identifier_h
 #define Identifier_h
-
-//
-//  Id.hpp
-//  papas
-//
-//  Created by Alice Robson on 19/05/16.
-//
-//
 
 #include "papas/datatypes/Definitions.h"
 #include <inttypes.h>
@@ -176,5 +160,4 @@ private:
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };
 }  // end namespace
-
 #endif /* Identifier_h */

@@ -1,10 +1,3 @@
-//
-//  PapasEvent.cpp
-//  papas
-//
-//  Created by Alice Robson on 18/11/16.
-//
-//
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/SimParticle.h"

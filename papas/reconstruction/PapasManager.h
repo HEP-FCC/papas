@@ -1,13 +1,5 @@
-//
-//  PapasManager.hpp
-//  papas
-//
-//  Created by Alice Robson on 22/06/16.
-//
-//
-
-#ifndef PapasManager_hpp
-#define PapasManager_hpp
+#ifndef PapasManager_h
+#define PapasManager_h
 
 #include "papas/display/AliceDisplay.h"
 #include "papas/reconstruction/PFEvent.h"

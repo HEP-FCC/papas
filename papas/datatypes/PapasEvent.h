@@ -1,11 +1,3 @@
-////
-////  PapasEvent.h
-////  papas
-////
-////  Created by Alice Robson on 18/11/16.
-////
-////
-//
 #ifndef PapasEvent_h
 #define PapasEvent_h
 
@@ -16,7 +8,6 @@
 
 namespace papas {
 /**
- *
  *  @brief The PapasEvent stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
  *  internal ClusterCollections, Track Collections etc. It also has a vector
  *  of one of more histories which describe the historical connections between the objects in the PapasEvent.
@@ -56,9 +47,7 @@ namespace papas {
  */
 class PapasEvent {
 public:
-  /**
-   *   @brief  Constructor
-   */
+  /// @brief  Constructor
   PapasEvent();
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the PapasEvent
@@ -191,5 +180,3 @@ void PapasEvent::addCollectionInternal(
 }
 
 #endif /* PapasEvent_h */
-
-//

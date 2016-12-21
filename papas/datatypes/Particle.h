@@ -30,7 +30,7 @@ public:
   const TLorentzVector& p4() const { return m_tlv; }  ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz, returning a local object so is not const &
   double e() const { return m_tlv.E(); }        ///<Energy
-  double pt() const { return m_tlv.Pt(); }      ///<transverse momentum (magnitude of p3 in transverse plane)file://localhost/Users/alice/fcc/papasmodular/heppy/papas/vectors.py
+  double pt() const { return m_tlv.Pt(); }      ///<transverse momentum (magnitude of p3 in transverse plane)
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane
   double eta() const { return m_tlv.Eta(); }                 ///<pseudo-rapidity (-ln(tan self._tlv.Theta()/2)).
   double phi() const { return m_tlv.Phi(); }                 ///<azymuthal angle (from x axis, in the transverse plane)

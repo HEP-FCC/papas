@@ -1,11 +1,3 @@
-//
-//  EventRuler.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 17/04/16.
-//
-//
-
 #include "papas/graphtools/PapasEventRuler.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/graphtools/Distance.h"
