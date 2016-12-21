@@ -13,7 +13,6 @@
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
-#include "ConvertEDMPapas.h"
 
 #include <iostream>
 #include <TApplication.h>
@@ -67,8 +66,3 @@ int main(int argc, char* argv[]) {
     std::cerr << c << ". Quitting." << std::endl;
   }
 }
-
-
-
-
-

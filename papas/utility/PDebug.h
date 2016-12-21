@@ -1,3 +1,5 @@
+#ifndef utilty_pdebug_h
+#define utilty_pdebug_h
 
 #include "papas/utility/StringFormatter.h"
 #include "spdlog/sinks/null_sink.h"
