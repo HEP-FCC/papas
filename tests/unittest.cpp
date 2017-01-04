@@ -601,6 +601,29 @@ TEST_CASE("merge_different_layers") {
   return;
 }
 
+
+TEST_CASE("test_papasevent") {
+  auto papasEvent = PapasEvent();
+  auto ecals = Clusters();
+  auto tracks = Tracks();
+
+
+  for (int i = 0; i<2 ; i++) {
+    auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
+    ecals.emplace(cluster.id(), std::move(cluster));
+    auto track = Track(TVector3(0, 0, 0), 1, std::make_shared<Path>(), 't');
+    tracks.emplace(track.id(), std::move(track));
+  }
+  papasEvent.addCollection(ecals);
+  papasEvent.addCollection(tracks);
+
+  //check that adding the same collection twice fails
+  //papasevent.addCollection(ecals);
+
+  //get we can get back collections OK
+  REQUIRE( papasEvent.clusters("et").size() ==2);
+}
+
 /*
 TEST_CASE("merge_inside") {
 
