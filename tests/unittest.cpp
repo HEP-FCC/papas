@@ -48,6 +48,7 @@
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFEvent.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/datatypes/HistoryHelper.h"
 #include "papas/utility/Random.h"
 using namespace papas;
 
@@ -603,26 +604,83 @@ TEST_CASE("merge_different_layers") {
 
 
 TEST_CASE("test_papasevent") {
+  Identifier::reset();
   auto papasEvent = PapasEvent();
   auto ecals = Clusters();
   auto tracks = Tracks();
-
+  IdType lastid = 0;
+  IdType lastcluster = 0;
 
   for (int i = 0; i<2 ; i++) {
     auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
+    lastcluster = cluster.id();
     auto track = Track(TVector3(0, 0, 0), 1, std::make_shared<Path>(), 't');
     tracks.emplace(track.id(), std::move(track));
+    lastid = track.id();
   }
   papasEvent.addCollection(ecals);
   papasEvent.addCollection(tracks);
+  REQUIRE_THROWS(papasEvent.addCollection(ecals));
 
   //check that adding the same collection twice fails
   //papasevent.addCollection(ecals);
 
   //get we can get back collections OK
   REQUIRE( papasEvent.clusters("et").size() ==2);
+  REQUIRE( papasEvent.hasCollection(499)==false);
+  REQUIRE( papasEvent.hasCollection(Identifier::kEcalCluster, 't')==true);
+  REQUIRE( papasEvent.hasCollection(lastid) == true);
+  REQUIRE_NOTHROW(papasEvent.track(lastid));
+  REQUIRE_NOTHROW(papasEvent.cluster(lastcluster));
+  REQUIRE_THROWS(papasEvent.track(500));
+  //REQUIRE( Identifier::pretty(lastid)  == "tt4" );
+  REQUIRE( papasEvent.hasObject(499)  ==false );
+  REQUIRE( papasEvent.hasObject(lastid)  ==true);
 }
+
+
+TEST_CASE("test_history") {
+  Identifier::reset();
+  auto papasEvent = PapasEvent();
+  auto ecals = Clusters();
+  auto particles = SimParticles();
+  IdType lastid = 0;
+  IdType lastcluster = 0;
+  Nodes history;
+  
+  for (int i = 0; i<2 ; i++) {
+    auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
+    ecals.emplace(cluster.id(), std::move(cluster));
+    lastcluster = cluster.id();
+    auto cnode = PFNode(lastcluster);
+    history.emplace(lastcluster, std::move(cnode));
+    auto particle = SimParticle(22, -1, TLorentzVector(1,1,1,1), TVector3(0., 0., 0.),  0.7, 'r');
+    particles.emplace(particle.id(), std::move(particle));
+    lastid = particle.id();
+    auto pnode = PFNode(lastid);
+    history.emplace(lastid, std::move(pnode));
+    history.at(lastid).addChild(history.at(lastcluster));
+  }
+  papasEvent.addCollection(ecals);
+  papasEvent.addCollection(particles);
+  papasEvent.addHistory(history);
+  papasEvent.mergeHistories();
+  auto hhelper = HistoryHelper(papasEvent);
+  auto ids =hhelper.linkedIds(lastid);
+  
+  //filter the ecals from the linked ids
+  REQUIRE( ids.size() ==2);
+  auto fids = hhelper.filteredIds(ids, Identifier::kEcalCluster, 't');
+  REQUIRE( fids.size() ==1);
+  REQUIRE( fids[0] == lastcluster);
+  
+  //filter the ecals from the linked ids
+  fids = hhelper.filteredIds(ids, Identifier::kParticle, 'r');
+  REQUIRE( fids.size() ==1);
+  REQUIRE( fids[0] == lastid);
+}
+
 
 /*
 TEST_CASE("merge_inside") {

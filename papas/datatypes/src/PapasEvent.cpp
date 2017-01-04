@@ -113,13 +113,14 @@ bool PapasEvent::hasObject(IdType id) const {
     for (auto history : m_historys)
     {
       for (const auto node : *history){
-          auto hnode = findOrMakeNode(node.first);
+          auto & hnode = findOrMakeNode(node.first);
         for (const auto& c : node.second.children()) {
-             auto cnode = findOrMakeNode(c->value());
+             auto & cnode = findOrMakeNode(c->value());
              hnode.addChild(cnode);
         }
       }
     }
+    
   }
   
   PFNode& PapasEvent::findOrMakeNode(IdType id) {
@@ -128,7 +129,6 @@ bool PapasEvent::hasObject(IdType id) const {
       m_history.emplace(id, newnode);
     }
     return m_history.at(id);
-
   }
 
 void PapasEvent::clear() {
@@ -138,5 +138,6 @@ void PapasEvent::clear() {
   m_particlesCollection.clear();
   m_blocksCollection.clear();
   m_historys.clear();
+  m_history.clear();
 }
 }

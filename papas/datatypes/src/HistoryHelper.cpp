@@ -10,8 +10,8 @@ namespace papas {
   
    Ids HistoryHelper::linkedIds(IdType id) const {
     const Nodes& history = m_papasEvent.history();
-    auto startnode = history.at(id);
-    auto bfs = DAG::BFSVisitor<PFNode>();
+    auto& startnode = history.at(id);
+    auto bfs = DAG::BFSRecurseVisitor<PFNode>();
     auto nodes = bfs.traverseUndirected(startnode);
     Ids ids;
     for (auto node : nodes){

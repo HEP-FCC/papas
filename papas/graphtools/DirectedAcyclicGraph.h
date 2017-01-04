@@ -243,7 +243,6 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::en
       for (auto node : nodeQueue.front()->children()) {
         if (m_visited.find(node) == m_visited.end()) {  // check node is not already being visited
           node->accept(*this);
-
           nodeQueue.push(node);
           nodeDepth.push(curdepth + 1);
         }
@@ -255,7 +254,6 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor<N>::en
 
         if (m_visited.find(node) == m_visited.end()) {  // check node is not already being visited
           node->accept(*this);
-
           nodeQueue.push(node);
           nodeDepth.push(curdepth + 1);
         }
@@ -300,7 +298,8 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename BFSVisitor
         }
       if (depth != 0 && (visittype == pt::PARENTS | visittype == pt::UNDIRECTED))
         for (const auto parent : node->parents()) {
-          if (!this->alreadyVisited(parent)) visitnextnodes.insert(parent);
+          if (!this->alreadyVisited(parent))
+               visitnextnodes.insert(parent);
         }
     }
   }
