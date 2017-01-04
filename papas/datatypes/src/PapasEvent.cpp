@@ -89,14 +89,13 @@ bool PapasEvent::hasObject(IdType id) const {
   if (hasCollection(id)) {
     switch (type) {
     case Identifier::kEcalCluster:
-      found = (clusters(id).find(id) != clusters(id).end());
-      break;
     case Identifier::kHcalCluster:
       found = (clusters(id).find(id) != clusters(id).end());
       break;
     case Identifier::kTrack:
       found = (tracks(id).find(id) != tracks(id).end());
       break;
+    case Identifier::kBlock:
       found = (blocks(id).find(id) != blocks(id).end());
       break;
     case Identifier::kParticle:
@@ -108,6 +107,29 @@ bool PapasEvent::hasObject(IdType id) const {
   }
   return found;
 };
+  
+  
+  void PapasEvent::mergeHistories() {
+    for (auto history : m_historys)
+    {
+      for (const auto node : *history){
+          auto hnode = findOrMakeNode(node.first);
+        for (const auto& c : node.second.children()) {
+             auto cnode = findOrMakeNode(c->value());
+             hnode.addChild(cnode);
+        }
+      }
+    }
+  }
+  
+  PFNode& PapasEvent::findOrMakeNode(IdType id) {
+    if (m_history.find(id)==m_history.end()){
+      auto newnode = PFNode(id);
+      m_history.emplace(id, newnode);
+    }
+    return m_history.at(id);
+
+  }
 
 void PapasEvent::clear() {
   m_ecalClustersCollection.clear();

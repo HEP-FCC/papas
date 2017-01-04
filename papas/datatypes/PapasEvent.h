@@ -83,7 +83,7 @@ public:
    *   @brief  returns list of historys as a const reference
    *
    */
-  const ListNodes& history() const { return m_historys; };
+  const ListNodes& histories() const { return m_historys; };
   /**
    *   @brief  returns true if a collection with the same typeAndSubtype as the identifier is found
    *   @param[in]  id: The identifier of an object
@@ -136,9 +136,13 @@ public:
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
   ;
 
+  void mergeHistories();
+  const Nodes& history() const { return m_history;}
   void clear();
 
 private:
+  PFNode& findOrMakeNode(IdType id);
+
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
    *           this collection type does not already exist. It then adds the collection into the PapasEvent.
@@ -159,6 +163,7 @@ private:
   CollectionBlocks m_blocksCollection;
   /// Vector of History objects.
   ListNodes m_historys;
+  Nodes m_history;
 };
 
 template <class T>
