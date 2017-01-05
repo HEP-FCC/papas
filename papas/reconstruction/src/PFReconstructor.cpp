@@ -159,7 +159,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
 
   if (ids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
-    IdType id = ids[0];
+    IdType id = *ids.begin();
     if (Identifier::isEcal(id)) {
       insertParticle(block, reconstructCluster(m_pfEvent.ECALCluster(id), papas::Layer::kEcal));
     } else if (Identifier::isHcal(id)) {

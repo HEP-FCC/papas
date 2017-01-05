@@ -25,7 +25,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, const Ruler
     addHistory = false;
   }
   Ids uniqueids;
-  uniqueids.reserve(clusters.size());
+      //uniqueids.reserve(clusters.size());
   for (auto const& cluster : clusters) {
     uniqueids.push_back(cluster.first);
   }
@@ -49,7 +49,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Clusters& clusters, const Ruler
 #if WITHSORT
     std::sort(ids.begin(), ids.end());
 #endif
-    auto id = ids[0];
+    auto id = *ids.begin();
     double totalenergy = 0.;
     if (ids.size() > 1) {
       for (const auto& c : ids) {

@@ -492,7 +492,7 @@ TEST_CASE("BlockSplitter") {
   IdType id1 = Identifier::makeId(Identifier::kEcalCluster, 't');
   IdType id2 = Identifier::makeId(Identifier::kHcalCluster, 't');
   IdType id3 = Identifier::makeId(Identifier::kTrack, 't');
-  const std::vector<IdType> ids{id1, id2, id3};
+  Ids ids{id1, id2, id3};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
   Edge edge1 = Edge(id1, id3, true, 10030.0);
@@ -621,12 +621,10 @@ TEST_CASE("test_papasevent") {
   }
   papasEvent.addCollection(ecals);
   papasEvent.addCollection(tracks);
+  //check that adding the same collection twice fails
   REQUIRE_THROWS(papasEvent.addCollection(ecals));
 
-  //check that adding the same collection twice fails
-  //papasevent.addCollection(ecals);
-
-  //get we can get back collections OK
+  //check we can get back collections OK
   REQUIRE( papasEvent.clusters("et").size() ==2);
   REQUIRE( papasEvent.hasCollection(499)==false);
   REQUIRE( papasEvent.hasCollection(Identifier::kEcalCluster, 't')==true);
@@ -634,7 +632,6 @@ TEST_CASE("test_papasevent") {
   REQUIRE_NOTHROW(papasEvent.track(lastid));
   REQUIRE_NOTHROW(papasEvent.cluster(lastcluster));
   REQUIRE_THROWS(papasEvent.track(500));
-  //REQUIRE( Identifier::pretty(lastid)  == "tt4" );
   REQUIRE( papasEvent.hasObject(499)  ==false );
   REQUIRE( papasEvent.hasObject(lastid)  ==true);
 }
@@ -649,6 +646,7 @@ TEST_CASE("test_history") {
   IdType lastcluster = 0;
   Nodes history;
   
+  //make a dummy papasevent including some history
   for (int i = 0; i<2 ; i++) {
     auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
@@ -667,18 +665,17 @@ TEST_CASE("test_history") {
   papasEvent.addHistory(history);
   papasEvent.mergeHistories();
   auto hhelper = HistoryHelper(papasEvent);
+  //find what is connected to the last particle created
   auto ids =hhelper.linkedIds(lastid);
-  
   //filter the ecals from the linked ids
   REQUIRE( ids.size() ==2);
   auto fids = hhelper.filteredIds(ids, Identifier::kEcalCluster, 't');
   REQUIRE( fids.size() ==1);
-  REQUIRE( fids[0] == lastcluster);
-  
-  //filter the ecals from the linked ids
+  REQUIRE( *fids.begin() == lastcluster);
+  //filter the particle from the linked ids
   fids = hhelper.filteredIds(ids, Identifier::kParticle, 'r');
   REQUIRE( fids.size() ==1);
-  REQUIRE( fids[0] == lastid);
+  REQUIRE(  *fids.begin() == lastid);
 }
 
 

@@ -377,7 +377,6 @@ namespace papas {
   Ids TestSimulator::linkedIds(IdType nodeid) const {
     DAG::BFSVisitor<PFNode> bfs;
     Ids foundids;
-    foundids.reserve(1000);  // TODO how
     auto res = bfs.traverseUndirected(m_history.at(nodeid));
     for (auto r : res) {
       foundids.push_back(r->value());

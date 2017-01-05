@@ -3,6 +3,7 @@
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/FloodFill.h"
 #include "papas/utility/PDebug.h"
+#include "papas/datatypes/DefinitionsCollections.h"
 namespace papas {
 
 GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_elementIds(ids) {
@@ -35,7 +36,7 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
   }
 }
 
-void GraphBuilder::sortIds(std::vector<IdType>& ids) {
+void GraphBuilder::sortIds(Ids& ids) {
 
 #if WITHSORT
   std::sort(ids.begin(), ids.end(), [](IdType a, IdType b) -> bool { return a < b; });

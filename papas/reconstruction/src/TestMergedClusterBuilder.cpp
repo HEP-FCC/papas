@@ -22,7 +22,7 @@ namespace papas {
       const auto& clusters = papasEvent.clusters(typeAndSubtype);
       //make list of all the ids in this collection
       Ids uniqueids;
-      uniqueids.reserve(clusters.size());
+      //uniqueids.reserve(clusters.size());
       for (auto const& cluster : clusters) {
         uniqueids.push_back(cluster.first);
       }
@@ -49,7 +49,7 @@ namespace papas {
 #if WITHSORT
         std::sort(ids.begin(), ids.end());
 #endif
-        auto id = ids[0];
+        auto id = *ids.begin();
         double totalenergy = 0.;
         if (ids.size() > 1) {
           for (const auto& c : ids) {

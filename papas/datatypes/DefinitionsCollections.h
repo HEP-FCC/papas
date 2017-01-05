@@ -19,7 +19,8 @@
 //#include <map>
 #include <string>
 #include <unordered_map>
-#include <vector>
+#include <list>
+#include "papas/datatypes/DefinitionsCollections.h"
 
 namespace papas {
 class Cluster;
@@ -32,7 +33,7 @@ class Particle;
 typedef std::unordered_map<IdType, SimParticle> SimParticles;  ///< collection of Simulated Particles
 typedef std::unordered_map<IdType, Particle> Particles;        ///< collection of Particles
 typedef std::unordered_map<unsigned long long, Edge> Edges;    ///< collection of Edges
-typedef std::vector<IdType> Ids;                               ///< collection of Ids
+typedef std::list<IdType> Ids;                               ///< collection of Ids
 typedef std::unordered_map<IdType, Track> Tracks;              ///< collection of Tracks
 typedef std::unordered_map<IdType, PFBlock> Blocks;            ///< collection of Blocks
 typedef std::unordered_map<IdType, Cluster> Clusters;  ///< collection of Clusters

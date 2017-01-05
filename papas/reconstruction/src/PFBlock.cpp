@@ -131,7 +131,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeTy
   return linkedEdgeKeys;
 }
 
-std::vector<IdType> PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
+Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   /// TODO think about sorting
   Ids linkedIds;
