@@ -74,7 +74,7 @@ private:
   void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
   void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
-  void smearElectron(SimParticle& ptc);     ///< Does not smear so far as I can see
+  void simulateElectron(SimParticle& ptc);     ///< Does not smear so far as I can see
   void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
 
   /**

@@ -12,6 +12,8 @@
 #include "papas/detectors/Field.h"
 #include "papas/detectors/SurfaceCylinder.h"
 #include "papas/detectors/Tracker.h"
+#include "papas/datatypes/Track.h"
+#include "papas/datatypes/SimParticle.h"
 
 namespace papas {
 
@@ -39,6 +41,18 @@ public:
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
+  double electronAcceptance(const Track& track) const {
+    return track.p3().Mag() > 5 && abs(track.p3().Eta()) < 2.5;}
+  
+  double electronEnergyResolution(const SimParticle& ptc) const {
+    return 0.1 / sqrt(ptc.e());}
+  
+  double muonAcceptance(const Track& track) const {
+  return track.pt() > 5. && abs(track.p3().Eta()) < 2.5;}
+  
+  double muonPtResolution(const SimParticle& ptc) const {
+    return 0.02;}
+  
 
 protected:
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class

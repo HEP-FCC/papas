@@ -103,7 +103,7 @@ namespace papas {
     if (ptc.charge() != 0) {
       auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
       auto storedtrack = storeTrack(std::move(track), ptc.id());
-      auto smeared = smearTrack(storedtrack);  // smear it
+      auto smeared = smearTrack(storedtrack,m_detector.tracker()->ptResolution(storedtrack));  // smear it
       if (acceptSmearedTrack(smeared)) {
         storeSmearedTrack(std::move(smeared), storedtrack.id());
       }
@@ -173,6 +173,34 @@ namespace papas {
     // PDebug::write("Made Smeared{}", smeared)
     // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
   }
+  
+  
+  void TestSimulator::simulateElectron(SimParticle& ptc) {
+    /*Simulate an electron corresponding to gen particle ptc.
+     
+     Uses the methods detector.electronEnergyResolution
+     and detector.electronAcceptance to smear the electron track.
+     Later on, the particle flow algorithm will use the tracks
+     coming from an electron to reconstruct electrons.
+     
+     This method does not simulate an electron energy deposit in the ECAL.*/
+    PDebug::write("Simulating Electron");
+    auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+    auto storedtrack = storeTrack(std::move(track), ptc.id());
+    auto eres = m_detector.electronEnergyResolution(ptc);
+    auto smeared = smearTrack(storedtrack, eres);  // smear it
+    if (acceptSmearedTrack(smeared)) {
+      storeSmearedTrack(std::move(smeared), storedtrack.id());
+    }
+    
+    auto ecal_sp = m_detector.ecal();  // ECAL detector element
+    propagate(ecal_sp->volumeCylinder().inner(), ptc);
+    
+  }
+    
+    
+    
+
   
   void TestSimulator::smearMuon(SimParticle& ptc) {
     PDebug::write("Smearing Muon");
@@ -316,9 +344,9 @@ namespace papas {
     return m_tracks.at(id);
   }
   
-  Track TestSimulator::smearTrack(const Track& track) const {
-    double ptResolution = m_detector.tracker()->ptResolution(track);
-    double scale_factor = randomgen::RandNormal(1, ptResolution).next();
+  Track TestSimulator::smearTrack(const Track& track, double resolution) const {
+    //double ptResolution = m_detector.tracker()->ptResolution(track);
+    double scale_factor = randomgen::RandNormal(1, resolution).next();
     auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(),'s');
     PDebug::write("Made Smeared{}", smeared);
     return smeared;
@@ -331,15 +359,25 @@ namespace papas {
     return m_smearedTracks[id];
   }
   
-  bool TestSimulator::acceptSmearedTrack(const Track& smearedtrack, bool accept) const {
+  bool TestSimulator::acceptSmearedTrack(const Track& smearedTrack, bool accept) const {
     // decide whether the smearedTrack is detected
-    if (m_detector.tracker()->acceptance(smearedtrack) || accept) {
+    if (m_detector.tracker()->acceptance(smearedTrack) || accept) {
       return true;
     } else {
-      PDebug::write("Rejected Smeared{}", smearedtrack);
+      PDebug::write("Rejected Smeared{}", smearedTrack);
       return false;
     }
   }
+        
+        bool TestSimulator::acceptElectronSmearedTrack(const Track& smearedTrack, bool accept) const {
+          // decide whether the electron smearedTrack is detected
+          if (m_detector.electronAcceptance(smearedTrack) || accept) {
+            return true;
+          } else {
+            PDebug::write("Rejected Smeared{}", smearedTrack);
+            return false;
+          }
+        }
   
   void TestSimulator::addNode(IdType newid, const IdType parentid) {
     // add the new node into the set of all nodes

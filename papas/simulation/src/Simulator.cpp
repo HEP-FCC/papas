@@ -35,7 +35,7 @@ void Simulator::simulateParticle(const Particle& ptc, IdType parentid) {
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
   } else if (abs(pdgid) == 11) {
-    smearElectron(storedParticle);
+    simulateElectron(storedParticle);
   } else if (abs(pdgid) == 13) {
     smearMuon(storedParticle);
   } else if ((abs(pdgid) == 12) | (abs(pdgid) == 14) | (abs(pdgid) == 16)) {
@@ -132,8 +132,8 @@ void Simulator::simulateNeutrino(SimParticle& ptc) {
   propagateAllLayers(ptc);
 }
 
-void Simulator::smearElectron(SimParticle& ptc) {
-  PDebug::write("Smearing Electron");
+void Simulator::simulateElectron(SimParticle& ptc) {
+  PDebug::write("Simulating Electron");
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
   storeTrack(std::move(track), ptc.id());
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
@@ -309,6 +309,8 @@ bool Simulator::acceptSmearedTrack(const Track& smearedtrack, bool accept) const
     return false;
   }
 }
+  
+
 
 void Simulator::addNode(IdType newid, const IdType parentid) {
   // add the new node into the set of all nodes

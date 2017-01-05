@@ -82,8 +82,9 @@ namespace papas {
     void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
     void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
     void smearElectron(SimParticle& ptc);     ///< Does not smear so far as I can see
+    void simulateElectron(SimParticle& ptc);
     void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
-    
+    void simulateMuon(SimParticle& ptc);
     /**
      Makes a new SimParticle
      @param[in] int pdgid: particle id (eg 22 for a photon)
@@ -114,8 +115,9 @@ namespace papas {
                               papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false) const;
     const Cluster& storeSmearedCluster(Cluster&& smearedCluster, IdType parentId);
     const Track& storeTrack(Track&& track, IdType parentId);  ///<move track into tracks collection and history
-    Track smearTrack(const Track& track) const;               ///< randomisation of the energy of a track
+    Track smearTrack(const Track& track, double resolution) const;               ///< randomisation of the energy of a track
     bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
+    bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept) const;
     const Track& storeSmearedTrack(Track&& smearedtrack,
                                    IdType parentid);  ///<move into the smearedtracks collection and history
     
