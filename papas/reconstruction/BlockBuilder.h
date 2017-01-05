@@ -7,7 +7,7 @@
 namespace papas {
 class PFEvent;
 /**
- * BlockBuilder takes a vector of Ids and an unordered map of associated edges which have distance and link info
+ * BlockBuilder takes a list of Ids and an unordered map of associated edges which have distance and link info
  * It uses the distances/links between elements to construct a set of connected blocks.
  * Each element will end up in one (and only one) block.
  * Blocks retain information of the elements and the distances between elements.
@@ -29,7 +29,7 @@ class PFEvent;
 class BlockBuilder : public GraphBuilder {
 public:
   /** Constructor
-   * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
+   * @param[in] ids : list of unique identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
    * @param[inout] historyNodes : optional (ie can be empty) unordered_map that describes which elements are parents of

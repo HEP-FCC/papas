@@ -22,7 +22,7 @@ namespace papas {
 /// returns a set of blocks, each block is a set of overlapping clusters and if it
 /// contains more than one element forms a new merged cluster.
 /// The mergedcluster is created by making a new cluster and adding in each of the overlapping clusters
-/// The ids of these clusters are stored in the subClusters vector of the Cluster class.
+/// The ids of these clusters are stored in the subClusters list of the Cluster class.
 ///
 class MergedClusterBuilder {
 public:

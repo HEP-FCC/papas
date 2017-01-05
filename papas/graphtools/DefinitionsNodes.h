@@ -12,7 +12,6 @@
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 #include "papas/datatypes/Identifier.h"
 #include <map>
-#include <vector>
 namespace papas {
 
 typedef DAG::Node<IdType> PFNode;
