@@ -117,7 +117,9 @@ namespace papas {
     const Track& storeTrack(Track&& track, IdType parentId);  ///<move track into tracks collection and history
     Track smearTrack(const Track& track, double resolution) const;               ///< randomisation of the energy of a track
     bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
-    bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept) const;
+    bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept  = false) const;
+    bool acceptMuonSmearedTrack(const Track& smearedTrack, bool accept  = false) const;
+    
     const Track& storeSmearedTrack(Track&& smearedtrack,
                                    IdType parentid);  ///<move into the smearedtracks collection and history
     
