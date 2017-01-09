@@ -48,7 +48,7 @@ void PapasManager::mergeClusters() {
   
 
 void PapasManager::reconstructEvent() {
-  auto pfReconstructor = PFReconstructor(m_pfEvent);
+  auto pfReconstructor = PFReconstructor(m_pfEvent, m_papasEvent);
   pfReconstructor.reconstruct();
   // return the blocks and particles to the event
   m_pfEvent.setReconstructedParticles(std::move(pfReconstructor.particles()));
