@@ -37,7 +37,8 @@ int main(int argc, char* argv[]) {
     // read and process a single event
     unsigned int eventNo = 0;
     pythiaConnector.processEvent(eventNo, papasManager);
-
+    
+  
     // write out the reconstructed particles to a root file
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.papasEvent().particles('r'));
 
@@ -56,6 +57,8 @@ int main(int argc, char* argv[]) {
 
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
+    pythiaConnector.displayEvent(papasManager);
+    //tApp.Run();
     //papasManager.display(false);
     //papasManager.show();
 

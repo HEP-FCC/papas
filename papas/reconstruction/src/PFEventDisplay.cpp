@@ -18,17 +18,17 @@ namespace papas {
 
 PFEventDisplay::PFEventDisplay(std::list<ViewPane::Projection> views) : Display(views) {}
 
-void PFEventDisplay::drawEvent(const Simulator& simulator, const PFEvent& pfEvent) {
-  for (auto& pr : simulator.particles()) {
+void PFEventDisplay::drawEvent(const PapasEvent& papasEvent) {
+  for (auto& pr : papasEvent.particles('s')) {
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second));
     addToRegister(gparticle, 2);
   }
-  for (auto& cl : simulator.smearedEcalClusters()) {
+  for (auto& cl : papasEvent.clusters("es")) {
     // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }
-  for (auto& cl : simulator.smearedHcalClusters()) {
+  for (auto& cl : papasEvent.clusters("hs")) {
     // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
@@ -37,7 +37,7 @@ void PFEventDisplay::drawEvent(const Simulator& simulator, const PFEvent& pfEven
   draw();
 }
 
-void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
+  //void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
 
   /*for (auto& pr : pfEvent.reconstructedParticles()) {
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 3, 1));
@@ -51,7 +51,7 @@ void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& par
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 2, 2, 2));
     addToRegister(gparticle, 2);
   }*/
-  draw();
-}
+  //draw();
+  //}
 
 }  // end namespace papas

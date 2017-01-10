@@ -21,6 +21,8 @@
 #include "papas/datatypes/Particle.h"
 #include "papas/simulation/Simulator.h"
 
+#include "papas/display/AliceDisplay.h"
+
 #include <exception>
 #include <string>
 #include <sys/stat.h>
@@ -114,6 +116,14 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   }
   
   m_reader.endOfEvent();
+}
+
+
+void PythiaConnector::displayEvent(const papas::PapasManager& papasManager)
+{
+  papas::PFApp myApp{}; // I think this should turn into a PapasManager member
+  myApp.display(papasManager.papasEvent(), papasManager.detector());
+  //gSystem->ProcessEvents();
 }
 
 void PythiaConnector::writeParticlesROOT(const char* fname, const papas::SimParticles& particles) {

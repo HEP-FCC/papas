@@ -42,6 +42,9 @@ public:
   PythiaConnector(const char* fname);
   void writeParticlesROOT(const char* fname, const papas::SimParticles& particles);
   void writeClustersROOT(const char* fname, const papas::Clusters& clusters);
+  
+  //todo find new home;
+  void displayEvent(const papas::PapasManager& papasManager);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
                                                                                //void processEvent(unsigned int eventNo, PapasManager& papasManager);
   papas::Particles makePapasParticlesFromGeneratedParticles(
