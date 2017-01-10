@@ -13,19 +13,20 @@
 
 namespace papas {
 
-BlockSplitter::BlockSplitter(const Edges& unlinkEdges, PFBlock& block, Nodes& historynodes) : m_blocks() {
+BlockSplitter::BlockSplitter(const Edges& unlinkEdges, const PFBlock& block, Nodes& historynodes, Blocks& blocks) :
+  m_blocks(blocks) {
   Edges modifiedEdges;
   for (auto edge : block.edges()) {  // copy edges
     Edge e = edge.second;
     if (unlinkEdges.find(edge.first) != unlinkEdges.end()) {
       e.setLinked(false);
     }
-    modifiedEdges.emplace(e.key(), std::move(e));
+    modifiedEdges.emplace(e.key(), e);
   }
 
-  auto bbuilder= BlockBuilder(block.elementIds(), std::move(modifiedEdges), historynodes, 's');
-  m_blocks = bbuilder.moveBlocks();
-  block.setActive(false);
+  auto bbuilder= BlockBuilder(block.elementIds(), std::move(modifiedEdges), historynodes, blocks, 's');
+  
+    //block.setActive(false);
 }
 
 std::ostream& operator<<(std::ostream& os, const BlockSplitter& builder) {

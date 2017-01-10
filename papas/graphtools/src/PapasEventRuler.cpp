@@ -33,10 +33,8 @@ Distance PapasEventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
 
 Distance PapasEventRuler::clusterTrackDistance(IdType clustId, IdType trackId) const {
   const Cluster& cluster = m_papasEvent.cluster(clustId);
-  //const Track& track = m_papasEvent.track(trackId);
-  throw "TODO track";
-  return Distance();
-  //return m_ruler.clusterTrackDistance(cluster, track);
+  const Track& track = m_papasEvent.track(trackId);
+  return m_ruler.clusterTrackDistance(cluster, track);
 }
 
 }  // end namespace papas

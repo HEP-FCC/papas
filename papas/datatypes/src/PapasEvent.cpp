@@ -52,7 +52,8 @@ const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
   // return the corresponding collection with this type and subtype
   return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
 }
-
+  
+  
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // Check if this collection is present
   auto found = false;
@@ -109,7 +110,11 @@ bool PapasEvent::hasObject(IdType id) const {
 };
   
   
-  void PapasEvent::mergeHistories() {
+ void PapasEvent::mergeHistories() {
+    //A separate history is created at each stage.
+    //the following merges these separate histories into
+    //one single history that can be used for analysis
+    Nodes mergedHistory;
     for (auto history : m_historys)
     {
       for (const auto node : *history){

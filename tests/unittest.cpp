@@ -478,7 +478,7 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.isActive() == true);
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
-  REQUIRE(Identifier::isBlock(block2.uniqueId()) == true);
+  REQUIRE(Identifier::isBlock(block2.id()) == true);
   REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()));

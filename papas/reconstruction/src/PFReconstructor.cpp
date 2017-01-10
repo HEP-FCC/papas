@@ -28,26 +28,40 @@
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(PFEvent& pfEvent, const PapasEvent& papasEvent)
-    : m_pfEvent(pfEvent),
-      m_papasEvent(papasEvent),
-      m_historyNodes(pfEvent.historyNodes()),
-      m_hasHistory(pfEvent.historyNodes().size() == 0) {}
+PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, SimParticles& particles, Nodes& history)
+    : m_papasEvent(papasEvent), m_particles(particles),  m_history(history) {
 
-void PFReconstructor::reconstruct() {
+  
+  const auto& blocks = m_papasEvent.blocks(blockSubtype);
+  auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
+#if WITHSORT
+  std::sort(blockids.begin(), blockids.end());
+#endif
+  
+  
+  for (auto bid : blockids) {
+    const PFBlock& block = blocks.at(bid);
+    PDebug::write("Processing {}", block);
+    reconstructBlock(block);
+    
+  }
+  if (m_unused.size() > 0) {
+    PDebug::write("unused elements ");
+    for (auto u : m_unused)
+      PDebug::write("{},", u);
+    // TODO warning message
+  }
+
   // TODO sort m_blocks
 
-  // simplify the blocks by editing the links
+ /* // simplify the blocks by editing the links
   // each track will end up linked to at most one hcal
 
   // sort the blocks by id to ensure match with python
   std::vector<IdType> blockids;
   std::vector<IdType> newblockids;
 
-  Ids ids = m_pfEvent.mergedElementIds();
-
-  // create the blocks of linked ids
-  auto bBuilder = PFBlockBuilder(ids, m_pfEvent);
+  auto bBuilder = PFBlockBuilder(m_papasEvent, "em", "hm", 's', m_blocks, m_history);
   m_blocks = bBuilder.blocks();
 
   for (const auto& b : m_blocks) {
@@ -83,9 +97,10 @@ void PFReconstructor::reconstruct() {
     for (auto u : m_unused)
       PDebug::write("{},", u);
     // TODO warning message
-  }
+  }*/
 }
 
+#if 0
 Blocks PFReconstructor::simplifyBlock(IdType id) {
   /* Block: a block which contains list of element ids and set of edges that connect them
    history_nodes: optional dictionary of Nodes with element identifiers in each node
@@ -146,10 +161,11 @@ Blocks PFReconstructor::simplifyBlock(IdType id) {
 
   // if there is something to unlink then use the BlockSplitter
   if (toUnlink.size() > 0) {
-    splitBlocks = BlockSplitter(toUnlink, block, m_historyNodes).blocks();
+    splitBlocks = BlockSplitter(toUnlink, block, m_history).blocks();
   }
   return splitBlocks;  // moves
 }
+#endif
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   /// see class description for summary of reconstruction approach
@@ -159,7 +175,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   std::sort(ids.begin(), ids.end());
 #endif
   for (auto id : ids) {
-    m_locked.at(id) = false;
+    m_locked[id] = false;
   }
 
   reconstructMuons(block);
@@ -171,13 +187,13 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     IdType id = *uids.begin();
-    auto parentIds = Ids{block.uniqueId(), id};
+    auto parentIds = Ids{block.id(), id};
     if (Identifier::isEcal(id)) {
-      reconstructCluster(m_pfEvent.ECALCluster(id), papas::Layer::kEcal, parentIds);
+      reconstructCluster(m_papasEvent.cluster(id), papas::Layer::kEcal, parentIds);
     } else if (Identifier::isHcal(id)) {
-      reconstructCluster(m_pfEvent.HCALCluster(id), papas::Layer::kHcal, parentIds);
+      reconstructCluster(m_papasEvent.cluster(id), papas::Layer::kHcal, parentIds);
     } else if (Identifier::isTrack(id)) {
-      reconstructTrack(m_pfEvent.track(id), 211, parentIds);
+      reconstructTrack(m_papasEvent.track(id), 211, parentIds);
     } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
               // TODO
     }
@@ -192,8 +208,8 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons.
          # ELECTRONS TO BE DEALT WITH.*/
-        auto parentIds = Ids{block.uniqueId(), id};
-        reconstructTrack(m_pfEvent.track(id), 211, parentIds);
+        auto parentIds = Ids{block.id(), id};
+        reconstructTrack(m_papasEvent.track(id), 211, parentIds);
         for (auto idlink : block.linkedIds(id, Edge::EdgeType::kEcalTrack)) {
           // TODO ask colin what happened to possible photons here:
           // TODO add in extra photons but decide where they should go?
@@ -218,8 +234,8 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
 
-      auto parentIds = Ids{block.uniqueId(), id};
-      reconstructTrack(m_pfEvent.track(id), 13, parentIds);
+      auto parentIds = Ids{block.id(), id};
+      reconstructTrack(m_papasEvent.track(id), 13, parentIds);
     }
   }
 }
@@ -238,42 +254,36 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
-      auto parentIds = Ids{block.uniqueId(), id};
-      reconstructTrack(m_pfEvent.track(id), 13, parentIds);
+      auto parentIds = Ids{block.id(), id};
+      reconstructTrack(m_papasEvent.track(id), 13, parentIds);
     }
   }
 }
 
-void PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newparticle) {
-  /* The new particle will be inserted into the history_nodes (if present).
-   A new node for the particle will be created if needed.
-   It will have as its parents the block and all the elements of the block.
-   '''
-   #Note that although it may be possible to specify more closely that the particle comes from
-   #some parts of the block, there are frequently ambiguities and so for now the particle is
-   #linked to everything in the block*/
-  // if (newparticle) :
+/*void PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newparticle) {
+ 
   IdType newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
 
-  // check if history nodes exists
-  if (!m_hasHistory) return;
 
   // find the node for the block
-  PFNode blockNode = m_historyNodes[block.uniqueId()];
-
-  // find or make a node for the particle
-  if (m_historyNodes.find(newid) == m_historyNodes.end()) {
-    m_historyNodes[newid] = PFNode(newid);
-  }
-  PFNode particleNode = m_historyNodes[newid];
-  // link particle to the block
+  PFNode& blockNode = findOrMakeNode(block.id());
+  PFNode& particleNode = findOrMakeNode(newid);
   blockNode.addChild(particleNode);
   // link particle to block elements
   for (auto element_id : block.elementIds()) {
     m_historyNodes[element_id].addChild(particleNode);
   }
-}
+}*/
+  
+  
+  PFNode& PFReconstructor::findOrMakeNode(IdType id) const {
+    if (m_history.find(id)==m_history.end()){
+      auto newnode = PFNode(id);
+      m_history.emplace(id, newnode);
+    }
+    return m_history.at(id);
+  }
 
 void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
@@ -287,17 +297,11 @@ void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparti
   IdType newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
 
-  // check if history nodes exists
-  if (!m_hasHistory) return;
-
-  // find or make a node for the particle
-  if (m_historyNodes.find(newid) == m_historyNodes.end()) {
-    m_historyNodes[newid] = PFNode(newid);
-  }
-  PFNode particleNode = m_historyNodes[newid];
+  PFNode particleNode = findOrMakeNode(newid);
   // add in parental history
   for (auto elementId : parentIds) {
-    m_historyNodes[elementId].addChild(particleNode);
+    auto& parentNode =findOrMakeNode(elementId);
+    parentNode.addChild(particleNode);
   }
 }
 
@@ -305,12 +309,17 @@ bool PFReconstructor::isFromParticle(IdType id, std::string typeAndSubtype, int 
   /*returns: True if object unique_id comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
+  
   auto historyHelper = HistoryHelper(m_papasEvent);
+  
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
+  
+  
 
   bool isFromPdgId = false;
-  for (auto p : parentIds) {
-    if (abs(m_papasEvent.particle(id).pdgId()) == abs(pdgid)) isFromPdgId = true;
+  for (auto pid : parentIds) {
+    
+    if (abs(m_papasEvent.particle(pid).pdgId()) == abs(pdgid)) isFromPdgId = true;
   }
   return isFromPdgId;
 }
@@ -384,15 +393,15 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   std::sort(ecalIds.begin(), ecalIds.end());
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
-  const Cluster& hcal = m_pfEvent.HCALCluster(hcalId);
+  const Cluster& hcal = m_papasEvent.cluster(hcalId);
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
   double trackEnergy = 0.;
 
   if (!trackIds.empty()) {
     for (auto id : trackIds) {
-      const Track& track = m_pfEvent.tracks().at(id);
-      auto parentIds = Ids{block.uniqueId(), id};
+      const Track& track = m_papasEvent.track(id);
+      auto parentIds = Ids{block.id(), id};
 
       auto ecalLinks = block.linkedIds(id, Edge::kEcalTrack);
       parentIds.insert(parentIds.end(), ecalLinks.begin(), ecalLinks.end());
@@ -403,7 +412,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
       trackEnergy += track.energy();
     }
     for (auto id : ecalIds) {
-      ecalEnergy += m_pfEvent.ECALCluster(id).energy();
+      ecalEnergy += m_papasEvent.cluster(id).energy();
     }
     double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
     double caloERes = neutralHadronEnergyResolution(hcal);
@@ -419,20 +428,20 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
                                    # Make a photon from the ecal energy
                                    # We make only one photon using only the combined ecal energies*/
         auto parentIds = ecalIds;
-        parentIds.push_back(block.uniqueId());
+        parentIds.push_back(block.id());
         reconstructCluster(hcal, papas::Layer::kEcal, parentIds, excess);
       }
 
       else {  // approx means that hcal energy>track energies so we must have a neutral hadron
               // excess-ecal_energy is approximately hcal energy  - track energies
-        auto parentIds = Ids{block.uniqueId(), hcalId};
+        auto parentIds = Ids{block.id(), hcalId};
         reconstructCluster(hcal, papas::Layer::kHcal, parentIds, excess - ecalEnergy);
         if (ecalEnergy) {
           // make a photon from the remaining ecal energies
           // again history is confusingbecause hcal is used to provide direction
           // be better to make several smaller photons one per ecal?
           auto parentIds = ecalIds;
-          parentIds.push_back(block.uniqueId());
+          parentIds.push_back(block.id());
           reconstructCluster(hcal, papas::Layer::kEcal, parentIds, ecalEnergy);
         }
       }
@@ -440,7 +449,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   } else {  // # case whether there are no tracks make a neutral hadron for each hcal
             //# note that hcal-ecal links have been removed so hcal should only be linked to
             //# other hcals
-    auto parentIds = Ids{block.uniqueId(), hcalId};
+    auto parentIds = Ids{block.id(), hcalId};
     reconstructCluster(hcal, papas::Layer::kHcal, parentIds);
   }
   m_locked[hcalId] = true;
@@ -466,7 +475,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   double mass = ParticlePData::particleMass(pdgId);
 
   if (energy < mass)  // no particle
-    return ;
+    return;
 
   double momentum;
   if (mass == 0) {
@@ -479,7 +488,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
 
   // IdType newid = Identifier::makeRecParticleId();
-  auto particle = SimParticle(pdgId, 0., p4, vertex, 'r');
+  auto particle = SimParticle(pdgId, 0., p4, vertex, 0, 'r');
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure

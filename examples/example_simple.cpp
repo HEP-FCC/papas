@@ -19,6 +19,7 @@
 #include <TCanvas.h>
 
 int main(int argc, char* argv[]) {
+  papas::PDebug::On("pdebug.txt");
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
@@ -38,25 +39,25 @@ int main(int argc, char* argv[]) {
     pythiaConnector.processEvent(eventNo, papasManager);
 
     // write out the reconstructed particles to a root file
-    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
+    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.papasEvent().particles('r'));
 
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;
-    for (const auto& p : papasManager.rawParticles()) {
+    for (const auto& p : papasManager.papasEvent().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
     std::cout << "Reconstructed Particles" << std::endl;
-    for (const auto& p : papasManager.reconstructedParticles()) {
+    for (const auto& p : papasManager.papasEvent().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
     
     //testing (move elsewhere)
-    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.pfEvent().ecalMergedClusters());
+    pythiaConnector.writeClustersROOT("simpleeg.root",papasManager.papasEvent().clusters("em"));
 
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
-    papasManager.display(false);
-    papasManager.show();
+    //papasManager.display(false);
+    //papasManager.show();
 
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {

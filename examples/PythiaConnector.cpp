@@ -10,7 +10,7 @@
 #include "PythiaConnector.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/reconstruction/TestPapasManager.h"
+#include "papas/reconstruction/PapasManager.h"
 
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
@@ -73,6 +73,7 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
   return std::move(particles);
 }
 
+/*
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
@@ -89,9 +90,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   }
 
   m_reader.endOfEvent();
-}
+}*/
 
-void PythiaConnector::processEvent(unsigned int eventNo, papas::TestPapasManager& papasManager) {
+void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
@@ -102,6 +103,10 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::TestPapasManager
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");
+    papasManager.buildBlocks("em","hm",'s');
+    papasManager.simplifyBlocks('r');
+    papasManager.mergeHistories();
+    papasManager.reconstruct('s');
     //todo blockbuilder and reconstruct
     //papasManager.testMergeClusters();
     //papasManager.reconstructEvent();
@@ -111,7 +116,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::TestPapasManager
   m_reader.endOfEvent();
 }
 
-void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
+void PythiaConnector::writeParticlesROOT(const char* fname, const papas::SimParticles& particles) {
 
   podio::ROOTWriter writer(fname, &m_store);
 

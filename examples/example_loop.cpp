@@ -11,7 +11,6 @@
 #include "papas/detectors/CMS.h"
 #include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/reconstruction/TestPapasManager.h"
 #include "PythiaConnector.h"
 
 // STL
@@ -19,7 +18,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  // papas::PDebug::On("physics.txt");
+  papas::PDebug::On("physics.txt");
   randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
 
   if (argc != 2) {
@@ -37,8 +36,8 @@ int main(int argc, char* argv[]) {
 #endif
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    //papas::PapasManager papasManager{CMSDetector};
-    papas::TestPapasManager papasManager{CMSDetector};
+    auto papasManager = papas::PapasManager(CMSDetector);
+    
 
     unsigned int eventNo = 0;
     unsigned int nEvents = 1000;

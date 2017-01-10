@@ -15,8 +15,8 @@
 
 namespace papas {
 
-BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes, char subtype)
-    : GraphBuilder(ids, std::move(edges)), m_historyNodes(historynodes), m_blocks() {
+BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes, Blocks& blocks, char subtype)
+    : GraphBuilder(ids, std::move(edges)), m_historyNodes(historynodes), m_blocks(blocks) {
   makeBlocks(subtype);
 }
 
@@ -32,7 +32,7 @@ void BlockBuilder::makeBlocks(char subtype) {
     auto block = PFBlock(elementIds, m_edges, subtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
-    IdType id = block.uniqueId();
+    IdType id = block.id();
     m_blocks.emplace(id, std::move(block));
 
     // update the history nodes (if they exist)

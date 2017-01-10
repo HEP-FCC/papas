@@ -70,34 +70,34 @@ class PFReconstructor {
 
 public:
   // TODO consider if this is the best constructor function interface (could be the clusters tracks and history nodes)
-  PFReconstructor(PFEvent& pfEvent, const PapasEvent& papasEvent);
+  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, SimParticles& particles, Nodes& history);
   void reconstruct();                                       ///< create reconstructed particles from the evnet
-  Particles particles() { return std::move(m_particles); }  /// allow the particles collection to be moved out
-  Blocks blocks() { return std::move(m_blocks); }           /// allow the particles collection to be moved out
+  const SimParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
+                                                              //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
 
 private:
-  Blocks
-  simplifyBlock(IdType id);  ///< checks whether a block can be simplified eg if two hcals are attached to one track
+  //Blocks simplifyBlock(IdType id);  ///< checks whether a block can be simplified eg if two hcals are attached to one track
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
   void reconstructTrack(const Track& track, int pdgId, Ids parentIds);  ///< constructs and returns particle(s) starting from a track
   void reconstructCluster(
       const Cluster& cluster, papas::Layer layer, Ids parentIds, double energy = -1,
       const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
-  void reconstructElectrons(const PFBlock&  block);
-  void reconstructMuons(const PFBlock&  block);
+  void reconstructElectrons(const PFBlock& block);
+  void reconstructMuons(const PFBlock& block);
   void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
   void insertParticle(const Ids& parentIds, SimParticle& newparticle);
   bool isFromParticle(IdType id, std::string typeAndSubtype, int pdgid) const;
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
+  PFNode& findOrMakeNode(IdType id) const;
 
-  PFEvent& m_pfEvent;
+  //PFEvent& m_pfEvent;
   const PapasEvent& m_papasEvent;
-  Nodes& m_historyNodes;
-  Particles m_particles;  ///< the reconstructed particles created by this class
-  Blocks m_blocks;        // new try alice
-  bool m_hasHistory;
+  
+  SimParticles& m_particles;  ///< the reconstructed particles created by this class
+                           //Blocks& m_blocks;        // new try alice
+  Nodes& m_history;
   Ids m_unused;
   std::unordered_map<IdType, bool> m_locked;
 };

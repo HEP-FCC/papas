@@ -134,8 +134,11 @@ public:
   const Blocks& blocks(const Identifier::SubType subtype) const { return *m_blocksCollection.at(subtype); };
   const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
-  ;
+  
+  //Ids collectionIds(const Clusters& collection) const;
 
+  template <class T>
+  Ids collectionIds(const T& collection) const;
   void mergeHistories();
   const Nodes& history() const { return m_history;}
   void clear();
@@ -177,11 +180,23 @@ void PapasEvent::addCollectionInternal(
       if (hasCollection(firstId)) throw "Collection already exists";
     }
     if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) {
+      std::cout << Identifier::pretty(it.first) << " : " <<Identifier::pretty(firstId) << std::endl;
       throw "more than one typeandSubtype found in collection";
     }
   }
   collections.emplace(Identifier::subtype(firstId), &collection);
 };
+  
+  template <class T>
+  Ids PapasEvent::collectionIds(const T& collection) const
+  {
+    Ids ids;
+    for (const auto& item : collection) {
+      ids.push_back(item.first);
+    }
+    return ids;
+  }
+
 }
 
 #endif /* PapasEvent_h */

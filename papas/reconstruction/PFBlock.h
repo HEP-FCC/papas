@@ -70,7 +70,7 @@ public:
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const;               ///< length of the element_unqiueids
-  IdType uniqueId() const { return m_uniqueId; };        ///<Unique ID of the block
+  IdType id() const { return m_uniqueId; };        ///<Unique ID of the block
   bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
   void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
   const Edges& edges() const { return m_edges; }
