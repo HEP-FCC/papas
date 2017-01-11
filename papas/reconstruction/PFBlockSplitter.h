@@ -33,9 +33,9 @@ namespace papas {
      * @param[inout] history structure to which history information will be added
      */
     PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history);
-    Blocks& blocks() { return m_simplifiedBlocks; };   ///<return the unordered map of the resulting blocks;
+    Blocks& blocks() const{ return m_simplifiedBlocks; };   ///<return the unordered map of the resulting blocks;
   private:
-    Edges findEdgesToUnlink(const PFBlock& block);
+    Edges findEdgesToUnlink(const PFBlock& block) const;
     void simplifyBlock(const PFBlock& block);  ///take a block and simplify it by removing edges and splitting if appropriate
     const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
     Blocks& m_simplifiedBlocks;     ///< the blocks produced by the blocksplitter, unsplit blocks will be copied across

@@ -39,7 +39,7 @@ public:
    */
   BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes, Blocks& blocks, char subtype);  // edges are moved, history can be updated
   /// Move the unordered map of the resulting blocks - note that this can only be done once and will empty m_blocks
-  const Blocks& blocks() { return m_blocks; };
+  const Blocks& blocks() const { return m_blocks; };
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?
 
 private:

@@ -144,7 +144,6 @@ namespace papas {
     Tracks& m_tracks;                 ///< tracks
     Tracks& m_smearedTracks;          ///< smeared tracks
     SimParticles& m_particles;        ///< all particles
-    
     Nodes& m_history;  ///< Records relationships of everything that is simulated
     const PapasEvent& m_papasEvent;
     StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles

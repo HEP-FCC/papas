@@ -67,7 +67,7 @@ void PFBlockSplitter::simplifyBlock(const PFBlock& block) {
   }
 }
 
-Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) {
+Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {

@@ -27,7 +27,7 @@ namespace papas {
      * @param[in] merged : an empty unordered_amp into which the merged Clusters will be place
      * @param[inout] history : an unordered_map into which new history will be added
      */
-    MergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& history);
+    MergedClusterBuilder(const PapasEvent& papasEvent, const std::string& typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& history);
     /** Access mergedCluster collection
         @return reference to the merged Clusters collection
      */

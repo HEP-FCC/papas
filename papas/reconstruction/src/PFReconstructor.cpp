@@ -259,25 +259,6 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   }
 }
 
-/*void PFReconstructor::insertParticle(const PFBlock& block, SimParticle&& newparticle) {
- 
-  IdType newid = newparticle.id();
-  m_particles.emplace(newid, std::move(newparticle));
-
-
-  // find the node for the block
-  PFNode& blockNode = findOrMakeNode(block.id());
-  PFNode& particleNode = findOrMakeNode(newid);
-  blockNode.addChild(particleNode);
-  // link particle to block elements
-  for (auto element_id : block.elementIds()) {
-    m_historyNodes[element_id].addChild(particleNode);
-  }
-}*/
-  
-  
- 
-
 void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
@@ -289,26 +270,18 @@ void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparti
   // if (newparticle) :
   IdType newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
-
   makeHistoryLinks(parentIds, {newid}, m_history);
-  
 }
 
-bool PFReconstructor::isFromParticle(IdType id, std::string typeAndSubtype, int pdgid) const {
+bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const {
   /*returns: True if object unique_id comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
   
   auto historyHelper = HistoryHelper(m_papasEvent);
-  
-  
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
-  
-  
-
   bool isFromPdgId = false;
   for (auto pid : parentIds) {
-    
     if (abs(m_papasEvent.particle(pid).pdgId()) == abs(pdgid)) isFromPdgId = true;
   }
   return isFromPdgId;
@@ -445,7 +418,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   m_locked[hcalId] = true;
 }
 
-void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, Ids parentIds, double energy,
+void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, const Ids& parentIds, double energy,
                                          const TVector3& vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
@@ -476,8 +449,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   }
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
-
-  // IdType newid = Identifier::makeRecParticleId();
   auto particle = SimParticle(pdgId, 0., p4, vertex, 0, 'r');
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
@@ -499,36 +470,20 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // return particle;
 }
 
-/*SimParticle PFReconstructor::reconstructTrack(const Track& track) {
-  // , Clusters = None): cluster argument does not ever seem to be used at present
 
-  int pdgId = 211 * track.charge();
-  TLorentzVector p4 = TLorentzVector();
-  p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  auto particle= SimParticle(pdgId, track.charge(), p4, track, 'r');
 
-  m_locked[track.id()] = true;
-  PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
-  // std::cout << "made particle pdgid: " << particle.pdgId() << " from track: " << track;  // TODO << particle;
-  return particle;
-}*/
-
-void PFReconstructor::reconstructTrack(const Track& track, int pdgId, Ids parentIds) {
+void PFReconstructor::reconstructTrack(const Track& track, int pdgId,const Ids& parentIds) {
   /*construct a charged hadron/electron/muon from the track
   */
   if (m_locked[track.id()]) return;
-  // vertex = track.path().points()['vertex'];
   pdgId = pdgId * track.charge();
-  // mass, charge = particle_data[pdgid]
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  // particle = Particle(p4, vertex, charge, pdgId, 'r');
   auto particle = SimParticle(pdgId, track.charge(), p4, track, 'r');
   //#todo fix this so it picks up smeared track points (need to propagagte smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;
   PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);
-  // return particle;
 }
 }  // end namespace papas

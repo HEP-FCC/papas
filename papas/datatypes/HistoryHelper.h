@@ -44,7 +44,7 @@ public:
    *   @param[in]  type: Itemtype for which we are filtering eg Identifier::kEcalCluster
    *   @param[in]  subtype: Subtype for the filtered items eg 'm' for merged
    */
-  Ids linkedIds(IdType id, std::string typeAndSubType, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
+  Ids linkedIds(IdType id, const std::string& typeAndSubType, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
    *   @brief  Filters a vector of ids to find a subset which have the required type and subtype
    *         for example could be used to identify all ids which are merged Ecal clusters.
@@ -53,7 +53,7 @@ public:
    *   @param[in]  subtype: Subtype for the filtered items eg 'm' for merged
    */
   Ids filteredIds(Ids ids, const Identifier::ItemType type, const Identifier::SubType subtype) const;
-  Ids filteredIds(Ids ids, std::string typeAndSubtype) const;
+  Ids filteredIds(Ids ids, const std::string& typeAndSubtype) const;
 private:
   const PapasEvent& m_papasEvent;  /// Contains the history
 };

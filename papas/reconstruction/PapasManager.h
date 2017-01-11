@@ -72,25 +72,17 @@ public:
    *       history
    */
   void mergeClusters(const std::string& typeAndSubtype);
-
-  
   void buildBlocks(const std::string& ecalTypeAndSubtype = "em",
                    const std::string& hcalTypeAndSubtype = "hm",
                    char trackSubtype = 's');
-  
-  void simplifyBlocks(char  blockSubtype);
-  
+  void simplifyBlocks(char blockSubtype);
   void mergeHistories();
-  
   void reconstruct(char blockSubtype);
-  
-  /*void reconstruct(const std::string& blockTypeAndSubtype = "br");*/
   /**
    *   @brief  return PapasEvent object
    *   @return  PapasEvent     */
   const PapasEvent& papasEvent() const { return m_papasEvent; }  //< Access the papasEvent
   const Detector& detector() const { return m_detector; }  //< Access the papasEvent
-  
   /**
    *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
    */
@@ -99,8 +91,7 @@ private:
   Clusters& createClusters();       // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();           // Create an empty concrete collection of tracks ready for filling by an algorithm
   Blocks& createBlocks();           // Create an empty concrete collection of blocks ready for filling by an algorithm
-  SimParticles& createParticles();  // Create an empty concrete collection of particles ready for filling by an
-                                    // algorithm
+  SimParticles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
   Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
   PapasEvent m_papasEvent;  // object that can be passed to algorithms to allow access to objects such as a track

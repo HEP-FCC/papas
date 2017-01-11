@@ -68,27 +68,23 @@ photon
 class PFReconstructor {
 
 public:
-  // TODO consider if this is the best constructor function interface (could be the clusters tracks and history nodes)
   PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, SimParticles& particles, Nodes& history);
-  void reconstruct();                                       ///< create reconstructed particles from the evnet
   const SimParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
                                                               //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
-
 private:
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
-  void reconstructTrack(const Track& track, int pdgId, Ids parentIds);  ///< constructs and returns particle(s) starting from a track
+  void reconstructTrack(const Track& track, int pdgId, const Ids& parentIds);  ///< constructs and returns particle(s) starting from a track
   void reconstructCluster(
-      const Cluster& cluster, papas::Layer layer, Ids parentIds, double energy = -1,
+      const Cluster& cluster, papas::Layer layer, const Ids& parentIds, double energy = -1,
       const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
   void reconstructElectrons(const PFBlock& block);
   void reconstructMuons(const PFBlock& block);
-  void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
+  //void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
   void insertParticle(const Ids& parentIds, SimParticle& newparticle);
-  bool isFromParticle(IdType id, std::string typeAndSubtype, int pdgid) const;
+  bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
-  
   const PapasEvent& m_papasEvent;
   SimParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history;

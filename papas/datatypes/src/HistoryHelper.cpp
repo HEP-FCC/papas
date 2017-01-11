@@ -20,7 +20,7 @@ Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
   return ids;
 }
 
-Ids HistoryHelper::linkedIds(IdType id, std::string typeAndSubtype, DAG::enumVisitType direction) const {
+Ids HistoryHelper::linkedIds(IdType id, const std::string& typeAndSubtype, DAG::enumVisitType direction) const {
   auto ids = linkedIds(id, direction);
   auto fids = filteredIds(ids, typeAndSubtype);
   return fids;
@@ -36,7 +36,7 @@ Ids HistoryHelper::filteredIds(Ids ids, const Identifier::ItemType type, const I
   return matchedIds;
 }
 
-Ids HistoryHelper::filteredIds(Ids ids, std::string typeAndSubtype) const {
+Ids HistoryHelper::filteredIds(Ids ids, const std::string& typeAndSubtype) const {
   Ids matchedIds;
   for (auto id : ids) {
     if (Identifier::typeAndSubtype(id) == typeAndSubtype) {

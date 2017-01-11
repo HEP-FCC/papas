@@ -12,7 +12,7 @@
 namespace papas {
 
   MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
-                               std::string typeAndSubtype,
+                               const std::string& typeAndSubtype,
                                const Ruler& ruler,
                                Clusters& merged,
                                Nodes& history)

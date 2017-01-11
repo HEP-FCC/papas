@@ -22,9 +22,10 @@ public:
    * @param[in]  pfevent contains collections of tracks, clusters and history
    * @param[in] ids  list of element ids from which to construct a block
    */
-  PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype, char trackSubtype,
+  PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype,
+                 const std::string& hcalTypeAndSubtype, char trackSubtype,
                 Blocks& blocks, Nodes& history);
-  Blocks& blocks() { return m_blocks; };   ///<return the unordered map of the resulting blocks;
+  Blocks& blocks() const { return m_blocks; };   ///<return the unordered map of the resulting blocks;
 
 private:
   void makeBlocks();         ///< does the main work of creating the blocks
