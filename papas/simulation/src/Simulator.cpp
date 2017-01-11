@@ -1,15 +1,3 @@
-//
-//  Simulator.cpp
-//  papas
-//
-//  Created by Alice Robson on 15/12/16.
-//
-//
-
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Identifier.h"
@@ -24,10 +12,11 @@ class Detector;
 
 namespace papas {
 
-Simulator::Simulator(const Particles& particles, const Detector& detector, Clusters& ecalClusters,
+Simulator::Simulator(const PapasEvent& papasevent, const Particles& particles, const Detector& detector, Clusters& ecalClusters,
                              Clusters& hcalClusters, Clusters& smearedEcalClusters, Clusters& smearedHcalClusters,
                              Tracks& tracks, Tracks& smearedTracks, SimParticles& simParticles, Nodes& history)
-    : m_detector(detector),
+    : m_papasEvent(papasevent),
+      m_detector(detector),
       m_ecalClusters(ecalClusters),
       m_hcalClusters(hcalClusters),
       m_smearedEcalClusters(smearedEcalClusters),

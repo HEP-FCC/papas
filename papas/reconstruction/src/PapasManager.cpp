@@ -29,7 +29,7 @@ void PapasManager::simulate(const Particles& particles) {
   auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
-  auto simulator = Simulator(particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+  auto simulator = Simulator(m_papasEvent, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
                                  smearedHcalClusters, tracks, smearedTracks, simParticles, history);
 
   // store the addresses of the filled collections to the PapasEvent

@@ -5,6 +5,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/datatypes/SimParticle.h"
@@ -38,7 +39,7 @@ namespace papas {
      * @param[nodes] Nodes& : Collection of Nodes which will be used to store history. It may be empty.
      */
     //Simulator(const Detector&, Nodes& nodes);
-    Simulator(const Particles& particles, const Detector& detector,
+    Simulator(const PapasEvent& papasEvent, const Particles& particles, const Detector& detector,
               Clusters& ecalClusters,
               Clusters& hcalClusters,
               Clusters& smearedEcalClusters,
@@ -145,7 +146,7 @@ namespace papas {
     SimParticles& m_particles;        ///< all particles
     
     Nodes& m_history;  ///< Records relationships of everything that is simulated
-    
+    const PapasEvent& m_papasEvent;
     StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
     HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
   };
