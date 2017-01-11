@@ -46,7 +46,7 @@
 
 #include "papas/reconstruction/BlockSplitter.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
-#include "papas/reconstruction/PFEvent.h"
+#include "papas/reconstruction/PapasEvent.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/utility/Random.h"

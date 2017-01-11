@@ -20,8 +20,6 @@
 #include <unordered_set>
 #include <vector>
 
-//#include "papas/reconstruction/PFEvent.h"
-
 namespace papas {
 
 int PFBlock::tempBlockCount = 0;

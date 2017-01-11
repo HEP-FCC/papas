@@ -5,7 +5,7 @@
 #include "papas/reconstruction/PFBlock.h"
 
 namespace papas {
-class PFEvent;
+
 /**
  * BlockBuilder takes a list of Ids and an unordered map of associated edges which have distance and link info
  * It uses the distances/links between elements to construct a set of connected blocks.

@@ -6,7 +6,7 @@
 //
 //
 
-#include "papas/reconstruction/PFEvent.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GTrajectories.h"
 #include "papas/reconstruction/PFEventDisplay.h"

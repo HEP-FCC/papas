@@ -4,10 +4,7 @@
 #include "papas/reconstruction/BlockBuilder.h"
 #include <iostream>
 
-class PFEvent;
-
 namespace papas {
-class PFEvent;
 /**
  *
  * BlockSplitter takes an exisiting block of particle flow element ids (clusters, tracks etc)

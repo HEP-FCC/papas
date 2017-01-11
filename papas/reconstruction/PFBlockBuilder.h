@@ -9,8 +9,8 @@
 namespace papas {
 class PapasEvent;
 
-/// The PFBlockBuilder takes a PFEvent and a set of ids (all of which must be in the PFEvent)
-/// It uses the PFEvent to access the elements corresponding to each id
+/// The PFBlockBuilder takes a PapasEvent and a set of ids (all of which must be in the PapasEvent)
+/// It uses the PapasEvent to access the elements corresponding to each id
 /// It proceeds by creating a collection of all possible edges (between ids)
 /// The blockbuilder is then used to create a set of distinct blocks, and the
 /// blocks look after the corresponding parts of the edges information.
@@ -22,7 +22,6 @@ public:
    * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
    * @param[in] ids  list of element ids from which to construct a block
    */
-  //PFBlockBuilder(const Ids& ids, PFEvent& pfevent);  // history inside PFEvent will be updated (improve this)
   PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype, char trackSubtype,
                 Blocks& blocks, Nodes& history);
   Blocks& blocks() { return m_blocks; };   ///<return the unordered map of the resulting blocks;

@@ -3,12 +3,11 @@
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
-#include "papas/reconstruction/PFEvent.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "TVector3.h"
 
 namespace papas {
-/** Handles reconstruction of particles from a PFEvent.
+/** Handles reconstruction of particles from a PapasEvent
 * The PFevent contains the merged clusters and tracks and the history nodes and should already contain
 * blocks of connected elements,
 * The PFevent may (in theory) be constructed from clusters and tracks read in from file or may be simulated in PAPAS

@@ -23,7 +23,6 @@
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
-#include "papas/reconstruction/PFEvent.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
