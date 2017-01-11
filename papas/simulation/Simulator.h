@@ -56,7 +56,7 @@ namespace papas {
     const Clusters& smearedHcalClusters() const { return m_smearedHcalClusters; }  ///<return smeared Hcal clusters coll.
     const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
     const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
-    Nodes& historyNodes() { return m_history; }                      /// return a reference to history nodes collection
+    Nodes& history() { return m_history; }                      /// return a reference to history nodes collection
     const SimParticles& particles() const { return m_particles; }  ///< Return particles collection
     Cluster smearCluster(const Cluster& cluster,
                          papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy

@@ -27,7 +27,7 @@ namespace papas {
   class PFBlockSplitter {
   public:
     /** Constructor
-     * @param[in]  papasEvent contains collections of tracks, clusters and historyNodes
+     * @param[in]  papasEvent contains collections of tracks, clusters and history
      * @param[in] blockSubtype which blocks to use from the PapasEvent
      * @param[inout] simplifiedblocks structure into which split blocks will be added
      * @param[inout] history structure to which history information will be added
@@ -37,7 +37,7 @@ namespace papas {
   private:
     Edges findEdgesToUnlink(const PFBlock& block);
     void simplifyBlock(const PFBlock& block);  ///take a block and simplify it by removing edges and splitting if appropriate
-    const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and historyNodes
+    const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
     Blocks& m_simplifiedBlocks;     ///< the blocks produced by the blocksplitter, unsplit blocks will be copied across
     Nodes& m_history;     ///< history will be updated to store block creation
   };

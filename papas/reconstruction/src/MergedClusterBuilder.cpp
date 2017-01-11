@@ -11,12 +11,12 @@
 
 namespace papas {
 
-  MergedClusterBuild::MergedClusterBuild(const PapasEvent& papasEvent,
+  MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
                                std::string typeAndSubtype,
                                const Ruler& ruler,
                                Clusters& merged,
-                               Nodes& historyNodes)
-    : m_merged(merged), m_historyNodes(historyNodes) {
+                               Nodes& history)
+    : m_merged(merged), m_history(history) {
 
       //extract the clusters collection from the papasEvent
       const auto& clusters = papasEvent.clusters(typeAndSubtype);
@@ -74,7 +74,7 @@ namespace papas {
               }
           }
         }
-        makeHistoryLinks(ids,{mergedCluster.id()}, m_historyNodes);
+        makeHistoryLinks(ids,{mergedCluster.id()}, m_history);
       if (ids.size() > 1) {
         PDebug::write("Made Merged{}", mergedCluster);
       }

@@ -32,7 +32,7 @@ public:
    * @param[in] ids : list of unique identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
-   * @param[inout] historyNodes : optional (ie can be empty) unordered_map that describes which elements are parents of
+   * @param[inout] history : optional (ie can be empty) unordered_map that describes which elements are parents of
    * which blocks
    *                     if a history_nodes tree is provided then
    *                     the new history will be added into the existing history

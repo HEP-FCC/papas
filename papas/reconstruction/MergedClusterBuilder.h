@@ -1,5 +1,5 @@
-#ifndef MergedClusterBuild_h
-#define MergedClusterBuild_h
+#ifndef MergedClusterBuilder_h
+#define MergedClusterBuilder_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
@@ -18,16 +18,16 @@ namespace papas {
   /// The mergedcluster is created by making a new cluster and adding in each of the overlapping clusters
   /// The ids of these clusters are stored in the subClusters vector of the Cluster class.
   ///
-  class MergedClusterBuild {
+  class MergedClusterBuilder {
   public:
     /** Constructor
      * @param[in] PapasEvent : much contain the Clusters collection that is to be merged
      * @param[in] typeAndSubtype : the tyepAndSubType of the clusters collection that is to be merged (as a string)
      * @param[in] ruler : measures distance between clusters
      * @param[in] merged : an empty unordered_amp into which the merged Clusters will be place
-     * @param[inout] historyNodes : an unordered_map into which new history will be added
+     * @param[inout] history : an unordered_map into which new history will be added
      */
-    MergedClusterBuild(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& historyNodes);
+    MergedClusterBuilder(const PapasEvent& papasEvent, std::string typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& history);
     /** Access mergedCluster collection
         @return reference to the merged Clusters collection
      */
@@ -35,11 +35,11 @@ namespace papas {
     /** Access history nodes
         @return reference to the history
      */
-    const Nodes& historyNodes() const { return m_historyNodes; }    //remove this?
+    const Nodes& history() const { return m_history; }    //remove this?
     
   private:
     Clusters& m_merged;      ///< the merged Clusters //remove this?
-    Nodes& m_historyNodes;  ///history is appended to this //remove this?
+    Nodes& m_history;  ///history is appended to this //remove this?
   };
 }  // end namespace papas
 

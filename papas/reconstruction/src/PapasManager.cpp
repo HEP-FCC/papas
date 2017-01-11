@@ -60,7 +60,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
-  auto ecalmerger = MergedClusterBuild(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
+  auto ecalmerger = MergedClusterBuilder(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into papasEvent
   m_papasEvent.addCollection(mergedClusters);
   m_papasEvent.addHistory(history);

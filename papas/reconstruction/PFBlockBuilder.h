@@ -19,7 +19,7 @@ class PapasEvent;
 class PFBlockBuilder {
 public:
   /** Constructor
-   * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
+   * @param[in]  pfevent contains collections of tracks, clusters and history
    * @param[in] ids  list of element ids from which to construct a block
    */
   PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype, char trackSubtype,
@@ -28,7 +28,7 @@ public:
 
 private:
   void makeBlocks();         ///< does the main work of creating the blocks
-  const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and historyNodes
+  const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
   Blocks& m_blocks;           ///< the blocks made by blockbuilder
   Nodes& m_history;     ///< history will be updated to store block creation
   Ids m_uniqueIds;           ///< list of element ids from which to construct the blocks
