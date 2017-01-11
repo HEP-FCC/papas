@@ -3,7 +3,7 @@
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFReconstructor.h"
-#include "papas/reconstruction/TestMergedClusterBuilder.h"
+#include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/simulation/TestSimulator.h"
 #include "papas/utility/PDebug.h"
@@ -60,7 +60,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
-  auto ecalmerger = TestMergedClusterBuilder(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
+  auto ecalmerger = MergedClusterBuild(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into papasEvent
   m_papasEvent.addCollection(mergedClusters);
   m_papasEvent.addHistory(history);
@@ -76,7 +76,7 @@ char trackSubtype) {
   //store a pointer to the ouputs into the papasEvent
   m_papasEvent.addCollection(blocks);
   m_papasEvent.addHistory(history);
-   printHistory(m_papasEvent.history());
+   //printHistory(m_papasEvent.history());
 
 }
   
@@ -103,7 +103,7 @@ void PapasManager::reconstruct(char blockSubtype) {
   m_papasEvent.addCollection(recParticles);
   m_papasEvent.addHistory(history);
   m_papasEvent.mergeHistories();
-  printHistory(m_papasEvent.history());
+  //printHistory(m_papasEvent.history());
 
 }
 
