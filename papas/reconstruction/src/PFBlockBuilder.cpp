@@ -32,13 +32,7 @@ namespace papas {
     for (auto id : m_papasEvent.collectionIds<Tracks>(tracks))
       ids.push_back(id);
 
-    
-    if (m_history.size() == 0) {
-      // create local nodes ready to use to make the blocks
-      for (auto id : ids)
-        m_history.emplace(id, PFNode(id));
-    }
-    
+  
     // TODO think hard about best way to deal with distance /ruler / edges etc
     // compute edges between each pair of nodes
     Edges edges;

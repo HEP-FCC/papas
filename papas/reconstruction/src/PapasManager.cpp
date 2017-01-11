@@ -76,6 +76,7 @@ char trackSubtype) {
   //store a pointer to the ouputs into the papasEvent
   m_papasEvent.addCollection(blocks);
   m_papasEvent.addHistory(history);
+   printHistory(m_papasEvent.history());
 
 }
   
@@ -101,6 +102,8 @@ void PapasManager::reconstruct(char blockSubtype) {
   auto pfReconstructor = PFReconstructor(m_papasEvent, blockSubtype, recParticles, history);
   m_papasEvent.addCollection(recParticles);
   m_papasEvent.addHistory(history);
+  m_papasEvent.mergeHistories();
+  printHistory(m_papasEvent.history());
 
 }
 

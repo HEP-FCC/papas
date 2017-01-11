@@ -28,7 +28,7 @@ int PFBlock::tempBlockCount = 0;
 
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
   : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
-  m_isActive(true), m_elementIds(element_ids) {
+   m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
 
   // extract the relevant parts of the complete set of edges and store this within the block
@@ -45,7 +45,7 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
   }
 }
 
-PFBlock::PFBlock() : m_uniqueId(-1), m_isActive(false), m_elementIds() {}
+PFBlock::PFBlock() : m_uniqueId(-1), m_elementIds() {}
 
 /*PFBlock::~PFBlock() {
   if(Identifier::pretty(m_uniqueId).compare(0,4, "b404")==0)
@@ -229,11 +229,7 @@ std::string PFBlock::info() const {
   return out.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
-  if (block.isActive())
-    os << "block:";
-  else
-    os << "deactivated block:";
+  std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   os << block.info() << std::endl;
   os << block.elementsString();
   os << block.edgeMatrixString();

@@ -33,8 +33,9 @@ void BlockBuilder::makeBlocks(char subtype) {
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.id();
-    m_blocks.emplace(id, std::move(block));
     makeHistoryLinks(block.elementIds(), {id} , m_history);
+    m_blocks.emplace(id, std::move(block));
+    
   }
 }
   

@@ -6,8 +6,6 @@
 
 namespace papas {
 
-class PFEvent;
-
 /**
  *
  * GraphBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link

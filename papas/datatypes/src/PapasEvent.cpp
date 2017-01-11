@@ -114,12 +114,11 @@ bool PapasEvent::hasObject(IdType id) const {
     //A separate history is created at each stage.
     //the following merges these separate histories into
     //one single history that can be used for analysis
-        for (auto history : m_historys)
+    for (auto history : m_historys)
     {
       for (const auto node : *history){
         for (const auto& c : node.second.children()) {
-          std::cout << Identifier::pretty(node.first) << " : " << Identifier::pretty( c->value())<< std::endl;
-           makeHistoryLink(node.first, c->value(), m_history);
+          makeHistoryLink(node.first, c->value(), m_history);
         }
       }
     }

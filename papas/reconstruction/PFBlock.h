@@ -23,7 +23,6 @@ namespace papas {
 
  Edges m_edges : Dictionary of all the edge cominations in the block dict{edgekey : Edge}
           use  findEdge(id1,id2) to find an edge
- bool m_isActive : bool true/false, set to false if the block is subsequently subdivided
  static int tempBlockCount: sequential numbering of blocks (useful for debugging/tracing etc)
 
  Usage:
@@ -71,8 +70,6 @@ public:
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const;               ///< length of the element_unqiueids
   IdType id() const { return m_uniqueId; };        ///<Unique ID of the block
-  bool isActive() const { return m_isActive; };          /// Blocks that have been split will be deactivated
-  void setActive(bool active) { m_isActive = active; };  /// active/ deactivate block
   const Edges& edges() const { return m_edges; }
   std::string info() const;
   std::string elementsString() const;
@@ -85,7 +82,6 @@ private:
   PFBlock& operator=(const PFBlock&) = default;
 
   IdType m_uniqueId;          //  make a uniqueid for this block
-  bool m_isActive;            // if a block is subsequently split it will be deactivated
   Ids m_elementIds;           // elements in this block ordered by type and decreasing energy
   Edges m_edges;              // all the edges for elements in this block
   static int tempBlockCount;  // sequential numbering of blocks, not essential but helpful for debugging

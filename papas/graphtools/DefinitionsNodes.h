@@ -39,6 +39,16 @@ typedef std::list< const Nodes*> ListNodes;  ///< collection of Nodes
     }
     
   }
+  
+  inline void printHistory(const Nodes& history ) {
+    for (auto node: history)
+      for (auto cnode : node.second.children())
+        std::cout<< Identifier::pretty(node.first) <<":" << Identifier::pretty(cnode->value())<< "   ";
+  
+}
+
+  
+    
 }  // end namespace papas
 
 #endif /* DefinitionsNodes_h */
