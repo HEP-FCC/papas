@@ -15,8 +15,8 @@
 
 namespace papas {
 
-BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& historynodes, Blocks& blocks, char subtype)
-    : GraphBuilder(ids, std::move(edges)), m_historyNodes(historynodes), m_blocks(blocks) {
+BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& history, Blocks& blocks, char subtype)
+    : GraphBuilder(ids, std::move(edges)), m_history(history), m_blocks(blocks) {
   makeBlocks(subtype);
 }
 
@@ -34,19 +34,11 @@ void BlockBuilder::makeBlocks(char subtype) {
     // put the block in the unordered map of blocks using move
     IdType id = block.id();
     m_blocks.emplace(id, std::move(block));
-
-    // update the history nodes (if they exist)
-    if (m_historyNodes.size() > 0) {
-      // make a new history node for the block and add into the history Nodes
-      m_historyNodes.emplace(id, std::move(PFNode(id)));  // move
-      auto storedBlocknode = m_historyNodes[id];
-      // add in the links between the block elements and the block
-      for (auto elemid : m_blocks[id].elementIds()) {
-        m_historyNodes[elemid].addChild(storedBlocknode);
-      }
-    }
+    makeHistoryLinks(block.elementIds(), {id} , m_history);
   }
 }
+  
+ 
 
 std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
   // TODO move to helper

@@ -65,32 +65,20 @@ namespace papas {
           throw "MergedCluster has same id as existing cluster";
         }
         
-        //add this link into the history
-        IdType mid = mergedCluster.id();
-        m_historyNodes.emplace(mid, std::move(PFNode(mid)));
-        PFNode snode = m_historyNodes[mid];
-        if (m_historyNodes.find(id)==m_historyNodes.end())
-           m_historyNodes.emplace(id, std::move(PFNode(id)));
-        m_historyNodes.at(id).addChild(snode);
-        
         //merge the original clusters into the new merged cluster
         //also add in the links between the block elements and the block into the history_nodes
         if (ids.size() > 1) {
           for (auto elemid : ids) {
-           
             if (elemid != id) {  // we have already handled the first element
-              PFNode snode = m_historyNodes[mid];
-              if (m_historyNodes.find(elemid)==m_historyNodes.end())
-                m_historyNodes.emplace(elemid, std::move(PFNode(elemid)));
-              m_historyNodes.at(elemid).addChild(snode);
               mergedCluster += clusters.at(elemid);
               }
           }
         }
+        makeHistoryLinks(ids,{mergedCluster.id()}, m_historyNodes);
       if (ids.size() > 1) {
         PDebug::write("Made Merged{}", mergedCluster);
       }
-      m_merged.emplace(mid, std::move(mergedCluster));  // create a new cluster based on existing cluster
+      m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
     }
     }
     }  // end namespace papas

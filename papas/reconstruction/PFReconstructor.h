@@ -76,7 +76,6 @@ public:
                                                               //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
 
 private:
-  //Blocks simplifyBlock(IdType id);  ///< checks whether a block can be simplified eg if two hcals are attached to one track
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
   void reconstructTrack(const Track& track, int pdgId, Ids parentIds);  ///< constructs and returns particle(s) starting from a track
@@ -90,13 +89,9 @@ private:
   bool isFromParticle(IdType id, std::string typeAndSubtype, int pdgid) const;
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
-  PFNode& findOrMakeNode(IdType id) const;
-
-  //PFEvent& m_pfEvent;
-  const PapasEvent& m_papasEvent;
   
+  const PapasEvent& m_papasEvent;
   SimParticles& m_particles;  ///< the reconstructed particles created by this class
-                           //Blocks& m_blocks;        // new try alice
   Nodes& m_history;
   Ids m_unused;
   std::unordered_map<IdType, bool> m_locked;

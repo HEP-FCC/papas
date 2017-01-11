@@ -1,67 +1,76 @@
 
-#include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/reconstruction/BlockSplitter.h"
 #include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/PapasEventRuler.h"
+#include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/reconstruction/PFBlockSplitter.h"
 
 // temp
 #include "papas/datatypes/Identifier.h"
 
 namespace papas {
-  
-  
-  
-  PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history)
-  : m_papasEvent(papasEvent), m_blocks(simplifiedblocks), m_history(history), m_uniqueIds() {
-    const auto& blocks = m_papasEvent.blocks(blockSubtype);
-    auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 
-    
+PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks,
+                                 Nodes& history)
+    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
+  const auto& blocks = m_papasEvent.blocks(blockSubtype);
+  auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-    std::sort(blockids.begin(), blockids.end());
+  std::sort(blockids.begin(), blockids.end());
 #endif
-    // go through each block and see if it can be simplified
-    // in some cases it will end up being split into smaller blocks
-    // Note that the old block will be marked as disactivated
-    for (auto bid : blockids) {
-      simplifyBlock(blocks.at(bid));
-    }
-    
+  // go through each block and see if it can be simplified
+  // in some cases it will end up being split into smaller blocks
+  // Note that the old block will be marked as disactivated
+  for (auto bid : blockids) {
+    simplifyBlock(blocks.at(bid));
   }
-  
-  
-  
+}
 
-  void PFBlockSplitter::simplifyBlock(const PFBlock& block) {
-    /* Block: a block which contains list of element ids and set of edges that connect them
-     history_nodes: optional dictionary of Nodes with element identifiers in each node
-     
-     returns None or a dictionary of new split blocks
-     
-     The goal is to remove, if needed, some links from the block so that each track links to
-     at most one hcal within a block. In some cases this may separate a block into smaller
-     blocks (splitblocks). The BlockSplitter is used to return the new smaller blocks.
-     If history_nodes are provided then the history will be updated. Split blocks will
-     have the tracks and cluster elements as parents, and also the original block as a parent
-     */
+void PFBlockSplitter::simplifyBlock(const PFBlock& block) {
+  /* Block: a block which contains list of element ids and set of edges that connect them
+        The goal is to remove, if needed, some links from the block so that each track links to
+   at most one hcal within a block. In some cases this may separate a block into smaller
+   blocks (splitblocks). The BlockSplitter is used to add the new smaller block into m_simplifiedBlocks. If a block is
+   unchanged its content will be copied into a new Block with a new Block Id and stored in m_simplifiedBlocks.
+   If history_nodes are provided then the history will be updated. Split blocks will
+   have the tracks and cluster elements as parents, and also the original block as a parent
+   */
+
+  Edges toUnlink = findEdgesToUnlink(block);  // find any Edges that can be removed
+
+  if (toUnlink.size() == 0) {
+    // no change to this block
+    // make a copy of the block and put it in the simplified blocks
+    Edges newedges = block.edges();  // copy edges
+    auto newblock = PFBlock(block.elementIds(), newedges, 's');
+    m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
+    //amend history
+    makeHistoryLinks(block.elementIds(), {newblock.id()} , m_history);
     
-    Ids ids = block.elementIds();
-    
-    if (ids.size() <= 1) {  // if block is just one element therer are no links to remove
-      Edges newedges = block.edges();
-      auto newblock = PFBlock(block.elementIds(), newedges,  's');
-      m_blocks.emplace(newblock.id(), std::move(newblock));
+      
+    // TODO m_history
+    // if there is something to unlink then use the BlockBuilder to create new blocks
+    // create a new modified set of edges with some edges unlinked
+  } else {
+    Edges modifiedEdges;
+    for (auto edge : block.edges()) {  // copying edges
+      Edge e = edge.second;
+      if (toUnlink.find(edge.first) != toUnlink.end()) {
+        e.setLinked(false);
+      }
+      modifiedEdges.emplace(e.key(), std::move(e));
     }
-    
-    /* work out any links that need to be removed
-     - for tracks unink all hcals except the closest hcal
-     - for ecals unlink hcals */
-    
-    
-    Edges toUnlink;  // TODO think about copy
+    // Blockbuilder will add the blocks it creates into m_simplifiedBlocks
+    auto bbuilder = BlockBuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
+  }
+}
+
+Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) {
+  Edges toUnlink;
+  Ids ids = block.elementIds();
+  if (ids.size() > 1) {
     std::vector<Edge::EdgeKey> linkedEdgeKeys;
     bool firstHCAL;
     double minDist = -1;
@@ -70,8 +79,7 @@ namespace papas {
         linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kHcalTrack);
         if (linkedEdgeKeys.size() > 0) {
           firstHCAL = true;
-          // find minimum distance
-          for (auto elem : linkedEdgeKeys) {
+          for (auto elem : linkedEdgeKeys) {  // find minimum distance between track and Hcals
             if (firstHCAL) {
               minDist = block.findEdge(elem).distance();
               firstHCAL = false;
@@ -86,24 +94,19 @@ namespace papas {
             }
           }
         }
-      } else if (Identifier::isEcal(id)) {
+      }
+      // TODO doublecheck this has gone in C++
+      /*else if (Identifier::isEcal(id)) {
         // this is now handled  elsewhere in  Ruler::distance and so could be removed
         // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
         linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
         for (auto elem : linkedEdgeKeys) {
           toUnlink[elem] = block.findEdge(elem);
         }
-      }
+      }*/
     }
-    
-    // if there is something to unlink then use the BlockSplitter
-    if (toUnlink.size() > 0) {
-      BlockSplitter(toUnlink, block, m_history, m_blocks);
-    }
-    
   }
+  return toUnlink;  // move
+}
 
-  
-  
-  
 }  // end namespace papas

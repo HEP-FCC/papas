@@ -44,7 +44,7 @@ public:
 
 private:
   void makeBlocks(char subtype);      // does the main work
-  Nodes& m_historyNodes;  ///< history can be updated
+  Nodes& m_history;  ///< history can be updated
   Blocks& m_blocks;        ///< the blocks made by blockbuilder
 };
 

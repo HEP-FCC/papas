@@ -20,7 +20,7 @@
 #include "papas/datatypes/SimParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Edge.h"
-#include "papas/reconstruction/BlockSplitter.h"
+#include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFEvent.h"
@@ -277,13 +277,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
 }*/
   
   
-  PFNode& PFReconstructor::findOrMakeNode(IdType id) const {
-    if (m_history.find(id)==m_history.end()){
-      auto newnode = PFNode(id);
-      m_history.emplace(id, newnode);
-    }
-    return m_history.at(id);
-  }
+ 
 
 void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
@@ -297,12 +291,8 @@ void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparti
   IdType newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
 
-  PFNode particleNode = findOrMakeNode(newid);
-  // add in parental history
-  for (auto elementId : parentIds) {
-    auto& parentNode =findOrMakeNode(elementId);
-    parentNode.addChild(particleNode);
-  }
+  makeHistoryLinks(parentIds, {newid}, m_history);
+  
 }
 
 bool PFReconstructor::isFromParticle(IdType id, std::string typeAndSubtype, int pdgid) const {
@@ -311,6 +301,7 @@ from a particle of type type_and_subtype, with this absolute pdgid.
 */
   
   auto historyHelper = HistoryHelper(m_papasEvent);
+  
   
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
   

@@ -27,19 +27,19 @@ namespace papas {
   class PFBlockSplitter {
   public:
     /** Constructor
-     * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
-     * @param[in] ids  list of element ids from which to construct a block
+     * @param[in]  papasEvent contains collections of tracks, clusters and historyNodes
+     * @param[in] blockSubtype which blocks to use from the PapasEvent
+     * @param[inout] simplifiedblocks structure into which split blocks will be added
+     * @param[inout] history structure to which history information will be added
      */
-    //PFBlockBuilder(const Ids& ids, PFEvent& pfevent);  // history inside PFEvent will be updated (improve this)
-    PFBlockSplitter(const PapasEvent& m_papasEvent, char blockSubtype,Blocks& simplifiedblocks, Nodes& history);
-    Blocks& blocks() { return m_blocks; };   ///<return the unordered map of the resulting blocks;
-    void simplifyBlock(const PFBlock& block);
+    PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history);
+    Blocks& blocks() { return m_simplifiedBlocks; };   ///<return the unordered map of the resulting blocks;
   private:
-    void makeBlocks();         ///< does the main work of creating the blocks
+    Edges findEdgesToUnlink(const PFBlock& block);
+    void simplifyBlock(const PFBlock& block);  ///take a block and simplify it by removing edges and splitting if appropriate
     const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and historyNodes
-    Blocks& m_blocks;           ///< the blocks made by blockbuilder
+    Blocks& m_simplifiedBlocks;     ///< the blocks produced by the blocksplitter, unsplit blocks will be copied across
     Nodes& m_history;     ///< history will be updated to store block creation
-    Ids m_uniqueIds;           ///< list of element ids from which to construct the blocks
   };
 }  // end namespace papas
 #endif /* PFBlcokSplitter_h */

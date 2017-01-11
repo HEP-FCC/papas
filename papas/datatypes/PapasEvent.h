@@ -144,8 +144,6 @@ public:
   void clear();
 
 private:
-  PFNode& findOrMakeNode(IdType id);
-
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
    *           this collection type does not already exist. It then adds the collection into the PapasEvent.

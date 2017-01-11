@@ -18,6 +18,27 @@ typedef DAG::Node<IdType> PFNode;
 typedef std::map<IdType, PFNode> Nodes;
 typedef std::list< const Nodes*> ListNodes;  ///< collection of Nodes
 
+  
+  inline PFNode& findOrMakeNode(IdType id, Nodes& history) {
+    if (history.find(id)==history.end()){
+      auto newnode = PFNode(id);
+      history.emplace(id, newnode);
+    }
+    return history.at(id);
+  }
+  
+  inline void makeHistoryLink(IdType parentid, IdType childid, Nodes& history ) {
+    findOrMakeNode(parentid, history).addChild(findOrMakeNode(childid, history));
+  }
+  
+  inline void makeHistoryLinks(const Ids& parentids, const Ids& childids, Nodes& history ) {
+    for(const auto pid : parentids) {
+      for (const auto cid: childids) {
+        makeHistoryLink(pid, cid, history);
+      }
+    }
+    
+  }
 }  // end namespace papas
 
 #endif /* DefinitionsNodes_h */

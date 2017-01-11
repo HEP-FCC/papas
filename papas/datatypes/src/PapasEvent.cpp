@@ -114,28 +114,19 @@ bool PapasEvent::hasObject(IdType id) const {
     //A separate history is created at each stage.
     //the following merges these separate histories into
     //one single history that can be used for analysis
-    Nodes mergedHistory;
-    for (auto history : m_historys)
+        for (auto history : m_historys)
     {
       for (const auto node : *history){
-          auto & hnode = findOrMakeNode(node.first);
         for (const auto& c : node.second.children()) {
-             auto & cnode = findOrMakeNode(c->value());
-             hnode.addChild(cnode);
+          std::cout << Identifier::pretty(node.first) << " : " << Identifier::pretty( c->value())<< std::endl;
+           makeHistoryLink(node.first, c->value(), m_history);
         }
       }
     }
     
   }
   
-  PFNode& PapasEvent::findOrMakeNode(IdType id) {
-    if (m_history.find(id)==m_history.end()){
-      auto newnode = PFNode(id);
-      m_history.emplace(id, newnode);
-    }
-    return m_history.at(id);
-  }
-
+  
 void PapasEvent::clear() {
   m_ecalClustersCollection.clear();
   m_hcalClustersCollection.clear();
