@@ -5,7 +5,7 @@
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/simulation/TestSimulator.h"
+#include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
@@ -29,7 +29,7 @@ void PapasManager::simulate(const Particles& particles) {
   auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
-  auto simulator = TestSimulator(particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+  auto simulator = Simulator(particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
                                  smearedHcalClusters, tracks, smearedTracks, simParticles, history);
 
   // store the addresses of the filled collections to the PapasEvent

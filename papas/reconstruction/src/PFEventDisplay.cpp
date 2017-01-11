@@ -10,7 +10,6 @@
 #include "papas/display/Drawable.h"
 #include "papas/display/GTrajectories.h"
 #include "papas/reconstruction/PFEventDisplay.h"
-#include "papas/simulation/Simulator.h"
 #include "papas/display/ViewPane.h"
 #include <iostream>
 

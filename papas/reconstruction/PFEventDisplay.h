@@ -16,7 +16,6 @@
 
 namespace papas {
 
-class Simulator;
 
 /// prototype only
 class PFEventDisplay : public Display {
