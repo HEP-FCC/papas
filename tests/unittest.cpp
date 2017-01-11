@@ -44,7 +44,7 @@
 #include "papas/detectors/VolumeCylinder.h"
 #include "papas/datatypes/Track.h"
 
-#include "papas/reconstruction/BlockSplitter.h"
+#include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PapasEvent.h"
 #include "papas/reconstruction/PapasManager.h"
