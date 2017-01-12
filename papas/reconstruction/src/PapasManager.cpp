@@ -84,8 +84,9 @@ char trackSubtype) {
     //create empty collections to hold the ouputs, the ouput will be added by the algorithm
     auto& simplifiedblocks = createBlocks();
     auto& history = createHistory();
-    auto blockBuilder = PFBlockSplitter(m_papasEvent, blockSubtype,
+    auto blockBuilder = PFBlockSplitter(m_papasEvent,
                                        simplifiedblocks, history);
+    blockBuilder.splitBlocks(blockSubtype);
     //store a pointer to the ouputs into the papasEvent
     m_papasEvent.addCollection(simplifiedblocks);
     m_papasEvent.addHistory(history);

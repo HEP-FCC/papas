@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
   unsigned int eventNo = 0;
   pythiaConnector.processEvent(eventNo, papasManager);
   TApplication tApp("theApp", &argc, argv);
-  papasManager.display(true);
-  tApp.Run();
+  pythiaConnector.displayEvent(papasManager);
   return EXIT_SUCCESS;
 }

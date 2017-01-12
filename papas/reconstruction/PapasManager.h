@@ -87,7 +87,7 @@ public:
    *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
    */
   void clear();
-private:
+protected:
   Clusters& createClusters();       // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();           // Create an empty concrete collection of tracks ready for filling by an algorithm
   Blocks& createBlocks();           // Create an empty concrete collection of blocks ready for filling by an algorithm

@@ -32,11 +32,13 @@ namespace papas {
      * @param[inout] simplifiedblocks structure into which split blocks will be added
      * @param[inout] history structure to which history information will be added
      */
-    PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history);
+    PFBlockSplitter(const PapasEvent& papasEvent,  Blocks& simplifiedblocks, Nodes& history);
+    void splitBlocks(char blockSubtype);
     Blocks& blocks() const{ return m_simplifiedBlocks; };   ///<return the unordered map of the resulting blocks;
+    void simplifyBlock(const Edges&, const PFBlock& block);
   private:
     Edges findEdgesToUnlink(const PFBlock& block) const;
-    void simplifyBlock(const PFBlock& block);  ///take a block and simplify it by removing edges and splitting if appropriate
+     ///take a block and simplify it by removing edges and splitting if appropriate
     const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
     Blocks& m_simplifiedBlocks;     ///< the blocks produced by the blocksplitter, unsplit blocks will be copied across
     Nodes& m_history;     ///< history will be updated to store block creation

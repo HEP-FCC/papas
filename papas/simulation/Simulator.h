@@ -38,7 +38,7 @@ namespace papas {
      * @param[in] const Detector& : Detector to be used as basis for simulation
      * @param[nodes] Nodes& : Collection of Nodes which will be used to store history. It may be empty.
      */
-    //Simulator(const Detector&, Nodes& nodes);
+    Simulator(const Detector&); // Nodes& nodes);
     Simulator(const PapasEvent& papasEvent, const Particles& particles, const Detector& detector,
               Clusters& ecalClusters,
               Clusters& hcalClusters,

@@ -12,9 +12,10 @@
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks,
-                                 Nodes& history)
-    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
+PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, Blocks& simplifiedblocks, Nodes& history)
+    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {}
+
+void PFBlockSplitter::splitBlocks(char blockSubtype) {
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
@@ -24,11 +25,12 @@ PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    simplifyBlock(blocks.at(bid));
+    auto unlink =findEdgesToUnlink(blocks.at(bid));
+    simplifyBlock(unlink, blocks.at(bid));
   }
 }
 
-void PFBlockSplitter::simplifyBlock(const PFBlock& block) {
+void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block) {
   /* Block: a block which contains list of element ids and set of edges that connect them
         The goal is to remove, if needed, some links from the block so that each track links to
    at most one hcal within a block. In some cases this may separate a block into smaller
@@ -38,18 +40,15 @@ void PFBlockSplitter::simplifyBlock(const PFBlock& block) {
    have the tracks and cluster elements as parents, and also the original block as a parent
    */
 
-  Edges toUnlink = findEdgesToUnlink(block);  // find any Edges that can be removed
-
   if (toUnlink.size() == 0) {
     // no change to this block
     // make a copy of the block and put it in the simplified blocks
     Edges newedges = block.edges();  // copy edges
     auto newblock = PFBlock(block.elementIds(), newedges, 's');
     m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
-    //amend history
-    makeHistoryLinks(block.elementIds(), {newblock.id()} , m_history);
-    
-      
+    // amend history
+    makeHistoryLinks(block.elementIds(), {newblock.id()}, m_history);
+
     // TODO m_history
     // if there is something to unlink then use the BlockBuilder to create new blocks
     // create a new modified set of edges with some edges unlinked

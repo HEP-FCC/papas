@@ -28,88 +28,67 @@
 
 // SSD libs
 //#include "fastsim/my_utilities.h"
-#include "papas/detectors/CMS.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
-#include "papas/graphtools/Distance.h"
-#include "papas/graphtools/Edge.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Identifier.h"
-#include "papas/detectors/Material.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/SimParticle.h"
-#include "papas/simulation/Simulator.h"
+#include "papas/datatypes/Track.h"
+#include "papas/detectors/CMS.h"
+#include "papas/detectors/Material.h"
 #include "papas/detectors/SurfaceCylinder.h"
 #include "papas/detectors/VolumeCylinder.h"
-#include "papas/datatypes/Track.h"
+#include "papas/graphtools/Distance.h"
+#include "papas/graphtools/Edge.h"
+#include "papas/reconstruction/BlockBuilder.h"
+#include "papas/simulation/Simulator.h"
 
-#include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/reconstruction/MergedClusterBuilder.h"
-#include "papas/reconstruction/PapasEvent.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "papas/datatypes/HistoryHelper.h"
+#include "papas/datatypes/PapasEvent.h"
+#include "papas/reconstruction/MergedClusterBuilder.h"
+#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/utility/Random.h"
+
 using namespace papas;
 
-
-TEST_CASE("Identifier") {  /// ID test
-  using namespace papas;
+TEST_CASE("Identifier") {
   Identifier::reset();
   auto uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', 1.23456);
   auto id1 = Identifier::makeId(Identifier::ItemType::kTrack, 's', 12.782);
-  
+
   REQUIRE(Identifier::pretty(id1) == "ts2");
   std::vector<IdType> idvec;
-  for (int i = -2; i<2 ; i++) {
-    uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', pow(2,i) );
+  for (int i = -2; i < 2; i++) {
+    uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', pow(2, i));
     idvec.push_back(uid);
   }
-  std::sort(idvec.begin(), idvec.end(),std::greater<int>());
+  std::sort(idvec.begin(), idvec.end(), std::greater<int>());
   REQUIRE(Identifier::pretty(idvec[0]) == "ts6");
   REQUIRE(Identifier::value(idvec[0]) == 2.0);
   REQUIRE(Identifier::pretty(idvec[3]) == "ts3");
   REQUIRE(Identifier::value(idvec[3]) == 0.25);
-  
-  
+
   auto id = Identifier::makeId(Identifier::ItemType::kEcalCluster, 'g', 3.1);
-  
-  REQUIRE(Identifier::itemType('e')==Identifier::kEcalCluster);
-  
+
+  REQUIRE(Identifier::itemType('e') == Identifier::kEcalCluster);
+
   for (int j = 0; j < 6; j++) {
-    
+
     Identifier::ItemType e = Identifier::ItemType::kEcalCluster;
     for (int i = 1; i < 21; i++) {
       int n = pow(2, i);
-      //makeId is self testing
-      id = Identifier::makeId(e, 't', (float)(1./n),  n);
-      //REQUIRE(Identifier::itemType(id) == e);
-      //REQUIRE(Identifier::subtype(id) == 't');
-      //REQUIRE(Identifier::value(id) == (float)n);
-      //REQUIRE(Identifier::uniqueId(id)== n);
+      // makeId is self testing
+      id = Identifier::makeId(e, 't', (float)(1. / n), n);
+      // REQUIRE(Identifier::itemType(id) == e);
+      // REQUIRE(Identifier::subtype(id) == 't');
+      // REQUIRE(Identifier::value(id) == (float)n);
+      // REQUIRE(Identifier::uniqueId(id)== n);
     }
   }
 }
-
-/*TEST_CASE("Id") {  /// ID test
-  using namespace papas;
-  IdType id(Id::ItemType::kEcalCluster);
-  auto uid = Id::uniqueId(id);
-  auto type = Id::itemType(id);
-
-  for (int j = 0; j < 6; j++) {
-
-    Id::ItemType e = Id::ItemType::kEcalCluster;
-    for (int i = 1; i < 30; i++) {
-      int n = pow(2, i);
-      id = Id::makeId(e, n);
-      uid = Id::uniqueId(id);
-      type = Id::itemType(id);
-      REQUIRE(type == e);
-      REQUIRE(uid == n);
-    }
-  }
-}*/
 
 TEST_CASE("Helix") {  /// Helix path test
   TLorentzVector p4 = TLorentzVector();
@@ -129,7 +108,7 @@ TEST_CASE("Helixpath") {  /// Helix path test
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1., 2.);
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
-  auto particle = SimParticle( 211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
+  auto particle = SimParticle(211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
   auto helixprop = HelixPropagator(3.8);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
@@ -176,15 +155,21 @@ TEST_CASE("ClusterSmear") {
 
   // Make a cluster
   double energy = 10.;
-  auto cluster = Cluster(energy, TVector3(1, 0, 0), 1., Identifier::kEcalCluster);  // #alice made this use default layer
+  auto cluster =
+      Cluster(energy, TVector3(1, 0, 0), 1., Identifier::kEcalCluster);  // #alice made this use default layer
   auto CMSDetector = CMS();
   auto ecal = CMSDetector.ecal();
-  PapasManager papasManager{CMSDetector};
+  auto tester = PapasManagerTester(CMSDetector);
 
   // smear it 10000 times and store the energy of the smeared cluster
   std::vector<double> energies;
+
+  // run the simulator which will fill the above objects
+  Particles particles;
+  auto simulator = tester.setSimulator(particles);
+
   for (int i = 0; i < 10000; i++) {
-    auto smeared = papasManager.simulator().smearCluster(cluster);
+    auto smeared = simulator.smearCluster(cluster);
     energies.push_back(smeared.energy());
   }
 
@@ -252,8 +237,8 @@ TEST_CASE("StraightLine") {
 
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
-  
-  SimParticle photon2 = SimParticle( 22, 0, tlv);
+
+  SimParticle photon2 = SimParticle(22, 0, tlv);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -265,21 +250,21 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  SimParticle photon3 = SimParticle( 22, 0, tlv, {0, 0, 1.5}, 0.);
+  SimParticle photon3 = SimParticle(22, 0, tlv, {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector(1, 0, -1, 2.);
-  SimParticle photon4 = SimParticle( 22, 0, tlv, {0, 0, -1.5}, 0.);
+  SimParticle photon4 = SimParticle(22, 0, tlv, {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
-  SimParticle photon5 = SimParticle( 22, 0, tlv,
+  SimParticle photon5 = SimParticle(22, 0, tlv,
                                     {
                                         0., 0.5, 0,
                                     },
@@ -470,12 +455,11 @@ TEST_CASE("PFBlocks") {
   edges.emplace(edge6.key(), std::move(edge6));
 
   REQUIRE_NOTHROW(PFBlock(ids, edges, 'r'));
-  PFBlock block2(ids2, edges,'r');
+  PFBlock block2(ids2, edges, 'r');
   REQUIRE(block2.countEcal() == 1);
   REQUIRE(block2.countHcal() == 1);
   REQUIRE(block2.countTracks() == 1);
   REQUIRE(block2.shortName() == "E1H1T1");
-  REQUIRE(block2.isActive() == true);
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
   REQUIRE(Identifier::isBlock(block2.id()) == true);
@@ -510,34 +494,40 @@ TEST_CASE("BlockSplitter") {
     historyNodes.emplace(id, std::move(PFNode(id)));
 
   Nodes emptyNodes;
-  auto blockbuilder = BlockBuilder(ids, std::move(edges), historyNodes, 'r');
+  Blocks blocks;
+  auto blockbuilder = BlockBuilder(ids, std::move(edges), historyNodes, blocks, 'r');
   REQUIRE(blockbuilder.subGraphs().size() == 1);
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
-  for (auto& block : blockbuilder.moveBlocks()) {
-    auto blocksplitter = BlockSplitter(to_unlink, block.second, emptyNodes);
-    REQUIRE(blocksplitter.blocks().size() == 2);
+  auto papasEvent = PapasEvent();
+  papasEvent.addCollection(blocks);
+  auto simplifiedBlocks = Blocks();
+  auto splitter = PFBlockSplitter(papasEvent, simplifiedBlocks, emptyNodes);
+  for (auto& block : blocks) {
+    splitter.simplifyBlock(to_unlink, block.second);
+    REQUIRE(simplifiedBlocks.size() == 2);
   }
 
   return;
 }
 
 TEST_CASE("Merge") {
-  //Identifier::reset();
+  // Identifier::reset();
   auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, Identifier::kEcalCluster);
   auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, Identifier::kEcalCluster);
   Clusters eclusters;
   eclusters.emplace(cluster1.id(), cluster1);
   eclusters.emplace(cluster2.id(), cluster2);
-  Clusters hclusters;
-  Tracks tracks;
+  Clusters mergedClusters;
   Nodes nodes;
-  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
+  auto papasEvent = PapasEvent();
+  papasEvent.addCollection(eclusters);
+
   auto ruler = papas::Ruler();
-  auto builder = MergedClusterBuilder(eclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() == 1);
-  for (auto mergedCluster : builder.mergedClusters()) {
+  auto builder = MergedClusterBuilder(papasEvent, "et", ruler, mergedClusters, nodes);
+  REQUIRE(mergedClusters.size() == 1);
+  for (auto mergedCluster : mergedClusters) {
     REQUIRE_THROWS(mergedCluster.second.size());         // not valid for merged cluster
     REQUIRE_THROWS(mergedCluster.second.angularSize());  // not valid for merged cluster
     REQUIRE(mergedCluster.second.energy() == 30.);
@@ -556,13 +546,16 @@ TEST_CASE("merge_pair") {
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
-  Clusters eclusters;
-  Tracks tracks;
+  Clusters mergedClusters;
+  ;
   Nodes nodes;
-  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
+  auto papasEvent = PapasEvent();
+  papasEvent.addCollection(hclusters);
+
   auto ruler = papas::Ruler();
-  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() == 1);
+  auto builder = MergedClusterBuilder(papasEvent, "ht", ruler, mergedClusters, nodes);
+
+  REQUIRE(mergedClusters.size() == 1);
   return;
 }
 
@@ -573,13 +566,16 @@ TEST_CASE("merge_pair_away") {
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
-  Clusters eclusters;
-  Tracks tracks;
+  Clusters mergedClusters;
+
   Nodes nodes;
-  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
+  auto papasEvent = PapasEvent();
+  papasEvent.addCollection(hclusters);
+
   auto ruler = papas::Ruler();
-  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() == 2);
+  auto builder = MergedClusterBuilder(papasEvent, "ht", ruler, mergedClusters, nodes);
+
+  REQUIRE(mergedClusters.size() == 2);
   return;
 }
 
@@ -592,16 +588,14 @@ TEST_CASE("merge_different_layers") {
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
 
-  Tracks tracks;
+  Clusters mergedClusters;
+
   Nodes nodes;
-  auto testevent = papas::PFEvent(eclusters, hclusters, tracks, nodes);
-  auto ruler = papas::Ruler();
-  auto builder = MergedClusterBuilder(hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() == 2);
+  auto papasEvent = PapasEvent();
+  REQUIRE_THROWS(papasEvent.addCollection(hclusters));
 
   return;
 }
-
 
 TEST_CASE("test_papasevent") {
   Identifier::reset();
@@ -611,8 +605,8 @@ TEST_CASE("test_papasevent") {
   IdType lastid = 0;
   IdType lastcluster = 0;
 
-  for (int i = 0; i<2 ; i++) {
-    auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
+  for (int i = 0; i < 2; i++) {
+    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
     auto track = Track(TVector3(0, 0, 0), 1, std::make_shared<Path>(), 't');
@@ -621,21 +615,20 @@ TEST_CASE("test_papasevent") {
   }
   papasEvent.addCollection(ecals);
   papasEvent.addCollection(tracks);
-  //check that adding the same collection twice fails
+  // check that adding the same collection twice fails
   REQUIRE_THROWS(papasEvent.addCollection(ecals));
 
-  //check we can get back collections OK
-  REQUIRE( papasEvent.clusters("et").size() ==2);
-  REQUIRE( papasEvent.hasCollection(499)==false);
-  REQUIRE( papasEvent.hasCollection(Identifier::kEcalCluster, 't')==true);
-  REQUIRE( papasEvent.hasCollection(lastid) == true);
+  // check we can get back collections OK
+  REQUIRE(papasEvent.clusters("et").size() == 2);
+  REQUIRE(papasEvent.hasCollection(499) == false);
+  REQUIRE(papasEvent.hasCollection(Identifier::kEcalCluster, 't') == true);
+  REQUIRE(papasEvent.hasCollection(lastid) == true);
   REQUIRE_NOTHROW(papasEvent.track(lastid));
   REQUIRE_NOTHROW(papasEvent.cluster(lastcluster));
   REQUIRE_THROWS(papasEvent.track(500));
-  REQUIRE( papasEvent.hasObject(499)  ==false );
-  REQUIRE( papasEvent.hasObject(lastid)  ==true);
+  REQUIRE(papasEvent.hasObject(499) == false);
+  REQUIRE(papasEvent.hasObject(lastid) == true);
 }
-
 
 TEST_CASE("test_history") {
   Identifier::reset();
@@ -645,15 +638,15 @@ TEST_CASE("test_history") {
   IdType lastid = 0;
   IdType lastcluster = 0;
   Nodes history;
-  
-  //make a dummy papasevent including some history
-  for (int i = 0; i<2 ; i++) {
-    auto cluster = Cluster(10.,TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
+
+  // make a dummy papasevent including some history
+  for (int i = 0; i < 2; i++) {
+    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., Identifier::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
     auto cnode = PFNode(lastcluster);
     history.emplace(lastcluster, std::move(cnode));
-    auto particle = SimParticle(22, -1, TLorentzVector(1,1,1,1), TVector3(0., 0., 0.),  0.7, 'r');
+    auto particle = SimParticle(22, -1, TLorentzVector(1, 1, 1, 1), TVector3(0., 0., 0.), 0.7, 'r');
     particles.emplace(particle.id(), std::move(particle));
     lastid = particle.id();
     auto pnode = PFNode(lastid);
@@ -665,71 +658,70 @@ TEST_CASE("test_history") {
   papasEvent.addHistory(history);
   papasEvent.mergeHistories();
   auto hhelper = HistoryHelper(papasEvent);
-  //find what is connected to the last particle created
-  auto ids =hhelper.linkedIds(lastid);
-  //filter the ecals from the linked ids
-  REQUIRE( ids.size() ==2);
+  // find what is connected to the last particle created
+  auto ids = hhelper.linkedIds(lastid);
+  // filter the ecals from the linked ids
+  REQUIRE(ids.size() == 2);
   auto fids = hhelper.filteredIds(ids, Identifier::kEcalCluster, 't');
-  REQUIRE( fids.size() ==1);
-  REQUIRE( *fids.begin() == lastcluster);
-  //filter the particle from the linked ids
+  REQUIRE(fids.size() == 1);
+  REQUIRE(*fids.begin() == lastcluster);
+  // filter the particle from the linked ids
   fids = hhelper.filteredIds(ids, Identifier::kParticle, 'r');
-  REQUIRE( fids.size() ==1);
-  REQUIRE(  *fids.begin() == lastid);
+  REQUIRE(fids.size() == 1);
+  REQUIRE(*fids.begin() == lastid);
 }
 
-
 /*
-TEST_CASE("merge_inside") {
+ TEST_CASE("merge_inside") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, Id::kEcalCluster);
-  auto cluster2 = Cluster(20., TVector3(1.,0.1, 0.0), 0.055, Id::kEcalCluster);
-  Clusters hclusters;
-  Clusters eclusters;
-  hclusters.emplace(cluster1.id(), cluster1);
-  hclusters.emplace(cluster2.id(),cluster2);
+ auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, Id::kEcalCluster);
+ auto cluster2 = Cluster(20., TVector3(1.,0.1, 0.0), 0.055, Id::kEcalCluster);
+ Clusters hclusters;
+ Clusters eclusters;
+ hclusters.emplace(cluster1.id(), cluster1);
+ hclusters.emplace(cluster2.id(),cluster2);
 
-  Tracks tracks;
-  Nodes nodes;
-  auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
-  auto ruler = papas::EventRuler(testevent);
-  auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
-  REQUIRE(builder.mergedClusters().size() ==1);
-  for (auto c : builder.mergedClusters())
-    REQUIRE(c.second.isInside(TVector3(1, 0.06, 0));
+ Tracks tracks;
+ Nodes nodes;
+ auto testevent = papas::PFEvent (eclusters,hclusters,tracks,nodes);
+ auto ruler = papas::EventRuler(testevent);
+ auto builder = MergedClusterBuilder (hclusters, ruler, nodes);
+ REQUIRE(builder.mergedClusters().size() ==1);
+ for (auto c : builder.mergedClusters())
+ REQUIRE(c.second.isInside(TVector3(1, 0.06, 0));
 
-  return;
-}*/
+ return;
+ }*/
 
 /*TEST_CASE("merge_pair_away"
-  auto cluster1 = Cluster(20, TVector3(1,0,0), 0.04, Id::kHcalCluster);
-  auto cluster2 = Cluster(20, TVector3(1,1.1,0.0), 0.04, Id::kHcalCluster);
-  auto id = cluster1.id();
-  auto mergedCluster = Cluster(cluster1,Id::makeId(Id::itemType(id)));
+ auto cluster1 = Cluster(20, TVector3(1,0,0), 0.04, Id::kHcalCluster);
+ auto cluster2 = Cluster(20, TVector3(1,1.1,0.0), 0.04, Id::kHcalCluster);
+ auto id = cluster1.id();
+ auto mergedCluster = Cluster(cluster1,Id::makeId(Id::itemType(id)));
 
-clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in'),
-            Cluster(20, TVector3(1,1.1,0.0), 0.04, 'hcal_in')]
-merge_clusters(clusters, 'hcal_in')
-self.assertEqual( len(clusters), 2 )
-self.assertEqual( len(clusters[0].subclusters), 1)
-self.assertEqual( len(clusters[1].subclusters), 1)
+ clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in'),
+ Cluster(20, TVector3(1,1.1,0.0), 0.04, 'hcal_in')]
+ merge_clusters(clusters, 'hcal_in')
+ self.assertEqual( len(clusters), 2 )
+ self.assertEqual( len(clusters[0].subclusters), 1)
+ self.assertEqual( len(clusters[1].subclusters), 1)
 
-def test_merge_different_layers(self):
-clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'ecal_in'),
-            Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in')]
-merge_clusters(clusters, 'hcal_in')
-self.assertEqual( len(clusters), 2)
+ def test_merge_different_layers(self):
+ clusters = [ Cluster(20, TVector3(1,0,0), 0.04, 'ecal_in'),
+ Cluster(20, TVector3(1,0,0), 0.04, 'hcal_in')]
+ merge_clusters(clusters, 'hcal_in')
+ self.assertEqual( len(clusters), 2)
 
-def test_inside(self):
-clusters = [ Cluster(20, TVector3(1, 0, 0), 0.055, 'hcal_in'),
-            Cluster(20, TVector3(1.,0.1, 0.0), 0.055, 'hcal_in')]
-merged_clusters = merge_clusters(clusters, 'hcal_in')
-self.assertEqual( len(merged_clusters), 1 )
-cluster = merged_clusters[0]
-self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0 , 0)) )
-self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0.1, 0)) )
-in_the_middle = cluster.is_inside(TVector3(1, 0.06, 0))
-self.assertTrue(in_the_middle[0])
-self.assertAlmostEqual(in_the_middle[1], 0.04000)
-self.assertFalse( cluster.is_inside(TVector3(1, 0.156, 0))[0]  )
-*/
+ def test_inside(self):
+ clusters = [ Cluster(20, TVector3(1, 0, 0), 0.055, 'hcal_in'),
+ Cluster(20, TVector3(1.,0.1, 0.0), 0.055, 'hcal_in')]
+ merged_clusters = merge_clusters(clusters, 'hcal_in')
+ self.assertEqual( len(merged_clusters), 1 )
+ cluster = merged_clusters[0]
+ self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0 , 0)) )
+ self.assertEqual( (True, 0.), cluster.is_inside(TVector3(1, 0.1, 0)) )
+ in_the_middle = cluster.is_inside(TVector3(1, 0.06, 0))
+ self.assertTrue(in_the_middle[0])
+ self.assertAlmostEqual(in_the_middle[1], 0.04000)
+ self.assertFalse( cluster.is_inside(TVector3(1, 0.156, 0))[0]  )
+ */
