@@ -7,7 +7,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 
-add_executable(example_simple example_simple.cpp PythiaConnector.cpp )
+add_executable(example_simple example_simple.cpp PythiaConnector.cpp ls)
 target_link_libraries(example_simple papas ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
 
 add_executable(example_loop example_loop.cpp PythiaConnector.cpp)

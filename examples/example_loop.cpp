@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     
 
     unsigned int eventNo = 0;
-    unsigned int nEvents = 1000;
+    unsigned int nEvents = 100;
 
     auto start = std::chrono::steady_clock::now();
 
