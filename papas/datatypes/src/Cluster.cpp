@@ -15,10 +15,12 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType idtype, char subtype)
-    : m_uniqueId(Identifier::makeId(idtype, subtype, energy)), m_p3(position), m_subClusters() {
+    : m_uniqueId(Identifier::makeId(idtype, subtype, fmax(0,energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
+  if (m_uniqueId == 5658733449062645996)
+    std::cout << *this;
 }
 
   Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
@@ -101,9 +103,8 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
+  os << "Cluster: " << std::setw(6)<< std::left<< Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
   os << " sub(";
-  if (cluster.subClusters().size() == 0) std::cout << "hmmm";
   for (auto c : cluster.subClusters()) {
     os << Identifier::pretty(c->id()) << ", ";
   }

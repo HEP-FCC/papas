@@ -31,6 +31,7 @@ class SimParticle;
 class Particle;
 
 typedef std::unordered_map<IdType, SimParticle> SimParticles;  ///< collection of Simulated Particles
+typedef std::list<Particle> ListParticles;        ///< collection of Particles
 typedef std::unordered_map<IdType, Particle> Particles;        ///< collection of Particles
 typedef std::unordered_map<unsigned long long, Edge> Edges;    ///< collection of Edges
 typedef std::list<IdType> Ids;                               ///< collection of Ids

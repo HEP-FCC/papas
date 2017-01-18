@@ -34,7 +34,7 @@ else
 
 SimParticle::SimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
                          double field, char subtype)
-  : Particle( pdgid, charge, tlv, subtype), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
+  : Particle( pdgid, charge, tlv), m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
 
   if (m_isHelix)
     if (field > 0)
@@ -81,5 +81,11 @@ bool SimParticle::isElectroMagnetic() const {
   } else
     return false;
 };
+  
+  
+  std::ostream& operator<<(std::ostream& os, const SimParticle& particle) {
+    os << "Particle :" << std::setw(6)<< std::left<< Identifier::pretty(particle.id()) << ":" << particle.id() << ": " << particle.info();
+    return os;
+  }
 
 }  // end namespace papas

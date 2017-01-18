@@ -17,7 +17,7 @@ std::string Track::info() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Track& track) {
-  os << "Track :" << Identifier::pretty(track.id()) << ":" << track.id() << ": " << track.info();
+  os << "Track: " << std::setw(6)<< std::left << Identifier::pretty(track.id()) << ":" << track.id() << ": " << track.info();
   return os;
 }
 

@@ -9,6 +9,9 @@
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/utility/PDebug.h"
 
+
+#include <algorithm>
+
 namespace papas {
 
   MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
@@ -27,7 +30,8 @@ namespace papas {
         uniqueids.push_back(cluster.first);
       }
 #if WITHSORT
-      std::sort(uniqueids.begin(), uniqueids.end());
+      uniqueids.sort();
+      uniqueids.reverse();
 #endif
       // create unordered map containing all edge combinations, index them by edgeKey
       // the edges describe the distance between pairs of clusters
@@ -47,16 +51,15 @@ namespace papas {
       GraphBuilder grBuilder{uniqueids, std::move(edges)};
       for (auto ids : grBuilder.subGraphs()) {
 #if WITHSORT
-        std::sort(ids.begin(), ids.end());
+        ids.sort();
+        ids.reverse();
 #endif
         auto id = *ids.begin();
         double totalenergy = 0.;
-        if (ids.size() > 1) {
-          for (const auto& c : ids) {
-            totalenergy += clusters.at(c).energy();
-            PDebug::write("Merged Cluster from Smeared{}",
+        for (const auto& c : ids) {
+          totalenergy += clusters.at(c).energy();
+          PDebug::write("Merged Cluster from Smeared{}",
                           clusters.at(c));  // hmmm not quite right we don't really know it is smeared
-          }
         }
         //create the merged Cluster
         auto mergedCluster = Cluster(
@@ -75,9 +78,9 @@ namespace papas {
           }
         }
         makeHistoryLinks(ids,{mergedCluster.id()}, m_history);
-      if (ids.size() > 1) {
+      
         PDebug::write("Made Merged{}", mergedCluster);
-      }
+      
       m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
     }
     }

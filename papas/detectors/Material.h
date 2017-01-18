@@ -8,7 +8,7 @@
 //#include <string>
 //#include <limits>
 #include "papas/datatypes/Definitions.h"
-#include "papas/utility/Random.h"
+#include "papas/utility/TRandom.h"
 
 namespace papas {
 

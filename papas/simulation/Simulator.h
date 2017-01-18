@@ -39,7 +39,7 @@ namespace papas {
      * @param[nodes] Nodes& : Collection of Nodes which will be used to store history. It may be empty.
      */
     Simulator(const Detector&); // Nodes& nodes);
-    Simulator(const PapasEvent& papasEvent, const Particles& particles, const Detector& detector,
+    Simulator(const PapasEvent& papasEvent, const ListParticles& particles, const Detector& detector,
               Clusters& ecalClusters,
               Clusters& hcalClusters,
               Clusters& smearedEcalClusters,

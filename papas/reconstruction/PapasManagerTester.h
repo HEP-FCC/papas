@@ -15,7 +15,7 @@ namespace papas {
   class PapasManagerTester: public PapasManager {
   public:
     PapasManagerTester(Detector& detector);
-    Simulator setSimulator(const Particles& particles);
+    Simulator setSimulator(const ListParticles& particles);
     //private:
     //;
     //Simulator m_simulator;

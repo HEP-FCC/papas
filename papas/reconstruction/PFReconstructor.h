@@ -4,6 +4,7 @@
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/datatypes/PapasEvent.h"
+#include "papas/detectors/Detector.h"
 #include "TVector3.h"
 
 namespace papas {
@@ -68,7 +69,7 @@ photon
 class PFReconstructor {
 
 public:
-  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, SimParticles& particles, Nodes& history);
+  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, SimParticles& particles, Nodes& history);
   const SimParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
                                                               //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
 private:
@@ -83,9 +84,11 @@ private:
   //void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
   void insertParticle(const Ids& parentIds, SimParticle& newparticle);
   bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
+  double neutralHadronEnergyResolution(double energy, double resolution) const;
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
   const PapasEvent& m_papasEvent;
+  const Detector& m_detector;
   SimParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history;
   Ids m_unused;

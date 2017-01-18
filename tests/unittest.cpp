@@ -50,6 +50,7 @@
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PapasManagerTester.h"
+#include "papas/utility/TRandom.h"
 #include "papas/utility/Random.h"
 
 using namespace papas;
@@ -294,6 +295,25 @@ TEST_CASE("RandomExp") {
 
   REQUIRE(r3 != r4);
 }
+
+
+TEST_CASE("TRandomExp") {
+  // seed it to have known start point
+  rootrandom::Random::seed(100);
+  ;
+  double r1 = rootrandom::Random::exponential(5.);
+  rootrandom::Random::Seed(100);
+  double r2 = rootrandom::Random::exponential(5.);
+  REQUIRE(r1 == r2);
+  
+  // use a random start point so should not give same answers
+  rootrandom::Random::Seed();
+  double r3 = rootrandom::Random::exponential(5.);
+  double r4 = rootrandom::Random::exponential(5.);
+  
+  REQUIRE(r3 != r4);
+}
+
 
 TEST_CASE("dummy") {
   bool success = true;

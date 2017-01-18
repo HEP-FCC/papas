@@ -10,7 +10,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/utility/Random.h"
+#include "papas/utility/TRandom.h"
 
 namespace papas {
 
@@ -42,15 +42,14 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
   double eta = fabs(cluster.eta());
 
   bool accept = false;
-  auto rUniform = randomgen::RandUniform(0, 1);
   if (eta < m_etaCrack) {
-    if (energy > 1.) accept = rUniform.next() < (1 / (1 + exp((energy - 1.93816) / (-1.75330))));
+    if (energy > 1.) accept = rootrandom::Random::uniform(0, 1) < (1 / (1 + exp((energy - 1.93816) / (-1.75330))));
   } else if (eta < 3.) {
     if (energy > 1.1) {
       if (energy < 10.)
-        accept = rUniform.next() < (1.05634 - 1.66943e-01 * energy + 1.05997e-02 * (pow(energy, 2)));
+        accept = rootrandom::Random::uniform(0, 1)< (1.05634 - 1.66943e-01 * energy + 1.05997e-02 * (pow(energy, 2)));
       else
-        accept = rUniform.next() < (8.09522e-01 / (1 + exp((energy - 9.90855) / -5.30366)));
+        accept = rootrandom::Random::uniform(0, 1)< (8.09522e-01 / (1 + exp((energy - 9.90855) / -5.30366)));
     }
   } else if (eta < 5. && energy > 7)
     accept = true;

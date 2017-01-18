@@ -28,6 +28,10 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
   : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
    m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
+     
+     //sort by type and then by reverse energy
+     m_elementIds.sort([](IdType a, IdType b) -> bool { if (Identifier::typeLetter(a) !=Identifier::typeLetter(b)) return (Identifier::typeLetter(a) <Identifier::typeLetter(b));
+       return b < a; } );
 
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
@@ -208,6 +212,7 @@ std::string PFBlock::edgeMatrixString() const {
         }
       }
     }
+    out.write("\n");
   }
   return out.str();
 }
@@ -222,13 +227,13 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
 }
 std::string PFBlock::info() const {
   fmt::MemoryWriter out;
-  out.write("{:8} :{:9}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
+  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }
 
   std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
-  os << block.info() << std::endl;
+  os << "block:"<<block.info() << std::endl;
   os << block.elementsString();
   os << block.edgeMatrixString();
   return os;

@@ -10,6 +10,8 @@
 #define PythiaConnector_h
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
+#include "datamodel/MCParticleCollection.h"
+#include "datamodel/GenVertexConst.h"
 #include "utilities/ParticleUtils.h"
 
 // ROOT
@@ -47,8 +49,8 @@ public:
   void displayEvent(const papas::PapasManager& papasManager);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
                                                                                //void processEvent(unsigned int eventNo, PapasManager& papasManager);
-  papas::Particles makePapasParticlesFromGeneratedParticles(
-      const fcc::ParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
+  papas::ListParticles makePapasParticlesFromGeneratedParticles(
+      const fcc::MCParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size, papas::Identifier::ItemType itemtype, char subtype) const;
 
   void AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters );

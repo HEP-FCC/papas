@@ -6,6 +6,7 @@
 
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
+#include "papas/datatypes/Identifier.h"
 
 namespace papas {
 
@@ -24,12 +25,17 @@ public:
   void setPath(Path::Ptr path) { m_path = path; }
   bool isHelix() const { return m_isHelix; }
   Path::Ptr path() const { return m_path; }
+  IdType id() const { return m_uniqueId; }
 
 private:
+  IdType m_uniqueId;
   TVector3 m_vertex;
   Path::Ptr m_path;
   bool m_isHelix;
 };
+  
+  std::ostream& operator<<(std::ostream& os, const SimParticle& particle);
+
 
 }  // end namespace papas
 #endif  // SimParticle_H

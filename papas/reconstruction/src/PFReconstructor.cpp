@@ -27,14 +27,15 @@
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, SimParticles& particles, Nodes& history)
-    : m_papasEvent(papasEvent), m_particles(particles),  m_history(history) {
+PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, SimParticles& particles, Nodes& history)
+    : m_papasEvent(papasEvent), m_particles(particles), m_detector(detector), m_history(history) {
 
   
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  std::sort(blockids.begin(), blockids.end());
+      blockids.sort();
+      blockids.reverse();
 #endif
   
   
@@ -171,7 +172,8 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
 
   Ids ids = block.elementIds();
 #if WITHSORT
-  std::sort(ids.begin(), ids.end());
+  ids.sort();
+  ids.reverse();
 #endif
   for (auto id : ids) {
     m_locked[id] = false;
@@ -228,7 +230,8 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   /// Reconstruct muons in block.'''
   Ids ids = block.elementIds();
 #if WITHSORT
-  std::sort(ids.begin(), ids.end());
+  ids.sort();
+  ids.reverse();
 #endif
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
@@ -243,7 +246,8 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   /*Reconstruct electrons in block.*/
   Ids ids = block.elementIds();
 #if WITHSORT
-  std::sort(ids.begin(), ids.end());
+  ids.sort();
+  ids.reverse();
 #endif
 
   /* the simulator does not simulate electron energy deposits in ecal.
@@ -287,7 +291,15 @@ from a particle of type type_and_subtype, with this absolute pdgid.
   return isFromPdgId;
 }
 
+  
+  
+double PFReconstructor::neutralHadronEnergyResolution(double energy, double eta) const {
+  auto resolution = m_detector.hcal()->energyResolution(energy, eta);
+    return resolution;
+  
+}
 double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const {
+  
   /*WARNING CMS SPECIFIC!
    //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
    */
@@ -337,7 +349,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
 #if WITHSORT
-  std::sort(trackIds.begin(), trackIds.end());
+  trackIds.sort();
+  trackIds.reverse();
 #endif
   for (auto trackId : trackIds) {
     for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
@@ -352,8 +365,11 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     }
   }
 #if WITHSORT
-  std::sort(trackIds.begin(), trackIds.end());
-  std::sort(ecalIds.begin(), ecalIds.end());
+  trackIds.sort();
+  trackIds.reverse();
+  ecalIds.sort();
+  ecalIds.reverse();
+
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_papasEvent.cluster(hcalId);
@@ -378,7 +394,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
       ecalEnergy += m_papasEvent.cluster(id).energy();
     }
     double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
-    double caloERes = neutralHadronEnergyResolution(hcal);
+    double caloERes = neutralHadronEnergyResolution(trackEnergy, hcal.eta());
     /*self.log.info( 'dE/p, res = {derel}, {res} '.format(
      derel = delta_e_rel,
      res = calo_eres ))*/
@@ -465,7 +481,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
   // TODO make more flexible and able to detect what type of cluster
-  PDebug::write("Made Reconstructed{} from Merged{}", particle, cluster);
+  PDebug::write("Made {} from Merged{}", particle, cluster);
   insertParticle(parentIds, particle);
   // return particle;
 }
@@ -483,7 +499,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId,const Ids& 
   //#todo fix this so it picks up smeared track points (need to propagagte smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;
-  PDebug::write("Made Reconstructed{} from Smeared{}", particle, track);
+  PDebug::write("Made {} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);
 }
 }  // end namespace papas

@@ -45,33 +45,54 @@ PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore(
   m_store.setReader(&m_reader);
 }
 
-papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::ParticleCollection* ptcs) {
+papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
-  papas::Particles particles;
+  papas::ListParticles particles;
   int countp = 0;
   for (const auto& ptc : *ptcs) {
     countp += 1;
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     int pdgid = ptc.core().pdgId;
+    TVector3 startVertex = TVector3(0,0,0);
+    TVector3 endVertex = TVector3(0,0,0);
+    if (ptc.startVertex().isAvailable()) {
+        std::cout<< "Z" << ptc.startVertex().z() <<std::endl;
+        startVertex = TVector3(ptc.startVertex().x()* 1e-3, ptc.startVertex().y()*1e-3, ptc.startVertex().z()*1e-3);
+    }
+    if (ptc.endVertex().isAvailable()) {
+      std::cout<< "Z" << ptc.endVertex().z() <<std::endl;
+      //convert pythia : mm -> papas : m
+      endVertex = TVector3(ptc.endVertex().x()* 1e-3, ptc.endVertex().y()*1e-3, ptc.endVertex().z()*1e-3);
+    }
+    if (pdgid == -211 && ptc.core().status == 1)
+      auto x = 3;
+    
+    // startVertex = TVector3(ptc.startVertex().x(), ptc.startVertex().y(), ptc.startVertex().z());
+    //TVector3 endVertex = ptc.core().endVertex();
 
-    //papas::IdType id = papas::Id::makeParticleId();
-    auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv,  'g');  // make every single one into a particle
+     // make every single one into a particle
     // so as to match python approach (for now)
     // otherwise ids do not align
 
     if (ptc.core().status == 1) {  // only stable ones
-
+      
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-
-        particles.emplace(particle.id(), std::move(particle));
-        papas::PDebug::write("Selected Papas{}", particle);
+        
+        auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
+        particles.push_back (std::move(particle));
+        //papas::PDebug::write("Selected Papas{}", particle);
       }
     }
   }
-  // sort(particles.begin(), particles.end(),
-  //     [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+#if WITHSORT
+  particles.sort(
+      [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+#endif
+  
+  for (auto p : particles)
+    std::cout << p.info() << std::endl;
   return std::move(particles);
 }
 
@@ -99,9 +120,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
   papasManager.clear();
-  const fcc::ParticleCollection* ptcs(nullptr);
+  const fcc::MCParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
-    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
+    papas::ListParticles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");

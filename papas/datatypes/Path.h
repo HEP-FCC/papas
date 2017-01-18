@@ -44,6 +44,7 @@ public:
   double field() const { return m_field; }
 
 protected:
+  TLorentzVector m_p4; //temp
   TVector3 m_unitDirection;
   double m_speed;
   TVector3 m_origin;

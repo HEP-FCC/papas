@@ -19,12 +19,14 @@ void PFBlockSplitter::splitBlocks(char blockSubtype) {
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  std::sort(blockids.begin(), blockids.end());
+  blockids.sort();
+  blockids.reverse();
 #endif
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
+    PDebug::write("Splitting {}",blocks.at(bid));
     auto unlink =findEdgesToUnlink(blocks.at(bid));
     simplifyBlock(unlink, blocks.at(bid));
   }
@@ -45,6 +47,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
     // make a copy of the block and put it in the simplified blocks
     Edges newedges = block.edges();  // copy edges
     auto newblock = PFBlock(block.elementIds(), newedges, 's');
+    PDebug::write("Made {}", newblock);
     m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
     // amend history
     makeHistoryLinks(block.elementIds(), {newblock.id()}, m_history);

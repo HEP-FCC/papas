@@ -1,11 +1,4 @@
 
-//
-//  example_simple.cpp
-//
-//  Created by Alice Robson on 14/01/16.
-//
-//
-// C++
 #include <iostream>
 #include <stdio.h>
 
@@ -23,7 +16,8 @@ using namespace papas;
 
 int main(int argc, char* argv[]) {
 
-  randomgen::setEngineSeed(0xdeadbeef);
+  //randomgen::setEngineSeed(0xdeadbeef);
+  rootrandom::Random::seed(0xdeadbeef);
 
   if (argc < 2) {
     std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
@@ -41,7 +35,7 @@ int main(int argc, char* argv[]) {
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 1000;
+  unsigned int nEvents = 1;
 
   auto start = std::chrono::steady_clock::now();
 

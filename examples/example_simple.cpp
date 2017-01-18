@@ -20,7 +20,8 @@
 
 int main(int argc, char* argv[]) {
   papas::PDebug::On("pdebug.txt");
-  randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  rootrandom::Random::seed(0xdeadbeef);
+  //randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;

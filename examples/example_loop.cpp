@@ -19,8 +19,9 @@
 
 int main(int argc, char* argv[]) {
   papas::PDebug::On("physics.txt");
-  randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
-
+  //randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  rootrandom::Random::seed(0xdeadbeef);
+  
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]) {
 #if WITHSORT
     std::cout << "doing sorting";
 #else
-    std::cout << "nosort";
+    std::cout << "no sort";
 #endif
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;

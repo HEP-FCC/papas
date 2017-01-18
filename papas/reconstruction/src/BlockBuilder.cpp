@@ -27,7 +27,7 @@ void BlockBuilder::makeBlocks(char subtype) {
 
   for (auto& elementIds : m_subGraphs) {
     if (elementIds.size() > 1) {
-      sortIds(elementIds);  // TODO allow sorting by energy using a helper class
+      sortIds(elementIds);
     }
     auto block = PFBlock(elementIds, m_edges, subtype);  // make the block
     PDebug::write("Made {}", block);

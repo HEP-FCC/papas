@@ -4,7 +4,7 @@
 //
 
 #include "papas/detectors/Material.h"
-
+#include <TRandom.h>
 namespace papas {
 
 Material::Material(double x0, double lambdaI) : m_x0(x0), m_lambdaI(lambdaI) {}
@@ -22,7 +22,8 @@ double Material::pathLength(bool isEm) const {
   }
 
   else {
-    double pl = randomgen::RandExponential(1. / freepath).next();
+    double pl = rootrandom::Random::expovariate(1. / freepath);
+
     return pl;
   }
 }

@@ -21,7 +21,7 @@ class Particle {
 public:
   Particle();
   // Particle& operator=(const Particle& P) = default;
-  Particle(int pdgid, double charge, const TLorentzVector& tlv,  char subtype = 'u', double status = 1);
+  Particle(int pdgid, double charge, const TLorentzVector& tlv,   double status = 1,const TVector3& startVector =TVector3(0,0,0), const TVector3& endVertex=TVector3(0,0,0));
   Particle(int pdgid, double charge);
   //Particle(IdType id, int pdgid, double charge, const TLorentzVector& tlv, double status = 1);
   //Particle(IdType id, int pdgid, double charge);
@@ -40,11 +40,8 @@ public:
   bool status() const { return m_status; }                   ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   const TVector3& endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
-  IdType id() const { return m_uniqueId; }
-  std::string info() const;  ///< text descriptor of the particle
+    std::string info() const;  ///< text descriptor of the particle
 
-protected:
-  IdType m_uniqueId;  ///< unique identifier for particle
 private:
   TLorentzVector m_tlv;
   int m_particleId;
@@ -54,7 +51,6 @@ private:
   TVector3 m_endVertex;
 };
 
-std::ostream& operator<<(std::ostream& os, const Particle& particle);
 
 }  // end namespace papas
 

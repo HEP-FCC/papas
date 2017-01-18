@@ -13,7 +13,7 @@ namespace papas {
   
   PapasManagerTester::PapasManagerTester(Detector& detector) :  PapasManager(detector) {}
 
-Simulator PapasManagerTester::setSimulator(const Particles& particles) {
+Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
   
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger

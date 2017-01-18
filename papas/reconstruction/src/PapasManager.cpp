@@ -12,7 +12,7 @@ namespace papas {
 
 PapasManager::PapasManager(Detector& detector) : m_detector(detector), m_papasEvent() {}
 
-void PapasManager::simulate(const Particles& particles) {
+void PapasManager::simulate(const ListParticles& particles) {
 
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
@@ -100,7 +100,7 @@ void PapasManager::reconstruct(char blockSubtype) {
   auto& history = createHistory();
   auto& recParticles = createParticles();
 
-  auto pfReconstructor = PFReconstructor(m_papasEvent, blockSubtype, recParticles, history);
+  auto pfReconstructor = PFReconstructor(m_papasEvent, blockSubtype, m_detector, recParticles, history);
   m_papasEvent.addCollection(recParticles);
   m_papasEvent.addHistory(history);
   m_papasEvent.mergeHistories();

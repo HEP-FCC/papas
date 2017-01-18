@@ -89,7 +89,7 @@ add_dependencies(papasDict papas-dictgen )
 target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
 add_library(papas SHARED ${sources} )
 target_link_libraries(  papas ${ROOT_LIBRARIES} )
-#target_compile_definitions(papas PRIVATE WITHSORT=1)
+target_compile_definitions(papas PRIVATE WITHSORT=1)
 install(TARGETS papas DESTINATION lib)
 install(TARGETS papasDict DESTINATION lib)
 

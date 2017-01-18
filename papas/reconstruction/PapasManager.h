@@ -61,7 +61,7 @@ public:
    *       particles-simulated "ps"
    *       history
    */
-  void simulate(const Particles& particles);
+  void simulate(const ListParticles& particles);
   /**
    *   @brief  Merges a set of clusters according to detector sensitivities.
    *   @param[in]  typeAndSubtype: identifies which clusters to merge, eg "hs" for hcals-smeared clusters

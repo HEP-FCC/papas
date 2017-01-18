@@ -7,12 +7,12 @@
 #include "papas/datatypes/Track.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
-#include "papas/utility/Random.h"
+#include "papas/utility/TRandom.h"
 class Detector;
 
 namespace papas {
 
-Simulator::Simulator(const PapasEvent& papasevent, const Particles& particles, const Detector& detector, Clusters& ecalClusters,
+Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particles, const Detector& detector, Clusters& ecalClusters,
                              Clusters& hcalClusters, Clusters& smearedEcalClusters, Clusters& smearedHcalClusters,
                              Tracks& tracks, Tracks& smearedTracks, SimParticles& simParticles, Nodes& history)
     : m_papasEvent(papasevent),
@@ -28,13 +28,15 @@ Simulator::Simulator(const PapasEvent& papasevent, const Particles& particles, c
       m_propHelix(detector.field()->getMagnitude()) {
 
   for (auto p : particles) {
-    simulateParticle(p.second);
+    simulateParticle(p);
   }
 }
 
 void Simulator::simulateParticle(const Particle& ptc) {
   int pdgid = ptc.pdgId();
-  SimParticle simParticle = makeSimParticle(pdgid, ptc.charge(), ptc.p4(), TVector3{0, 0, 0});
+  SimParticle simParticle = makeSimParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
+  if (simParticle.id() == 10261413468422799590)
+    auto x = 3;
   SimParticle& storedParticle = storeSimParticle(std::move(simParticle), 0);
   PDebug::write("Made {}", storedParticle);
 
@@ -103,7 +105,8 @@ void Simulator::simulateHadron(SimParticle& ptc) {
     TVector3 pointDecay = path->pointAtTime(timeDecay);
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().contains(pointDecay)) {
-      fracEcal = randomgen::RandUniform(0., 0.7).next();
+      //fracEcal = randomgen::RandUniform(0., 0.7).next();
+      fracEcal = rootrandom::Random::uniform(0., 0.7);
       auto cluster = makeCluster(ptc, papas::Layer::kEcal, fracEcal);
       const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
       // For now, using the hcal resolution and acceptance for hadronic cluster
@@ -119,6 +122,10 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   }
 
   // now find where it reaches into HCAL
+  if (ptc.id()== 10261413468422799590) {
+    auto x=3;
+  }
+    
   propagate(hcal_sp->volumeCylinder().inner(), ptc);
 
   auto hcalCluster = makeCluster(ptc, papas::Layer::kHcal, 1 - fracEcal);
@@ -250,9 +257,9 @@ SimParticle& Simulator::storeSimParticle(SimParticle&& simParticle, IdType paren
 
 SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
                                            double ptmax, const TVector3& vertex) {
-  double theta = randomgen::RandUniform(thetamin, thetamax).next();
-  double phi = randomgen::RandUniform(-M_PI, M_PI).next();
-  double energy = randomgen::RandUniform(ptmin, ptmax).next();
+  double theta = rootrandom::Random::uniform(thetamin, thetamax);
+  double phi = rootrandom::Random::uniform(-M_PI, M_PI);
+  double energy = rootrandom::Random::uniform(ptmin, ptmax);
   double mass = ParticlePData::particleMass(pdgid);
   double costheta = cos(M_PI / 2 - theta);
   double sintheta = sin(M_PI / 2 - theta);
@@ -301,8 +308,8 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detectorLayer);
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
-  double energy = parent.energy() * randomgen::RandNormal(response, energyresolution).next();
-  energy = fmax(0., energy);  // energy always positive
+  double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
+  //energy = fmax(0., energy);  // energy always positive
   auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
@@ -344,7 +351,7 @@ const Track& Simulator::storeTrack(Track&& track, IdType parentid) {
 
 Track Simulator::smearTrack(const Track& track, double resolution) const {
   // double ptResolution = m_detector.tracker()->ptResolution(track);
-  double scale_factor = randomgen::RandNormal(1, resolution).next();
+  double scale_factor = rootrandom::Random::gauss(1, resolution);
   auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(), 's');
   PDebug::write("Made Smeared{}", smeared);
   return smeared;

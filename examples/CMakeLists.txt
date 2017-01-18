@@ -19,7 +19,7 @@ add_executable(example_pair example_dag_pair.cpp)
 target_link_libraries(example_pair papas ${ROOT_LIBRARIES} )
 
 add_executable(example_pdebug example_pdebug_python_comparer.cpp  PythiaConnector.cpp )
-
+target_compile_definitions(example_pdebug PRIVATE WITHSORT=1)
 target_link_libraries(example_pdebug papas ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
 
 add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )
