@@ -19,8 +19,6 @@ Cluster::Cluster(double energy, const TVector3& position, double size_m, Identif
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
-  if (m_uniqueId == 5658733449062645996)
-    std::cout << *this;
 }
 
   Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
@@ -42,8 +40,6 @@ Cluster::Cluster(Cluster&& c)
       m_energy(c.m_energy),
       m_subClusters() {
   m_p3 = c.m_p3;
-        //std::cout<< "Move Cluster " << Identifier::pretty(m_uniqueId) << std::endl;
-
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
   // This is a disadvantage of using Cluster class to deal with both
@@ -82,10 +78,8 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  // if(Identifier::pretty(m_uniqueId)=="e299     ")
-  //  std::cout<<*this;
   if (Identifier::itemType(m_uniqueId) != Identifier::itemType(rhs.id())) {
-    std::cout << "can only add a cluster from the same layer";
+    throw "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
   m_energy = m_energy + rhs.energy();
@@ -93,7 +87,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   double denom = 1. / m_energy;
   m_p3 *= denom;
   if (rhs.subClusters().size() > 1) {
-    std::cout << "can only add in a cluster which is not already merged";
+    throw "can only add in a cluster which is not already merged";
   }
   m_pt = m_energy * m_p3.Unit().Perp();
   m_subClusters.push_back(&rhs);
