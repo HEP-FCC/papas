@@ -19,6 +19,8 @@ PapasEvent::PapasEvent()
 
 void PapasEvent::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
+  std::cout <<  "Add clusters" ;
+  std::cout << Identifier::pretty(clusters.begin()->first)<< std::endl;
   if (Identifier::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else

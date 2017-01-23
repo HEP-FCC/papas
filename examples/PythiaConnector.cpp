@@ -150,7 +150,7 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::SimPart
 
   podio::ROOTWriter writer(fname, &m_store);
 
-  unsigned int nevents = 1;
+  unsigned int nevents = 10;
   unsigned int eventno = 0;
 
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
