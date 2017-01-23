@@ -166,7 +166,7 @@ TEST_CASE("ClusterSmear") {
   std::vector<double> energies;
 
   // run the simulator which will fill the above objects
-  Particles particles;
+  ListParticles particles;
   auto simulator = tester.setSimulator(particles);
 
   for (int i = 0; i < 10000; i++) {
@@ -302,12 +302,12 @@ TEST_CASE("TRandomExp") {
   rootrandom::Random::seed(100);
   ;
   double r1 = rootrandom::Random::exponential(5.);
-  rootrandom::Random::Seed(100);
+  rootrandom::Random::seed(100);
   double r2 = rootrandom::Random::exponential(5.);
   REQUIRE(r1 == r2);
   
   // use a random start point so should not give same answers
-  rootrandom::Random::Seed();
+  rootrandom::Random::seed();
   double r3 = rootrandom::Random::exponential(5.);
   double r4 = rootrandom::Random::exponential(5.);
   

@@ -9,5 +9,5 @@
 #include "papas/utility/TRandom.h"
 namespace rootrandom {
   
-  auto Random::s_random=TRandom(0);
+  TRandom Random::s_random=TRandom(0);
 }

@@ -35,8 +35,6 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
 void Simulator::simulateParticle(const Particle& ptc) {
   int pdgid = ptc.pdgId();
   SimParticle simParticle = makeSimParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  if (simParticle.id() == 10261413468422799590)
-    auto x = 3;
   SimParticle& storedParticle = storeSimParticle(std::move(simParticle), 0);
   PDebug::write("Made {}", storedParticle);
 
@@ -122,10 +120,6 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   }
 
   // now find where it reaches into HCAL
-  if (ptc.id()== 10261413468422799590) {
-    auto x=3;
-  }
-    
   propagate(hcal_sp->volumeCylinder().inner(), ptc);
 
   auto hcalCluster = makeCluster(ptc, papas::Layer::kHcal, 1 - fracEcal);
