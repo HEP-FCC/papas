@@ -123,15 +123,15 @@ public:
   const Cluster& cluster(IdType id) const { return clusters(id).at(id); };
 
   // TODO doxygen as above
-  const Tracks& tracks(const Identifier::SubType subtype) const { return *m_tracksCollection.at(subtype); };
+  const Tracks& tracks(const Identifier::SubType subtype) const;
   const Tracks& tracks(IdType id) const { return tracks(Identifier::subtype(id)); };
   const Track& track(IdType id) const { return tracks(id).at(id); };
 
-  const SimParticles& particles(const Identifier::SubType subtype) const { return *m_particlesCollection.at(subtype); };
+  const SimParticles& particles(const Identifier::SubType subtype) const ;
   const SimParticles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
   const SimParticle& particle(IdType id) const { return particles(id).at(id); };
 
-  const Blocks& blocks(const Identifier::SubType subtype) const { return *m_blocksCollection.at(subtype); };
+  const Blocks& blocks(const Identifier::SubType subtype) const  ;
   const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
   
@@ -165,6 +165,10 @@ private:
   /// Vector of History objects.
   ListNodes m_historys;
   Nodes m_history;
+  Clusters m_emptyClusters;
+  Tracks m_emptyTracks;
+  SimParticles m_emptySimParticles;
+  Blocks m_emptyBlocks;
 };
 
 template <class T>

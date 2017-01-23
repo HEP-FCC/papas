@@ -37,6 +37,8 @@ void PapasEvent::addCollection(const Blocks& blocks) { addCollectionInternal<PFB
 
 const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // return the corresponding collection
+  if (!hasCollection(type, subtype))
+    return m_emptyClusters;
   if (type == Identifier::ItemType::kEcalCluster)
     return *(m_ecalClustersCollection.at(subtype));
   else
@@ -52,8 +54,23 @@ const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
   // return the corresponding collection with this type and subtype
   return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
 }
+
+const Tracks& PapasEvent::tracks(const Identifier::SubType subtype) const {
+  if (!hasCollection(Identifier::ItemType::kTrack, subtype))
+    return m_emptyTracks;
+  return *m_tracksCollection.at(subtype);
+}
   
-  
+  const SimParticles& PapasEvent::particles(const Identifier::SubType subtype) const {
+    if (!hasCollection(Identifier::ItemType::kParticle, subtype))
+      return m_emptySimParticles;
+    return *m_particlesCollection.at(subtype);
+  }
+  const Blocks& PapasEvent::blocks(const Identifier::SubType subtype) const {
+    if (!hasCollection(Identifier::ItemType::kBlock, subtype))
+      return m_emptyBlocks;
+    return *m_blocksCollection.at(subtype);
+  }
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // Check if this collection is present
   auto found = false;

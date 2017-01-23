@@ -26,13 +26,14 @@ namespace papas {
     const auto& ecals = m_papasEvent.clusters(ecalTypeAndSubtype);
     const auto& hcals = m_papasEvent.clusters(hcalTypeAndSubtype);
     const auto& tracks = m_papasEvent.tracks(trackSubtype);
+    PDebug::write("PF BlockBuilder Ecals: {}", ecals.size());
     auto ids = m_papasEvent.collectionIds<Clusters>(ecals);
     for (auto id : m_papasEvent.collectionIds<Clusters>(hcals))
       ids.push_back(id);
     for (auto id : m_papasEvent.collectionIds<Tracks>(tracks))
       ids.push_back(id);
 
-  
+  PDebug::write("Ids: {}", ids.size());
     // TODO think hard about best way to deal with distance /ruler / edges etc
     // compute edges between each pair of nodes
     Edges edges;
@@ -47,6 +48,7 @@ namespace papas {
         }
       }
     }
+    PDebug::write("GotoBlock Builder");
     BlockBuilder bb(ids, std::move(edges), m_history, blocks, 'r');
 
   }
