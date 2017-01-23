@@ -46,6 +46,11 @@ std::string Particle::info() const {
 
   return out.str();
 }
+  
+  std::ostream& operator<<(std::ostream& os, const Particle& particle) {
+    os << "Particle :" << ":" << particle.info();
+    return os;
+  }
 
 
 }  // end namespace papas

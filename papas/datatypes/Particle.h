@@ -51,7 +51,8 @@ private:
   TVector3 m_endVertex;
 };
 
-
+  std::ostream& operator<<(std::ostream& os, const Particle& particle);
+  
 }  // end namespace papas
 
 #endif
