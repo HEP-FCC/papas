@@ -176,6 +176,8 @@ void PapasEvent::addCollectionInternal(
     const std::unordered_map<IdType, T>& collection,
     std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections) {
   IdType firstId = 0;
+  if (collection.size()==0)
+    return;
   for (const auto& it : collection) {
     if (!firstId) {
       firstId = it.first;

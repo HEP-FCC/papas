@@ -120,7 +120,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   m_reader.goToEvent(eventNo);
   papasManager.clear();
   const fcc::MCParticleCollection* ptcs(nullptr);
-  if (m_store.get("GenParticle", ptcs)) {
+  if (m_store.get("all_genparticles", ptcs)) {
     papas::ListParticles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
