@@ -50,7 +50,7 @@ public:
   double muonAcceptance(const Track& track) const {
   return track.pt() > 5. && fabs(track.p3().Eta()) < 2.5;}
   
-  double muonPtResolution(const SimParticle& ptc) const {
+  double muonPtResolution(const SimParticle& /*ptc*/) const {
     return 0.02;}
   
 
