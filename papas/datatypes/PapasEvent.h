@@ -183,7 +183,7 @@ void PapasEvent::addCollectionInternal(
     }
   }
   collections.emplace(Identifier::subtype(firstId), &collection);
-};
+}
   
   template <class T>
   Ids PapasEvent::collectionIds(const T& collection) const

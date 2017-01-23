@@ -66,8 +66,7 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
       //convert pythia : mm -> papas : m
       endVertex = TVector3(ptc.endVertex().x()* 1e-3, ptc.endVertex().y()*1e-3, ptc.endVertex().z()*1e-3);
     }
-    if (pdgid == -211 && ptc.core().status == 1)
-      auto x = 3;
+ 
     
     // startVertex = TVector3(ptc.startVertex().x(), ptc.startVertex().y(), ptc.startVertex().z());
     //TVector3 endVertex = ptc.core().endVertex();

@@ -70,7 +70,12 @@ FILE(GLOB files6 "${CMAKE_SOURCE_DIR}/papas/display/*.h")
 INSTALL(FILES ${files6} DESTINATION include/papas/display/)
 FILE(GLOB files7 "${CMAKE_SOURCE_DIR}/papas/utility/*.h")
 INSTALL(FILES ${files7} DESTINATION include/papas/utility/)
-
+FILE(GLOB files8 "${CMAKE_SOURCE_DIR}/spdlog/*.h")
+INSTALL(FILES ${files8} DESTINATION include/papas/spdlog/)
+FILE(GLOB files9 "${CMAKE_SOURCE_DIR}/spdlog/details/*.h")
+INSTALL(FILES ${files9} DESTINATION include/papas/spdlog/details/)
+FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sink/*.h")
+INSTALL(FILES ${files10} DESTINATION include/papas/spdlog/sink/)
 
 
 project(papaslib)
