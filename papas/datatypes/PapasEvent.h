@@ -15,7 +15,7 @@ namespace papas {
  *  The PapasEvent is a lightweight obejct that can be used from Papas Standalone or from
  *  Gaudi modules.
  *    The collections stored in the PapasEvent are unordered_maps of unordered_maps eg an unordered map of Clusters.
- *    The collections are indexed by the typeAndSubtype of the identifiers of each item 
+ *    The collections are indexed by the typeAndSubtype of the identifiers of each item
  *    (eg of each Cluster in Clusters)
  *       Therefore each collection to be stored must contain only one typeAndSubtype
  *       Examples of typeAndSubtype are:
@@ -122,25 +122,68 @@ public:
    */
   const Cluster& cluster(IdType id) const { return clusters(id).at(id); };
 
-  // TODO doxygen as above
+  /**
+   *   @brief  returns a Tracks collection matching type and subtype
+   *   @param[in]  subtype: The subtype of the track eg 's' for smeared
+   */
   const Tracks& tracks(const Identifier::SubType subtype) const;
+  /**
+   *   @brief  returns a Tracks collection with typeAndSubtype that match the identifier
+   *   @param[in]  id: the Identifier of an object
+   */
   const Tracks& tracks(IdType id) const { return tracks(Identifier::subtype(id)); };
+  /**
+   *   @brief  returns a Track with the required id
+   *   @param[in]  id: the Identifier of an object
+   */
   const Track& track(IdType id) const { return tracks(id).at(id); };
-
-  const SimParticles& particles(const Identifier::SubType subtype) const ;
+  /**
+   *   @brief  returns a Particles collection matching type and subtype
+   *   @param[in]  subtype: The subtype of the particle eg 'r' for reconstructed
+   */
+  const SimParticles& particles(const Identifier::SubType subtype) const;
+  /**
+   *   @brief  returns a SimParticles collection with typeAndSubtype that match the identifier
+   *   @param[in]  id: the Identifier of an object
+   */
   const SimParticles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
+  /**
+   *   @brief  returns a SimParticle with the required id
+   *   @param[in]  id: the Identifier of an object
+   */
   const SimParticle& particle(IdType id) const { return particles(id).at(id); };
-
-  const Blocks& blocks(const Identifier::SubType subtype) const  ;
+  /**
+   *   @brief  returns a Blocks collection matching type and subtype
+   *   @param[in]  subtype: The subtype of the block eg 'r' for reconstructed
+   */
+  const Blocks& blocks(const Identifier::SubType subtype) const;
+  /**
+   *   @brief  returns a Blocks collection with typeAndSubtype that match the identifier
+   *   @param[in]  id: the Identifier of an object
+   */
   const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
+  /**
+   *   @brief  returns a Block with the required id
+   *   @param[in]  id: the Identifier of an object
+   */
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
-  
-  //Ids collectionIds(const Clusters& collection) const;
-
+  /**
+   *   @brief  returns a list of all the Ids inside a collection
+   *   @param[in]  collection: the collection
+   */
   template <class T>
   Ids collectionIds(const T& collection) const;
+  /**
+   *   @brief  takes all the history collection and merged them into one single history
+   */
   void mergeHistories();
-  const Nodes& history() const { return m_history;}
+  /**
+   *   @brief  returns the merged history
+   */
+  const Nodes& history() const { return m_history; }
+  /**
+   *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the Identifier counter
+   */
   void clear();
 
 private:
@@ -164,11 +207,11 @@ private:
   CollectionBlocks m_blocksCollection;
   /// Vector of History objects.
   ListNodes m_historys;
-  Nodes m_history;
-  Clusters m_emptyClusters;
-  Tracks m_emptyTracks;
-  SimParticles m_emptySimParticles;
-  Blocks m_emptyBlocks;
+  Nodes m_history;                   ///< Holds the merged history (built from the m_histories)
+  Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
+  Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is foun
+  SimParticles m_emptySimParticles;  ///<Used to return an empty collection when no collection is foun
+  Blocks m_emptyBlocks;              ///<Used to return an empty collection when no collection is foun
 };
 
 template <class T>
@@ -176,31 +219,28 @@ void PapasEvent::addCollectionInternal(
     const std::unordered_map<IdType, T>& collection,
     std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections) {
   IdType firstId = 0;
-  if (collection.size()==0)
-    return;
+  if (collection.size() == 0) return;
   for (const auto& it : collection) {
     if (!firstId) {
       firstId = it.first;
       if (hasCollection(firstId)) throw "Collection already exists";
     }
     if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) {
-      std::cout << Identifier::pretty(it.first) << " : " <<Identifier::pretty(firstId) << std::endl;
+      std::cout << Identifier::pretty(it.first) << " : " << Identifier::pretty(firstId) << std::endl;
       throw "more than one typeandSubtype found in collection";
     }
   }
   collections.emplace(Identifier::subtype(firstId), &collection);
 }
-  
-  template <class T>
-  Ids PapasEvent::collectionIds(const T& collection) const
-  {
-    Ids ids;
-    for (const auto& item : collection) {
-      ids.push_back(item.first);
-    }
-    return ids;
-  }
 
+template <class T>
+Ids PapasEvent::collectionIds(const T& collection) const {
+  Ids ids;
+  for (const auto& item : collection) {
+    ids.push_back(item.first);
+  }
+  return ids;
+}
 }
 
 #endif /* PapasEvent_h */
