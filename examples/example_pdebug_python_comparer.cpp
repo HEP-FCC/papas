@@ -16,7 +16,6 @@ using namespace papas;
 
 int main(int argc, char* argv[]) {
 
-  //randomgen::setEngineSeed(0xdeadbeef);
   rootrandom::Random::seed(0xdeadbeef);
 
   if (argc < 2) {

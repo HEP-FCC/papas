@@ -12,10 +12,8 @@
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, Blocks& simplifiedblocks, Nodes& history)
-    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {}
-
-void PFBlockSplitter::splitBlocks(char blockSubtype) {
+PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history)
+    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
@@ -52,9 +50,6 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
     // amend history
     makeHistoryLinks(block.elementIds(), {newblock.id()}, m_history);
 
-    // TODO m_history
-    // if there is something to unlink then use the BlockBuilder to create new blocks
-    // create a new modified set of edges with some edges unlinked
   } else {
     Edges modifiedEdges;
     for (auto edge : block.edges()) {  // copying edges

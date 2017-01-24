@@ -9,7 +9,7 @@ namespace papas {
 /**
  *
  * GraphBuilder takes a vector of identifiers and an unordered map of associated edges which have distance and link
-/true/false) info.
+ * (ie true/false) info.
  * The graph can be thought of as having the ids as the nodes and the edges as the connecting lines.
  * It uses the distances/links between elements to construct a set of connected blocks.
  * Each element will end up in one (and only one) block.
@@ -38,7 +38,7 @@ public:
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more),
    *            an edge records the distance and links between two ids
    */
-  GraphBuilder(const Ids& ids, Edges&& edges);  // edges are moved in
+  GraphBuilder(const Ids& ids, Edges&& edges);  /// edges are moved in
 
   /// returns a vector containing vectors of Ids each of which is a subgraph
   const std::vector<Ids>& subGraphs() const { return m_subGraphs; };

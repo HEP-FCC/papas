@@ -89,8 +89,6 @@ private:
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block);
 
-
-  //typedef std::unordered_map<IdType, PFBlock> Blocks;            ///< collection of Blocks
 }  // end namespace papas
 #endif /* PFBlock_h */
 

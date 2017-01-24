@@ -523,7 +523,7 @@ TEST_CASE("BlockSplitter") {
   auto papasEvent = PapasEvent();
   papasEvent.addCollection(blocks);
   auto simplifiedBlocks = Blocks();
-  auto splitter = PFBlockSplitter(papasEvent, simplifiedBlocks, emptyNodes);
+  auto splitter = PFBlockSplitter(papasEvent, 'r', simplifiedBlocks, emptyNodes);
   for (auto& block : blocks) {
     splitter.simplifyBlock(to_unlink, block.second);
     REQUIRE(simplifiedBlocks.size() == 2);

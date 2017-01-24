@@ -44,7 +44,7 @@ public:
   /** Constructor
    * @param[in] detector : the detector to be used in the simulation and reconstruction
    */
-  PapasManager(Detector& detector);
+  PapasManager(const Detector& detector);
   /**
    *   @brief  Runs Papas simulation on a collection of generated particles producing papas simulated particles
    *          and their clusters and tracks and also history information of the connections between objects

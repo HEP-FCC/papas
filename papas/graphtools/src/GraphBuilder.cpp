@@ -44,28 +44,4 @@ void GraphBuilder::sortIds(Ids& ids) {
 #endif
 }
 
-}  // end namespace papas
-
-/*void GraphBuilder::sortIds(std::vector<IdType>& ids) // sorts by type and energy
- {//TODO move to helper
- std::sort( ids.begin(), ids.end(), [this] (IdType a, IdType b) { return this->m_pfEvent.compare(a,b);});
- }*/
-
-/*bool GraphBuilder::compareEdges(long long key1, long long key2, IdType uniqueid) const//TODO check direction of sort
- {
- //sort by the type eg ecal hcal
- // and then in order of decreasing energy
- Edge e1 = m_edges.find(key1)->second; // should part of this be a static function in Edges?
- Edge e2 = m_edges.find(key2)->second;
- if (e1.distance() < e2.distance())
- return true;
- else if (e1.distance() > e2.distance())
- return false;
- // the distance for edge1 and edge 2 is same
- // so return based on edgetype and end energy comparison for the items
- // at the other end from uniqueId
- double energy1 = m_pfEvent.energy(e1.otherid(uniqueid));
- double energy2 = m_pfEvent.energy(e2.otherid(uniqueid));
-
- return (energy1 > energy2) ;
- }*/
+} //end namespace papas

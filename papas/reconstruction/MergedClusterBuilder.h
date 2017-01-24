@@ -9,14 +9,14 @@
 
 
 namespace papas {
-  /// Takes a collection of clusters and produces a collection of merged clusters.
+  /// Takes a collection of clusters and writes a collection of merged clusters.
   /// The MergedClusterBuilder creates a collection of edges describing the distances between
   /// every possible pair of clusters.
   /// The cluster ids and corresponding edges are then passed to GraphBuilder which
-  /// returns a set of blocks, each block is a set of overlapping clusters and if it
-  /// contains more than one element forms a new merged cluster.
+  /// returns a set of blocks, each block is a set of overlapping clusters and becomes a new merged cluster.
+  /// Blocks with only one cluster will also create a new merged cluster (a copy of the original cluster)
   /// The mergedcluster is created by making a new cluster and adding in each of the overlapping clusters
-  /// The ids of these clusters are stored in the subClusters vector of the Cluster class.
+  /// The ids of the component clusters are stored in the subClusters vector of the Cluster class.
   ///
   class MergedClusterBuilder {
   public:
@@ -28,18 +28,9 @@ namespace papas {
      * @param[inout] history : an unordered_map into which new history will be added
      */
     MergedClusterBuilder(const PapasEvent& papasEvent, const std::string& typeAndSubtype, const Ruler& ruler, Clusters& merged, Nodes& history);
-    /** Access mergedCluster collection
-        @return reference to the merged Clusters collection
-     */
-    const Clusters& mergedClusters() const { return m_merged; }  //remove this?
-    /** Access history nodes
-        @return reference to the history
-     */
-    const Nodes& history() const { return m_history; }    //remove this?
-    
-  private:
-    Clusters& m_merged;      ///< the merged Clusters //remove this?
-    Nodes& m_history;  ///history is appended to this //remove this?
+      private:
+    Clusters& m_merged;      ///< external collection to which the merged Clusters will be added
+    Nodes& m_history;  ///external collection to which new history info will be added
   };
 }  // end namespace papas
 
