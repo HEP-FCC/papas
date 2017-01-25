@@ -17,7 +17,7 @@
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
@@ -27,7 +27,7 @@
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, SimParticles& particles, Nodes& history)
+PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles, Nodes& history)
     : m_papasEvent(papasEvent), m_particles(particles), m_detector(detector), m_history(history) {
 
   
@@ -263,7 +263,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   }
 }
 
-void PFReconstructor::insertParticle(const Ids& parentIds, SimParticle& newparticle) {
+void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
    It will have as its parents the block and all the elements of the block.
@@ -465,7 +465,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   }
   TVector3 p3 = cluster.position().Unit() * momentum;
   TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
-  auto particle = SimParticle(pdgId, 0., p4, vertex, 0, 'r');
+  auto particle = PFParticle(pdgId, 0., p4, vertex, 0, 'r');
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure
@@ -495,7 +495,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId,const Ids& 
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  auto particle = SimParticle(pdgId, track.charge(), p4, track, 'r');
+  auto particle = PFParticle(pdgId, track.charge(), p4, track, 'r');
   //#todo fix this so it picks up smeared track points (need to propagagte smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;

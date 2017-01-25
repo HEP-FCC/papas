@@ -3,7 +3,7 @@
 #include "papas/datatypes/Identifier.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
@@ -14,7 +14,7 @@ namespace papas {
 
 Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particles, const Detector& detector, Clusters& ecalClusters,
                              Clusters& hcalClusters, Clusters& smearedEcalClusters, Clusters& smearedHcalClusters,
-                             Tracks& tracks, Tracks& smearedTracks, SimParticles& simParticles, Nodes& history)
+                             Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles, Nodes& history)
     : m_papasEvent(papasevent),
       m_detector(detector),
       m_ecalClusters(ecalClusters),
@@ -34,8 +34,8 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
 
 void Simulator::simulateParticle(const Particle& ptc) {
   int pdgid = ptc.pdgId();
-  SimParticle simParticle = makeSimParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  SimParticle& storedParticle = storeSimParticle(std::move(simParticle), 0);
+  PFParticle simParticle = makePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
+  PFParticle& storedParticle = storePFParticle(std::move(simParticle), 0);
   PDebug::write("Made {}", storedParticle);
 
   if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
@@ -56,7 +56,7 @@ void Simulator::simulateParticle(const Particle& ptc) {
   }
 }
 
-void Simulator::simulatePhoton(SimParticle& ptc) {
+void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
 
@@ -72,7 +72,7 @@ void Simulator::simulatePhoton(SimParticle& ptc) {
   }
 }
 
-void Simulator::simulateHadron(SimParticle& ptc) {
+void Simulator::simulateHadron(PFParticle& ptc) {
   PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
@@ -130,7 +130,7 @@ void Simulator::simulateHadron(SimParticle& ptc) {
   }
 }
 
-void Simulator::propagateAllLayers(SimParticle& ptc) {
+void Simulator::propagateAllLayers(PFParticle& ptc) {
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   auto hcal_sp = m_detector.hcal();  // HCAL detector element
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
@@ -139,23 +139,23 @@ void Simulator::propagateAllLayers(SimParticle& ptc) {
   propagate(hcal_sp->volumeCylinder().outer(), ptc);
 }
 
-void Simulator::simulateNeutrino(SimParticle& ptc) {
+void Simulator::simulateNeutrino(PFParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
   propagateAllLayers(ptc);
 }
 
-void Simulator::smearElectron(SimParticle& ptc) {
+void Simulator::smearElectron(PFParticle& ptc) {
   PDebug::write("Smearing Electron");
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
   storeTrack(std::move(track), ptc.id());
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
-  // SimParticle smeared{ptc}; //this line to match deepcopy on python
+  // PFParticle smeared{ptc}; //this line to match deepcopy on python
   // PDebug::write("Made Smeared{}", smeared)
   // TODO ask COLIN why bother when its not smearedsmeared = copy.deepcopy(ptc)
 }
 
-void Simulator::simulateElectron(SimParticle& ptc) {
+void Simulator::simulateElectron(PFParticle& ptc) {
   /*Simulate an electron corresponding to gen particle ptc.
 
    Uses the methods detector.electronEnergyResolution
@@ -177,14 +177,14 @@ void Simulator::simulateElectron(SimParticle& ptc) {
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
 }
 
-void Simulator::smearMuon(SimParticle& ptc) {
+void Simulator::smearMuon(PFParticle& ptc) {
   PDebug::write("Smearing Muon");
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
   storeTrack(std::move(track), ptc.id());
   propagateAllLayers(ptc);
 }
   
-  void Simulator::simulateMuon(SimParticle& ptc) {
+  void Simulator::simulateMuon(PFParticle& ptc) {
   /*Simulate a muon corresponding to gen particle ptc
   
   Uses the methods detector.muon_energy_resolution
@@ -206,7 +206,7 @@ void Simulator::smearMuon(SimParticle& ptc) {
   }
   
 
-void Simulator::propagate(const SurfaceCylinder& cylinder, SimParticle& ptc) {
+void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
   bool isNeutral = fabs(ptc.charge()) < 0.5;
   if (isNeutral)
     m_propStraight.propagateOne(ptc, cylinder);
@@ -222,15 +222,15 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-SimParticle Simulator::makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv,
+PFParticle Simulator::makePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                            const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
-  auto simParticle = SimParticle(pdgid, charge, tlv, vertex, field, 's');
+  auto simParticle = PFParticle(pdgid, charge, tlv, vertex, field, 's');
   return std::move(simParticle);
 }
 
-SimParticle Simulator::makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
+PFParticle Simulator::makePFParticle(int pdgid, double charge, double theta, double phi, double energy,
                                            const TVector3& vertex) const {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -239,17 +239,17 @@ SimParticle Simulator::makeSimParticle(int pdgid, double charge, double theta, d
   double cosphi = cos(phi);
   double sinphi = sin(phi);
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  return makeSimParticle(pdgid, charge, p4, vertex);
+  return makePFParticle(pdgid, charge, p4, vertex);
 }
 
-SimParticle& Simulator::storeSimParticle(SimParticle&& simParticle, IdType parentId) {
+PFParticle& Simulator::storePFParticle(PFParticle&& simParticle, IdType parentId) {
   auto id = simParticle.id();
   m_particles.emplace(id, std::move(simParticle));
   addNode(id, parentId);  // add node to history graph
   return m_particles[id];
 }
 
-SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
+PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
                                            double ptmax, const TVector3& vertex) {
   double theta = rootrandom::Random::uniform(thetamin, thetamax);
   double phi = rootrandom::Random::uniform(-M_PI, M_PI);
@@ -263,11 +263,11 @@ SimParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin
   energy = sqrt(pow(momentum, 2) + pow(mass, 2));
 
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  auto simParticle = makeSimParticle(pdgid, charge, p4, vertex);
-  return storeSimParticle(std::move(simParticle), 0);
+  auto simParticle = makePFParticle(pdgid, charge, p4, vertex);
+  return storePFParticle(std::move(simParticle), 0);
 }
 
-Cluster Simulator::makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction, double csize,
+Cluster Simulator::makeCluster(const PFParticle& ptc, papas::Layer layer, double fraction, double csize,
                                    char subtype) const {
   double energy = ptc.p4().E() * fraction;
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();

@@ -69,8 +69,8 @@ photon
 class PFReconstructor {
 
 public:
-  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, SimParticles& particles, Nodes& history);
-  const SimParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
+  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles, Nodes& history);
+  const PFParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
                                                               //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
 private:
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
@@ -81,15 +81,15 @@ private:
       const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
   void reconstructElectrons(const PFBlock& block);
   void reconstructMuons(const PFBlock& block);
-  //void insertParticle(const PFBlock& block, SimParticle&& particle);  ///< moves particle and adds into history
-  void insertParticle(const Ids& parentIds, SimParticle& newparticle);
+  //void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
+  void insertParticle(const Ids& parentIds, PFParticle& newparticle);
   bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
   double neutralHadronEnergyResolution(double energy, double resolution) const;
   double neutralHadronEnergyResolution(const Cluster& hcal) const;
   double nsigmaHcal(const Cluster& cluster) const;
   const PapasEvent& m_papasEvent;
   const Detector& m_detector;
-  SimParticles& m_particles;  ///< the reconstructed particles created by this class
+  PFParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history;
   Ids m_unused;
   std::unordered_map<IdType, bool> m_locked;

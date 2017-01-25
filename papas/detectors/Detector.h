@@ -13,7 +13,7 @@
 #include "papas/detectors/SurfaceCylinder.h"
 #include "papas/detectors/Tracker.h"
 #include "papas/datatypes/Track.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 
 namespace papas {
 
@@ -44,13 +44,13 @@ public:
   double electronAcceptance(const Track& track) const {
     return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;}
   
-  double electronEnergyResolution(const SimParticle& ptc) const {
+  double electronEnergyResolution(const PFParticle& ptc) const {
     return 0.1 / sqrt(ptc.e());}
   
   double muonAcceptance(const Track& track) const {
   return track.pt() > 5. && fabs(track.p3().Eta()) < 2.5;}
   
-  double muonPtResolution(const SimParticle& /*ptc*/) const {
+  double muonPtResolution(const PFParticle& /*ptc*/) const {
     return 0.02;}
   
 

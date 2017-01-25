@@ -1,6 +1,6 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/PapasEvent.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
 #include <stdio.h>
@@ -33,8 +33,8 @@ void PapasEvent::addHistory(const Nodes& history) { m_historys.push_back(&histor
 
 void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
-void PapasEvent::addCollection(const SimParticles& particles) {
-  addCollectionInternal<SimParticle>(particles, m_particlesCollection);
+void PapasEvent::addCollection(const PFParticles& particles) {
+  addCollectionInternal<PFParticle>(particles, m_particlesCollection);
 };
 
 void PapasEvent::addCollection(const Blocks& blocks) { addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
@@ -65,9 +65,9 @@ const Tracks& PapasEvent::tracks(const Identifier::SubType subtype) const {
   return *m_tracksCollection.at(subtype);
 }
   
-  const SimParticles& PapasEvent::particles(const Identifier::SubType subtype) const {
+  const PFParticles& PapasEvent::particles(const Identifier::SubType subtype) const {
     if (!hasCollection(Identifier::ItemType::kParticle, subtype))
-      return m_emptySimParticles;
+      return m_emptyPFParticles;
     return *m_particlesCollection.at(subtype);
   }
   const Blocks& PapasEvent::blocks(const Identifier::SubType subtype) const {

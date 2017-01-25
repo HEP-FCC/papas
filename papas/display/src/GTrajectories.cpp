@@ -6,7 +6,7 @@
 #include "papas/display/GTrajectories.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 //#include "papas/datatypes/Identifier.h"
 
@@ -136,7 +136,7 @@ void GTrajectory::Draw(const std::string& projection /*,
   // raise ValueError('implement drawing for projection ' + projection )
 };
 
-GTrajectories::GTrajectories(const SimParticle& particle) {
+GTrajectories::GTrajectories(const PFParticle& particle) {
   if (particle.charge() != 0) {
     if (abs(particle.pdgId()) > 100) {
       addHelix(particle.path(), particle.p4().Vect(), 1, 1);

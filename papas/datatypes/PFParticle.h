@@ -1,8 +1,8 @@
 //
 //  Created by Alice Robson on 29/11/15.
 
-#ifndef SimParticle_H
-#define SimParticle_H
+#ifndef PFParticle_H
+#define PFParticle_H
 
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
@@ -13,13 +13,13 @@ namespace papas {
 class Track;
 /// Simulated particle
 /// Inherits from Particle and contains additional information to decribe the path of the particle
-class SimParticle : public Particle {
+class PFParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
-  SimParticle() = default;
-  SimParticle(int pdgid, double charge, const TLorentzVector& tlv,
+  PFParticle() = default;
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv,
               const TVector3& vertex = TVector3(0., 0., 0.), double field = 0., char subtype ='s');
-  SimParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype ='r');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype ='r');
 
   const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
   void setPath(Path::Ptr path) { m_path = path; }
@@ -34,8 +34,8 @@ private:
   bool m_isHelix;
 };
   
-  std::ostream& operator<<(std::ostream& os, const SimParticle& particle);
+  std::ostream& operator<<(std::ostream& os, const PFParticle& particle);
 
 
 }  // end namespace papas
-#endif  // SimParticle_H
+#endif  // PFParticle_H

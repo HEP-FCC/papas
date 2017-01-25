@@ -5,13 +5,13 @@
 #include "papas/utility/GeoTools.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 
 namespace papas {
 
 HelixPropagator::HelixPropagator(double field) : m_field(field) {}
 
-void HelixPropagator::propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const {
+void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
 
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();

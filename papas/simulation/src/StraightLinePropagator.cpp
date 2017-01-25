@@ -5,13 +5,13 @@
 #include "papas/utility/GeoTools.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 
 namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(const SimParticle& ptc,
+void StraightLinePropagator::propagateOne(const PFParticle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius) const {
@@ -53,7 +53,7 @@ void StraightLinePropagator::propagateOne(const SimParticle& ptc,
   }
 }
 
-void StraightLinePropagator::propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
   propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 

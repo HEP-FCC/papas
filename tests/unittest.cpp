@@ -34,7 +34,7 @@
 #include "papas/datatypes/Identifier.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/detectors/CMS.h"
 #include "papas/detectors/Material.h"
@@ -109,12 +109,12 @@ TEST_CASE("Helixpath") {  /// Helix path test
   auto cyl1 = SurfaceCylinder(papas::Position::kEcalIn, 1., 2.);
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
-  auto particle = SimParticle(211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
+  auto particle = PFParticle(211, -1, TLorentzVector{2., 0, 1, 5}, TVector3{0, 0, 0}, field);
   auto helixprop = HelixPropagator(3.8);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
   auto tvec = particle.pathPosition(cyl1.layer());
-  auto particle2 = SimParticle(211, -1, TLorentzVector{0., 2, 1, 5}, TVector3{0, 0, 0}, field);
+  auto particle2 = PFParticle(211, -1, TLorentzVector{0., 2, 1, 5}, TVector3{0, 0, 0}, field);
   helixprop.propagateOne(particle2, cyl1);
   auto tvec2 = particle2.pathPosition(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
@@ -224,7 +224,7 @@ TEST_CASE("StraightLine") {
   auto cyl2 = SurfaceCylinder(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  SimParticle photon = SimParticle(22, 0, tlv);
+  PFParticle photon = PFParticle(22, 0, tlv);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -239,7 +239,7 @@ TEST_CASE("StraightLine") {
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
 
-  SimParticle photon2 = SimParticle(22, 0, tlv);
+  PFParticle photon2 = PFParticle(22, 0, tlv);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -251,21 +251,21 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  SimParticle photon3 = SimParticle(22, 0, tlv, {0, 0, 1.5}, 0.);
+  PFParticle photon3 = PFParticle(22, 0, tlv, {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector(1, 0, -1, 2.);
-  SimParticle photon4 = SimParticle(22, 0, tlv, {0, 0, -1.5}, 0.);
+  PFParticle photon4 = PFParticle(22, 0, tlv, {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
-  SimParticle photon5 = SimParticle(22, 0, tlv,
+  PFParticle photon5 = PFParticle(22, 0, tlv,
                                     {
                                         0., 0.5, 0,
                                     },
@@ -654,7 +654,7 @@ TEST_CASE("test_history") {
   Identifier::reset();
   auto papasEvent = PapasEvent();
   auto ecals = Clusters();
-  auto particles = SimParticles();
+  auto particles = PFParticles();
   IdType lastid = 0;
   IdType lastcluster = 0;
   Nodes history;
@@ -666,7 +666,7 @@ TEST_CASE("test_history") {
     lastcluster = cluster.id();
     auto cnode = PFNode(lastcluster);
     history.emplace(lastcluster, std::move(cnode));
-    auto particle = SimParticle(22, -1, TLorentzVector(1, 1, 1, 1), TVector3(0., 0., 0.), 0.7, 'r');
+    auto particle = PFParticle(22, -1, TLorentzVector(1, 1, 1, 1), TVector3(0., 0., 0.), 0.7, 'r');
     particles.emplace(particle.id(), std::move(particle));
     lastid = particle.id();
     auto pnode = PFNode(lastid);

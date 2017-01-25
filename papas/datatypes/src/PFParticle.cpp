@@ -3,7 +3,7 @@
 //
 //
 
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include <cmath>
 #include <iostream>
 #include <utility>
@@ -19,7 +19,7 @@
 
 namespace papas {
 
-/*SimParticle::SimParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
+/*PFParticle::PFParticle(IdType uniqueid, int pdgid, TLorentzVector tlv, TVector3 vertex, double field) :
 Particle(uniqueid, pdgid, ParticlePData::particleCharge(pdgid), tlv),
 m_vertex(vertex),
 m_isHelix(fabs(charge())>0.5)
@@ -32,7 +32,7 @@ else
 
 }*/
 
-SimParticle::SimParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
                          double field, char subtype)
   : Particle( pdgid, charge, tlv), m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
 
@@ -45,9 +45,9 @@ SimParticle::SimParticle(int pdgid, double charge, const TLorentzVector& tlv, co
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-SimParticle::SimParticle( int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
+PFParticle::PFParticle( int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
     :  // for when particle is created via reconstruct track - it calls the above constructor
-      SimParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
+      PFParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
                   track.path()->field(), subtype) {
 
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
@@ -55,17 +55,17 @@ SimParticle::SimParticle( int pdgid, double charge, const TLorentzVector& tlv, c
   }
 }
 /*
-void SimParticle::setHelix(const Path& path) {
+void PFParticle::setHelix(const Path& path) {
   m_helix = path; //copy??
   }
 
-void SimParticle::setPath(const Path& path) {
+void PFParticle::setPath(const Path& path) {
   m_path = path;
 }*/
 
-const TVector3& SimParticle::pathPosition(papas::Position layer) const { return m_path->namedPoint(layer); }
+const TVector3& PFParticle::pathPosition(papas::Position layer) const { return m_path->namedPoint(layer); }
 
-/*SimParticle::SimParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
+/*PFParticle::PFParticle( TLorentzVector& tlv, TVector3& vertex, double charge, int pdgid):
  Particle(pdgid, charge, tlv), m_vertex(vertex) {
  self.path = None
  self.clusters = dict()
@@ -74,7 +74,7 @@ const TVector3& SimParticle::pathPosition(papas::Position layer) const { return 
  self.track_smeared = None
  }*/
 
-bool SimParticle::isElectroMagnetic() const {
+bool PFParticle::isElectroMagnetic() const {
   unsigned int kind = abs(pdgId());
   if (kind == 11 || kind == 22) {
     return true;
@@ -83,7 +83,7 @@ bool SimParticle::isElectroMagnetic() const {
 };
   
   
-  std::ostream& operator<<(std::ostream& os, const SimParticle& particle) {
+  std::ostream& operator<<(std::ostream& os, const PFParticle& particle) {
     os << "Particle :" << std::setw(6)<< std::left<< Identifier::pretty(particle.id()) << ":" << particle.id() << ": " << particle.info();
     return os;
   }

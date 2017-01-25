@@ -8,7 +8,7 @@
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/simulation/HelixPropagator.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
@@ -28,7 +28,7 @@ namespace papas {
    Usage:
    Nodes history;
    auto sim = Simulator(CMSDetector, Nodes);
-   SimParticle& ptc = sim.addParticle(211, M_PI / 2. + 0.5 , 0, 40. );
+   PFParticle& ptc = sim.addParticle(211, M_PI / 2. + 0.5 , 0, 40. );
    sim.simulateHadron(ptc);
    */
   class Simulator {
@@ -46,7 +46,7 @@ namespace papas {
               Clusters& smearedHcalClusters,
               Tracks& tracks,
               Tracks& smearedtracks,
-              SimParticles& simParticles,
+              PFParticles& simParticles,
               Nodes& history);
 
     void simulateParticle(const Particle& ptc);
@@ -58,13 +58,13 @@ namespace papas {
     const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
     const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
     Nodes& history() { return m_history; }                      /// return a reference to history nodes collection
-    const SimParticles& particles() const { return m_particles; }  ///< Return particles collection
+    const PFParticles& particles() const { return m_particles; }  ///< Return particles collection
     Cluster smearCluster(const Cluster& cluster,
                          papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
     void clear();  ///< Clear all the collections of clusters, particles, tracks
     
     /**
-     Makes a new SimParticle using random uniform distribution for theta, phi (-pi to +pi), energy
+     Makes a new PFParticle using random uniform distribution for theta, phi (-pi to +pi), energy
      @param[in] int pdgid: particle id (eg 22 for a photon)
      @param[in] double charge: charge of particle eg -1
      @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
@@ -72,44 +72,44 @@ namespace papas {
      @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
      @param[in] double ptmax: maximum pt
      @param[in] const TVector3& vertex: start point of particle
-     @return SimParticle& the newly created particle
+     @return PFParticle& the newly created particle
      */
     // move this somewhere else
-    SimParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
+    PFParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                                 const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
     
   private:
-    void simulatePhoton(SimParticle& ptc);    ///< Simulates cluster from Photon
-    void simulateHadron(SimParticle& ptc);    ///< Simulates clusters and track from a Hadron
-    void simulateNeutrino(SimParticle& ptc);  ///< Simulates neutrino
-    void smearElectron(SimParticle& ptc);     ///< Does not smear so far as I can see
-    void simulateElectron(SimParticle& ptc);
-    void smearMuon(SimParticle& ptc);         ///< Does not smear so far as I can see
-    void simulateMuon(SimParticle& ptc);
+    void simulatePhoton(PFParticle& ptc);    ///< Simulates cluster from Photon
+    void simulateHadron(PFParticle& ptc);    ///< Simulates clusters and track from a Hadron
+    void simulateNeutrino(PFParticle& ptc);  ///< Simulates neutrino
+    void smearElectron(PFParticle& ptc);     ///< Does not smear so far as I can see
+    void simulateElectron(PFParticle& ptc);
+    void smearMuon(PFParticle& ptc);         ///< Does not smear so far as I can see
+    void simulateMuon(PFParticle& ptc);
     /**
-     Makes a new SimParticle
+     Makes a new PFParticle
      @param[in] int pdgid: particle id (eg 22 for a photon)
      @param[in] const TLorentzVector& tlv: particle momentum
      @param[in] const TVector3& vertex: start point of particle
-     @return SimParticle& the newly created particle
+     @return PFParticle& the newly created particle
      */
-    SimParticle makeSimParticle(int pdgid, double charge, const TLorentzVector& tlv,
+    PFParticle makePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                 const TVector3& vertex = TVector3(0., 0., 0.)) const;
     
     /**
-     Makes a new SimParticle
+     Makes a new PFParticle
      @param[in] int pdgid: particle id (eg 22 for a photon)
      @param[in] double charge: charge of particle eg -1
      @param[in] double theta: initial direction of particle
      @param[in] double phi: initial direction of particle
      @param[in] double energy: energy of particle
      @param[in] const TVector3& vertex: start point of particle
-     @return SimParticle& the newly created particle
+     @return PFParticle& the newly created particle
      */
-    SimParticle makeSimParticle(int pdgid, double charge, double theta, double phi, double energy,
+    PFParticle makePFParticle(int pdgid, double charge, double theta, double phi, double energy,
                                 const TVector3& vertex = TVector3(0., 0., 0.)) const;
-    SimParticle& storeSimParticle(SimParticle&& simParticle, IdType parentId);
-    Cluster makeCluster(const SimParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1., char subtype='t') const;
+    PFParticle& storePFParticle(PFParticle&& simParticle, IdType parentId);
+    Cluster makeCluster(const PFParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1., char subtype='t') const;
     const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
     const Cluster& storeHcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
     bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer = papas::Layer::kNone,
@@ -124,8 +124,8 @@ namespace papas {
     const Track& storeSmearedTrack(Track&& smearedtrack,
                                    IdType parentid);  ///<move into the smearedtracks collection and history
     
-    void propagate(const SurfaceCylinder& cylinder, SimParticle& ptc);  ///< find where particle hits cylinder
-    void propagateAllLayers(SimParticle& ptc);                          ///< find where particle hits detector cylinders
+    void propagate(const SurfaceCylinder& cylinder, PFParticle& ptc);  ///< find where particle hits cylinder
+    void propagateAllLayers(PFParticle& ptc);                          ///< find where particle hits detector cylinders
     void addNode(const IdType newid, const IdType parentid = 0);        ///<update history nodes
     std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
     
@@ -143,7 +143,7 @@ namespace papas {
     Clusters& m_smearedHcalClusters;  ///< smeared hcal clusters
     Tracks& m_tracks;                 ///< tracks
     Tracks& m_smearedTracks;          ///< smeared tracks
-    SimParticles& m_particles;        ///< all particles
+    PFParticles& m_particles;        ///< all particles
     Nodes& m_history;  ///< Records relationships of everything that is simulated
     const PapasEvent& m_papasEvent;
     StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
