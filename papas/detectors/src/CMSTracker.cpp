@@ -12,9 +12,9 @@
 
 namespace papas {
 
-CMSTracker::CMSTracker(const VolumeCylinder& volume) : Tracker(Layer::kTracker, volume, Material(0, 0)) {}
+CMSTracker::CMSTracker(const VolumeCylinder& volume) : Tracker(Layer::kTracker, volume, Material("void", 0, 0)) {}
 
-CMSTracker::CMSTracker(const VolumeCylinder&& volume) : Tracker(Layer::kTracker, volume, Material(0, 0)) {}
+CMSTracker::CMSTracker(const VolumeCylinder&& volume) : Tracker(Layer::kTracker, volume, Material("void", 0, 0)) {}
 
 bool CMSTracker::acceptance(const Track& track) const {
   double pt = track.pt();

@@ -26,7 +26,8 @@ public:
    * @param[in] magnitude field strength
    */
   Field(const VolumeCylinder&& volume, const Material&& material,
-        double magnitude);  ///< allows the Material and Volume to be created on the fly
+        double magnitude);
+  
                             /** Constructor
                              *
                              * @param[in] volume The field cyclinders

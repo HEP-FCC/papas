@@ -4,10 +4,11 @@
 //
 
 #include "papas/detectors/Material.h"
-#include <TRandom.h>
+#include "papas/utility/TRandom.h"
+
 namespace papas {
 
-Material::Material(double x0, double lambdaI) : m_x0(x0), m_lambdaI(lambdaI) {}
+Material::Material(std::string name, double x0, double lambdaI) : m_name(name), m_x0(x0), m_lambdaI(lambdaI) {}
 
 double Material::pathLength(bool isEm) const {
   // AJRTODO check with Colin about what happens if x= is none

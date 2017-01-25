@@ -15,18 +15,18 @@ class SurfaceCylinder {
 public:
   /** Constructor
    * @param[in] papas::Position clayer : eg kEcalIn, kEcalDecay etc
-   * @param[in] double rad : cyclinder radius
-   * @param[in] double z : cyclinder maximum z value
+   * @param[in] double rad : cylinder radius
+   * @param[in] double z : cylinder maximum z value
    */
   SurfaceCylinder(papas::Position clayer, double rad = 0., double z = 0.);
   double z() const { return m_z; };                  ///<z value
-  double radius() const { return m_radius; }         ///<cyclinder radius
-  papas::Position layer() const { return m_layer; }  ///<cyclinder layer
+  double radius() const { return m_radius; }         ///<cylinder radius
+  papas::Position layer() const { return m_layer; }  ///<cylinder layer
 
 private:
-  papas::Position m_layer;
-  double m_radius;
-  double m_z;
+  papas::Position m_layer; ///<cylinder layer
+  double m_radius; ///<cylinder radius
+  double m_z; ///<z value
 };
 
 }  // end namespace papas
