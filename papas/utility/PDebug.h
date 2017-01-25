@@ -50,9 +50,9 @@ public:
   static std::shared_ptr<spdlog::logger> log();
 
 private:
-  static spdlog::details::line_logger info()  { return log()->info(); }
+  static spdlog::details::line_logger info() { return log()->info(); }
   static spdlog::details::line_logger write() { return log()->info(); }
-  static spdlog::details::line_logger warn()  { return log()->warn(); }
+  static spdlog::details::line_logger warn() { return log()->warn(); }
   static spdlog::details::line_logger error() { return log()->error(); }
   static spdlog::details::line_logger debug() { return log()->debug(); }
   static void init();          ///< called when a log message is first encountered

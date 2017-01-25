@@ -1,10 +1,10 @@
 
+#include "papas/reconstruction/PFBlock.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/PapasEventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
-#include "papas/reconstruction/PFBlock.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 
 // temp
@@ -12,7 +12,8 @@
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks, Nodes& history)
+PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks,
+                                 Nodes& history)
     : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
@@ -24,8 +25,8 @@ PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    PDebug::write("Splitting {}",blocks.at(bid));
-    auto unlink =findEdgesToUnlink(blocks.at(bid));
+    PDebug::write("Splitting {}", blocks.at(bid));
+    auto unlink = findEdgesToUnlink(blocks.at(bid));
     simplifyBlock(unlink, blocks.at(bid));
   }
 }

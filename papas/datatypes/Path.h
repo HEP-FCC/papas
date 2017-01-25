@@ -5,9 +5,9 @@
 #ifndef path_h
 #define path_h
 
-#include "papas/datatypes/Definitions.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "papas/datatypes/Definitions.h"
 #include <map>
 #include <memory>
 #include <vector>
@@ -44,7 +44,7 @@ public:
   double field() const { return m_field; }
 
 protected:
-  TLorentzVector m_p4; //temp
+  TLorentzVector m_p4;  // temp
   TVector3 m_unitDirection;
   double m_speed;
   TVector3 m_origin;

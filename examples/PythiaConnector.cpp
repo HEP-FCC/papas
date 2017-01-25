@@ -12,14 +12,14 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/reconstruction/PapasManager.h"
 
+#include "datamodel/CaloClusterCollection.h"
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
-#include "datamodel/CaloClusterCollection.h"
 #include "utilities/ParticleUtils.h"
 
-#include "papas/utility/PDebug.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/simulation/Simulator.h"
+#include "papas/utility/PDebug.h"
 
 #include "papas/display/AliceDisplay.h"
 
@@ -55,41 +55,40 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     int pdgid = ptc.core().pdgId;
-    TVector3 startVertex = TVector3(0,0,0);
-    TVector3 endVertex = TVector3(0,0,0);
+    TVector3 startVertex = TVector3(0, 0, 0);
+    TVector3 endVertex = TVector3(0, 0, 0);
     if (ptc.startVertex().isAvailable()) {
-        std::cout<< "Z" << ptc.startVertex().z() <<std::endl;
-        startVertex = TVector3(ptc.startVertex().x()* 1e-3, ptc.startVertex().y()*1e-3, ptc.startVertex().z()*1e-3);
+      std::cout << "Z" << ptc.startVertex().z() << std::endl;
+      startVertex = TVector3(ptc.startVertex().x() * 1e-3, ptc.startVertex().y() * 1e-3, ptc.startVertex().z() * 1e-3);
     }
     if (ptc.endVertex().isAvailable()) {
-      std::cout<< "Z" << ptc.endVertex().z() <<std::endl;
-      //convert pythia : mm -> papas : m
-      endVertex = TVector3(ptc.endVertex().x()* 1e-3, ptc.endVertex().y()*1e-3, ptc.endVertex().z()*1e-3);
+      std::cout << "Z" << ptc.endVertex().z() << std::endl;
+      // convert pythia : mm -> papas : m
+      endVertex = TVector3(ptc.endVertex().x() * 1e-3, ptc.endVertex().y() * 1e-3, ptc.endVertex().z() * 1e-3);
     }
- 
-    
-    // startVertex = TVector3(ptc.startVertex().x(), ptc.startVertex().y(), ptc.startVertex().z());
-    //TVector3 endVertex = ptc.core().endVertex();
 
-     // make every single one into a particle
+    // startVertex = TVector3(ptc.startVertex().x(), ptc.startVertex().y(), ptc.startVertex().z());
+    // TVector3 endVertex = ptc.core().endVertex();
+
+    // make every single one into a particle
     // so as to match python approach (for now)
     // otherwise ids do not align
 
     if (ptc.core().status == 1) {  // only stable ones
-      
+
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-        
-        auto particle = papas::Particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
-        particles.push_back (std::move(particle));
-        //papas::PDebug::write("Selected Papas{}", particle);
+
+        auto particle =
+            papas::Particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
+        particles.push_back(std::move(particle));
+        // papas::PDebug::write("Selected Papas{}", particle);
       }
     }
   }
 #if WITHSORT
-  particles.sort(
-      [](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
+  particles.sort([](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
 #endif
-  
+
   for (auto p : particles)
     std::cout << p.info() << std::endl;
   return std::move(particles);
@@ -125,25 +124,23 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");
-    papasManager.buildBlocks("em","hm",'s');
+    papasManager.buildBlocks("em", "hm", 's');
     papasManager.simplifyBlocks('r');
     papasManager.mergeHistories();
     papasManager.reconstruct('s');
-    //todo blockbuilder and reconstruct
-    //papasManager.testMergeClusters();
-    //papasManager.reconstructEvent();
+    // todo blockbuilder and reconstruct
+    // papasManager.testMergeClusters();
+    // papasManager.reconstructEvent();
     m_store.clear();
   }
-  
+
   m_reader.endOfEvent();
 }
 
-
-void PythiaConnector::displayEvent(const papas::PapasManager& papasManager)
-{
-  papas::PFApp myApp{}; // I think this should turn into a PapasManager member
+void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
+  papas::PFApp myApp{};  // I think this should turn into a PapasManager member
   myApp.display(papasManager.papasEvent(), papasManager.detector());
-  //gSystem->ProcessEvents();
+  // gSystem->ProcessEvents();
 }
 
 void PythiaConnector::writeParticlesROOT(const char* fname, const papas::PFParticles& particles) {
@@ -180,32 +177,35 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::PFParti
 }
 
 void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
-  
+
   podio::ROOTWriter writer(fname, &m_store);
   unsigned int nevents = 1;
   unsigned int eventno = 0;
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
-  
+
   writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
   writer.registerForWrite<fcc::CaloClusterCollection>("Cluster");
-  
+
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
   evinfocoll.push_back(evinfo);
-  AddClustersToEDM(clusters, ccoll );
-  
-  auto checkClusters=ConvertClustersToPapas(ccoll,
-                                            0, //size or 0 for merged
-                                            papas::Identifier::ItemType::kEcalCluster,
-                                            's' );
-  
+  AddClustersToEDM(clusters, ccoll);
+
+  auto checkClusters = ConvertClustersToPapas(ccoll,
+                                              0,  // size or 0 for merged
+                                              papas::Identifier::ItemType::kEcalCluster,
+                                              's');
+
   writer.writeEvent();
   m_store.clearCollections();
   writer.finish();
 }
 
-papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size, papas::Identifier::ItemType itemtype, char subtype) const {
+papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
+                                                        float size,
+                                                        papas::Identifier::ItemType itemtype,
+                                                        char subtype) const {
   papas::Clusters clusters;
   for (const auto& c : fccClusters) {
     const auto position = c.core().position;
@@ -216,7 +216,7 @@ papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCo
   return clusters;
 }
 
-void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters ) {
+void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters) {
   for (const auto& c : papasClusters) {
     auto clust = fccClusters.create();
     clust.core().energy = c.second.energy();
@@ -225,12 +225,10 @@ void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc
     p3.y = c.second.position().Y();
     p3.z = c.second.position().Z();
   }
-
 }
 
-
 /*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
-  
+
   const fcc::ParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
     papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
@@ -240,6 +238,6 @@ void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc
     papasManager.reconstructEvent();
     m_store.clear();
   }
-  
+
   m_reader.endOfEvent();
 }*/

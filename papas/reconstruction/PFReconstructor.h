@@ -1,11 +1,11 @@
 #ifndef PFReconstructor_h
 #define PFReconstructor_h
 
+#include "TVector3.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/detectors/Detector.h"
-#include "TVector3.h"
+#include "papas/graphtools/DefinitionsNodes.h"
 
 namespace papas {
 /** Handles reconstruction of particles from a PapasEvent
@@ -69,19 +69,21 @@ photon
 class PFReconstructor {
 
 public:
-  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles, Nodes& history);
+  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles,
+                  Nodes& history);
   const PFParticles& particles() const { return m_particles; }  /// allow the particles collection to be moved out
-                                                              //const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
+  // const Blocks& blocks() const { return m_blocks; }           /// allow the particles collection to be moved out
 private:
   void reconstructBlock(const PFBlock& block);                ///< turns a block into one or more particles
   void reconstructHcal(const PFBlock& block, IdType hcalId);  ///< constructs particle(s) starting from Hcal cluster
-  void reconstructTrack(const Track& track, int pdgId, const Ids& parentIds);  ///< constructs and returns particle(s) starting from a track
+  void reconstructTrack(const Track& track, int pdgId,
+                        const Ids& parentIds);  ///< constructs and returns particle(s) starting from a track
   void reconstructCluster(
       const Cluster& cluster, papas::Layer layer, const Ids& parentIds, double energy = -1,
       const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
   void reconstructElectrons(const PFBlock& block);
   void reconstructMuons(const PFBlock& block);
-  //void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
+  // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
   void insertParticle(const Ids& parentIds, PFParticle& newparticle);
   bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
   double neutralHadronEnergyResolution(double energy, double resolution) const;

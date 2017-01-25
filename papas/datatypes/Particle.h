@@ -21,12 +21,13 @@ class Particle {
 public:
   Particle();
   Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1,
-           const TVector3& startVector = TVector3(0, 0, 0), const TVector3& endVertex = TVector3(0, 0, 0));
+           const TVector3& startVector = TVector3(0, 0, 0),
+           const TVector3& endVertex = TVector3(0, 0, 0));
   Particle(int pdgid, double charge);
 
   std::string stringDescription() const;               ///< String to describe the particle
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
-  const TVector3& p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
+  TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
   double e() const { return m_tlv.E(); }               ///<Energy
   double pt() const { return m_tlv.Pt(); }             ///<transverse momentum (magnitude of p3 in transverse plane)
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane

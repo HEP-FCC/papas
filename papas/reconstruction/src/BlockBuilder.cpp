@@ -10,8 +10,8 @@
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 #include "papas/graphtools/FloodFill.h"
-#include "papas/utility/PDebug.h"
 #include "papas/reconstruction/PFBlock.h"
+#include "papas/utility/PDebug.h"
 
 namespace papas {
 
@@ -33,13 +33,10 @@ void BlockBuilder::makeBlocks(char subtype) {
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.id();
-    makeHistoryLinks(block.elementIds(), {id} , m_history);
+    makeHistoryLinks(block.elementIds(), {id}, m_history);
     m_blocks.emplace(id, std::move(block));
-    
   }
 }
-  
- 
 
 std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
   // TODO move to helper

@@ -9,19 +9,19 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
 
-#include <iostream>
 #include <TApplication.h>
 #include <TCanvas.h>
+#include <iostream>
 
 int main(int argc, char* argv[]) {
   papas::PDebug::On("pdebug.txt");
   rootrandom::Random::seed(0xdeadbeef);
-  //randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -38,8 +38,7 @@ int main(int argc, char* argv[]) {
     // read and process a single event
     unsigned int eventNo = 0;
     pythiaConnector.processEvent(eventNo, papasManager);
-    
-  
+
     // write out the reconstructed particles to a root file
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.papasEvent().particles('r'));
 
@@ -52,16 +51,16 @@ int main(int argc, char* argv[]) {
     for (const auto& p : papasManager.papasEvent().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
-    
-    //testing (move elsewhere)
-    pythiaConnector.writeClustersROOT("simpleeg.root",papasManager.papasEvent().clusters("em"));
+
+    // testing (move elsewhere)
+    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.papasEvent().clusters("em"));
 
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
     pythiaConnector.displayEvent(papasManager);
-    //tApp.Run();
-    //papasManager.display(false);
-    //papasManager.show();
+    // tApp.Run();
+    // papasManager.display(false);
+    // papasManager.show();
 
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {

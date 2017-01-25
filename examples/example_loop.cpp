@@ -8,10 +8,10 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
 
 // STL
 #include <chrono>
@@ -19,9 +19,9 @@
 
 int main(int argc, char* argv[]) {
   papas::PDebug::On("physics.txt");
-  //randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   rootrandom::Random::seed(0xdeadbeef);
-  
+
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -38,7 +38,6 @@ int main(int argc, char* argv[]) {
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
     auto papasManager = papas::PapasManager(CMSDetector);
-    
 
     unsigned int eventNo = 0;
     unsigned int nEvents = 100;

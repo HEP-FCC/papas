@@ -15,35 +15,33 @@
 #include "TLorentzVector.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/HistoryHelper.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Edge.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
+#include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles, Nodes& history)
-    : m_papasEvent(papasEvent), m_particles(particles), m_detector(detector), m_history(history) {
+PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector,
+                                 PFParticles& particles, Nodes& history)
+    : m_papasEvent(papasEvent), m_detector(detector), m_particles(particles), m_history(history) {
 
-  
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-      blockids.sort();
-      blockids.reverse();
+  blockids.sort();
+  blockids.reverse();
 #endif
-  
-  
+
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
     reconstructBlock(block);
-    
   }
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");
@@ -54,50 +52,50 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
 
   // TODO sort m_blocks
 
- /* // simplify the blocks by editing the links
-  // each track will end up linked to at most one hcal
+  /* // simplify the blocks by editing the links
+   // each track will end up linked to at most one hcal
 
-  // sort the blocks by id to ensure match with python
-  std::vector<IdType> blockids;
-  std::vector<IdType> newblockids;
+   // sort the blocks by id to ensure match with python
+   std::vector<IdType> blockids;
+   std::vector<IdType> newblockids;
 
-  auto bBuilder = PFBlockBuilder(m_papasEvent, "em", "hm", 's', m_blocks, m_history);
-  m_blocks = bBuilder.blocks();
+   auto bBuilder = PFBlockBuilder(m_papasEvent, "em", "hm", 's', m_blocks, m_history);
+   m_blocks = bBuilder.blocks();
 
-  for (const auto& b : m_blocks) {
-    blockids.push_back(b.first);
-  }
-#if WITHSORT
-  std::sort(blockids.begin(), blockids.end());
-#endif
-  // go through each block and see if it can be simplified
-  // in some cases it will end up being split into smaller blocks
-  // Note that the old block will be marked as disactivated
-  for (auto bid : blockids) {
-    Blocks newBlocks = simplifyBlock(bid);
-    if (newBlocks.size() > 0) {
-      for (auto& b : newBlocks) {
-        IdType id = b.first;
-        m_blocks.emplace(id, std::move(b.second));
-        newblockids.push_back(b.first);
-      }
-    }
-  }
-  blockids.insert(std::end(blockids), std::begin(newblockids), std::end(newblockids));
+   for (const auto& b : m_blocks) {
+     blockids.push_back(b.first);
+   }
+ #if WITHSORT
+   std::sort(blockids.begin(), blockids.end());
+ #endif
+   // go through each block and see if it can be simplified
+   // in some cases it will end up being split into smaller blocks
+   // Note that the old block will be marked as disactivated
+   for (auto bid : blockids) {
+     Blocks newBlocks = simplifyBlock(bid);
+     if (newBlocks.size() > 0) {
+       for (auto& b : newBlocks) {
+         IdType id = b.first;
+         m_blocks.emplace(id, std::move(b.second));
+         newblockids.push_back(b.first);
+       }
+     }
+   }
+   blockids.insert(std::end(blockids), std::begin(newblockids), std::end(newblockids));
 
-  for (auto bid : blockids) {
-    PFBlock& block = m_blocks.at(bid);
-    if (block.isActive()) {  // when blocks are split the original gets deactivated
-      PDebug::write("Processing {}", block);
-      reconstructBlock(block);
-    }
-  }
-  if (m_unused.size() > 0) {
-    PDebug::write("unused elements ");
-    for (auto u : m_unused)
-      PDebug::write("{},", u);
-    // TODO warning message
-  }*/
+   for (auto bid : blockids) {
+     PFBlock& block = m_blocks.at(bid);
+     if (block.isActive()) {  // when blocks are split the original gets deactivated
+       PDebug::write("Processing {}", block);
+       reconstructBlock(block);
+     }
+   }
+   if (m_unused.size() > 0) {
+     PDebug::write("unused elements ");
+     for (auto u : m_unused)
+       PDebug::write("{},", u);
+     // TODO warning message
+   }*/
 }
 
 #if 0
@@ -281,7 +279,7 @@ bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtyp
   /*returns: True if object unique_id comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
-  
+
   auto historyHelper = HistoryHelper(m_papasEvent);
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
   bool isFromPdgId = false;
@@ -291,15 +289,12 @@ from a particle of type type_and_subtype, with this absolute pdgid.
   return isFromPdgId;
 }
 
-  
-  
 double PFReconstructor::neutralHadronEnergyResolution(double energy, double eta) const {
   auto resolution = m_detector.hcal()->energyResolution(energy, eta);
-    return resolution;
-  
+  return resolution;
 }
 double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const {
-  
+
   /*WARNING CMS SPECIFIC!
    //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
    */
@@ -434,8 +429,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   m_locked[hcalId] = true;
 }
 
-void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, const Ids& parentIds, double energy,
-                                         const TVector3& vertex) {
+void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer layer, const Ids& parentIds,
+                                         double energy, const TVector3& vertex) {
   // construct a photon if it is an ecal
   // construct a neutral hadron if it is an hcal
   int pdgId = 0;
@@ -486,9 +481,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // return particle;
 }
 
-
-
-void PFReconstructor::reconstructTrack(const Track& track, int pdgId,const Ids& parentIds) {
+void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids& parentIds) {
   /*construct a charged hadron/electron/muon from the track
   */
   if (m_locked[track.id()]) return;

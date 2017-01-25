@@ -5,8 +5,8 @@
 
 #include "papas/display/GTrajectories.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/Path.h"
 #include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
 //#include "papas/datatypes/Identifier.h"
 
@@ -129,7 +129,8 @@ void GTrajectory::setColor(int color) {
 }
 
 void GTrajectory::Draw(const std::string& projection /*,
-                       const std::string&  opt*/) const {  std::string usedopt = "lpsame";  // AJRTODO
+                       const std::string&  opt*/) const {
+  std::string usedopt = "lpsame";  // AJRTODO
 
   m_graphs.at(projection)->Draw(usedopt.c_str());  // "at" instead of  [] otherwise fails because of const ness
 

@@ -9,7 +9,7 @@ HistoryHelper::HistoryHelper(const PapasEvent& papasEvent) : m_papasEvent(papasE
 
 Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
   const Nodes& history = m_papasEvent.history();
-  //std::cout << Identifier::pretty(id)<<std::endl;
+  // std::cout << Identifier::pretty(id)<<std::endl;
   auto& startnode = history.at(id);
   auto bfs = DAG::BFSRecurseVisitor<PFNode>();
   auto nodes = bfs.traverseNodes(startnode, direction);

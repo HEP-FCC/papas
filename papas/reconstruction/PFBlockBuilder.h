@@ -21,21 +21,21 @@ public:
   /** Constructor
    * @param[in]  papasEvent contains collections of tracks, clusters and history
    * @param[in]  ecalTypeAndSubtype which ecal clusters to use from the PapasEvent
-   * @param[in]  hcalTypeAndSubtype which hcal clusters to use from the PapasEvent  
+   * @param[in]  hcalTypeAndSubtype which hcal clusters to use from the PapasEvent
    * @param[in]  trackSubtype which tracks to use from the PapasEvent
    * @param[inout] blocks structure into which new blocks will be added
    * @param[inout] history structure to which history information will be added
    */
   PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype,
-                 const std::string& hcalTypeAndSubtype, char trackSubtype,
-                Blocks& blocks, Nodes& history);
+                 const std::string& hcalTypeAndSubtype, char trackSubtype, Blocks& blocks, Nodes& history);
+
 private:
-  void makeBlocks();         ///< does the main work of creating the blocks
+  void makeBlocks();               ///< does the main work of creating the blocks
   const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
-  Blocks& m_blocks;           ///< the blocks made by blockbuilder
-  Nodes& m_history;     ///< history will be updated to store block creation
-  Ids m_uniqueIds;           ///< list of element ids from which to construct the blocks
+  Blocks& m_blocks;                ///< the blocks made by blockbuilder
+  Nodes& m_history;                ///< history will be updated to store block creation
+  Ids m_uniqueIds;                 ///< list of element ids from which to construct the blocks
 };
-  
+
 }  // end namespace papas
 #endif /* PFBlockBuilder_hpp */

@@ -8,8 +8,8 @@
 
 #include "papas/graphtools/Ruler.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/graphtools/Distance.h"
 #include "papas/datatypes/Track.h"
+#include "papas/graphtools/Distance.h"
 
 namespace papas {
 

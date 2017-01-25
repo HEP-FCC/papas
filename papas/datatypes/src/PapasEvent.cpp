@@ -1,5 +1,5 @@
-#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
@@ -19,10 +19,9 @@ PapasEvent::PapasEvent()
 
 void PapasEvent::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
-  if (clusters.size()==0)
-    return;
-  std::cout <<  "Add clusters" ;
-  std::cout << Identifier::pretty(clusters.begin()->first)<< std::endl;
+  if (clusters.size() == 0) return;
+  std::cout << "Add clusters";
+  std::cout << Identifier::pretty(clusters.begin()->first) << std::endl;
   if (Identifier::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
@@ -41,8 +40,7 @@ void PapasEvent::addCollection(const Blocks& blocks) { addCollectionInternal<PFB
 
 const Clusters& PapasEvent::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // return the corresponding collection
-  if (!hasCollection(type, subtype))
-    return m_emptyClusters;
+  if (!hasCollection(type, subtype)) return m_emptyClusters;
   if (type == Identifier::ItemType::kEcalCluster)
     return *(m_ecalClustersCollection.at(subtype));
   else
@@ -60,21 +58,18 @@ const Clusters& PapasEvent::clusters(const std::string& typeAndSubtype) const {
 }
 
 const Tracks& PapasEvent::tracks(const Identifier::SubType subtype) const {
-  if (!hasCollection(Identifier::ItemType::kTrack, subtype))
-    return m_emptyTracks;
+  if (!hasCollection(Identifier::ItemType::kTrack, subtype)) return m_emptyTracks;
   return *m_tracksCollection.at(subtype);
 }
-  
-  const PFParticles& PapasEvent::particles(const Identifier::SubType subtype) const {
-    if (!hasCollection(Identifier::ItemType::kParticle, subtype))
-      return m_emptyPFParticles;
-    return *m_particlesCollection.at(subtype);
-  }
-  const Blocks& PapasEvent::blocks(const Identifier::SubType subtype) const {
-    if (!hasCollection(Identifier::ItemType::kBlock, subtype))
-      return m_emptyBlocks;
-    return *m_blocksCollection.at(subtype);
-  }
+
+const PFParticles& PapasEvent::particles(const Identifier::SubType subtype) const {
+  if (!hasCollection(Identifier::ItemType::kParticle, subtype)) return m_emptyPFParticles;
+  return *m_particlesCollection.at(subtype);
+}
+const Blocks& PapasEvent::blocks(const Identifier::SubType subtype) const {
+  if (!hasCollection(Identifier::ItemType::kBlock, subtype)) return m_emptyBlocks;
+  return *m_blocksCollection.at(subtype);
+}
 bool PapasEvent::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // Check if this collection is present
   auto found = false;
@@ -129,24 +124,20 @@ bool PapasEvent::hasObject(IdType id) const {
   }
   return found;
 };
-  
-  
- void PapasEvent::mergeHistories() {
-    //A separate history is created at each stage.
-    //the following merges these separate histories into
-    //one single history that can be used for analysis
-    for (auto history : m_historys)
-    {
-      for (const auto node : *history){
-        for (const auto& c : node.second.children()) {
-          makeHistoryLink(node.first, c->value(), m_history);
-        }
+
+void PapasEvent::mergeHistories() {
+  // A separate history is created at each stage.
+  // the following merges these separate histories into
+  // one single history that can be used for analysis
+  for (auto history : m_historys) {
+    for (const auto node : *history) {
+      for (const auto& c : node.second.children()) {
+        makeHistoryLink(node.first, c->value(), m_history);
       }
     }
-    
   }
-  
-  
+}
+
 void PapasEvent::clear() {
   m_ecalClustersCollection.clear();
   m_hcalClustersCollection.clear();

@@ -9,12 +9,11 @@
 #include "papas/reconstruction/PapasManagerTester.h"
 
 namespace papas {
-  
-  
-  PapasManagerTester::PapasManagerTester(Detector& detector) :  PapasManager(detector) {}
+
+PapasManagerTester::PapasManagerTester(Detector& detector) : PapasManager(detector) {}
 
 Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
-  
+
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
   // and stored in a list of collections.
@@ -33,12 +32,11 @@ Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
   auto& smearedTracks = createTracks();
   auto& history = createHistory();
   auto& simParticles = createParticles();
-  
+
   // run the simulator which will fill the above objects
   const auto simulator = Simulator(m_papasEvent, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
-                             smearedHcalClusters, tracks, smearedTracks, simParticles, history);
+                                   smearedHcalClusters, tracks, smearedTracks, simParticles, history);
   return simulator;
-  
 }
 
-} //end namespace papas
+}  // end namespace papas

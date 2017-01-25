@@ -9,10 +9,10 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
 
 #include <TApplication.h>
 

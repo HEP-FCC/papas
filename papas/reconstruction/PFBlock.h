@@ -1,12 +1,12 @@
 #ifndef RECONSTRUCTION_PFBLOCK_H
 #define RECONSTRUCTION_PFBLOCK_H
 
-#include <iostream>
-#include <string>
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
-#include "papas/graphtools/Edge.h"
 #include "papas/graphtools/DefinitionsNodes.h"
+#include "papas/graphtools/Edge.h"
+#include <iostream>
+#include <string>
 
 #include <iostream>
 #include <string>
@@ -29,8 +29,6 @@ namespace papas {
  block = PFBlock(element_ids,  edges, pfevent)
  os << block;
  */
-  
-
 
 class PFBlock {
 
@@ -41,7 +39,8 @@ public:
    problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are
    extracted will be removed from the Edges object.
    */
-  PFBlock(const Ids& elementIds, Edges& edges, char subtype = 'u');  // relevant parts of edges will be removed by PFBlock
+  PFBlock(const Ids& elementIds, Edges& edges,
+          char subtype = 'u');  // relevant parts of edges will be removed by PFBlock
   PFBlock();
   PFBlock(PFBlock&& pfblock) = default;  // allow move
 
@@ -69,7 +68,7 @@ public:
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const;               ///< length of the element_unqiueids
-  IdType id() const { return m_uniqueId; };        ///<Unique ID of the block
+  IdType id() const { return m_uniqueId; };  ///<Unique ID of the block
   const Edges& edges() const { return m_edges; }
   std::string info() const;
   std::string elementsString() const;
@@ -91,4 +90,3 @@ std::ostream& operator<<(std::ostream& os, const PFBlock& block);
 
 }  // end namespace papas
 #endif /* PFBlock_h */
-

@@ -4,9 +4,9 @@
 #ifndef PFParticle_H
 #define PFParticle_H
 
+#include "papas/datatypes/Identifier.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/Identifier.h"
 
 namespace papas {
 
@@ -17,9 +17,9 @@ class PFParticle : public Particle {
 public:
   bool isElectroMagnetic() const;
   PFParticle() = default;
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv,
-              const TVector3& vertex = TVector3(0., 0., 0.), double field = 0., char subtype ='s');
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype ='r');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.),
+             double field = 0., char subtype = 's');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype = 'r');
 
   const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of Simparticle at given layer
   void setPath(Path::Ptr path) { m_path = path; }
@@ -33,9 +33,8 @@ private:
   Path::Ptr m_path;
   bool m_isHelix;
 };
-  
-  std::ostream& operator<<(std::ostream& os, const PFParticle& particle);
 
+std::ostream& operator<<(std::ostream& os, const PFParticle& particle);
 
 }  // end namespace papas
 #endif  // PFParticle_H

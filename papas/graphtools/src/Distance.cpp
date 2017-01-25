@@ -9,9 +9,9 @@
 #include "papas/graphtools/Distance.h"
 //#include "papas/datatypes/Identifier.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/utility/DeltaR.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
+#include "papas/utility/DeltaR.h"
 
 namespace papas {
 

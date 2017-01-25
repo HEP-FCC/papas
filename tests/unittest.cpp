@@ -32,9 +32,9 @@
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/detectors/CMS.h"
 #include "papas/detectors/Material.h"
@@ -50,8 +50,8 @@
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PapasManagerTester.h"
-#include "papas/utility/TRandom.h"
 #include "papas/utility/Random.h"
+#include "papas/utility/TRandom.h"
 
 using namespace papas;
 
@@ -266,10 +266,10 @@ TEST_CASE("StraightLine") {
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
   PFParticle photon5 = PFParticle(22, 0, tlv,
-                                    {
-                                        0., 0.5, 0,
-                                    },
-                                    0.);
+                                  {
+                                      0., 0.5, 0,
+                                  },
+                                  0.);
   propStraight.propagateOne(photon5, cyl1);
   points = photon5.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(1.));
@@ -296,7 +296,6 @@ TEST_CASE("RandomExp") {
   REQUIRE(r3 != r4);
 }
 
-
 TEST_CASE("TRandomExp") {
   // seed it to have known start point
   rootrandom::Random::seed(100);
@@ -305,15 +304,14 @@ TEST_CASE("TRandomExp") {
   rootrandom::Random::seed(100);
   double r2 = rootrandom::Random::exponential(5.);
   REQUIRE(r1 == r2);
-  
+
   // use a random start point so should not give same answers
   rootrandom::Random::seed();
   double r3 = rootrandom::Random::exponential(5.);
   double r4 = rootrandom::Random::exponential(5.);
-  
+
   REQUIRE(r3 != r4);
 }
-
 
 TEST_CASE("dummy") {
   bool success = true;

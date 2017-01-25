@@ -20,7 +20,7 @@ namespace papas {
 
  }
  @endcode
- 
+
  */
 class BlockBuilder : public GraphBuilder {
 public:
@@ -36,11 +36,10 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?
 
 private:
-  void makeBlocks(char subtype);      // does the main work
-  Nodes& m_history;  ///< externally owned and will be updated by BlockBuilder
-  Blocks& m_blocks;  ///< externally owned and will be updated by BlockBuilder
+  void makeBlocks(char subtype);  // does the main work
+  Nodes& m_history;               ///< externally owned and will be updated by BlockBuilder
+  Blocks& m_blocks;               ///< externally owned and will be updated by BlockBuilder
+};
 
-}  ;
-  
-}// end namespace papas
+}  // end namespace papas
 #endif /* BlockBuilder_h */

@@ -9,9 +9,9 @@
 #ifndef Cluster_h
 #define Cluster_h
 
+#include "TVector3.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Identifier.h"
-#include "TVector3.h"
 #include <stdio.h>
 
 namespace papas {
@@ -27,8 +27,8 @@ public:
    @param[in]  id type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype: single char eg 's' describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype ='t');
-  
+  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype = 't');
+
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster to be copied
    @param[in]  id new unique id to be provided by user
@@ -39,7 +39,7 @@ public:
    auto mergedCluster = Cluster(clusters.at(id), newid);
    */
   //~Cluster(); //temp
-  Cluster(const Cluster& cluster, Identifier::ItemType type, char subtype= 'u', float val =0.0);
+  Cluster(const Cluster& cluster, Identifier::ItemType type, char subtype = 'u', float val = 0.0);
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map

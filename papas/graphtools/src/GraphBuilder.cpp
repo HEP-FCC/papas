@@ -1,9 +1,9 @@
 
 #include "papas/graphtools/GraphBuilder.h"
+#include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/FloodFill.h"
 #include "papas/utility/PDebug.h"
-#include "papas/datatypes/DefinitionsCollections.h"
 namespace papas {
 
 GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_elementIds(ids) {
@@ -44,4 +44,4 @@ void GraphBuilder::sortIds(Ids& ids) {
 #endif
 }
 
-} //end namespace papas
+}  // end namespace papas

@@ -1,7 +1,7 @@
 #include "datatypes/papas/Definitions.h"
+#include "datatypes/papas/Id.h"
 #include "graphtools/papas/Edge.h"
 #include "graphtools/papas/GraphBuilder.h"
-#include "datatypes/papas/Id.h"
 #include "gtest/gtest.h"
 
 namespace papas {

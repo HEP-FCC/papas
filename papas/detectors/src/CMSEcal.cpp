@@ -7,8 +7,8 @@
  * @brief Implementation of the CMS ECAL  */
 #include "papas/detectors/CMSEcal.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/detectors/Material.h"
 #include "papas/datatypes/Particle.h"
+#include "papas/detectors/Material.h"
 
 namespace papas {
 /*

@@ -1,9 +1,9 @@
 #ifndef PAPAS_TRACK_H
 #define PAPAS_TRACK_H
 
-#include "papas/datatypes/Path.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "papas/datatypes/Path.h"
 
 namespace papas {
 /// Describes the particle track  - stored momentum and charge and can access particle path

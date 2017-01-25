@@ -9,8 +9,8 @@
 #include "papas/reconstruction/PFBlock.h"
 
 //#include <boost/format.hpp>
-#include "papas/graphtools/Edge.h"
 #include "papas/datatypes/Identifier.h"
+#include "papas/graphtools/Edge.h"
 #include "papas/utility/PDebug.h"
 #include "spdlog/details/format.h"
 #include <algorithm>
@@ -25,13 +25,15 @@ namespace papas {
 int PFBlock::tempBlockCount = 0;
 
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
-  : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
-   m_elementIds(element_ids) {
+    : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-     
-     //sort by type and then by reverse energy
-     m_elementIds.sort([](IdType a, IdType b) -> bool { if (Identifier::typeLetter(a) !=Identifier::typeLetter(b)) return (Identifier::typeLetter(a) <Identifier::typeLetter(b));
-       return b < a; } );
+
+  // sort by type and then by reverse energy
+  m_elementIds.sort([](IdType a, IdType b) -> bool {
+    if (Identifier::typeLetter(a) != Identifier::typeLetter(b))
+      return (Identifier::typeLetter(a) < Identifier::typeLetter(b));
+    return b < a;
+  });
 
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
@@ -232,8 +234,8 @@ std::string PFBlock::info() const {
   return out.str();
 }
 
-  std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
-  os << "block:"<<block.info() << std::endl;
+std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
+  os << "block:" << block.info() << std::endl;
   os << block.elementsString();
   os << block.edgeMatrixString();
   return os;

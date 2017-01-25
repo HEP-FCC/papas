@@ -67,7 +67,7 @@ TVector3 Helix::pointAtTime(double time) const {
 }
 
 TVector3 Helix::pointAtZ(double z) const {
-  
+
   double time = timeAtZ(z);
   return pointAtTime(time);
 }

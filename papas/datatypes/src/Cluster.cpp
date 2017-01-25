@@ -15,13 +15,13 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType idtype, char subtype)
-    : m_uniqueId(Identifier::makeId(idtype, subtype, fmax(0,energy))), m_p3(position), m_subClusters() {
+    : m_uniqueId(Identifier::makeId(idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
 }
 
-  Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
+Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
     : m_uniqueId(Identifier::makeId(type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
@@ -97,7 +97,8 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster: " << std::setw(6)<< std::left<< Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
+  os << "Cluster: " << std::setw(6) << std::left << Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": "
+     << cluster.info();
   os << " sub(";
   for (auto c : cluster.subClusters()) {
     os << Identifier::pretty(c->id()) << ", ";
@@ -106,7 +107,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   return os;
 }
 
-  /*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
+/*//KEEP these as  they can provide tests to check if any unwanted copying of Clusters is occuring
 Cluster::Cluster( Cluster && c) :
 m_size(c.m_size),
 m_angularSize(c.m_angularSize),
@@ -117,8 +118,8 @@ m_subClusters(std::move(c.m_subClusters))
 
 {
 m_p3=c.m_p3;
-    PDebug::write("Move cluster {}" , *this);
- std::cout<< "Move Cluster" <<std::endl;
+  PDebug::write("Move cluster {}" , *this);
+std::cout<< "Move Cluster" <<std::endl;
 }*/
 
 /* Cluster& Cluster::operator=(Cluster&& c) {

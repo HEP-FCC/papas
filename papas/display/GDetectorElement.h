@@ -9,10 +9,10 @@
 #include <memory>
 #include <string>
 
-#include "papas/detectors/DetectorElement.h"
-#include "papas/display/Drawable.h"
 #include "TBox.h"
 #include "TEllipse.h"
+#include "papas/detectors/DetectorElement.h"
+#include "papas/display/Drawable.h"
 
 namespace papas {
 

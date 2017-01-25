@@ -82,24 +82,25 @@ public:
    *   @brief  return PapasEvent object
    *   @return  PapasEvent     */
   const PapasEvent& papasEvent() const { return m_papasEvent; }  //< Access the papasEvent
-  const Detector& detector() const { return m_detector; }  //< Access the papasEvent
-  /**
-   *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
-   */
+  const Detector& detector() const { return m_detector; }        //< Access the papasEvent
+                                                                 /**
+                                                                  *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
+                                                                  */
   void clear();
+
 protected:
-  Clusters& createClusters();       // Create an empty concrete collection of clusters ready for filling by an algorithm
-  Tracks& createTracks();           // Create an empty concrete collection of tracks ready for filling by an algorithm
-  Blocks& createBlocks();           // Create an empty concrete collection of blocks ready for filling by an algorithm
+  Clusters& createClusters();      // Create an empty concrete collection of clusters ready for filling by an algorithm
+  Tracks& createTracks();          // Create an empty concrete collection of tracks ready for filling by an algorithm
+  Blocks& createBlocks();          // Create an empty concrete collection of blocks ready for filling by an algorithm
   PFParticles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
   Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
   PapasEvent m_papasEvent;  // object that can be passed to algorithms to allow access to objects such as a track
-  std::list<Clusters> m_ownedClusters;       //<Holds all the clusters collections created during an event
-  std::list<Tracks> m_ownedTracks;           //<Holds all the tracks collections created during an event
-  std::list<Blocks> m_ownedBlocks;           //<Holds all the blocks collections created during an event
+  std::list<Clusters> m_ownedClusters;      //<Holds all the clusters collections created during an event
+  std::list<Tracks> m_ownedTracks;          //<Holds all the tracks collections created during an event
+  std::list<Blocks> m_ownedBlocks;          //<Holds all the blocks collections created during an event
   std::list<PFParticles> m_ownedParticles;  //<Holds all the particles collections created during an event
-  std::list<Nodes> m_ownedHistory;           //<Holds all the histories created during an event
+  std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
 
   // bool operator()(IdType i, IdType j);//todo reinstate was used for sorting ids
 };

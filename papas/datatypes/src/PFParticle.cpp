@@ -32,9 +32,12 @@ else
 
 }*/
 
-PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex,
-                         double field, char subtype)
-  : Particle( pdgid, charge, tlv), m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())), m_vertex(vertex), m_isHelix(fabs(charge) > 0.5) {
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex, double field,
+                       char subtype)
+    : Particle(pdgid, charge, tlv),
+      m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())),
+      m_vertex(vertex),
+      m_isHelix(fabs(charge) > 0.5) {
 
   if (m_isHelix)
     if (field > 0)
@@ -45,10 +48,10 @@ PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, cons
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-PFParticle::PFParticle( int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
     :  // for when particle is created via reconstruct track - it calls the above constructor
-      PFParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex),
-                  track.path()->field(), subtype) {
+      PFParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex), track.path()->field(),
+                 subtype) {
 
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
     if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);
@@ -81,11 +84,11 @@ bool PFParticle::isElectroMagnetic() const {
   } else
     return false;
 };
-  
-  
-  std::ostream& operator<<(std::ostream& os, const PFParticle& particle) {
-    os << "Particle :" << std::setw(6)<< std::left<< Identifier::pretty(particle.id()) << ":" << particle.id() << ": " << particle.info();
-    return os;
-  }
+
+std::ostream& operator<<(std::ostream& os, const PFParticle& particle) {
+  os << "Particle :" << std::setw(6) << std::left << Identifier::pretty(particle.id()) << ":" << particle.id() << ": "
+     << particle.info();
+  return os;
+}
 
 }  // end namespace papas

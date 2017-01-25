@@ -1,20 +1,21 @@
+#include "papas/simulation/Simulator.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Track.h"
-#include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 class Detector;
 
 namespace papas {
 
-Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particles, const Detector& detector, Clusters& ecalClusters,
-                             Clusters& hcalClusters, Clusters& smearedEcalClusters, Clusters& smearedHcalClusters,
-                             Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles, Nodes& history)
+Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particles, const Detector& detector,
+                     Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
+                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles,
+                     Nodes& history)
     : m_papasEvent(papasevent),
       m_detector(detector),
       m_ecalClusters(ecalClusters),
@@ -103,7 +104,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     TVector3 pointDecay = path->pointAtTime(timeDecay);
     path->addPoint(papas::Position::kEcalDecay, pointDecay);
     if (ecal_sp->volumeCylinder().contains(pointDecay)) {
-      //fracEcal = randomgen::RandUniform(0., 0.7).next();
+      // fracEcal = randomgen::RandUniform(0., 0.7).next();
       fracEcal = rootrandom::Random::uniform(0., 0.7);
       auto cluster = makeCluster(ptc, papas::Layer::kEcal, fracEcal);
       const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
@@ -183,28 +184,27 @@ void Simulator::smearMuon(PFParticle& ptc) {
   storeTrack(std::move(track), ptc.id());
   propagateAllLayers(ptc);
 }
-  
-  void Simulator::simulateMuon(PFParticle& ptc) {
+
+void Simulator::simulateMuon(PFParticle& ptc) {
   /*Simulate a muon corresponding to gen particle ptc
-  
+
   Uses the methods detector.muon_energy_resolution
   and detector.muon_acceptance to smear the muon track.
   Later on, the particle flow algorithm will use the tracks
   coming from a muon to reconstruct muons.
-  
+
   This method does not simulate energy deposits in the calorimeters
   */
-    PDebug::write("Simulating Muon");
-    propagateAllLayers(ptc);
-    auto ptres = m_detector.muonPtResolution(ptc);
-    auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
-    auto storedtrack = storeTrack(std::move(track), ptc.id());
-    auto smeared = smearTrack(storedtrack, ptres);  // smear it
-    if (acceptMuonSmearedTrack(smeared)) {
-      storeSmearedTrack(std::move(smeared), storedtrack.id());
-    }
+  PDebug::write("Simulating Muon");
+  propagateAllLayers(ptc);
+  auto ptres = m_detector.muonPtResolution(ptc);
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+  auto storedtrack = storeTrack(std::move(track), ptc.id());
+  auto smeared = smearTrack(storedtrack, ptres);  // smear it
+  if (acceptMuonSmearedTrack(smeared)) {
+    storeSmearedTrack(std::move(smeared), storedtrack.id());
   }
-  
+}
 
 void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
   bool isNeutral = fabs(ptc.charge()) < 0.5;
@@ -223,7 +223,7 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
 }
 
 PFParticle Simulator::makePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
-                                           const TVector3& vertex) const {
+                                     const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
   auto simParticle = PFParticle(pdgid, charge, tlv, vertex, field, 's');
@@ -231,7 +231,7 @@ PFParticle Simulator::makePFParticle(int pdgid, double charge, const TLorentzVec
 }
 
 PFParticle Simulator::makePFParticle(int pdgid, double charge, double theta, double phi, double energy,
-                                           const TVector3& vertex) const {
+                                     const TVector3& vertex) const {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   double costheta = cos(theta);
@@ -250,7 +250,7 @@ PFParticle& Simulator::storePFParticle(PFParticle&& simParticle, IdType parentId
 }
 
 PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                                           double ptmax, const TVector3& vertex) {
+                                      double ptmax, const TVector3& vertex) {
   double theta = rootrandom::Random::uniform(thetamin, thetamax);
   double phi = rootrandom::Random::uniform(-M_PI, M_PI);
   double energy = rootrandom::Random::uniform(ptmin, ptmax);
@@ -268,7 +268,7 @@ PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin,
 }
 
 Cluster Simulator::makeCluster(const PFParticle& ptc, papas::Layer layer, double fraction, double csize,
-                                   char subtype) const {
+                               char subtype) const {
   double energy = ptc.p4().E() * fraction;
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();
   TVector3 pos = ptc.pathPosition(clayer);
@@ -303,14 +303,14 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
-  //energy = fmax(0., energy);  // energy always positive
+  // energy = fmax(0., energy);  // energy always positive
   auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer,
-                                         papas::Layer acceptLayer, bool accept) const {
+                                     papas::Layer acceptLayer, bool accept) const {
 
   // Determine if this smeared cluster will be detected
   if (acceptLayer == papas::Layer::kNone) acceptLayer = detectorLayer;
@@ -377,17 +377,16 @@ bool Simulator::acceptElectronSmearedTrack(const Track& smearedTrack, bool accep
     return false;
   }
 }
-      
-      bool Simulator::acceptMuonSmearedTrack(const Track& smearedTrack, bool accept) const {
-        // decide whether the electron smearedTrack is detected
-        if (m_detector.muonAcceptance(smearedTrack) || accept) {
-          return true;
-        } else {
-          PDebug::write("Rejected Smeared{}", smearedTrack);
-          return false;
-        }
-      }
 
+bool Simulator::acceptMuonSmearedTrack(const Track& smearedTrack, bool accept) const {
+  // decide whether the electron smearedTrack is detected
+  if (m_detector.muonAcceptance(smearedTrack) || accept) {
+    return true;
+  } else {
+    PDebug::write("Rejected Smeared{}", smearedTrack);
+    return false;
+  }
+}
 
 void Simulator::addNode(IdType newid, const IdType parentid) {
   // add the new node into the set of all nodes
@@ -410,9 +409,7 @@ void Simulator::clear() {
   m_particles.clear();
 }
 
-std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const {
-  return m_detector.element(layer);
-}
+std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const { return m_detector.element(layer); }
 
 void Simulator::testing() {
   DAG::BFSVisitor<PFNode> bfs;

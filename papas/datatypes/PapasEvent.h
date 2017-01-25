@@ -207,11 +207,11 @@ private:
   CollectionBlocks m_blocksCollection;
   /// Vector of History objects.
   ListNodes m_historys;
-  Nodes m_history;                   ///< Holds the merged history (built from the m_histories)
-  Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
-  Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is foun
+  Nodes m_history;                 ///< Holds the merged history (built from the m_histories)
+  Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
+  Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is foun
   PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is foun
-  Blocks m_emptyBlocks;              ///<Used to return an empty collection when no collection is foun
+  Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is foun
 };
 
 template <class T>

@@ -2,10 +2,10 @@
 
 //#include <iostream>
 #include "papas/simulation/HelixPropagator.h"
-#include "papas/utility/GeoTools.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/Path.h"
 #include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Path.h"
+#include "papas/utility/GeoTools.h"
 
 namespace papas {
 

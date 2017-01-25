@@ -13,7 +13,7 @@ namespace papas {
 
 double gconstc = 299792458.0;  // TODO constants.c)
 
-  Path::Path() {}
+Path::Path() {}
 
 Path::Path(const TLorentzVector& p4, const TVector3& origin, double field)
     : m_p4(p4),
@@ -30,9 +30,10 @@ Path::Path(const TLorentzVector& p4, const TVector3& origin, double field)
  * @return double
  */
 double Path::timeAtZ(double z) const {
-  
+
   double dest_time = (z - m_origin.Z()) / vZ();
-  std::cout << vZ()<< " " << m_origin.Z() <<" " <<dest_time << std::endl;;
+  std::cout << vZ() << " " << m_origin.Z() << " " << dest_time << std::endl;
+  ;
   return dest_time;
 }
 

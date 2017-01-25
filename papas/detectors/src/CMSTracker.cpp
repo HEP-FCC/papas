@@ -7,8 +7,8 @@
  * @brief Implementation of the CMS detector
  */
 #include "papas/detectors/CMSTracker.h"
-#include "papas/utility/TRandom.h"
 #include "papas/datatypes/Track.h"
+#include "papas/utility/TRandom.h"
 
 namespace papas {
 
@@ -19,12 +19,12 @@ CMSTracker::CMSTracker(const VolumeCylinder&& volume) : Tracker(Layer::kTracker,
 bool CMSTracker::acceptance(const Track& track) const {
   double pt = track.pt();
   double eta = fabs(track.eta());
-  //randomgen::RandUniform rUniform{0, 1};
+  // randomgen::RandUniform rUniform{0, 1};
   bool accept = false;
   if (eta < 1.35 && pt > 0.5) {
-    accept = rootrandom::Random::uniform(0,1) < 0.95;
+    accept = rootrandom::Random::uniform(0, 1) < 0.95;
   } else if (eta < 2.5 && pt > 0.5) {
-    accept = rootrandom::Random::uniform(0,1) < 0.9;
+    accept = rootrandom::Random::uniform(0, 1) < 0.9;
   }
   return accept;
 }

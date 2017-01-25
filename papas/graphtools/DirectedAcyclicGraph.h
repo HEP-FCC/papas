@@ -70,7 +70,7 @@ using Nodeset = std::unordered_set<const N*>;  ///<set of Nodes which allows fin
 template <typename N>
 using Nodevector = std::vector<const N*>;  ///<vector of Nodes typically used to return results
 enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };
-  
+
 /// Visitor class interface for the DirectedAcyclicGraph
 /**Defines the visitor class interface for the DirectedAcyclicGraph
  */
@@ -87,8 +87,7 @@ public:
   virtual const Nodevector<N>& traverseParents(const N& startnode, int depth) = 0;
   /// returns everything linked to the start node
   virtual const Nodevector<N>& traverseUndirected(const N& startnode, int depth) = 0;
-  virtual const Nodevector<N>& traverseNodes(const N& startnode,  DAG::enumVisitType visittype, int depth) = 0;
-
+  virtual const Nodevector<N>& traverseNodes(const N& startnode, DAG::enumVisitType visittype, int depth) = 0;
 
 protected:
 };
@@ -135,12 +134,13 @@ public:
   const Nodevector<N>& traverseParents(const N& node, int depth = -1) override;
   const Nodevector<N>& traverseUndirected(const N& node, int depth = -1) override;
   const Nodevector<N>& traverseNodes(const N& node, DAG::enumVisitType visittype, int depth = -1) override;
+
 protected:
   Nodeset<N> m_visited;    ///< which nodes have been visited (reset each time a traversal is made)
   Nodevector<N> m_result;  ///< the list of nodes that are linked and that will be returned
 
   /// @enum Whether to seek for linked Children , Parents or both
-  //enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };  ///< internal enumeration
+  // enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };  ///< internal enumeration
 
   virtual void traverse(const DAG::Nodeset<N>& nodes, DAG::enumVisitType visittype, int depth);
   bool alreadyVisited(const N* node) const;
@@ -152,8 +152,7 @@ class BFSRecurseVisitor : public BFSVisitor<N> {
 public:
 private:
   /// core traversal code uses by all of the public traversals
-  virtual void traverse(const DAG::Nodeset<N>& nodes, typename DAG::enumVisitType visittype,
-                        int depth) override;
+  virtual void traverse(const DAG::Nodeset<N>& nodes, typename DAG::enumVisitType visittype, int depth) override;
 };
 
 /// Constructor
@@ -275,8 +274,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
  @return void
  */
 template <typename N>
-void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitType visittype,
-                                    int depth) {
+void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitType visittype, int depth) {
   // For a recursive  breadth first traversal we gather all nodes at the same depth
   typedef typename DAG::enumVisitType pt;
   Nodeset<N> visitnextnodes;  // this collects all the nodes at the next "depth"
@@ -301,8 +299,7 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumV
         }
       if (depth != 0 && (visittype == pt::PARENTS | visittype == pt::UNDIRECTED))
         for (const auto parent : node->parents()) {
-          if (!this->alreadyVisited(parent))
-               visitnextnodes.insert(parent);
+          if (!this->alreadyVisited(parent)) visitnextnodes.insert(parent);
         }
     }
   }
@@ -354,22 +351,21 @@ const std::vector<const N*>& BFSVisitor<N>::traverseUndirected(const N& startnod
   m_visited = {};  // reset the list of visited nodes
   return m_result;
 }
-  
-  /**
-   traverse all nodes linked to the start node using Breadth First Search
-   @param N& startnode
-   @param int depth - how many levels to visit (-1 = everything, 0 = start node(s), 2= start node plus 2 levels)
-   @return const std::vector<N*>&  results vector of Nodes
-   */
-  template <typename N>
-  const std::vector<const N*>& BFSVisitor<N>::traverseNodes(const N& startnode,DAG::enumVisitType direction, int depth) {
-    m_result = {};                // reset the list of results
-    Nodeset<N> root{&startnode};  // create an initial nodeset containing the root node
-    traverse(root, direction, depth);
-    m_visited = {};  // reset the list of visited nodes
-    return m_result;
-  }
 
+/**
+ traverse all nodes linked to the start node using Breadth First Search
+ @param N& startnode
+ @param int depth - how many levels to visit (-1 = everything, 0 = start node(s), 2= start node plus 2 levels)
+ @return const std::vector<N*>&  results vector of Nodes
+ */
+template <typename N>
+const std::vector<const N*>& BFSVisitor<N>::traverseNodes(const N& startnode, DAG::enumVisitType direction, int depth) {
+  m_result = {};                // reset the list of results
+  Nodeset<N> root{&startnode};  // create an initial nodeset containing the root node
+  traverse(root, direction, depth);
+  m_visited = {};  // reset the list of visited nodes
+  return m_result;
+}
 }
 
 #endif /* DirectedAcyclicGraph */

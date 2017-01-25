@@ -6,10 +6,10 @@
 //
 //
 
+#include "papas/reconstruction/PFEventDisplay.h"
 #include "papas/datatypes/PapasEvent.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GTrajectories.h"
-#include "papas/reconstruction/PFEventDisplay.h"
 #include "papas/display/ViewPane.h"
 #include <iostream>
 
@@ -36,21 +36,21 @@ void PFEventDisplay::drawEvent(const PapasEvent& papasEvent) {
   draw();
 }
 
-  //void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
+// void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
 
-  /*for (auto& pr : pfEvent.reconstructedParticles()) {
-    std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 3, 1));
-    addToRegister(gparticle, 2);
-  }
-  for (auto& pr : particles) {
-    std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 1, 1));
-    addToRegister(gparticle, 2);
-  }
-  for (auto& pr : pfEvent.reconstructedParticles()) {
-    std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 2, 2, 2));
-    addToRegister(gparticle, 2);
-  }*/
-  //draw();
-  //}
+/*for (auto& pr : pfEvent.reconstructedParticles()) {
+  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 3, 1));
+  addToRegister(gparticle, 2);
+}
+for (auto& pr : particles) {
+  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 1, 1));
+  addToRegister(gparticle, 2);
+}
+for (auto& pr : pfEvent.reconstructedParticles()) {
+  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 2, 2, 2));
+  addToRegister(gparticle, 2);
+}*/
+// draw();
+//}
 
 }  // end namespace papas

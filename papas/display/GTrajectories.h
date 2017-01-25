@@ -8,11 +8,11 @@
 #include <list>
 #include <utility>
 
+#include "TVector3.h"
+#include "papas/datatypes/Path.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GBlob.h"
 #include "papas/display/GTrajectory.h"
-#include "papas/datatypes/Path.h"
-#include "TVector3.h"
 
 namespace papas {
 
