@@ -12,7 +12,7 @@ namespace papas {
  *
  * Usage:
  * @code
- *  PDebug::On("papas.log");  //If not turned on nothing will be produced
+ *   PDebug::File("papas.log");  //If not turned on nothing will be produced
  *  PDebug::write("problem with track not found :{}", id);
  * @endcode
 */
@@ -28,7 +28,7 @@ public:
 
   /// Tells PDebug where to write output and sets output level to info
   /// @param[in] fname filename
-  static void On(const std::string& fname) {
+  static void File(const std::string& fname) {
     s_On = true;
     s_fname = fname;
     slevel = spdlog::level::info;
@@ -61,7 +61,7 @@ private:
   static std::vector<spdlog::sink_ptr> m_sinks;
   static spdlog::level::level_enum slevel;  ///< either err or info
   static std::string s_fname;
-  static bool s_On;
+  static bool s_On; ///< Boolean which says whether PDebug is active
 };
 }
 

@@ -6,10 +6,19 @@
 #include "papas/datatypes/Path.h"
 
 namespace papas {
-/// Describes the particle track  - stored momentum and charge and can access particle path
-///
+ /** @brief Determines the trajectory in space and time of a particle (charged or neutral).
+  
+attributes:
+  - p3 : momentum in 3D space (px, py, pz)
+  - charge : particle charge
+  - path : contains the trajectory parameters and points
+  
+*/
 class Track {
 public:
+  /** Constructor
+   * @param[in] p3 : the detector to be used in the simulation and reconstruction
+   */
   Track(const TVector3& p3, double charge, Path::Ptr path, char subtype = 'u');
   Track() : m_uniqueId(0), m_path(std::make_shared<Path>()){};
   ~Track() = default;

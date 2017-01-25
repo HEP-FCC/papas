@@ -19,19 +19,34 @@ namespace papas {
 
 class Particle {
 public:
-  Particle();
+  Particle(); ///<Constructor
+  /** Constructor
+   @param[in] pdgid : particle type
+   @param[in] charge : charge
+   @param[in] tlv : 4-momentum, px, py, pz, E
+   @param[in] status : status code, e.g. from generator. 1:stable
+   @param[in] startVector : start vertex (3d point)
+   @param[in] endVertex : end vertex (3d point)
+   */
   Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1,
            const TVector3& startVector = TVector3(0, 0, 0),
            const TVector3& endVertex = TVector3(0, 0, 0));
+  /** Constructor
+   @param[in] pdgid : particle type
+   @param[in] charge : charge
+   */
   Particle(int pdgid, double charge);
-
-  std::string stringDescription() const;               ///< String to describe the particle
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
   double e() const { return m_tlv.E(); }               ///<Energy
   double pt() const { return m_tlv.Pt(); }             ///<transverse momentum (magnitude of p3 in transverse plane)
   double theta() const { return M_PI / 2 - m_tlv.Theta(); }  ///< angle w/r to transverse plane
-  double eta() const { return m_tlv.Eta(); }                 ///<pseudo-rapidity (-ln(tan self._tlv.Theta()/2)).
+  
+  /**pseudo-rapidity (-ln(tan self._tlv.Theta()/2)).
+  theta = 0 -> eta = +inf
+  theta = pi/2 -> 0
+  theta = pi -> eta = -inf*/
+  double eta() const { return m_tlv.Eta(); }                 
   double phi() const { return m_tlv.Phi(); }                 ///<azymuthal angle (from x axis, in the transverse plane)
   double mass() const { return m_tlv.M(); }                  ///< mass
   int pdgId() const { return m_pdgId; }                      ///< particle type (an integer value)
@@ -40,12 +55,11 @@ public:
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   const TVector3& endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
   std::string info() const;                                      ///< text descriptor of the particle
-
 private:
   TLorentzVector m_tlv;    ///<4-momentum, px, py, pz, E
   int m_pdgId;             ///<particle type
   double m_charge;         ///<particle charge
-  double m_status;         ///< status code, e.g. from generator. 1:stabl
+  double m_status;         ///< status code, e.g. from generator. 1:stable
   TVector3 m_startVertex;  ///<start vertex (3d point)
   TVector3 m_endVertex;    ///<end vertex (3d point)
 };

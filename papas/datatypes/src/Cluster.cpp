@@ -46,7 +46,7 @@ Cluster::Cluster(Cluster&& c)
   // "cluster" and "mergedcluster" and it may infact be better to have the
   // subclusters empty for a non-merged cluster
   // For a non merged cluster the subcluster points to itself.
-  if (c.subClusters().size() == 1 && c.id() == c.subClusters()[0]->id())
+  if (c.subClusters().size() == 1 && c.id() == (*c.subClusters().begin())->id())
     m_subClusters.push_back(this);  // non merged cluster point to itself
   else
     for (auto s : c.subClusters())  // merged clusters
@@ -83,7 +83,7 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
   m_energy = m_energy + rhs.energy();
-  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // ajr not sure if this is needed at all?
+  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // used for graphics
   double denom = 1. / m_energy;
   m_p3 *= denom;
   if (rhs.subClusters().size() > 1) {

@@ -16,8 +16,9 @@ namespace papas {
  *  Gaudi modules.
  *    The collections stored in the PapasEvent are unordered_maps of unordered_maps eg an unordered map of Clusters.
  *    The collections are indexed by the typeAndSubtype of the identifiers of each item
- *    (eg of each Cluster in Clusters)
+ *    (eg of each Cluster in Clusters).
  *       Therefore each collection to be stored must contain only one typeAndSubtype
+*       @code
  *       Examples of typeAndSubtype are:
  *       "es" ecal-smeared
  *       "ps" particle-simulated
@@ -35,7 +36,6 @@ namespace papas {
  *        r = reconstructed
  *        m = merged
  Usage example:
- @code
   m_papasEvent.addCollection(ecalClusters);
   m_papasEvent.addCollection(hcalClusters);
   ...
@@ -51,32 +51,32 @@ public:
   PapasEvent();
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the PapasEvent
-   *   @param[in]  clusters: unordered map of Clusters, all of which have the same Identifier typeAndSubtype
-   *               typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
+   *   @param[in]  clusters unordered map of Clusters, all of which have the same Identifier typeAndSubtype.
+   *               The typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
   void addCollection(const Clusters& clusters);
   /**
    *   @brief  adds a pointer to a Tracks collection (unordered map) into the PapasEvent
-   *   @param[in]  tracks: unordered map of Tracks, all of which have the same Identifier typeAndSubtype
-   *               typeAndSubtype will be used as the map index, eg "tt" for track-true.
+   *   @param[in]  tracks unordered map of Tracks, all of which have the same Identifier typeAndSubtype
+   *               The typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
   void addCollection(const Tracks& tracks);
   /**
    *   @brief  adds a pointer to a Blocks collection (unordered map) into the PapasEvent
-   *   @param[in]  blocks: unordered map of Blocks, all of which have the same Identifier typeAndSubtype
-   *               typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
+   *   @param[in]  blocks unordered map of Blocks, all of which have the same Identifier typeAndSubtype
+   *               The typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
   void addCollection(const Blocks& blocks);
   /**
    *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the PapasEvent
-   *   @param[in]  blocks: unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
-   *               typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
+   *   @param[in]  blocks unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
+   *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const PFParticles& particles);
   /**
    *   @brief  adds a pointer to a hsitory Nodes collection (unordered map) into the PapasEvent
-   *   @param[in]  history: unordered map of Nodes, all of which have the same Identifier typeAndSubtype.
-   *               typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
+   *   @param[in]  history unordered map of Nodes, all of which have the same Identifier typeAndSubtype.
+   *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addHistory(const Nodes& history);
   /**
@@ -86,90 +86,90 @@ public:
   const ListNodes& histories() const { return m_historys; };
   /**
    *   @brief  returns true if a collection with the same typeAndSubtype as the identifier is found
-   *   @param[in]  id: The identifier of an object
+   *   @param[in]  id The identifier of an object
    */
   bool hasCollection(IdType id) const;
   /**
    *   @brief  returns true if a collection with matching type and subtype  is found
-   *   @param[in]  type: The type of an object eg Identifier::kEcalCluster
-   *   @param[in]  subtype: The subtype of an object eg 'm' for merged
+   *   @param[in]  type The type of an object eg Identifier::kEcalCluster
+   *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
   bool hasCollection(const Identifier::ItemType type, const Identifier::SubType subtype) const;
   /**
    *   @brief  returns true if an object matching the Identifier is found in the PapasEvent collections
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   bool hasObject(IdType id) const;
   /**
    *   @brief  returns a Clusters collection with typeAndSubtype that match the identifier
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const Clusters& clusters(IdType id) const;
   /**
    *   @brief  returns a Clusters collection matching type and subtype
-   *   @param[in]  type: The type of an object eg Identifier::kEcalCluster
-   *   @param[in]  subtype: The subtype of an object eg 'm' for merged
+   *   @param[in]  type The type of an object eg Identifier::kEcalCluster
+   *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
   const Clusters& clusters(const Identifier::ItemType type, const Identifier::SubType subtype) const;
   /**
    *   @brief  returns a Clusters collection matching type and subtype as a string
-   *   @param[in]  typeAndSubtype: The type and subtype of an object as a string eg "em" for ecals-merged.
+   *   @param[in]  typeAndSubtype The type and subtype of an object as a string eg "em" for ecals-merged.
    */
   const Clusters& clusters(const std::string& typeAndSubtype) const;
   /**
    *   @brief  returns a Cluster with the required id
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const Cluster& cluster(IdType id) const { return clusters(id).at(id); };
 
   /**
    *   @brief  returns a Tracks collection matching type and subtype
-   *   @param[in]  subtype: The subtype of the track eg 's' for smeared
+   *   @param[in]  subtype The subtype of the track eg 's' for smeared
    */
   const Tracks& tracks(const Identifier::SubType subtype) const;
   /**
    *   @brief  returns a Tracks collection with typeAndSubtype that match the identifier
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const Tracks& tracks(IdType id) const { return tracks(Identifier::subtype(id)); };
   /**
    *   @brief  returns a Track with the required id
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const Track& track(IdType id) const { return tracks(id).at(id); };
   /**
    *   @brief  returns a Particles collection matching type and subtype
-   *   @param[in]  subtype: The subtype of the particle eg 'r' for reconstructed
+   *   @param[in]  subtype The subtype of the particle eg 'r' for reconstructed
    */
   const PFParticles& particles(const Identifier::SubType subtype) const;
   /**
    *   @brief  returns a PFParticles collection with typeAndSubtype that match the identifier
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const PFParticles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
   /**
    *   @brief  returns a PFParticle with the required id
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const PFParticle& particle(IdType id) const { return particles(id).at(id); };
   /**
    *   @brief  returns a Blocks collection matching type and subtype
-   *   @param[in]  subtype: The subtype of the block eg 'r' for reconstructed
+   *   @param[in]  subtype The subtype of the block eg 'r' for reconstructed
    */
   const Blocks& blocks(const Identifier::SubType subtype) const;
   /**
    *   @brief  returns a Blocks collection with typeAndSubtype that match the identifier
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
   /**
    *   @brief  returns a Block with the required id
-   *   @param[in]  id: the Identifier of an object
+   *   @param[in]  id the Identifier of an object
    */
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
   /**
    *   @brief  returns a list of all the Ids inside a collection
-   *   @param[in]  collection: the collection
+   *   @param[in]  collection the collection
    */
   template <class T>
   Ids collectionIds(const T& collection) const;

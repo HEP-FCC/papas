@@ -42,18 +42,7 @@ void PapasManager::simulate(const ListParticles& particles) {
   m_papasEvent.addCollection(simParticles);
   m_papasEvent.addHistory(history);
 
-  /*// TODO  reinstate sorting (but some work on generated particles is needed first)
-  std::vector<IdType> ids;
-  for (auto kv : particles) {
-    ids.push_back(kv.first);
   }
-#if WITHSORT
-  bool operator()(IdType i, IdType j);
-  std::sort(ids.begin(), ids.end(),
-            [&](IdType i, IdType j) { return (m_particles.at(i).e() > m_particles.at(j).e()); });
-#endif
-}*/
-}
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   Ruler ruler;

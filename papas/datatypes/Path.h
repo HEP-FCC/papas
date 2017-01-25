@@ -14,16 +14,15 @@
 
 namespace papas {
 
-/// Path followed by a particle in 3D space.
+/// @brief Path followed by a particle in 3D space.
 ///
 /// Assumes constant speed magnitude both along the z axis and in the transverse plane.
-/// Path base class is essentially straightline but can be inherited from to make Helix etc
+/// Path base class is essentially a straightline but can be inherited from to make Helix etc
 ///
 class Path {
 public:
-  typedef std::map<papas::Position, TVector3> Points;
-
-  typedef std::shared_ptr<Path> Ptr;  /// shared pointer to allow for striaghtline or helix
+  typedef std::map<papas::Position, TVector3> Points; ///< Map of labelled points
+  typedef std::shared_ptr<Path> Ptr;  ///< shared pointer to allow for straightline or helix
 
   Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
   Path();

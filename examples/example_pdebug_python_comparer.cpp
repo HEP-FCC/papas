@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 
   if (argc == 3) {
     const char* lname = argv[2];
-    PDebug::On(lname);  // physics debug output
+     PDebug::File(lname);  // physics debug output
   }
 
   // Create CMS detector and PapasManager

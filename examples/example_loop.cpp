@@ -18,7 +18,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  papas::PDebug::On("physics.txt");
+  papas:: PDebug::File("physics.txt");
   // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   rootrandom::Random::seed(0xdeadbeef);
 

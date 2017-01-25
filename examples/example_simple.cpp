@@ -19,7 +19,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  papas::PDebug::On("pdebug.txt");
+  papas:: PDebug::File("pdebug.txt");
   rootrandom::Random::seed(0xdeadbeef);
   // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   if (argc != 2) {

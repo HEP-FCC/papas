@@ -1,14 +1,6 @@
-//
-//  pfblock.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 05/04/16.
-//
-//
 
 #include "papas/reconstruction/PFBlock.h"
 
-//#include <boost/format.hpp>
 #include "papas/datatypes/Identifier.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/utility/PDebug.h"
