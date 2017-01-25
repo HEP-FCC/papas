@@ -45,7 +45,7 @@ void PapasManager::simulate(const ListParticles& particles) {
   }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
-  Ruler ruler;
+  PapasEventRuler ruler(m_papasEvent);;
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();

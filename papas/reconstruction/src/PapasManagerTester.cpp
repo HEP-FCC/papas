@@ -1,10 +1,6 @@
 //
-//  PapasManagerTester.cpp
-//  papas
-//
-//  Created by Alice Robson on 12/01/17.
-//
-//
+//  Used only for Unit testing
+
 
 #include "papas/reconstruction/PapasManagerTester.h"
 

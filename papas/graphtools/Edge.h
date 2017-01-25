@@ -22,27 +22,21 @@ public:
    */
   enum EdgeType { kUnknown = 0, kEcalHcal, kEcalEcal, kEcalTrack, kHcalTrack, kHcalHcal, kTrackTrack };
   typedef uint64_t EdgeKey;
-
+  ///Constructor
   Edge() : m_id1(0), m_id2(0), m_isLinked(false), m_distance(0){};
   /**
    *   @brief  Edge constructor - note that the ordering of id1 and id2 does not matter
    *
-   *   @param[in]  id1 : element uniqueid enerated from Id class for one end
-   *   @param[in]  id2 : element2 uniqueid generated from Id class for other end
-   *   @param[in]  isLinked : boolean T/F
+   *   @param[in]  id1 element uniqueid enerated from Id class for one end
+   *   @param[in]  id2 element2 uniqueid generated from Id class for other end
+   *   @param[in]  isLinked boolean T/F
    *   @param[in]  distance: distance between two elements
    */
   Edge(IdType id1, IdType id2, bool isLinked, double distance);
-  /*Edge(const Edge&) = default;  //{std::cout <<"copy Edge";};
-  Edge(Edge&&) = default;
-  Edge& operator=(const Edge& other) = default;  // {   std::cout<<"copy EDGE =";};
-  Edge& operator=(Edge&& other) = default;       // { std::cout <<"move edge =";};
-  ~Edge() = default;*/
-
-  IdType id1() const { return m_id1; }
-  IdType id2() const { return m_id2; }
+  IdType id1() const { return m_id1; } ///< id of one end of edge
+  IdType id2() const { return m_id2; } ///< id of other end of edge
   bool isLinked() const { return m_isLinked; }  ///<boolean to mark if this edge links the two elements
-  void setLinked(bool link) { m_isLinked = link; };
+  void setLinked(bool link) { m_isLinked = link; };  ///< is the edge a link
   double distance() const { return m_distance; }  ///<distance between the two elements
   Edge::EdgeKey key() const { return m_key; }  ///<unique key for this edge that can be found from the two element ids
   EdgeType edgeType() const { return m_edgeType; }  ///<describes what types of elements are connected
@@ -55,8 +49,8 @@ public:
     *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids
     *     note that the order of id1 and id2 is not important
     *
-    *   @param  id1 : element uniqueid enerated from Id class for one end
-    *   @param  id2 : element2 uniqueid generated from Id class for other end
+    *   @param  id1 element uniqueid enerated from Id class for one end
+    *   @param  id2 element2 uniqueid generated from Id class for other end
     */
   static EdgeKey makeKey(IdType id1, IdType id2);  ///<static function to create a unique key
 

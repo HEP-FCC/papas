@@ -6,7 +6,7 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/GraphBuilder.h"
-#include "papas/graphtools/Ruler.h"
+#include "papas/graphtools/PapasEventRuler.h"
 #include "papas/utility/PDebug.h"
 
 #include <algorithm>
@@ -15,7 +15,7 @@ namespace papas {
 
 MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
                                            const std::string& typeAndSubtype,
-                                           const Ruler& ruler,
+                                           const PapasEventRuler& ruler,
                                            Clusters& merged,
                                            Nodes& history)
     : m_merged(merged), m_history(history) {
@@ -38,7 +38,7 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
   for (auto id1 : uniqueids) {
     for (auto id2 : uniqueids) {
       if (id1 < id2) {
-        Distance dist = ruler.clusterClusterDistance(clusters.at(id1), clusters.at(id2));
+        Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
         Edge::EdgeKey key = edge.key();
         edges.emplace(key, std::move(edge));
