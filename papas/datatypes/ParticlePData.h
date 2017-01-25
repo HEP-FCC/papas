@@ -13,9 +13,7 @@
 #include <utility>
 
 namespace papas {
-
-/// Defines Particle data (mass and charge) for basic partcle types
-///
+  /// @brief Class which provides pdgid, masss and charge data for particles
 class ParticlePData {
 public:
   static const double m_e;   // = 0.000511;
@@ -24,10 +22,20 @@ public:
   static const double m_K0;  //= 0.498;
   static const double m_n;   //= 1.;
   static const double m_p;   //= 1.;
-
-  static double particleMass(unsigned int pid) { return particleData(pid).first; };
-  static double particleCharge(unsigned int pid) { return particleData(pid).second; };
-  static const std::pair<double, unsigned int>& particleData(unsigned int pid) { return m_datamap[pid]; };
+ 
+  /** @brief returns the corresponding Mass of particle with specified pdgid
+   @param[in] pdgid particle type
+  */
+  static double particleMass(unsigned int pdgid) { return particleData(pdgid).first; };
+  /** @brief returns the corresponding Charge of particle with specified pdgid
+   @param[in] pdgid particle type
+   */
+  static double particleCharge(unsigned int pdgid) { return particleData(pdgid).second; };
+  /** @brief returns a pair consisting of the Mass and Charge of a particle with specified pdgid
+   @param[in] pdgid particle type
+   */
+  static const std::pair<double, unsigned int>& particleData(unsigned int pdgid) { return m_datamap[pdgid]; };
+  /// Stores the particle id and associated Mass and Charge.
   static std::unordered_map<unsigned int, std::pair<double, unsigned int>> m_datamap;
 };
 }  // end namespace papas

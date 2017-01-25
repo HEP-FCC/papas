@@ -10,12 +10,13 @@ namespace papas {
 /**
  *  @brief The HistoryHelper is used to access history information stored in a PapasEvent.
  *  The PapasEvent contains history information eg which clusters and tracks were used
- *  to reconstruct a particle. The HistoryHelper allows questions such as
+ *  to reconstruct a particle. The HistoryHelper allows questions such as -
  *  what simulation particles(s) gave rise to this reconstructed particle, or what was
  *  reconstructed from this simulation particle.
  *
-    Usage example:
+ 
  @code
+ Usage example:
  auto hhelper = HistoryHelper(papasEvent);
  //find what is connected to (say) a reconstructed particle
  auto ids =hhelper.linkedIds(id);
@@ -26,37 +27,42 @@ namespace papas {
   */
 class HistoryHelper {
 public:
-  // enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };
   /** @brief  Constructor
-      @param[in]  papasEvent: papasEvent whose history is to be investigated
+      @param[in]  papasEvent papasEvent whose history is to be investigated
   */
   HistoryHelper(const PapasEvent& papasEvent);
   /**
-   *   @brief  Finds all ids which have a history link with the input id
-   *   @param[in]  id: Identifier for which we want to find connected items
+   *   @brief Finds all ids which have a history link with the input id
+   *   @param[in] id Identifier for which we want to find connected items
+   *   @param[in] direction whether to search parents, children or both
    */
   Ids linkedIds(IdType id, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
-   *   @brief  Filters a vector of ids to find a subset which have the required type and subtype
-   *         for example could be used to identify all ids which are merged Ecal clusters.
-   *   @param[in]  ids: vector of identifiers that is to be filtered
-   *   @param[in]  type: Itemtype for which we are filtering eg Identifier::kEcalCluster
-   *   @param[in]  subtype: Subtype for the filtered items eg 'm' for merged
+   *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id Identifier for which we want to find connected items
+   *   @param[in] typeAndSubType The identifier type and subtype for which we are searching eg "pr"
+   for a reconstructed particle, should be a string of length 2
+   *   @param[in] direction whether to search parents, children or both
    */
   Ids linkedIds(IdType id, const std::string& typeAndSubType,
                 DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
    *   @brief  Filters a vector of ids to find a subset which have the required type and subtype
    *         for example could be used to identify all ids which are merged Ecal clusters.
-   *   @param[in]  ids: vector of identifiers that is to be filtered
-   *   @param[in]  type: Itemtype for which we are filtering eg Identifier::kEcalCluster
-   *   @param[in]  subtype: Subtype for the filtered items eg 'm' for merged
+   *   @param[in]  ids vector of identifiers that is to be filtered
+   *   @param[in]  type Itemtype for which we are filtering eg Identifier::kEcalCluster
+   *   @param[in]  subtype Subtype for the filtered items eg 'm' for merged
    */
   Ids filteredIds(Ids ids, const Identifier::ItemType type, const Identifier::SubType subtype) const;
+  /**
+   *   @brief  Filters a vector of ids to find a subset which have the required typeAndSubtype
+   *         for example could be used to identify all ids which are merged Ecal clusters.
+   *   @param[in]  ids vector of identifiers that is to be filtered
+   *   @param[in] typeAndSubType The identifier type and subtype which we are filtering on eg "pr"
+   */
   Ids filteredIds(Ids ids, const std::string& typeAndSubtype) const;
 
 private:
-  const PapasEvent& m_papasEvent;  /// Contains the history
+  const PapasEvent& m_papasEvent;  ///< Contains pointers to data collections and to history
 };
 }
 

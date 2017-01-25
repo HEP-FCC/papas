@@ -14,12 +14,10 @@
 namespace papas {
 typedef uint64_t IdType;
 
-/// describe position of a cluster within the Detector
+/// describe position of a Cluster within the Detector
 enum Position { kVertex, kEcalIn, kEcalOut, kEcalDecay, kHcalIn, kHcalOut };
-/// detector layers
+/// Detector layers
 enum Layer { kNone, kTracker, kEcal, kHcal, kField };
-// enum SubType { kNONE, RAW, MERGED, SMEARED };  // TODO could this go in clusters class
-// enum enumSource { NONE, SIMULATION, RECONSTRUCTION, OBSERVED };  // TODO get rid
 }
 
 #endif /* Definitions_h */

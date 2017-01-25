@@ -202,7 +202,7 @@ private:
   /// Unordered map of pointers to unordered map of (concrete) Tracks
   CollectionTracks m_tracksCollection;
   /// Unordered map of pointers to unordered map of (concrete) PFParticles
-  CollectionParticles m_particlesCollection;
+  CollectionPFParticles m_particlesCollection;
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
   /// Vector of History objects.
