@@ -38,8 +38,9 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
 void GraphBuilder::sortIds(Ids& ids) {
 
 #if WITHSORT
-  ids.sort();
-  ids.reverse();
+  //ids.sort();
+  //ids.reverse();
+  ids.sort(std::greater<int>()); //sort in descending order
 #endif
 }
 

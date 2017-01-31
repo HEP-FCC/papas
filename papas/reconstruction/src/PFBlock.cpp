@@ -1,10 +1,6 @@
 
 #include "papas/reconstruction/PFBlock.h"
 
-#include "papas/datatypes/Identifier.h"
-#include "papas/graphtools/Edge.h"
-#include "papas/utility/PDebug.h"
-#include "spdlog/details/format.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -12,21 +8,20 @@
 #include <unordered_set>
 #include <vector>
 
+#include "papas/datatypes/Identifier.h"
+#include "papas/graphtools/Edge.h"
+#include "papas/utility/PDebug.h"
+#include "spdlog/details/format.h"
+
 namespace papas {
 
 int PFBlock::tempBlockCount = 0;
 
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
-    : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
+    : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
+     m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-
-  // sort by type and then by reverse energy
-  m_elementIds.sort([](IdType a, IdType b) -> bool {
-    if (Identifier::typeLetter(a) != Identifier::typeLetter(b))
-      return (Identifier::typeLetter(a) < Identifier::typeLetter(b));
-    return b < a;
-  });
-
+  m_elementIds.sort(std::greater<int>()); //sort in descending order of ids
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {
@@ -40,32 +35,6 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
     }
   }
 }
-
-PFBlock::PFBlock() : m_uniqueId(-1), m_elementIds() {}
-
-/*PFBlock::~PFBlock() {
-  if(Identifier::pretty(m_uniqueId).compare(0,4, "b404")==0)
-     std::cout<<*this;
-  PDebug::write("Delete block {} {} with Es{} & Ids{}", Identifier::pretty(m_uniqueId), m_uniqueId, m_edges.size(),
-m_elementIds.size());
-  //std::cout<<this;
-  m_elementIds.clear();
-  m_edges.clear();
-
-}*/
-
-/*PFBlock::PFBlock(PFBlock&& pfblock) {
-
-  PDebug::write("Move block {} {} with Es{} & Ids{}", Identifier::pretty(pfblock.m_uniqueId), pfblock.m_uniqueId,
-pfblock.m_edges.size(), pfblock.m_elementIds.size());
-  m_uniqueId=pfblock.m_uniqueId;
-  m_elementIds= std::move(pfblock.m_elementIds);
-  m_edges= std::move(pfblock.m_edges);
-  m_isActive= pfblock.m_isActive;            // if a block is subsequently split it will be deactivated
-  tempBlockCount= pfblock.tempBlockCount;
-  if(Identifier::pretty(pfblock.m_uniqueId).compare(0,4, "b404")==0)
-    std::cout<<*this;
-}*/
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
@@ -92,18 +61,11 @@ std::string PFBlock::shortName() const {
   return shortName;
 }
 
-/*Edge& PFBlock::findEdge(Edge::EdgeKey key) {
-  auto edge = m_edges.find(key);
-  if (edge == m_edges.end()) throw std::range_error("Edge not found");
-  return edge->second;
-}*/
 const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   auto edge = m_edges.find(key);
   if (edge == m_edges.end()) throw std::range_error("Edge not found");
   return edge->second;
 }
-
-int PFBlock::size() const { return m_elementIds.size(); }
 
 std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
   /**
@@ -116,7 +78,6 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeTy
   std::vector<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
     // if this is an edge that includes uniqueid
-    // std::cout<<" E" << edge.second << " "<<edge.second.otherid(uniqueid) << " "<<edge.second.isLinked()<<std::endl;
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
@@ -129,15 +90,12 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeTy
 
 Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
-  /// TODO think about sorting
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
     linkedIds.push_back(found->second.otherid(uniqueid));
   }
-  // std::sort(linkedIds.begin(), linkedIds.end(), [this, uniqueid](IdType a, IdType b) -> bool
-  //                  { return this->compareEdges(a, b, uniqueid); } );
   return linkedIds;
 }
 
@@ -219,7 +177,7 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
   if (found == m_edges.end()) throw std::range_error("Required edge not found");
   return found->second;
 }
-std::string PFBlock::info() const {
+  std::string PFBlock::info() const { //One liner summary of PFBlock
   fmt::MemoryWriter out;
   out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
             countHcal(), countTracks());
