@@ -1,10 +1,5 @@
 //
 //  Ruler.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 17/04/16.
-//
-//
 
 #include "papas/graphtools/Ruler.h"
 #include "papas/datatypes/Cluster.h"

@@ -1,11 +1,9 @@
 //
 //  Cluster.h
-//  papas
 //
 //  Created by Alice Robson on 28/04/16.
 //
 //
-
 #ifndef Cluster_h
 #define Cluster_h
 

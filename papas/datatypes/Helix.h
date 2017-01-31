@@ -1,6 +1,5 @@
 //
 //  Helix.hpp
-//  papas
 //
 //  Created by Alice Robson on 11/05/16.
 //

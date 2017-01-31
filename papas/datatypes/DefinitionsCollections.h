@@ -1,6 +1,5 @@
 //
 //  DefinitionsCollections.h
-//  papas
 //
 //  Created by Alice Robson on 26/05/16.
 //

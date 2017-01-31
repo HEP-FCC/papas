@@ -1,5 +1,5 @@
 //
-//  Ruler.hpp
+//  Ruler.h
 //  fastsim
 //
 //  Created by Alice Robson on 17/04/16.
