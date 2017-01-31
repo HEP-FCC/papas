@@ -17,9 +17,8 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
   for (const auto& edge : m_edges) {
     const Edge& e = edge.second;
     if (e.isLinked()) {  // note this is an undirected link - OK for undirected searches
-      m_localNodes[e.id1()].addChild(m_localNodes[e.id2()]);
-      // PDebug::write("      Add Child {:9} to  Node {:9}",Id::pretty(e.id2()),Id::pretty(e.id1()));
-    }
+      m_localNodes[e.endIds()[0]].addChild(m_localNodes[e.endIds()[1]]);
+      }
   }
 
   DAG::FloodFill<IdType> FFill;
