@@ -19,8 +19,8 @@ namespace papas {
 class Distance;
 class PapasEvent;
 
-/// The PapasEventRuler measures distances/links between items(ids) that belong to a papasevent (eg cluster-cluster)
-/// It can find the distance between two objects given the object ids.
+/// The PapasEventRuler measures distances/links between items(ids) that belong to a papasevent
+/// It can find the distance between two objects (eg cluster-cluster) given the object ids.
 /// It is a "wrapper" for the Ruler (distance measuring class)
 /// It contains a reference to the papas event, which allows location of the underlying
 /// element (cluster, track) from the id.

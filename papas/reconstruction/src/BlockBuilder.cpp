@@ -20,16 +20,15 @@ BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& history, Blocks
   makeBlocks(subtype);
 }
 
-void BlockBuilder::makeBlocks(char subtype) {
+void BlockBuilder::makeBlocks(char blockSubtype) {
   /** uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
    Each subGraph will be used to make a new PFBlock
    */
-
   for (auto& elementIds : m_subGraphs) {
     if (elementIds.size() > 1) {
       sortIds(elementIds);
     }
-    auto block = PFBlock(elementIds, m_edges, subtype);  // make the block
+    auto block = PFBlock(elementIds, m_edges, blockSubtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.id();
@@ -39,31 +38,10 @@ void BlockBuilder::makeBlocks(char subtype) {
 }
 
 std::ostream& operator<<(std::ostream& os, const BlockBuilder& builder) {
-  // TODO move to helper
   for (const auto& block : builder.m_blocks) {
     os << block.second << std::endl;
   }
   return os;
 }
-
-/* keep for now as might just be useful if we want to sort by energy
- bool BlockBuilder::compareEdges(long long key1, long long key2, IdType uniqueid) const//TODO check direction of sort
- {
- //sort by the type eg ecal hcal
- // and then in order of decreasing energy
- Edge e1 = m_edges.find(key1)->second; // should part of this be a static function in Edges?
- Edge e2 = m_edges.find(key2)->second;
- if (e1.distance() < e2.distance())
- return true;
- else if (e1.distance() > e2.distance())
- return false;
- // the distance for edge1 and edge 2 is same
- // so return based on edgetype and end energy comparison for the items
- // at the other end from uniqueId
- double energy1 = m_pfEvent.energy(e1.otherid(uniqueid));
- double energy2 = m_pfEvent.energy(e2.otherid(uniqueid));
-
- return (energy1 > energy2) ;
- }*/
 
 }  // end namespace papas

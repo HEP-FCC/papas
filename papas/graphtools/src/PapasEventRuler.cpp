@@ -9,6 +9,7 @@ namespace papas {
 PapasEventRuler::PapasEventRuler(const PapasEvent& papasevent) : m_ruler(), m_papasEvent(papasevent) {}
 
 Distance PapasEventRuler::distance(IdType id1, IdType id2) const {
+  //figure out the object types and then call ClusterCluster or ClusterTrack distance measures
   if (Identifier::isCluster(id1) && Identifier::isCluster(id2))
     if (Identifier::itemType(id1) == Identifier::itemType(id2))
       return std::move(clusterClusterDistance(id1, id2));
@@ -26,12 +27,14 @@ Distance PapasEventRuler::distance(IdType id1, IdType id2) const {
 }
 
 Distance PapasEventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
+  //find the objects and use ruler to find distance
   const Cluster& cluster1 = m_papasEvent.cluster(id1);
   const Cluster& cluster2 = m_papasEvent.cluster(id2);
   return m_ruler.clusterClusterDistance(cluster1, cluster2);
 }
 
 Distance PapasEventRuler::clusterTrackDistance(IdType clustId, IdType trackId) const {
+  //find the objects and use ruler to find distance
   const Cluster& cluster = m_papasEvent.cluster(clustId);
   const Track& track = m_papasEvent.track(trackId);
   return m_ruler.clusterTrackDistance(cluster, track);

@@ -36,7 +36,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const BlockBuilder& blockbuilder);  // TODO move to helper class?
 
 private:
-  void makeBlocks(char subtype);  // does the main work
+  void makeBlocks(char blockSubtype);  // does the main work
   Nodes& m_history;               ///< externally owned and will be updated by BlockBuilder
   Blocks& m_blocks;               ///< externally owned and will be updated by BlockBuilder
 };

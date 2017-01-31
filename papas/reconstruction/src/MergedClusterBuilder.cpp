@@ -19,18 +19,15 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
                                            Clusters& merged,
                                            Nodes& history)
     : m_merged(merged), m_history(history) {
-
   // extract the clusters collection from the papasEvent
   const auto& clusters = papasEvent.clusters(typeAndSubtype);
   // make list of all the ids in this collection
   Ids uniqueids;
-  // uniqueids.reserve(clusters.size());
   for (auto const& cluster : clusters) {
     uniqueids.push_back(cluster.first);
   }
 #if WITHSORT
-  uniqueids.sort();
-  uniqueids.reverse();
+  uniqueids.sort(std::greater<int>()); //sort in descending order
 #endif
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
@@ -50,8 +47,7 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
   GraphBuilder grBuilder{uniqueids, std::move(edges)};
   for (auto ids : grBuilder.subGraphs()) {
 #if WITHSORT
-    ids.sort();
-    ids.reverse();
+    ids.sort(std::greater<int>()); //sort in descending order
 #endif
     auto id = *ids.begin();
     double totalenergy = 0.;
@@ -77,9 +73,7 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
       }
     }
     makeHistoryLinks(ids, {mergedCluster.id()}, m_history);
-
     PDebug::write("Made Merged{}", mergedCluster);
-
     m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
   }
 }

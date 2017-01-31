@@ -39,7 +39,7 @@ public:
    */
   Distance(const Cluster& cluster1, const Cluster& cluster2);
   /** Constructor
-   * Finds distance to a cluster
+   * Finds distance to a cluster from a point
    * @param[in] point position (3d)
    * @param[in] cluster Cluster
    */
