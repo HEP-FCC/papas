@@ -6,8 +6,6 @@
 #include "papas/graphtools/PapasEventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
-
-// temp
 #include "papas/datatypes/Identifier.h"
 
 namespace papas {
@@ -18,8 +16,7 @@ PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  blockids.sort();
-  blockids.reverse();
+  blockids.sort(std::greater<int>());
 #endif
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
@@ -32,10 +29,10 @@ PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype
 }
 
 void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block) {
-  /* Block: a block which contains list of element ids and set of edges that connect them
+  /* Block: a block which contains a list of element ids and set of edges that connect them
         The goal is to remove, if needed, some links from the block so that each track links to
    at most one hcal within a block. In some cases this may separate a block into smaller
-   blocks (splitblocks). The BlockSplitter is used to add the new smaller block into m_simplifiedBlocks. If a block is
+   blocks (splitblocks). The BlockSplitter is used to add the new smaller blocks into m_simplifiedBlocks. If a block is
    unchanged its content will be copied into a new Block with a new Block Id and stored in m_simplifiedBlocks.
    If history_nodes are provided then the history will be updated. Split blocks will
    have the tracks and cluster elements as parents, and also the original block as a parent
@@ -48,7 +45,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
     auto newblock = PFBlock(block.elementIds(), newedges, 's');
     PDebug::write("Made {}", newblock);
     m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
-    // amend history
+    // update history
     makeHistoryLinks(block.elementIds(), {newblock.id()}, m_history);
 
   } else {
@@ -93,15 +90,6 @@ Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
           }
         }
       }
-      // TODO doublecheck this has gone in C++
-      /*else if (Identifier::isEcal(id)) {
-        // this is now handled  elsewhere in  Ruler::distance and so could be removed
-        // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
-        linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
-        for (auto elem : linkedEdgeKeys) {
-          toUnlink[elem] = block.findEdge(elem);
-        }
-      }*/
     }
   }
   return toUnlink;  // move

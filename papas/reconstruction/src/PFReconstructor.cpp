@@ -1,11 +1,3 @@
-//
-//  PFReconstructor.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 20/04/16.
-//
-//
-
 #include "papas/reconstruction/PFReconstructor.h"
 
 #include <algorithm>
@@ -34,10 +26,8 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  blockids.sort();
-  blockids.reverse();
+  blockids.sort(std::greater<int>());
 #endif
-
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
@@ -49,88 +39,17 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
       PDebug::write("{},", u);
     // TODO warning message
   }
-
   }
-
-#if 0
-Blocks PFReconstructor::simplifyBlock(IdType id) {
-  /* Block: a block which contains list of element ids and set of edges that connect them
-   history_nodes: optional dictionary of Nodes with element identifiers in each node
-
-   returns None or a dictionary of new split blocks
-
-   The goal is to remove, if needed, some links from the block so that each track links to
-   at most one hcal within a block. In some cases this may separate a block into smaller
-   blocks (splitblocks). The BlockSplitter is used to return the new smaller blocks.
-   If history_nodes are provided then the history will be updated. Split blocks will
-   have the tracks and cluster elements as parents, and also the original block as a parent
-   */
-  Blocks splitBlocks;
-  auto& block = m_blocks.at(id);
-  Ids ids = block.elementIds();
-
-  if (ids.size() <= 1) {  // if block is just one element therer are no links to remove
-    return splitBlocks;
-  }
-
-  /* work out any links that need to be removed
-   - for tracks unink all hcals except the closest hcal
-   - for ecals unlink hcals */
-  Edges toUnlink;  // TODO think about copy
-  std::list<Edge::EdgeKey> linkedEdgeKeys;
-  bool firstHCAL;
-  double minDist = -1;
-  for (auto id : ids) {
-    if (Identifier::isTrack(id)) {
-      linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kHcalTrack);
-      if (linkedEdgeKeys.size() > 0) {
-        firstHCAL = true;
-        // find minimum distance
-        for (auto elem : linkedEdgeKeys) {
-          if (firstHCAL) {
-            minDist = block.findEdge(elem).distance();
-            firstHCAL = false;
-          } else {
-            minDist = fmin(minDist, block.findEdge(elem).distance());
-          }
-        }
-        // unlink anything that is greater than minimum distance
-        for (auto elem : linkedEdgeKeys) {
-          if (block.findEdge(elem).distance() > minDist) {  // (could be more than one at zero distance)
-            toUnlink[elem] = block.findEdge(elem);          // should toUnlink be list of keys rather than edges
-          }
-        }
-      }
-    } else if (Identifier::isEcal(id)) {
-      // this is now handled  elsewhere in  Ruler::distance and so could be removed
-      // remove all ecal-hcal links. ecal linked to hcal give rise to a photon anyway.
-      linkedEdgeKeys = block.linkedEdgeKeys(id, Edge::EdgeType::kEcalHcal);  //"ecal_hcal")
-      for (auto elem : linkedEdgeKeys) {
-        toUnlink[elem] = block.findEdge(elem);
-      }
-    }
-  }
-
-  // if there is something to unlink then use the BlockSplitter
-  if (toUnlink.size() > 0) {
-    splitBlocks = BlockSplitter(toUnlink, block, m_history).blocks();
-  }
-  return splitBlocks;  // moves
-}
-#endif
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
-  /// see class description for summary of reconstruction approach
-
+  // see class description for summary of reconstruction approach
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort();
-  ids.reverse();
+  ids.sort(std::greater<int>());
 #endif
   for (auto id : ids) {
     m_locked[id] = false;
   }
-
   reconstructMuons(block);
   reconstructElectrons(block);
   // keeping only the elements that have not been used so far
@@ -159,8 +78,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
     for (auto id : ids) {
       if (Identifier::isTrack(id) && !m_locked[id]) {
         /* unused tracks, so not linked to HCAL
-         # reconstructing charged hadrons.
-         # ELECTRONS TO BE DEALT WITH.*/
+         # reconstructing charged hadrons*/
         auto parentIds = Ids{block.id(), id};
         reconstructTrack(m_papasEvent.track(id), 211, parentIds);
         for (auto idlink : block.linkedIds(id, Edge::EdgeType::kEcalTrack)) {
@@ -179,11 +97,10 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
 }
 
 void PFReconstructor::reconstructMuons(const PFBlock& block) {
-  /// Reconstruct muons in block.'''
+  /// Reconstruct muons in block.
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort();
-  ids.reverse();
+  ids.sort(std::greater<int>());
 #endif
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
@@ -198,14 +115,12 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   /*Reconstruct electrons in block.*/
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort();
-  ids.reverse();
+  ids.sort(std::greater<int>());
 #endif
 
   /* the simulator does not simulate electron energy deposits in ecal.
   # therefore, one should not lock the ecal clusters linked to the
   # electron track as these clusters are coming from other particles.*/
-
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
@@ -290,16 +205,12 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
    */
 
   // hcal used to make ecal_in has a couple of possible issues
-  // m_pfEvent.HCALCluster(hcalId);
-
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
-  // TODO sorting Ids trackids =    block.sort_distance_energy(hcalid, block.linked_ids(hcalid, "hcal_track") )
-
+ 
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
 #if WITHSORT
-  trackIds.sort();
-  trackIds.reverse();
+  trackIds.sort(std::greater<int>());
 #endif
   for (auto trackId : trackIds) {
     for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
@@ -314,11 +225,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     }
   }
 #if WITHSORT
-  trackIds.sort();
-  trackIds.reverse();
-  ecalIds.sort();
-  ecalIds.reverse();
-
+  trackIds.sort(std::greater<int>());
+  ecalIds.sort(std::greater<int>());
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_papasEvent.cluster(hcalId);
@@ -344,9 +252,6 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     }
     double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
     double caloERes = neutralHadronEnergyResolution(trackEnergy, hcal.eta());
-    /*self.log.info( 'dE/p, res = {derel}, {res} '.format(
-     derel = delta_e_rel,
-     res = calo_eres ))*/
     if (deltaERel > nsigmaHcal(hcal) * caloERes) {  //# approx means hcal energy + ecal energies > track energies
 
       double excess = deltaERel * trackEnergy;  // energy in excess of track energies
@@ -374,9 +279,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
         }
       }
     }
-  } else {  // # case whether there are no tracks make a neutral hadron for each hcal
-            //# note that hcal-ecal links have been removed so hcal should only be linked to
-            //# other hcals
+  } else {  //  case whether there are no tracks make a neutral hadron for each hcal
+            // note that hcal-ecal links have been removed so hcal should only be linked to
+            // other hcals
     auto parentIds = Ids{block.id(), hcalId};
     reconstructCluster(hcal, papas::Layer::kHcal, parentIds);
   }
@@ -391,7 +296,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   if (energy < 0) {
     energy = cluster.energy();
   }
-  // double charge = ParticlePData::particleCharge(pdgId);
   if (layer == papas::Layer::kEcal) {
     pdgId = 22;  // photon
   } else if (layer == papas::Layer::kHcal) {
@@ -399,7 +303,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   } else {
     // TODO raise ValueError('layer must be equal to ecal_in or hcal_in')
   }
-  // assert(pdg_id)
   double mass = ParticlePData::particleMass(pdgId);
 
   if (energy < mass)  // no particle
@@ -443,7 +346,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
   auto particle = PFParticle(pdgId, track.charge(), p4, track, 'r');
-  //#todo fix this so it picks up smeared track points (need to propagagte smeared track)
+  //#todo fix this so it picks up smeared track points (need to propagate smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;
   PDebug::write("Made {} from Smeared{}", particle, track);

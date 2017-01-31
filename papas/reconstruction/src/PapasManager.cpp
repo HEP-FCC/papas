@@ -74,7 +74,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   auto& history = createHistory();
   auto blockBuilder = PFBlockSplitter(m_papasEvent, blockSubtype, simplifiedblocks, history);
 
-  // store a pointer to the ouputs into the papasEvent
+  // store a pointer to the outputs into the papasEvent
   m_papasEvent.addCollection(simplifiedblocks);
   m_papasEvent.addHistory(history);
 }

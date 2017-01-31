@@ -1,10 +1,3 @@
-//
-//  PFBlockBuilder.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 17/04/16.
-//
-//
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/PapasEvent.h"
@@ -12,8 +5,6 @@
 #include "papas/graphtools/PapasEventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-
-// temp
 #include "papas/datatypes/Identifier.h"
 
 namespace papas {
@@ -25,16 +16,12 @@ PFBlockBuilder::PFBlockBuilder(const PapasEvent& papasEvent, const std::string& 
   const auto& ecals = m_papasEvent.clusters(ecalTypeAndSubtype);
   const auto& hcals = m_papasEvent.clusters(hcalTypeAndSubtype);
   const auto& tracks = m_papasEvent.tracks(trackSubtype);
-  PDebug::write("PF BlockBuilder Ecals: {}", ecals.size());
   auto ids = m_papasEvent.collectionIds<Clusters>(ecals);
   for (auto id : m_papasEvent.collectionIds<Clusters>(hcals))
     ids.push_back(id);
   for (auto id : m_papasEvent.collectionIds<Tracks>(tracks))
     ids.push_back(id);
 
-  PDebug::write("Ids: {}", ids.size());
-  // TODO think hard about best way to deal with distance /ruler / edges etc
-  // compute edges between each pair of nodes
   Edges edges;
   PapasEventRuler ruler(m_papasEvent);
   for (auto id1 : ids) {
@@ -47,7 +34,6 @@ PFBlockBuilder::PFBlockBuilder(const PapasEvent& papasEvent, const std::string& 
       }
     }
   }
-  PDebug::write("GotoBlock Builder");
   BlockBuilder bb(ids, std::move(edges), m_history, blocks, 'r');
 }
 

@@ -37,14 +37,13 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
-        Edge::EdgeKey key = edge.key();
-        edges.emplace(key, std::move(edge));
+        edges.emplace(edge.key(), std::move(edge));
       }
     }
   }
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
-  GraphBuilder grBuilder{uniqueids, std::move(edges)};
+   auto grBuilder = GraphBuilder(uniqueids, std::move(edges));
   for (auto ids : grBuilder.subGraphs()) {
 #if WITHSORT
     ids.sort(std::greater<int>()); //sort in descending order
@@ -57,12 +56,13 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
                     clusters.at(c));  // hmmm not quite right we don't really know it is smeared
     }
     // create the merged Cluster
+    // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
+    //for several reasons so this is probably more straightforward
     auto mergedCluster =
         Cluster(clusters.at(id), Identifier::itemType(id), 'm', totalenergy);  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }
-
     // merge the original clusters into the new merged cluster
     // also add in the links between the block elements and the block into the history_nodes
     if (ids.size() > 1) {

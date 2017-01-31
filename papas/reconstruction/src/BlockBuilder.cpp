@@ -21,7 +21,7 @@ BlockBuilder::BlockBuilder(const Ids& ids, Edges&& edges, Nodes& history, Blocks
 }
 
 void BlockBuilder::makeBlocks(char blockSubtype) {
-  /** uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
+  /* uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
    Each subGraph will be used to make a new PFBlock
    */
   for (auto& elementIds : m_subGraphs) {

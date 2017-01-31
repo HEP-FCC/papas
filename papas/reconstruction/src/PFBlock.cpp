@@ -54,11 +54,11 @@ int PFBlock::countTracks() const {
 std::string PFBlock::shortName() const {
   // constructs a short summary name for blocks allowing sorting based on contents
   // eg 'E1H1T2' for a block with 1 ecal, 1 hcal, 2 tracks
-  std::string shortName = "";
-  if (countEcal()) shortName = shortName + "E" + std::to_string(countEcal());
-  if (countHcal()) shortName = shortName + "H" + std::to_string(countHcal());
-  if (countTracks()) shortName = shortName + "T" + std::to_string(countTracks());
-  return shortName;
+  fmt::MemoryWriter out;
+  if (countEcal()) out.write("E{}", countEcal());
+  if (countHcal()) out.write("H{}", countHcal());
+  if (countTracks()) out.write("T{}", countTracks());
+  return out.str();
 }
 
 const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
@@ -70,7 +70,6 @@ const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
 std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
-
    Arguments:
    uniqueid : is the id of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
