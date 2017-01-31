@@ -69,7 +69,7 @@ Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {
-    std::vector<Edge::EdgeKey> linkedEdgeKeys;
+    std::list<Edge::EdgeKey> linkedEdgeKeys;
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {

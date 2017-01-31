@@ -21,8 +21,8 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
     /// Otherwise deal with merged cluster(s).
     /// Examine all cluster cluster distances within the subclusters
     /// and look for the closest overlap between the mergedclusters, returning the minimum distance found.
-    std::vector<double> allDistances;
-    std::vector<double> linkedDistances;
+    std::list<double> allDistances;
+    std::list<double> linkedDistances;
     bool isLinked = false;
 
     for (const auto c1 : cluster1.subClusters()) {
@@ -46,8 +46,8 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
 
 Distance Ruler::clusterTrackDistance(const Cluster& cluster, const Track& track) const {
   if (cluster.subClusters().size() > 1) {
-    std::vector<double> distances;
-    std::vector<double> linkedDistances;
+    std::list<double> distances;
+    std::list<double> linkedDistances;
     bool isLinked = false;
     for (const auto c : cluster.subClusters()) {
       Distance d = clusterTrackDistance(*c, track);

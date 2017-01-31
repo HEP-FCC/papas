@@ -50,53 +50,7 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
     // TODO warning message
   }
 
-  // TODO sort m_blocks
-
-  /* // simplify the blocks by editing the links
-   // each track will end up linked to at most one hcal
-
-   // sort the blocks by id to ensure match with python
-   std::vector<IdType> blockids;
-   std::vector<IdType> newblockids;
-
-   auto bBuilder = PFBlockBuilder(m_papasEvent, "em", "hm", 's', m_blocks, m_history);
-   m_blocks = bBuilder.blocks();
-
-   for (const auto& b : m_blocks) {
-     blockids.push_back(b.first);
-   }
- #if WITHSORT
-   std::sort(blockids.begin(), blockids.end());
- #endif
-   // go through each block and see if it can be simplified
-   // in some cases it will end up being split into smaller blocks
-   // Note that the old block will be marked as disactivated
-   for (auto bid : blockids) {
-     Blocks newBlocks = simplifyBlock(bid);
-     if (newBlocks.size() > 0) {
-       for (auto& b : newBlocks) {
-         IdType id = b.first;
-         m_blocks.emplace(id, std::move(b.second));
-         newblockids.push_back(b.first);
-       }
-     }
-   }
-   blockids.insert(std::end(blockids), std::begin(newblockids), std::end(newblockids));
-
-   for (auto bid : blockids) {
-     PFBlock& block = m_blocks.at(bid);
-     if (block.isActive()) {  // when blocks are split the original gets deactivated
-       PDebug::write("Processing {}", block);
-       reconstructBlock(block);
-     }
-   }
-   if (m_unused.size() > 0) {
-     PDebug::write("unused elements ");
-     for (auto u : m_unused)
-       PDebug::write("{},", u);
-     // TODO warning message
-   }*/
-}
+  }
 
 #if 0
 Blocks PFReconstructor::simplifyBlock(IdType id) {
@@ -123,7 +77,7 @@ Blocks PFReconstructor::simplifyBlock(IdType id) {
    - for tracks unink all hcals except the closest hcal
    - for ecals unlink hcals */
   Edges toUnlink;  // TODO think about copy
-  std::vector<Edge::EdgeKey> linkedEdgeKeys;
+  std::list<Edge::EdgeKey> linkedEdgeKeys;
   bool firstHCAL;
   double minDist = -1;
   for (auto id : ids) {

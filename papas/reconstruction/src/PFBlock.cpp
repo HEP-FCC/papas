@@ -67,7 +67,7 @@ const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   return edge->second;
 }
 
-std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
+std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
 
@@ -75,7 +75,7 @@ std::vector<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeTy
    uniqueid : is the id of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    */
-  std::vector<Edge::EdgeKey> linkedEdgeKeys;
+  std::list<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
     // if this is an edge that includes uniqueid
     if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {

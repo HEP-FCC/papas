@@ -52,7 +52,7 @@ public:
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
  */
-  std::vector<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::list<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
