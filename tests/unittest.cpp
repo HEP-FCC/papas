@@ -56,7 +56,7 @@
 using namespace papas;
 
 TEST_CASE("Identifier") {
-  Identifier::reset();
+  //Identifier::reset();
   auto uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', 1.23456);
   auto id1 = Identifier::makeId(Identifier::ItemType::kTrack, 's', 12.782);
 
@@ -89,6 +89,15 @@ TEST_CASE("Identifier") {
       // REQUIRE(Identifier::uniqueId(id)== n);
     }
   }
+}
+
+TEST_CASE("Counter") {
+  int a = 3
+  void counter(int& x) {
+    return x++;
+  }
+  std::cout << a <<std::endl;
+  std::cout << counter(a) << a << counter(a) << a<< std::endl;
 }
 
 TEST_CASE("Helix") {  /// Helix path test
@@ -616,7 +625,7 @@ TEST_CASE("merge_different_layers") {
 }
 
 TEST_CASE("test_papasevent") {
-  Identifier::reset();
+  //Identifier::reset();
   auto papasEvent = PapasEvent();
   auto ecals = Clusters();
   auto tracks = Tracks();
@@ -649,7 +658,7 @@ TEST_CASE("test_papasevent") {
 }
 
 TEST_CASE("test_history") {
-  Identifier::reset();
+  //Identifier::reset();
   auto papasEvent = PapasEvent();
   auto ecals = Clusters();
   auto particles = PFParticles();

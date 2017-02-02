@@ -32,10 +32,9 @@ else
 
 }*/
 
-PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex, double field,
-                       char subtype)
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int counter, char subtype, const TVector3& vertex, double field)
     : Particle(pdgid, charge, tlv),
-      m_uniqueId(Identifier::makeId(Identifier::kParticle, subtype, tlv.E())),
+      m_uniqueId(Identifier::makeId(counter, Identifier::kParticle,  subtype, tlv.E())),
       m_vertex(vertex),
       m_isHelix(fabs(charge) > 0.5) {
 
@@ -48,10 +47,9 @@ PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, cons
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype)
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int counter, char subtype)
     :  // for when particle is created via reconstruct track - it calls the above constructor
-      PFParticle(pdgid, charge, tlv, track.path()->namedPoint(papas::Position::kVertex), track.path()->field(),
-                 subtype) {
+      PFParticle(pdgid, charge, tlv,counter, subtype, track.path()->namedPoint(papas::Position::kVertex), track.path()->field()) {
 
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
     if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);

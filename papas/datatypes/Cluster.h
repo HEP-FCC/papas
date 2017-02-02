@@ -23,7 +23,7 @@ public:
    @param[in]  id Identifier type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype single char describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType id, char subtype = 't');
+  Cluster(double energy, const TVector3& position, double size_m, unsigned int counter, Identifier::ItemType id, char subtype = 't');
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
@@ -32,7 +32,7 @@ public:
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.
                 When creating a merged cluster it should ideally be set to the total eneergy of the cluster
       */
-  Cluster(const Cluster& cluster, Identifier::ItemType type, char subtype = 'u', float val = 0.0);
+  Cluster(const Cluster& cluster, unsigned int counter, Identifier::ItemType type, char subtype = 'u', float val = 0.0);
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map

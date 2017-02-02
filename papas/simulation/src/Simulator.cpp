@@ -82,7 +82,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 
   // make a track if it is charged
   if (ptc.charge() != 0) {
-    auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+    auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
     auto storedtrack = storeTrack(std::move(track), ptc.id());
     auto smeared = smearTrack(storedtrack, m_detector.tracker()->ptResolution(storedtrack));  // smear it
     if (acceptSmearedTrack(smeared)) {
@@ -147,7 +147,7 @@ void Simulator::simulateNeutrino(PFParticle& ptc) {
 
 void Simulator::smearElectron(PFParticle& ptc) {
   PDebug::write("Smearing Electron");
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   storeTrack(std::move(track), ptc.id());
   auto ecal_sp = m_detector.ecal();  // ECAL detector element
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
@@ -166,7 +166,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
 
    This method does not simulate an electron energy deposit in the ECAL.*/
   PDebug::write("Simulating Electron");
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   auto storedtrack = storeTrack(std::move(track), ptc.id());
   auto eres = m_detector.electronEnergyResolution(ptc);
   auto smeared = smearTrack(storedtrack, eres);  // smear it
@@ -180,7 +180,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
 
 void Simulator::smearMuon(PFParticle& ptc) {
   PDebug::write("Smearing Muon");
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   storeTrack(std::move(track), ptc.id());
   propagateAllLayers(ptc);
 }
@@ -198,7 +198,7 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   PDebug::write("Simulating Muon");
   propagateAllLayers(ptc);
   auto ptres = m_detector.muonPtResolution(ptc);
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), 't');
+  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   auto storedtrack = storeTrack(std::move(track), ptc.id());
   auto smeared = smearTrack(storedtrack, ptres);  // smear it
   if (acceptMuonSmearedTrack(smeared)) {
@@ -226,7 +226,7 @@ PFParticle Simulator::makePFParticle(int pdgid, double charge, const TLorentzVec
                                      const TVector3& vertex) const {
 
   double field = m_detector.field()->getMagnitude();
-  auto simParticle = PFParticle(pdgid, charge, tlv, vertex, field, 's');
+  auto simParticle = PFParticle(pdgid, charge, tlv, m_particles.size(), 's',vertex, field);
   return std::move(simParticle);
 }
 
@@ -271,11 +271,16 @@ Cluster Simulator::makeCluster(const PFParticle& ptc, papas::Layer layer, double
                                char subtype) const {
   double energy = ptc.p4().E() * fraction;
   papas::Position clayer = m_detector.calorimeter(layer)->volumeCylinder().innerLayer();
+  unsigned int counter;
+  if (Identifier::itemType(layer)== Identifier::kEcalCluster )
+    counter = m_ecalClusters.size();
+  else
+     counter = m_hcalClusters.size();
   TVector3 pos = ptc.pathPosition(clayer);
   if (csize == -1.) {  // ie value not provided
     csize = m_detector.calorimeter(layer)->clusterSize(ptc);
   }
-  auto cluster = Cluster(energy, pos, csize, Identifier::itemType(layer), subtype);
+  auto cluster = Cluster(energy, pos, csize, counter, Identifier::itemType(layer), subtype);
   return cluster;
 }
 
@@ -303,8 +308,13 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
+  unsigned int counter;
+  if (Identifier::itemType(detectorLayer)== Identifier::kEcalCluster )
+    counter = m_smearedEcalClusters.size();
+  else
+    counter = m_smearedHcalClusters.size();
   // energy = fmax(0., energy);  // energy always positive
-  auto cluster = Cluster(energy, parent.position(), parent.size(), Identifier::itemType(parent.id()), 's');
+  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, Identifier::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }
@@ -346,7 +356,7 @@ const Track& Simulator::storeTrack(Track&& track, IdType parentid) {
 Track Simulator::smearTrack(const Track& track, double resolution) const {
   // double ptResolution = m_detector.tracker()->ptResolution(track);
   double scale_factor = rootrandom::Random::gauss(1, resolution);
-  auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(), 's');
+  auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(),m_smearedTracks.size(), 's');
   PDebug::write("Made Smeared{}", smeared);
   return smeared;
 }

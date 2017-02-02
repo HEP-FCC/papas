@@ -210,7 +210,7 @@ papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCo
   for (const auto& c : fccClusters) {
     const auto position = c.core().position;
     const auto energy = c.core().energy;
-    auto cluster = papas::Cluster(energy, TVector3(position.x, position.y, position.z), size, itemtype, subtype);
+    auto cluster = papas::Cluster(energy, TVector3(position.x, position.y, position.z), size,  clusters.size(), itemtype, subtype);
     clusters.emplace(cluster.id(), std::move(cluster));
   }
   return clusters;

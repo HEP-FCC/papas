@@ -92,7 +92,7 @@ void PapasManager::reconstruct(char blockSubtype) {
 }
 
 void PapasManager::clear() {
-  Identifier::reset();
+  //Identifier::reset();
   m_papasEvent.clear();
   m_ownedHistory.clear();
   m_ownedClusters.clear();

@@ -17,16 +17,16 @@ namespace papas {
 // s_counter is a static counter which will be used to create a unique long
 // max value is 2** m_bitshift
 // TODO move this and reset elsewhere to allow this class to be parallelized
-unsigned int Identifier::s_counter = 1;
+//unsigned int Identifier::s_counter = 1;
 
-void Identifier::reset() { s_counter = 1; }
+  //void Identifier::reset() { s_counter = 1; }
 
-IdType Identifier::makeId(ItemType type, char subt, float val, unsigned int uniqueid) {
+IdType Identifier::makeId(unsigned int uniqueid, ItemType type, char subt, float val) {
 
   if (type == kNone) {
     throw "Id must have a valid type";
   }
-  s_counter++;
+
   if (uniqueid >= pow(2, m_bitshift) - 1) throw "Identifier unique id is too big: too many identifiers";
 
   // Shift all the parts and join together

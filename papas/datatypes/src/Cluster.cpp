@@ -14,15 +14,15 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, Identifier::ItemType idtype, char subtype)
-    : m_uniqueId(Identifier::makeId(idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
+Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int counter, Identifier::ItemType idtype, char subtype)
+    : m_uniqueId(Identifier::makeId(counter, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
 }
 
-Cluster::Cluster(const Cluster& c, Identifier::ItemType type, char subtype, float val)
-    : m_uniqueId(Identifier::makeId(type, subtype, val)),
+Cluster::Cluster(const Cluster& c, unsigned int counter, Identifier::ItemType type, char subtype, float val)
+    : m_uniqueId(Identifier::makeId(counter, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),

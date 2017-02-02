@@ -185,6 +185,7 @@ public:
    *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the Identifier counter
    */
   void clear();
+  unsigned int counter()  {m_objectCounter++; return m_objectCounter; }
 
 private:
   /**
@@ -209,9 +210,10 @@ private:
   ListNodes m_historys;
   Nodes m_history;                 ///< Holds the merged history (built from the m_histories)
   Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
-  Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is foun
-  PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is foun
-  Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is foun
+  Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
+  PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found
+  Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is found
+  int m_objectCounter;
 };
 
 template <class T>

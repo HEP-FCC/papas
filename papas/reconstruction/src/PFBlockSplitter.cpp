@@ -42,7 +42,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
     // no change to this block
     // make a copy of the block and put it in the simplified blocks
     Edges newedges = block.edges();  // copy edges
-    auto newblock = PFBlock(block.elementIds(), newedges, 's');
+    auto newblock = PFBlock(block.elementIds(), newedges, m_simplifiedBlocks.size(), 's');
     PDebug::write("Made {}", newblock);
     m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
     // update history

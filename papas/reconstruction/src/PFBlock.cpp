@@ -17,8 +17,8 @@ namespace papas {
 
 int PFBlock::tempBlockCount = 0;
 
-PFBlock::PFBlock(const Ids& element_ids, Edges& edges, char subtype)
-    : m_uniqueId(Identifier::makeId(Identifier::kBlock, subtype, element_ids.size())),
+PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int counter, char subtype)
+    : m_uniqueId(Identifier::makeId(counter, Identifier::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(std::greater<int>()); //sort in descending order of ids

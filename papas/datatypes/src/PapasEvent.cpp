@@ -10,12 +10,14 @@ namespace papas {
 /// an event
 
 PapasEvent::PapasEvent()
-    : m_ecalClustersCollection{},
-      m_hcalClustersCollection{},
-      m_tracksCollection{},
-      m_particlesCollection{},
-      m_blocksCollection{},
-      m_historys{} {};
+    : m_ecalClustersCollection(),
+      m_hcalClustersCollection(),
+      m_tracksCollection(),
+      m_particlesCollection(),
+      m_blocksCollection(),
+      m_historys(),
+      m_objectCounter(0)
+  {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection

@@ -64,6 +64,10 @@ private:
   bool m_isLinked;      ///< boolean to day if there is a link between the two edges
   double m_distance;    ///< distance between two ends
   EdgeKey m_key;        ///<unique key for this edge that allows lookup in an unordered_map of edges
+  static const unsigned int m_bitshift1 = 29;  ///< encoding parameter
+  static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
+                                               /// checks that the identifier can be correctly decoded
+  static bool checkValid(EdgeKey id, IdType uid);
 };
 
 }  // end namespace papas

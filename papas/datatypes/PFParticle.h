@@ -26,8 +26,7 @@ public:
    @param[in] field Magnetic field
    @param[in] subtype Identifier subtype to be used when creating unique Identifier eg 'r' for reconstructed
    */
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const TVector3& vertex = TVector3(0., 0., 0.),
-             double field = 0., char subtype = 's');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int counter , char subtype = 's', const TVector3& vertex = TVector3(0., 0., 0.), double field = 0. );
   /** Constructor
    @param[in] pdgid particle type
    @param[in] charge charge
@@ -35,7 +34,7 @@ public:
    @param[in] track The track to use in creating a particle
    @param[in] subtype Identifier subtype to be used when creating unique Identifier eg 'r' for reconstructed
    */
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, char subtype = 'r');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int counter , char subtype = 'r');
 
   const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of particle path at given layer
   void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle

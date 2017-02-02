@@ -101,7 +101,7 @@ protected:
   std::list<Blocks> m_ownedBlocks;          //<Holds all the blocks collections created during an event
   std::list<PFParticles> m_ownedParticles;  //<Holds all the particles collections created during an event
   std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
-
+  
   // bool operator()(IdType i, IdType j);//todo reinstate was used for sorting ids
 };
 }

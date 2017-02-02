@@ -58,8 +58,7 @@ public:
    @param[in]  uniqueid: not used in normal use
    @return identifier
    */
-  static IdType makeId(ItemType type, char subtype = 'u', float value = 0.0,
-                       unsigned int uniqueid = Identifier::s_counter);
+  static IdType makeId(unsigned int uniqueid, ItemType type, char subtype = 'u', float value = 0.0);
 
   /** returns the item type of the the identifier
    This is one of: None = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock
@@ -145,15 +144,9 @@ public:
   static int bitshift() { return m_bitshift; }
 
 private:
-  // TODO consider how to deal with this for multithreading as it is not threadsafe
-  // consider using boost:uuid or pthread_mutex_t lock;
-  // or move the s_counter out of here eg perhaps into the PapasEvent
-  static unsigned int s_counter;               ///<starts at 1 and increments by 1 each time
   static const unsigned int m_bitshift1 = 61;  ///< encoding parameter
   static const unsigned int m_bitshift2 = 53;  ///< encoding parameter
   static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
-  /// returns the counter used for the unique id component
-  static unsigned int counter() { return s_counter; };
   /// checks that the identifier can be correctly decoded
   static bool checkValid(IdType id, ItemType type, char subt, float val, unsigned int uid);
   static uint64_t floatToBits(float value);  /// convert float into binary

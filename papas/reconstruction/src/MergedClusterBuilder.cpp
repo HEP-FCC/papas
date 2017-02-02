@@ -59,7 +59,7 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
     //for several reasons so this is probably more straightforward
     auto mergedCluster =
-        Cluster(clusters.at(id), Identifier::itemType(id), 'm', totalenergy);  // create a new cluster based on old one
+        Cluster(clusters.at(id), merged.size(), Identifier::itemType(id), 'm', totalenergy);  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }

@@ -28,7 +28,7 @@ void BlockBuilder::makeBlocks(char blockSubtype) {
     if (elementIds.size() > 1) {
       sortIds(elementIds);
     }
-    auto block = PFBlock(elementIds, m_edges, blockSubtype);  // make the block
+    auto block = PFBlock(elementIds, m_edges, m_blocks.size(), blockSubtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.id();
