@@ -25,15 +25,13 @@ public:
    * @param[in] material field material
    * @param[in] magnitude field strength
    */
-  Field(const VolumeCylinder&& volume, const Material&& material,
-        double magnitude);
-  
-                            /** Constructor
-                             *
-                             * @param[in] volume The field cyclinders
-                             * @param[in] material field material
-                             * @param[in] magnitude field strength
-                             */
+  Field(const VolumeCylinder&& volume, const Material&& material, double magnitude);
+  /** Constructor
+   *
+   * @param[in] volume The field cyclinders
+   * @param[in] material field material
+   * @param[in] magnitude field strength
+   */
   Field(const VolumeCylinder& volume, const Material& material, double magnitude);
   double getMagnitude() const { return m_magnitude; };
 

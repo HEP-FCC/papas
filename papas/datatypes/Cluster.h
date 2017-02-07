@@ -23,7 +23,8 @@ public:
    @param[in]  id Identifier type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype single char describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, unsigned int counter, Identifier::ItemType id, char subtype = 't');
+  Cluster(double energy, const TVector3& position, double size_m, unsigned int counter, Identifier::ItemType id,
+          char subtype = 't');
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
@@ -37,29 +38,31 @@ public:
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map
   Cluster& operator+=(const Cluster& rhs);    ///< merges a cluster into an existing cluster
-  double angularSize() const;  ///< The angle that the cluster boundary makes (not valid for merged clusters)
-  double size() const;  ///< The radius of the cluster
-  double pt() const { return m_pt; } ///< Transverse momentum (magnitude of p3 in transverse plane)
-  double energy() const { return m_energy; } ///< Energy
-  double eta() const { return m_p3.Eta(); } ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
-  double theta() const { return M_PI / 2. - m_p3.Theta(); } ///< Angle w/r to transverse plane
-  IdType id() const { return m_uniqueId; }  ///< Unique identifier
-  const TVector3& position() const { return m_p3; } ///< position (x, y, z)
-  void setEnergy(double energy); ///< Set cluster energy
-  void setSize(double value); ///< Set cluster size
+  double angularSize() const;         ///< The angle that the cluster boundary makes (not valid for merged clusters)
+  double size() const;                ///< The radius of the cluster
+  double pt() const { return m_pt; }  ///< Transverse momentum (magnitude of p3 in transverse plane)
+  double energy() const { return m_energy; }                 ///< Energy
+  double eta() const { return m_p3.Eta(); }                  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
+  double theta() const { return M_PI / 2. - m_p3.Theta(); }  ///< Angle w/r to transverse plane
+  IdType id() const { return m_uniqueId; }                   ///< Unique identifier
+  const TVector3& position() const { return m_p3; }          ///< position (x, y, z)
+  void setEnergy(double energy);                             ///< Set cluster energy
+  void setSize(double value);                                ///< Set cluster size
   const std::list<const Cluster*>& subClusters() const { return m_subClusters; };
   std::string info() const;  ///< returns a text descriptor of the cluster
-  // static that returns max cluster energy (intended for display purposes)
-  static double maxEnergy() { return s_maxEnergy; };
+
+  static double maxEnergy() {
+    return s_maxEnergy;
+  };  ///< static that returns max cluster energy (intended for display purposes)
 protected:
-  IdType m_uniqueId; ///< Unique Identifier for Cluster
-  double m_size; ///< Cluster size (radius?)
-  double m_angularSize;  ///< Cluster angular size (only valid for non-merged clusters)
-  double m_pt; ///< Transverse momentum (magnitude of p3 in transverse plane)
-  TVector3 m_p3; ///< position (x, y, z)
-  double m_energy; ///< Energy
+  IdType m_uniqueId;                        ///< Unique Identifier for Cluster
+  double m_size;                            ///< Cluster size (radius?)
+  double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
+  double m_pt;                              ///< Transverse momentum (magnitude of p3 in transverse plane)
+  TVector3 m_p3;                            ///< position (x, y, z)
+  double m_energy;                          ///< Energy
   std::list<const Cluster*> m_subClusters;  ///< list of subClusters
-  static double s_maxEnergy;                  ///< Maximum energy over all clusters
+  static double s_maxEnergy;                ///< Maximum energy over all clusters
 };
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster);

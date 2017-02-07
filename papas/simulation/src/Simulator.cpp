@@ -27,7 +27,6 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
       m_particles(simParticles),
       m_history(history),
       m_propHelix(detector.field()->getMagnitude()) {
-
   for (auto p : particles) {
     simulateParticle(p);
   }
@@ -35,15 +34,11 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
 
 void Simulator::simulateParticle(const Particle& ptc) {
   int pdgid = ptc.pdgId();
-  // PFParticle simParticle = makePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  // PFParticle& storedParticle = storePFParticle(std::move(simParticle), 0);
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-
   if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
     // to avoid numerical problems in propagation
     return;
   }
-
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
   } else if (abs(pdgid) == 11) {
@@ -59,14 +54,12 @@ void Simulator::simulateParticle(const Particle& ptc) {
 
 void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
-  auto ecal_sp = m_detector.ecal();  // ECAL detector element
-
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagate(ecal_sp->volumeCylinder().inner(), ptc);
-  auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't', ptc.id());
+  propagate( m_detector.ecal()->volumeCylinder().inner(), ptc);
+  auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
-  if (acceptSmearedCluster(smeared, papas::Layer::kEcal)) {
+  if (acceptSmearedCluster(smeared)) {
     storeSmearedEcalCluster(std::move(smeared), cluster.id());
   }
 }
@@ -82,7 +75,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   if (ptc.charge() != 0) {
     auto track = makeAndStoreTrack(ptc);
     auto resolution = m_detector.tracker()->ptResolution(track);
-    auto smeared = smearTrack(track, resolution);  // smear it
+    auto smeared = smearTrack(track, resolution);
     if (m_detector.tracker()->acceptance(smeared)) {
       storeSmearedTrack(std::move(smeared), track.id());
     }
@@ -90,9 +83,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   // find where it meets the inner Ecal cyclinder
   propagate(ecal_sp->volumeCylinder().inner(), ptc);
   double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
-
   if (pathLength < std::numeric_limits<double>::max()) {
-
     /// ecal path length can be infinite in case the ecal
     /// has lambda_I = 0 (fully transparent to hadrons)
     auto path = ptc.path();
@@ -104,34 +95,30 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     if (ecal_sp->volumeCylinder().contains(pointDecay)) {
       // fracEcal = randomgen::RandUniform(0., 0.7).next();
       fracEcal = rootrandom::Random::uniform(0., 0.7);
-      auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't', ptc.id());
+      auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
       // const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
       // For now, using the hcal resolution and acceptance for hadronic cluster
       // in the Ecal. That's not a bug!
       auto smeared = smearCluster(cluster, papas::Layer::kHcal);
-      if (acceptSmearedCluster(smeared, papas::Layer::kHcal, papas::Layer::kEcal)) {
+      if (acceptSmearedCluster(smeared, papas::Layer::kEcal)) {
         storeSmearedEcalCluster(std::move(smeared), cluster.id());
       }
     }
   }
-
   // now find where it reaches into HCAL
   propagate(hcal_sp->volumeCylinder().inner(), ptc);
-
-  auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't', ptc.id());
+  auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
-  if (acceptSmearedCluster(hcalSmeared, papas::Layer::kHcal)) {
+  if (acceptSmearedCluster(hcalSmeared)) {
     storeSmearedHcalCluster(std::move(hcalSmeared), hcalCluster.id());
   }
 }
 
 void Simulator::propagateAllLayers(PFParticle& ptc) {
-  auto ecal_sp = m_detector.ecal();  // ECAL detector element
-  auto hcal_sp = m_detector.hcal();  // HCAL detector element
-  propagate(ecal_sp->volumeCylinder().inner(), ptc);
-  propagate(ecal_sp->volumeCylinder().outer(), ptc);
-  propagate(hcal_sp->volumeCylinder().inner(), ptc);
-  propagate(hcal_sp->volumeCylinder().outer(), ptc);
+  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagate(m_detector.ecal()->volumeCylinder().outer(), ptc);
+  propagate(m_detector.hcal()->volumeCylinder().inner(), ptc);
+  propagate(m_detector.hcal()->volumeCylinder().outer(), ptc);
 }
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
@@ -142,8 +129,7 @@ void Simulator::simulateNeutrino(PFParticle& ptc) {
 void Simulator::smearElectron(PFParticle& ptc) {
   PDebug::write("Smearing Electron");
   auto track = makeAndStoreTrack(ptc);
-  auto ecal_sp = m_detector.ecal();  // ECAL detector element
-  propagate(ecal_sp->volumeCylinder().inner(), ptc);
+  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
 }
 
 void Simulator::simulateElectron(PFParticle& ptc) {
@@ -162,8 +148,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   if (acceptElectronSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
-  auto ecal_sp = m_detector.ecal();  // ECAL detector element
-  propagate(ecal_sp->volumeCylinder().inner(), ptc);
+  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
 }
 
 void Simulator::smearMuon(PFParticle& ptc) {
@@ -186,7 +171,7 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   propagateAllLayers(ptc);
   auto ptres = m_detector.muonPtResolution(ptc);
   auto track = makeAndStoreTrack(ptc);
-  auto smeared = smearTrack(track, ptres);  // smear it
+  auto smeared = smearTrack(track, ptres);
   if (acceptMuonSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
@@ -210,7 +195,6 @@ const Cluster& Simulator::cluster(IdType clusterId) const {
 
 PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                               const TVector3& vertex) {
-
   double field = m_detector.field()->getMagnitude();
   auto simParticle = PFParticle(pdgid, charge, tlv, m_particles.size(), 's', vertex, field);
   auto id = simParticle.id();
@@ -249,8 +233,7 @@ PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin,
   return makeAndStorePFParticle(pdgid, charge, p4, vertex);
 }
 
-Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype,
-                                           IdType parentId) {
+Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
   if (csize == -1.) {  // ie value not provided
@@ -258,14 +241,13 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
   }
   auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), Identifier::kEcalCluster, subtype);
   IdType id = cluster.id();
-  addNode(id, parentId);
+  addNode(id, ptc.id());
   PDebug::write("Made {}", cluster);
   m_ecalClusters.emplace(id, std::move(cluster));
   return m_ecalClusters[id];
 }
 
-Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype,
-                                           IdType parentId) {
+Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
   if (csize == -1.) {  // ie value not provided
@@ -273,7 +255,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
   }
   auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), Identifier::kHcalCluster, subtype);
   IdType id = cluster.id();
-  addNode(id, parentId);
+  addNode(id, ptc.id());
   PDebug::write("Made {}", cluster);
   m_hcalClusters.emplace(id, std::move(cluster));
   return m_hcalClusters[id];
@@ -290,7 +272,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
   unsigned int counter;
-  if (Identifier::itemType(detectorLayer) == Identifier::kEcalCluster)
+  if (detectorLayer == Layer::kEcal)
     counter = m_smearedEcalClusters.size();
   else
     counter = m_smearedHcalClusters.size();
@@ -300,11 +282,10 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   return cluster;
 }
 
-bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer,
+bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster,
                                      papas::Layer acceptLayer, bool accept) const {
-
   // Determine if this smeared cluster will be detected
-  if (acceptLayer == papas::Layer::kNone) acceptLayer = detectorLayer;
+  if (acceptLayer == papas::Layer::kNone) acceptLayer = Identifier::layer(smearedCluster.id());
   if (m_detector.calorimeter(acceptLayer)->acceptance(smearedCluster) || accept) {
     return true;
   } else {
@@ -314,7 +295,6 @@ bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer
 }
 
 const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId) {
-
   auto id = smearedCluster.id();
   addNode(id, parentId);
   m_smearedEcalClusters.emplace(id, std::move(smearedCluster));
@@ -337,18 +317,6 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   return m_tracks.at(id);
 }
 
-/*const Track& Simulator::makeSmearedTrack(const Track& track, double resolution) {
-  double scale_factor = rootrandom::Random::gauss(1, resolution);
-  auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(),m_smearedTracks.size(), 's');
-  PDebug::write("Made Smeared{}", smeared);
-
-  auto id = smearedtrack.id();
-  addNode(id, parentid);
-  m_smearedTracks.emplace(smearedtrack.id(), std::move(smearedtrack));
-  return m_smearedTracks[id];
-}
-
-*/
 void Simulator::storeSmearedTrack(Track&& track, IdType parentid) {
   IdType id = track.id();
   m_smearedTracks.emplace(id, std::move(track));
@@ -356,7 +324,6 @@ void Simulator::storeSmearedTrack(Track&& track, IdType parentid) {
 }
 
 Track Simulator::smearTrack(const Track& track, double resolution) const {
-
   double scale_factor = rootrandom::Random::gauss(1, resolution);
   auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(), m_smearedTracks.size(), 's');
   PDebug::write("Made Smeared{}", smeared);
@@ -416,7 +383,7 @@ void Simulator::clear() {
 
 std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const { return m_detector.element(layer); }
 
-void Simulator::testing() {
+/*void Simulator::testing() {
   DAG::BFSVisitor<PFNode> bfs;
   for (auto p : m_particles) {
     std::cout << "Connected to " << p.first << std::endl;
@@ -424,91 +391,7 @@ void Simulator::testing() {
     for (auto r : res)
       std::cout << "  " << r->value() << ": " << Identifier::itemType(r->value()) << std::endl;
   }
-}
-
-/*Ids Simulator::linkedIds(IdType nodeid) const {
-  DAG::BFSVisitor<PFNode> bfs;
-  Ids foundids;
-  auto res = bfs.traverseUndirected(m_history.at(nodeid));
-  for (auto r : res) {
-    foundids.push_back(r->value());
-  }
-  return foundids;
 }*/
 
-/*
- Ids Simulator::linkedEcalSmearedClusterIds(long nodeid) const {
- return matchingIds(nodeid,
- Identifier::DataType::kCluster,
- papas::Layer::kEcal,
- papas::SubType::SMEARED,
- papas::enumSource::SIMULATION);
- }
-
- Ids  Simulator::linkedRawTrackIds(long nodeid) const {
- return matchingIds(nodeid,
- Identifier::DataType::kTrack,
- papas::Layer::kNone,
- papas::SubType::RAW,
- papas::enumSource::SIMULATION);
- }
-
- Ids Simulator::linkedSmearedTrackIds(long nodeid) const {
- return matchingIds(nodeid,
- Identifier::DataType::kTrack,
- papas::Layer::kNone,
- papas::SubType::SMEARED,
- papas::enumSource::SIMULATION);
- }
-
- Ids Simulator::linkedParticleIds(long nodeid) const {
- return matchingIds(nodeid,
- Identifier::DataType::kParticle,
- papas::Layer::kNone,
- papas::SubType::RAW,
- papas::enumSource::SIMULATION);
- }
-
- Ids Simulator::parentParticleIds(long nodeid) const {
- return getMatchingParentIds(nodeid,
- Identifier::DataType::kParticle,
- papas::Layer::kNone,
- papas::SubType::RAW,
- papas::enumSource::SIMULATION);
- }*/
-
-/*
- Ids Simulator::matchingIds(long nodeid, Identifier::DataType datatype, papas::Layer layer, papas::SubType type,
- papas::enumSource source) const
- {
- DAG::BFSVisitor<PFNode> bfs;
- Ids foundids;
- auto res =bfs.traverseUndirected(m_history.at(nodeid));
- for (auto r : res)
- {
- long id=r->value();
- if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
- foundids.push_back(id);
- }
- }
- return foundids;
- }
-
- Ids Simulator::getMatchingParentIds(long nodeid, Identifier::DataType datatype, papas::Layer layer, papas::SubType
- type,papas::enumSource source) const
- {
- DAG::BFSVisitor<PFNode> bfs;
- Ids foundids;
- //foundids.reserve(1000); //TODO set sizes sensible.... how
- auto res =bfs.traverseParents(m_history.at(nodeid));
- for (auto r : res)
- {
- long id=r->value();
- if(Identifier::isUniqueIdMatch(id, datatype, layer, type, source)) {
- foundids.push_back(id);
- }
- }
- return foundids;
- }*/
 
 }  // end namespace papas
