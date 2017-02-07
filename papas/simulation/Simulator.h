@@ -87,8 +87,8 @@ private:
    @param[in] const TVector3& vertex: start point of particle
    @return PFParticle& the newly created particle
    */
-  PFParticle makePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
-                            const TVector3& vertex = TVector3(0., 0., 0.)) const;
+ PFParticle& makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
+                            const TVector3& vertex = TVector3(0., 0., 0.)) ;
 
   /**
    Makes a new PFParticle
@@ -100,38 +100,38 @@ private:
    @param[in] const TVector3& vertex: start point of particle
    @return PFParticle& the newly created particle
    */
-  PFParticle makePFParticle(int pdgid, double charge, double theta, double phi, double energy,
-                            const TVector3& vertex = TVector3(0., 0., 0.)) const;
-  PFParticle& storePFParticle(PFParticle&& simParticle, IdType parentId);
-  Cluster makeCluster(const PFParticle& ptc, papas::Layer layer, double fraction = 1., double csize = -1.,
-                      char subtype = 't') const;
-  const Cluster& storeEcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
-  const Cluster& storeHcalCluster(Cluster&& cluster, IdType parentId);  ///<Store and add to history
+ PFParticle& makeAndStorePFParticle(int pdgid, double charge, double theta, double phi, double energy,
+                            const TVector3& vertex = TVector3(0., 0., 0.));
   bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer detectorLayer = papas::Layer::kNone,
                             papas::Layer acceptLayer = papas::Layer::kNone, bool accept = false) const;
   const Cluster& storeSmearedCluster(Cluster&& smearedCluster, IdType parentId);
-  const Track& storeTrack(Track&& track, IdType parentId);        ///<move track into tracks collection and history
+  Cluster makeAndStoreEcalCluster(const PFParticle& ptc, double fraction , double csize ,
+                      char subtype , IdType parentId) ;
+  Cluster makeAndStoreHcalCluster(const PFParticle& ptc,  double fraction , double csize ,
+                                  char subtype , IdType parentId) ;
+  const Cluster& storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId);
+  const Cluster& storeSmearedHcalCluster(Cluster&& smearedCluster, IdType parentId);
+  
+  const Track& makeAndStoreTrack(const PFParticle & ptc);
   Track smearTrack(const Track& track, double resolution) const;  ///< randomisation of the energy of a track
   bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
   bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept = false) const;
   bool acceptMuonSmearedTrack(const Track& smearedTrack, bool accept = false) const;
-
-  const Track& storeSmearedTrack(Track&& smearedtrack,
+  void storeSmearedTrack(Track&& smearedtrack,
                                  IdType parentid);  ///<move into the smearedtracks collection and history
-
   void propagate(const SurfaceCylinder& cylinder, PFParticle& ptc);  ///< find where particle hits cylinder
   void propagateAllLayers(PFParticle& ptc);                          ///< find where particle hits detector cylinders
   void addNode(const IdType newid, const IdType parentid = 0);       ///<update history nodes
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
-  void testing();                                        // temp
-  Ids linkedEcalSmearedClusterIds(IdType nodeid) const;  // TODO move to helper/history class?
-  Ids linkedParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
-  Ids parentParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
-  Ids linkedRawTrackIds(IdType nodeid) const;            // TODO move to helper/history class?
-  Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
-  Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
-  const PapasEvent& m_papasEvent; ///< PapasEvent from which Identifier count can be taken
+  void testing();
+  // Ids linkedEcalSmearedClusterIds(IdType nodeid) const;  // TODO move to helper/history class?
+  // Ids linkedParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
+  // Ids parentParticleIds(IdType nodeid) const;            // TODO move to helper/history class?
+  // Ids linkedRawTrackIds(IdType nodeid) const;            // TODO move to helper/history class?
+  // Ids linkedSmearedTrackIds(IdType nodeid) const;        // TODO move to helper/history class?
+  // Ids linkedIds(IdType nodeid) const;                    // TODO move to helper/history class?
+  const PapasEvent& m_papasEvent;  ///< PapasEvent from which Identifier count can be taken
   const Detector& m_detector;
   Clusters& m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters& m_hcalClusters;         ///< hcal clusters (prior to smearing)
@@ -141,7 +141,7 @@ private:
   Tracks& m_smearedTracks;          ///< smeared tracks
   PFParticles& m_particles;         ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
-  
+
   StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
   HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
 };
