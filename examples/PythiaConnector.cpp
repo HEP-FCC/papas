@@ -58,11 +58,9 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
     TVector3 startVertex = TVector3(0, 0, 0);
     TVector3 endVertex = TVector3(0, 0, 0);
     if (ptc.startVertex().isAvailable()) {
-      std::cout << "Z" << ptc.startVertex().z() << std::endl;
       startVertex = TVector3(ptc.startVertex().x() * 1e-3, ptc.startVertex().y() * 1e-3, ptc.startVertex().z() * 1e-3);
     }
     if (ptc.endVertex().isAvailable()) {
-      std::cout << "Z" << ptc.endVertex().z() << std::endl;
       // convert pythia : mm -> papas : m
       endVertex = TVector3(ptc.endVertex().x() * 1e-3, ptc.endVertex().y() * 1e-3, ptc.endVertex().z() * 1e-3);
     }
@@ -89,8 +87,8 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
   particles.sort([](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
 #endif
 
-  for (auto p : particles)
-    std::cout << p.info() << std::endl;
+  //for (auto p : particles)
+  //std::cout << p.info() << std::endl;
   return std::move(particles);
 }
 

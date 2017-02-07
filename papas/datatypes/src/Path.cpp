@@ -32,7 +32,7 @@ Path::Path(const TLorentzVector& p4, const TVector3& origin, double field)
 double Path::timeAtZ(double z) const {
 
   double dest_time = (z - m_origin.Z()) / vZ();
-  std::cout << vZ() << " " << m_origin.Z() << " " << dest_time << std::endl;
+  //std::cout << vZ() << " " << m_origin.Z() << " " << dest_time << std::endl;
   ;
   return dest_time;
 }
