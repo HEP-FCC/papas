@@ -92,6 +92,13 @@ public:
    @param[in] id: unique identifier
    @return the unique counter
    */
+  static unsigned int index(IdType id);  ///< Returns encoded unique id
+  
+
+  /** Takes an identifier and returns the unique counter component of it
+   @param[in] id: unique identifier
+   @return the unique counter
+   */
   static unsigned int uniqueId(IdType id);  ///< Returns encoded unique id
 
   static char typeLetter(IdType id);  ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
@@ -149,6 +156,7 @@ private:
   static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
   /// checks that the identifier can be correctly decoded
   static bool checkValid(IdType id, ItemType type, char subt, float val, unsigned int uid);
+  static bool checkUIDValid(IdType id, unsigned int uniqueid);
   static uint64_t floatToBits(float value);  /// convert float into binary
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };

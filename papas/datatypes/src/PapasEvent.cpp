@@ -15,8 +15,7 @@ PapasEvent::PapasEvent()
       m_tracksCollection(),
       m_particlesCollection(),
       m_blocksCollection(),
-      m_historys(),
-      m_objectCounter(0)
+      m_historys()
   {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {

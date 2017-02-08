@@ -4,6 +4,7 @@
 #include <cmath>
 #include <inttypes.h>
 #include <iostream>
+#include <bitset>
 
 //
 // Encode information into a unique identifier
@@ -21,13 +22,13 @@ namespace papas {
 
   //void Identifier::reset() { s_counter = 1; }
 
-IdType Identifier::makeId(unsigned int uniqueid, ItemType type, char subt, float val) {
+IdType Identifier::makeId(unsigned int index, ItemType type, char subt, float val) {
 
   if (type == kNone) {
     throw "Id must have a valid type";
   }
 
-  if (uniqueid >= pow(2, m_bitshift) - 1) throw "Identifier unique id is too big: too many identifiers";
+  if (index >= pow(2, m_bitshift) - 1) throw "Identifier unique id is too big: too many identifiers";
 
   // Shift all the parts and join together
   // NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
@@ -36,9 +37,9 @@ IdType Identifier::makeId(unsigned int uniqueid, ItemType type, char subt, float
   IdType typeShift = (uint64_t)type << m_bitshift1;
   IdType valueShift = (uint64_t)Identifier::floatToBits(val) << m_bitshift;
   IdType subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << m_bitshift2;
-  IdType uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | uniqueid;
+  IdType uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | index;
 
-  if (!checkValid(uid, type, subt, val, uniqueid)) throw "Error occured constructing identifier";
+  if (!checkValid(uid, type, subt, val, index)) throw "Error occured constructing identifier";
   return uid;
 }
 
@@ -57,7 +58,21 @@ float Identifier::value(IdType id) {
   return bitsToFloat(bitvalue);
 }
 
-unsigned int Identifier::uniqueId(IdType id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
+unsigned int Identifier::index(IdType id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
+  
+unsigned int Identifier::uniqueId(IdType id)  {
+    //For some purposes we want a smaller uniqueid without the value information
+    //here we consruct a 32 bit uniqueid out of the index and the type and subtype
+    unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
+    IdType typeShift = (uint32_t)Identifier::itemType(id) << bitshift;
+    IdType subtypeShift = (uint32_t) static_cast<int>(tolower(Identifier::subtype(id))) << m_bitshift;
+    //binary printout std::cout <<"Index" << std::bitset<32>(Identifier::index(id)) <<std::endl;
+    uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)Identifier::index(id);
+    if (!checkUIDValid(id, uniqueid))
+      throw "unique id part of Identifier not valid";
+    return uniqueid;
+}
+  
 
 char Identifier::typeLetter(IdType id) {
   // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
@@ -82,7 +97,7 @@ std::string Identifier::typeAndSubtype(IdType id) {
 
 std::string Identifier::pretty(IdType id) {
   // pretty version of the identifier
-  return Identifier::typeAndSubtype(id) + std::to_string(Identifier::uniqueId(id));
+  return Identifier::typeAndSubtype(id) + std::to_string(Identifier::index(id));
 }
 
 papas::Layer Identifier::layer(IdType id) {
@@ -107,14 +122,27 @@ Identifier::ItemType Identifier::itemType(papas::Layer layer) {
     return ItemType::kNone;
 }
 
-bool Identifier::checkValid(IdType uid, ItemType type, char subt, float val, unsigned int uniqueid) {
+bool Identifier::checkValid(IdType uid, ItemType type, char subt, float val, unsigned int indx) {
   // verify that it all works, the id should match the items from which it was constructed
-  if (uniqueId(uid) != uniqueid) return false;
+  if (index(uid) != indx) return false;
   if (val != 0) {
     if ((fabs(value(uid) - val) >= fabs(val) * 10e-6) | (itemType(uid) != type) | (subtype(uid) != subt)) return false;
   }
   return true;
 }
+  
+  bool Identifier::checkUIDValid(IdType id, unsigned int uniqueid) {
+    unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
+    // verify that it all works, the uniqueid should match the items from which it was constructed
+    ItemType it = static_cast<ItemType>((uniqueid >> bitshift) & (uint32_t)(pow(2, 3) - 1));
+    char st = static_cast<char>((uniqueid >> m_bitshift) & (uint64_t)(pow(2,bitshift - m_bitshift) - 1));
+    unsigned idx = ((uniqueid) & (uint32_t)(pow(2, m_bitshift) - 1));
+    if (it != itemType(id) || st != subtype(id) || idx != index(id))
+      return false;
+    return true;
+  }
+  
+
 
 uint64_t Identifier::floatToBits(float value) {
   // CHAR_BIT not known on lxplus assert(CHAR_BIT * sizeof(float) == 32);  // TODO think of somewhere better to put this

@@ -12,47 +12,18 @@ Edge::Edge(IdType endId1, IdType endId2, bool isLinked, double distance)
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
 Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
-
   EdgeKey key;
-    // Shift all the parts and join together
-    // NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
-    // if the m_bitshift is 32 or more the shift is undefined and can return 0
-  auto temp = id1;
-  if (id1 > id2) {
-      id1 = id2;
-      id2 = temp;
-  }
+  IdType uid1 = Identifier::uniqueId(id1);
+  IdType uid2 = Identifier::uniqueId(id2);
   
+  if (id1 > id2)  // ensure that the order of the ids does not matter
+    key = (((uint64_t)uid1) << 32 ) | ((uint64_t)uid2);
+  else
+    key = (((uint64_t)uid2) << 32 ) | ((uint64_t)uid1);
   
-    IdType typeShift1 = (uint64_t)Identifier::itemType(id1) << m_bitshift1;
-    IdType subtypeShift1 = (uint64_t) static_cast<int>(tolower(Identifier::subtype(id1))) << m_bitshift;
-    IdType typeShift2 = (uint64_t)Identifier::itemType(id2) << (m_bitshift1 +32) ;
-    IdType subtypeShift2 = (uint64_t) static_cast<int>(tolower(Identifier::subtype(id2))) << (m_bitshift + 32);
-    IdType shiftid2 = (uint64_t)Identifier::uniqueId(id2) << 32;
-  //std::cout <<Identifier::itemType(id1) << Identifier::subtype(id1) << Identifier::uniqueId(id1) << " : "<< Identifier::itemType(id2) << Identifier::subtype(id2)<< Identifier::uniqueId(id2) << std::endl;
-  
-    key = (uint64_t)subtypeShift1 | (uint64_t)typeShift1 | (uint64_t)Identifier::uniqueId(id1) | (uint64_t)shiftid2
-  | (uint64_t)subtypeShift2 | (uint64_t)typeShift2;
-  
-  
-  
-   /* std::cout <<((key >> m_bitshift1) & (uint64_t)(pow(2, 3) - 1));
-  std::cout << static_cast<char>((key >> m_bitshift) & (uint64_t)(pow(2, m_bitshift1 - m_bitshift) - 1));
-  std::cout <<((key) & (uint64_t)(pow(2, m_bitshift) - 1));
-  std::cout << " : ";
-  std::cout << ((key >> (m_bitshift1+32)) & (uint64_t)(pow(2, 3) - 1));
-  std::cout << static_cast<char>((key >> (m_bitshift+32)) & (uint64_t)(pow(2, m_bitshift1 - m_bitshift) - 1));
-  std::cout << ((key >> 32) & (uint64_t)(pow(2, m_bitshift) - 1));*/
-                                                                                                                                
-    return key;
+  return key;
 }
   
-  
-  /*bool Edge::checkValid(uint64_t uid, IdType id, IdType id2) {
-    return ((id >> m_bitshift1) & (uint64_t)(pow(2, 3) - 1)) == Identifier::itemType(id);
-    
-  }*/
-
 IdType Edge::otherid(IdType id) const {
   if (m_endIds[0] == id)
     return m_endIds[1];
