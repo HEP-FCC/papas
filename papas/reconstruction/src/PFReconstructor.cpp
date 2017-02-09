@@ -26,7 +26,7 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  blockids.sort(std::greater<int>());
+  blockids.sort(std::greater<IdType>());
 #endif
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
@@ -45,7 +45,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<int>());
+  ids.sort(std::greater<IdType>());
 #endif
   for (auto id : ids) {
     m_locked[id] = false;
@@ -100,7 +100,7 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   /// Reconstruct muons in block.
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<int>());
+  ids.sort(std::greater<IdType>());
 #endif
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
@@ -115,7 +115,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   /*Reconstruct electrons in block.*/
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<int>());
+  ids.sort(std::greater<IdType>());
 #endif
 
   /* the simulator does not simulate electron energy deposits in ecal.
@@ -210,7 +210,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
 #if WITHSORT
-  trackIds.sort(std::greater<int>());
+  trackIds.sort(std::greater<IdType>());
 #endif
   for (auto trackId : trackIds) {
     for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
@@ -225,8 +225,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     }
   }
 #if WITHSORT
-  trackIds.sort(std::greater<int>());
-  ecalIds.sort(std::greater<int>());
+  trackIds.sort(std::greater<IdType>());
+  ecalIds.sort(std::greater<IdType>());
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_papasEvent.cluster(hcalId);

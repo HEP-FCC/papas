@@ -27,7 +27,7 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
     uniqueids.push_back(cluster.first);
   }
 #if WITHSORT
-  uniqueids.sort(std::greater<int>()); //sort in descending order
+  uniqueids.sort(std::greater<IdType>()); //sort in descending order
 #endif
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
@@ -46,14 +46,14 @@ MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
    auto grBuilder = GraphBuilder(uniqueids, std::move(edges));
   for (auto ids : grBuilder.subGraphs()) {
 #if WITHSORT
-    ids.sort(std::greater<int>()); //sort in descending order
+    ids.sort(std::greater<IdType>()); //sort in descending order
 #endif
     auto id = *ids.begin();
     double totalenergy = 0.;
     for (const auto& c : ids) {
       totalenergy += clusters.at(c).energy();
-      PDebug::write("Merged Cluster from Smeared{}",
-                    clusters.at(c));  // hmmm not quite right we don't really know it is smeared
+      //PDebug::write("Merged Cluster from Smeared{}",
+      //              clusters.at(c));  // hmmm not quite right we don't really know it is smeared
     }
     // create the merged Cluster
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated

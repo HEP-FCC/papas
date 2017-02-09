@@ -16,12 +16,18 @@
 namespace papas {
 
 int PFBlock::tempBlockCount = 0;
-
+  
+  bool blockIdComparer (IdType id1, IdType id2) {
+    if (Identifier::itemType(id1) ==Identifier::itemType(id2))
+      return id1>id2;
+    else
+      return Identifier::itemType(id1) < Identifier::itemType(id2);}
+  
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int counter, char subtype)
     : m_uniqueId(Identifier::makeId(counter, Identifier::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-  m_elementIds.sort(std::greater<int>()); //sort in descending order of ids
+  m_elementIds.sort(blockIdComparer);
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {

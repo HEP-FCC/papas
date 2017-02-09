@@ -16,7 +16,7 @@ PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  blockids.sort(std::greater<int>());
+  blockids.sort(std::greater<uint64_t>());
 #endif
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks

@@ -66,7 +66,7 @@ TEST_CASE("Identifier") {
     uid = Identifier::makeId(Identifier::ItemType::kTrack, 's', pow(2, i));
     idvec.push_back(uid);
   }
-  std::sort(idvec.begin(), idvec.end(), std::greater<int>());
+  std::sort(idvec.begin(), idvec.end(), std::greater<IdType>());
   REQUIRE(Identifier::pretty(idvec[0]) == "ts6");
   REQUIRE(Identifier::value(idvec[0]) == 2.0);
   REQUIRE(Identifier::pretty(idvec[3]) == "ts3");

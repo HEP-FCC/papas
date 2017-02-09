@@ -34,11 +34,11 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
 
 void Simulator::simulateParticle(const Particle& ptc) {
   int pdgid = ptc.pdgId();
-  PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
   if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
     // to avoid numerical problems in propagation
     return;
   }
+  PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
   } else if (abs(pdgid) == 11) {
@@ -76,7 +76,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     auto track = makeAndStoreTrack(ptc);
     auto resolution = m_detector.tracker()->ptResolution(track);
     auto smeared = smearTrack(track, resolution);
-    if (m_detector.tracker()->acceptance(smeared)) {
+    if (acceptSmearedTrack(smeared)) {
       storeSmearedTrack(std::move(smeared), track.id());
     }
   }
@@ -272,7 +272,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
   unsigned int counter;
-  if (detectorLayer == Layer::kEcal)
+  if (Identifier::layer(parent.id()) == Layer::kEcal)
     counter = m_smearedEcalClusters.size();
   else
     counter = m_smearedHcalClusters.size();

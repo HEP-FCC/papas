@@ -31,10 +31,10 @@ Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, double s
 std::string Particle::info() const {
   fmt::MemoryWriter out;
   int pid = m_pdgId;
-  if (m_charge < 0) pid = -abs(pid);
-  if (m_charge == 0 && pid < 0) pid = -pid;
+  //if (m_charge < 0) pid = -abs(pid);
+  //if (m_charge == 0 && pid < 0) pid = -pid;
   out.write("pdgid = {:5}, status = {:3}, q = {:2}", pid, m_status, m_charge);
-  out.write(", e = {:5.1f}, theta = {:5.2f}, phi = {:5.2f}, mass = {:5.2f}", e(), theta(), phi(), mass());
+  out.write(", e = {:5.1f}, theta = {:5.2f}, phi = {:5.2f}, mass = {:5.2f}", e(), theta(), phi(), fabs(mass()));
   return out.str();
 }
 
