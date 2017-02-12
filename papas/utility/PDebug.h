@@ -8,7 +8,7 @@
 #include <iostream>
 
 namespace papas {
-/** Produces Physics debug output and writes to file
+/** Produce Physics debug output and write out to file
  *
  * Usage:
  * @code

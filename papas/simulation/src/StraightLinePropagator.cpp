@@ -19,7 +19,6 @@ void StraightLinePropagator::propagateOne(const PFParticle& ptc,
   TVector3 udir = line->unitDirection();
   TVector3 origin = line->origin();
   double theta = udir.Theta();
-
   double zbar = line->unitDirection().Z();  // Z of unit vex
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
