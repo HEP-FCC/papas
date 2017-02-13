@@ -85,50 +85,66 @@ private:
       block the block to be reconstructed
   */
   void reconstructBlock(const PFBlock& block);
-  /** Reconstructs an Hcal cluster
-      block the block to which the hcal structure belongs
-      hcalId the unique identifier of the Hcal cluster
+  /** Reconstructs particles from na hcal cluster
+      @param block the block to which the hcal structure belongs
+      @param hcalId the unique identifier of the Hcal cluster
   */
   void reconstructHcal(const PFBlock& block, IdType hcalId);
-  /** Reconstructs a charged hadron/electron/muon
-   track the track which is to be reconstructed
-   pdgId the type of particle to be reconstructed
-   parentIds ids of parent objects which will be recorded in the history
+  /** Reconstructs a charged hadron/electron/muon from an Hcal
+   @param track the track which is to be reconstructed
+   @param pdgId the type of particle to be reconstructed
+   @param parentIds ids of parent objects which will be recorded in the history
    */
   void reconstructTrack(const Track& track, int pdgId,
                         const Ids& parentIds);  ///< constructs and returns particle(s) starting from a track
-  /** 
-  cluster cluster that is to be reconstructed into photon or neutral hadron
-  layer Ecal or Hcal papas::Layer::kEcal or papas::Layer::kHcal
-  parentIds ids of parent objects which will be recorded in the history
-  energy Energy that is to be assigned to the particle, if not specified or if negative the cluster energy will be used
-  vertex This will be the start vertex for the new particle
+  /** Reconstruct photon (Ecal) of neutralHadron (hcal) from a cluster
+  @param cluster cluster that is to be reconstructed into photon or neutral hadron
+  @param layer Ecal or Hcal papas::Layer::kEcal or papas::Layer::kHcal
+  @param parentIds ids of parent objects which will be recorded in the history
+  @param energy Energy that is to be assigned to the particle, if not specified or if negative the cluster energy will be used
+  @param vertex This will be the start vertex for the new particle
   */
   void reconstructCluster(
       const Cluster& cluster, papas::Layer layer, const Ids& parentIds, double energy = -1,
       const TVector3& vertex = TVector3());  ///< constructs and returns a particles starting from a cluster
-  /** Identify any electrons in the block and reconstructed them 
-   block Block in which to check for and reconstruct electrons
+  /** Identify any electrons in the block and reconstruct them
+   @param block Block in which to check for and reconstruct electrons
   */
   void reconstructElectrons(const PFBlock& block);
-  /** Identify any muons in the block and reconstructed them
-   block Block in which to check for and reconstruct muons
+  /** Identify any muons in the block and reconstruct them
+   @param block Block in which to check for and reconstruct muons
    */
   void reconstructMuons(const PFBlock& block);
   // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
   /** Add new particle into history
+   @param Ids Unique identifiers of parents of the new particle
+   @param newparticle New particle that is to be added into history
    */
   void insertParticle(const Ids& parentIds, PFParticle& newparticle);
+  /**  Checks if object unique_id comes, directly or indirectly,
+   from a particle of type typeAndSubtype, with this absolute pdgid.
+   
+   @param id Unique Identifier of object
+   @param typeAndSubtype type and subtype of particle eg 'ps' for simulated particle
+   @param pdgid particle type eg muon
+   @return True if there is a direct /indirect link between object and particle of this typeAndSubtype and absolute pdgid
+  */
   bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
+  /** detector energy resolution of for a neutral Hadron
+   @param energy Energy of deposit (?)
+   @param resolution ?
+  */
   double neutralHadronEnergyResolution(double energy, double resolution) const;
-  double neutralHadronEnergyResolution(const Cluster& hcal) const;
+  /**
+   @param cluster
+   */
   double nsigmaHcal(const Cluster& cluster) const;
-  const PapasEvent& m_papasEvent;
-  const Detector& m_detector;
+  const PapasEvent& m_papasEvent; ///< Contains history information and collections of clusters/blocks/tracks
+  const Detector& m_detector; ///< Detector
   PFParticles& m_particles;  ///< the reconstructed particles created by this class
-  Nodes& m_history;
-  Ids m_unused;
-  std::unordered_map<IdType, bool> m_locked;
+  Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
+  Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
+  std::unordered_map<IdType, bool> m_locked; ///< map of unique ids which have already been used in reconstruction
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */

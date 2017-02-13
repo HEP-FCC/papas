@@ -22,7 +22,6 @@ namespace papas {
 PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector,
                                  PFParticles& particles, Nodes& history)
     : m_papasEvent(papasEvent), m_detector(detector), m_particles(particles), m_history(history) {
-
   const auto& blocks = m_papasEvent.blocks(blockSubtype);
   auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
 #if WITHSORT
@@ -148,7 +147,6 @@ bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtyp
   /*returns: True if object unique_id comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
-
   auto historyHelper = HistoryHelper(m_papasEvent);
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
   bool isFromPdgId = false;
@@ -159,14 +157,14 @@ from a particle of type type_and_subtype, with this absolute pdgid.
 }
 
 double PFReconstructor::neutralHadronEnergyResolution(double energy, double eta) const {
+  /*Currently returns the hcal resolution of the detector in use.
+  That's a generic solution, but CMS is doing the following
+  (implementation in commented code)
+http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
+  */
   auto resolution = m_detector.hcal()->energyResolution(energy, eta);
   return resolution;
-}
-double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const {
-
-  /*WARNING CMS SPECIFIC!
-   //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
-   */
+  /*
   double energy = fmax(hcal.energy(), 1.);
   double stoch = 1.02;
   double kconst = 0.065;
@@ -176,14 +174,17 @@ double PFReconstructor::neutralHadronEnergyResolution(const Cluster& hcal) const
   }
   double resol = sqrt(pow(stoch, 2) / energy + pow(kconst, 2));
   return resol;
+}*/
+
 }
 
 double PFReconstructor::nsigmaHcal(const Cluster& cluster) const {
-  /*'WARNING CMS SPECIFIC!
-
-   //http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
-   '''*/
-  return 1. + exp(-cluster.energy() / 100.);
+  /*Currently returns 2.
+  CMS is doing the following (implementation in commented code)
+http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
+  */
+  return 2;
+  //return 1. + exp(-cluster.energy() / 100.);
 }
 
 void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
@@ -238,10 +239,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     for (auto id : trackIds) {
       const Track& track = m_papasEvent.track(id);
       auto parentIds = Ids{block.id(), id};
-
       auto ecalLinks = block.linkedIds(id, Edge::kEcalTrack);
       parentIds.insert(parentIds.end(), ecalLinks.begin(), ecalLinks.end());
-
       auto hcalLinks = block.linkedIds(id, Edge::kHcalTrack);
       parentIds.insert(parentIds.end(), hcalLinks.begin(), hcalLinks.end());
       reconstructTrack(track, 211, parentIds);
