@@ -9,24 +9,19 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
-
-#include <iostream>
-
-#include <iostream>
-
-using namespace std;
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
 
 #include <TApplication.h>
 #include <TCanvas.h>
+#include <iostream>
 
 int main(int argc, char* argv[]) {
-
-  randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
-
+  papas::PDebug::File("pdebug.txt");
+  rootrandom::Random::seed(0xdeadbeef);
+  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;
@@ -45,21 +40,27 @@ int main(int argc, char* argv[]) {
     pythiaConnector.processEvent(eventNo, papasManager);
 
     // write out the reconstructed particles to a root file
-    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.reconstructedParticles());
+    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.papasEvent().particles('r'));
 
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;
-    for (const auto& p : papasManager.rawParticles()) {
+    for (const auto& p : papasManager.papasEvent().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
     std::cout << "Reconstructed Particles" << std::endl;
-    for (const auto& p : papasManager.reconstructedParticles()) {
+    for (const auto& p : papasManager.papasEvent().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
+
+    // testing (move elsewhere)
+    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.papasEvent().clusters("em"));
+
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
-    papasManager.display(false);
-    papasManager.show();
+    pythiaConnector.displayEvent(papasManager);
+    // tApp.Run();
+    // papasManager.display(false);
+    // papasManager.show();
 
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {

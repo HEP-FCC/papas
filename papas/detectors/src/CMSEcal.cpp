@@ -7,17 +7,10 @@
  * @brief Implementation of the CMS ECAL  */
 #include "papas/detectors/CMSEcal.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/detectors/Material.h"
 #include "papas/datatypes/Particle.h"
+#include "papas/detectors/Material.h"
 
 namespace papas {
-/*
- CMSECAL::CMSECAL(papas::Layer layer, const VolumeCylinder& volume,
- const  Material& material , double eta_crack,
- double emin, const std::vector<double>& eres) :
- DetectorElement(layer,   volume,  material), m_eta_crack(eta_crack), m_emin(emin),
- m_eres(eres)
- {}*/
 
 CMSECAL::CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
                  const std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp)

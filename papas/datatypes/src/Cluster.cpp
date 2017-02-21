@@ -7,22 +7,22 @@
 //
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, Id::ItemType idtype)
-    : m_uniqueId(Id::makeId(idtype)), m_p3(position), m_subClusters() {
+Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int counter, Identifier::ItemType idtype, char subtype)
+    : m_uniqueId(Identifier::makeId(counter, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
 }
 
-Cluster::Cluster(const Cluster& c, IdType id)
-    : m_uniqueId(id),
+Cluster::Cluster(const Cluster& c, unsigned int counter, Identifier::ItemType type, char subtype, float val)
+    : m_uniqueId(Identifier::makeId(counter, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
@@ -40,14 +40,13 @@ Cluster::Cluster(Cluster&& c)
       m_energy(c.m_energy),
       m_subClusters() {
   m_p3 = c.m_p3;
-
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
   // This is a disadvantage of using Cluster class to deal with both
   // "cluster" and "mergedcluster" and it may infact be better to have the
   // subclusters empty for a non-merged cluster
   // For a non merged cluster the subcluster points to itself.
-  if (c.subClusters().size() == 1 && c.id() == c.subClusters()[0]->id())
+  if (c.subClusters().size() == 1 && c.id() == (*c.subClusters().begin())->id())
     m_subClusters.push_back(this);  // non merged cluster point to itself
   else
     for (auto s : c.subClusters())  // merged clusters
@@ -79,18 +78,16 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  // if(Id::pretty(m_uniqueId)=="e299     ")
-  //  std::cout<<*this;
-  if (Id::itemType(m_uniqueId) != Id::itemType(rhs.id())) {
-    std::cout << "can only add a cluster from the same layer";
+  if (Identifier::itemType(m_uniqueId) != Identifier::itemType(rhs.id())) {
+    throw "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
   m_energy = m_energy + rhs.energy();
-  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // ajr not sure if this is needed at all?
+  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // used for graphics
   double denom = 1. / m_energy;
   m_p3 *= denom;
   if (rhs.subClusters().size() > 1) {
-    std::cout << "can only add in a cluster which is not already merged";
+    throw "can only add in a cluster which is not already merged";
   }
   m_pt = m_energy * m_p3.Unit().Perp();
   m_subClusters.push_back(&rhs);
@@ -100,11 +97,11 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster :" << Id::pretty(cluster.id()) << ":" << cluster.id() << ": " << cluster.info();
+  os << "Cluster: " << std::setw(6) << std::left << Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": "
+     << cluster.info();
   os << " sub(";
-  if (cluster.subClusters().size() == 0) std::cout << "hmmm";
   for (auto c : cluster.subClusters()) {
-    os << Id::pretty(c->id()) << ", ";
+    os << Identifier::pretty(c->id()) << ", ";
   }
   os << ")";
   return os;
@@ -121,8 +118,8 @@ m_subClusters(std::move(c.m_subClusters))
 
 {
 m_p3=c.m_p3;
-    PDebug::write("Move cluster {}" , *this);
- std::cout<< "Move Cluster" <<std::endl;
+  PDebug::write("Move cluster {}" , *this);
+std::cout<< "Move Cluster" <<std::endl;
 }*/
 
 /* Cluster& Cluster::operator=(Cluster&& c) {
@@ -146,13 +143,13 @@ return *this;
 };
 
 Cluster::Cluster(const Cluster&) {
-  PDebug::write("copy cluster {}" , Id::pretty(m_uniqueId));
+  PDebug::write("copy cluster {}" , Identifier::pretty(m_uniqueId));
 std::cout<< "copy cluster" ;
 } ;*/
 
 /*Cluster::~Cluster() {
-  PDebug::write("delete cluster {}" , Id::pretty(m_uniqueId));
-  std::cout<< "delete cluster" ;
+  PDebug::write("delete cluster {}" , Identifier::pretty(m_uniqueId));
+  std::cout<< " delete cluster " <<  Identifier::pretty(m_uniqueId) ;
 } ;*/
 
 }  // end namespace papas

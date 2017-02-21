@@ -8,18 +8,18 @@
 #include <list>
 #include <utility>
 
+#include "TVector3.h"
+#include "papas/datatypes/Path.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GBlob.h"
 #include "papas/display/GTrajectory.h"
-#include "papas/datatypes/Path.h"
-#include "TVector3.h"
 
 namespace papas {
 
 class Cluster;
 class Track;
 class Particle;
-class SimParticle;
+class PFParticle;
 
 /// Used to display the tracks and clusters on output graphs
 class GTrajectories : public Drawable {
@@ -29,7 +29,7 @@ public:
   /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
   GTrajectories(const Cluster& cluster);
   GTrajectories(const Track& track);
-  GTrajectories(const SimParticle& particle);
+  GTrajectories(const PFParticle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
   void Draw(const std::string& projection) override;
   void addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);

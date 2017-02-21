@@ -13,21 +13,19 @@ ${CMAKE_SOURCE_DIR})
 
 message(status, "building papascpp library")
 
-REFLEX_GENERATE_DICTIONARY(papascppDict ${headers} SELECTION selection.xml)
-add_library(papascpp SHARED ${sources}  ${headers}  papascppDict.cxx )
-add_dependencies(papascpp papascppDict-dictgen )
-
-target_link_libraries(papascpp ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES} )
-target_compile_definitions(papascpp PRIVATE WITHSORT=1)
-install(TARGETS papascpp DESTINATION lib)
+REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
+add_library(papasDict SHARED  ${headers}  papas.cxx )
+add_dependencies(papasDict papas-dictgen )
+target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
+add_library(papas SHARED ${sources} )
+target_link_libraries(  papas ${ROOT_LIBRARIES} )
+#target_compile_definitions(papas PRIVATE WITHSORT=1)
+install(TARGETS papas DESTINATION lib)
 
 # Install the dictionary
-if (${ROOT_VERSION} GREATER 6)
-  install(FILES
-      "${PROJECT_BINARY_DIR}/papascppDict_rdict.pcm"
-      DESTINATION lib COMPONENT dev)
-endif()
-
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/papas DESTINATION include)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
 
 
 

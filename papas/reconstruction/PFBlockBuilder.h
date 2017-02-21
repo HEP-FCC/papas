@@ -7,30 +7,32 @@
 #include <iostream>
 
 namespace papas {
-class PFEvent;
+class PapasEvent;
 
-/// The PFBlockBuilder takes a PFEvent and a set of ids (all of which must be in the PFEvent)
-/// It uses the PFEvent to access the elements corresponding to each id
+/// The PFBlockBuilder takes a PapasEvent and a set of ids (all of which must be in the PapasEvent)
+/// It uses the PapasEvent to access the elements corresponding to each id
 /// It proceeds by creating a collection of all possible edges (between ids)
 /// The blockbuilder is then used to create a set of distinct blocks, and the
 /// blocks look after the corresponding parts of the edges information.
-/// Class to create blocks of connected elements from a PF event eg connected tracs and clusters.
-/// It creates what is needed in order to call BlockBuilder
 class PFBlockBuilder {
 public:
   /** Constructor
-   * @param[in]  pfevent contains collections of tracks, clusters and historyNodes
-   * @param[in] ids  list of element ids from which to construct a block
+   * @param[in]  papasEvent contains collections of tracks, clusters and history
+   * @param[in]  ecalTypeAndSubtype which ecal clusters to use from the PapasEvent
+   * @param[in]  hcalTypeAndSubtype which hcal clusters to use from the PapasEvent
+   * @param[in]  trackSubtype which tracks to use from the PapasEvent
+   * @param[inout] blocks structure into which new blocks will be added
+   * @param[inout] history structure to which history information will be added
    */
-  PFBlockBuilder(const Ids& ids, PFEvent& pfevent);  // history inside PFEvent will be updated (improve this)
-  Blocks blocks() { return std::move(m_blocks); };   ///<return the unordered map of the resulting blocks;
-
+  PFBlockBuilder(const PapasEvent& m_papasEvent, const std::string& ecalTypeAndSubtype,
+                 const std::string& hcalTypeAndSubtype, char trackSubtype, Blocks& blocks, Nodes& history);
 private:
-  void makeBlocks();         ///< does the main work of creating the blocks
-  Blocks m_blocks;           ///< the blocks made by blockbuilder
-  const PFEvent& m_pfEvent;  ///< contains the collections of tracks, clusters and historyNodes
-  Nodes& m_historyNodes;     ///< history will be updated to store block creation
-  Ids m_uniqueIds;           ///< list of element ids from which to construct the blocks
+  void makeBlocks();               ///< does the main work of creating the blocks
+  const PapasEvent& m_papasEvent;  ///< contains the collections of tracks, clusters and history
+  Blocks& m_blocks;                ///< the externally owned collection that new blocks will be added to by blockbuilder
+  Nodes& m_history;                ///< history will be updated to record block creation
+  Ids m_uniqueIds;                 ///< list of element ids from which to construct the blocks
 };
+
 }  // end namespace papas
 #endif /* PFBlockBuilder_hpp */

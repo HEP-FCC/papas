@@ -1,6 +1,5 @@
 //
 //  DefinitionsCollections.h
-//  papas
 //
 //  Created by Alice Robson on 26/05/16.
 //
@@ -9,32 +8,36 @@
 #ifndef DefinitionsCollections_h
 #define DefinitionsCollections_h
 
-#include "papas/datatypes/Id.h"
-//#include <map>
+#include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
+#include "papas/datatypes/Track.h"
+#include "papas/graphtools/Edge.h"
+#include <list>
+#include <string>
 #include <unordered_map>
-#include <vector>
+
 namespace papas {
 class Cluster;
 class PFBlock;
 class Track;
 class Edge;
-class SimParticle;
+class PFParticle;
 class Particle;
 
-typedef std::unordered_map<Id::Type, SimParticle> SimParticles;  ///< collection of Simulated Particles
-typedef std::unordered_map<Id::Type, Particle> Particles;        ///< collection of Particles
-typedef std::unordered_map<unsigned long long, Edge> Edges;      ///< collection of Edges
-typedef std::vector<Id::Type> Ids;                               ///< collection of Ids
-typedef std::unordered_map<Id::Type, Track> Tracks;              ///< collection of Tracks
-typedef std::unordered_map<Id::Type, PFBlock> Blocks;            ///< collection of Blocks
-typedef std::unordered_map<Id::Type, Cluster> Clusters;          ///< collection of Clusters
+typedef std::unordered_map<IdType, PFParticle> PFParticles;  ///< collection of PFParticles
+typedef std::list<Particle> ListParticles;                   ///< collection of Particles
+typedef std::unordered_map<IdType, Particle> Particles;      ///< collection of Particles
+typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of Edges
+typedef std::list<IdType> Ids;                               ///< collection of Ids
+typedef std::unordered_map<IdType, Track> Tracks;            ///< collection of Tracks
+typedef std::unordered_map<IdType, PFBlock> Blocks;          ///< collection of Blocks
+typedef std::unordered_map<IdType, Cluster> Clusters;        ///< collection of Clusters
 
-/*typedef std::map<Id::Type, SimParticle> SimParticles;    ///< collection of Simulated Particles
-typedef std::map<Id::Type, Particle> Particles;          ///< collection of Particles
-typedef std::map<unsigned long long, class Edge> Edges;  ///< collection of Edges
-typedef std::vector<Id::Type> Ids;                                 ///< collection of Ids
-typedef std::map<Id::Type, Track> Tracks;                ///< collection of Tracks
-typedef std::map<Id::Type, PFBlock> Blocks;              ///< collection of Blocks
-typedef std::map<Id::Type, Cluster> Clusters;            ///< collection of Clusters*/
+typedef std::unordered_map<Identifier::SubType, const PFParticles*> CollectionPFParticles;  ///< collection of PFParticles
+typedef std::unordered_map<Identifier::SubType, const Tracks*> CollectionTracks;          ///< collection of Tracks
+typedef std::unordered_map<Identifier::SubType, const Clusters*> CollectionClusters;      ///< collection of Clusters
+typedef std::unordered_map<Identifier::SubType, const Blocks*> CollectionBlocks;          ///< collection of Clusters
 }
 #endif /* DefinitionsCollections_h */

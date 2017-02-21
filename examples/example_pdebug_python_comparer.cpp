@@ -1,19 +1,13 @@
 
-//
-//  example_simple.cpp
-//
-//  Created by Alice Robson on 14/01/16.
-//
-//
-// C++
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
-
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
+#include "papas/utility/log.h"
+#include "papas/utility/TRandom.h"
 // STL
 #include <TApplication.h>
 #include <chrono>
@@ -23,7 +17,7 @@ using namespace papas;
 
 int main(int argc, char* argv[]) {
 
-  randomgen::setEngineSeed(0xdeadbeef);
+  rootrandom::Random::seed(0xdeadbeef);
 
   if (argc < 2) {
     std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
@@ -34,8 +28,10 @@ int main(int argc, char* argv[]) {
 
   if (argc == 3) {
     const char* lname = argv[2];
-    PDebug::On(lname);  // physics debug output
+     PDebug::File(lname);  // physics debug output
   }
+  Log::init();
+  Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
   CMS CMSDetector;
@@ -47,6 +43,8 @@ int main(int argc, char* argv[]) {
 
   // TApplication tapp("papas", &argc, argv );
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
+    // if (i==60)
+    //  std::cout << "6";
 
     PDebug::write("Event: {}", i);
     if (i % 10 == 0) {

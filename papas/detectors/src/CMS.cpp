@@ -20,7 +20,7 @@ CMS::CMS() : Detector() {
   // ECAL detector Element
   m_ecal = std::shared_ptr<const class Calorimeter>{
       new CMSECAL(VolumeCylinder(Layer::kEcal, 1.55, 2.1, 1.30, 2),
-                  Material(8.9e-3, 0.275),
+                  Material("CMS_ECAL", 8.9e-3, 0.275),
                   1.479,                        // eta_crack
                   std::vector<double>{0.3, 1},  // emin barrel and endcap
                   std::vector<std::vector<double>>{{4.22163e-02, 1.55903e-01, 7.14166e-03},
@@ -31,7 +31,7 @@ CMS::CMS() : Detector() {
   // HCAL detector element
   m_hcal = std::shared_ptr<const class Calorimeter>{
       new CMSHCAL(VolumeCylinder(Layer::kHcal, 2.9, 3.6, 1.9, 2.6),
-                  Material(0.0, 0.17),
+                  Material("CMS_HCAL", 0.0, 0.17),
                   1.3,  // eta crack
                   std::vector<std::vector<double>>{{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
                   std::vector<std::vector<double>>{{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}})};

@@ -5,9 +5,9 @@
 #ifndef PAPAS_VIEWPANE_H
 #define PAPAS_VIEWPANE_H
 
-#include "papas/display/Drawable.h"
 #include "TCanvas.h"
 #include "TH2F.h"
+#include "papas/display/Drawable.h"
 #include <list>
 #include <string>
 #include <vector>

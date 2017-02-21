@@ -1,10 +1,5 @@
 //
-//  StringFormater.hpp
-//  papas
-//
-//  Created by Alice Robson on 01/06/16.
-//
-//
+//  Externally written function
 
 #ifndef StringFormatter_h
 #define StringFormatter_h

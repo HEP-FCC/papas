@@ -12,15 +12,15 @@
 #include "papas/display/Display.h"
 //#include "TApplication.h"
 
+#include "TSystem.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/display/GDetector.h"
 #include "papas/reconstruction/PFEventDisplay.h"
-#include "TSystem.h"
 #include <TApplication.h>
 
 namespace papas {
 
-class PFEvent;
+class PapasEvent;
 class Detector;
 class GDetector;
 
@@ -28,10 +28,10 @@ class GDetector;
 class PFApp {
 public:
   PFApp();
-  void display(const Simulator& simulator, const PFEvent& pfevent, const Particles& particles, const Detector& det);
-  void display2(const Simulator& simulator, const PFEvent& pfEvent, const Particles& particles,
-                const Detector& det);  // under development for exprimental purposes.
-  void run(int k) {
+  void display(const PapasEvent& papasEvent, const Detector& det);
+  // void display2(const Simulator& simulator, const PFEvent& pfEvent, const Particles& particles,
+  // const Detector& det);  // under development for exprimental purposes.
+  void run(int /*k*/) {
     gPad->Modified();
     gPad->Update();
     gSystem->ProcessEvents();
@@ -50,4 +50,4 @@ private:
 
 }  // end namespace papas
 
-#endif /* AliceDisplay_hpp */
+#endif /* AliceDisplay_h */
