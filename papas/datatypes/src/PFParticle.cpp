@@ -36,8 +36,6 @@ PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, cons
   }
 }
 
-const TVector3& PFParticle::pathPosition(papas::Position layer) const { return m_path->namedPoint(layer); }
-
 bool PFParticle::isElectroMagnetic() const {
   unsigned int kind = abs(pdgId());
   if (kind == 11 || kind == 22) {

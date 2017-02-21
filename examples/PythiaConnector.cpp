@@ -22,6 +22,7 @@
 #include "papas/utility/PDebug.h"
 
 #include "papas/display/AliceDisplay.h"
+#include "papas/utility/Log.h"
 
 #include <exception>
 #include <string>
@@ -116,8 +117,10 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
   papasManager.clear();
+  papasManager.setEventNo(eventNo);
   const fcc::MCParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
+    try {
     papas::ListParticles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
     papasManager.simulate(papasparticles);
     papasManager.mergeClusters("es");
@@ -126,6 +129,10 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.simplifyBlocks('r');
     papasManager.mergeHistories();
     papasManager.reconstruct('s');
+    }
+    catch (std::string message){
+      papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
+    }
     // todo blockbuilder and reconstruct
     // papasManager.testMergeClusters();
     // papasManager.reconstructEvent();

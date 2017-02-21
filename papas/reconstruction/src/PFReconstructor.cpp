@@ -30,6 +30,7 @@ PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
+    //std::cout << Identifier::pretty(block.id()) << block.elementIds().size()<<" :" << block.shortName()<<std::endl;
     reconstructBlock(block);
   }
   if (m_unused.size() > 0) {
@@ -124,7 +125,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
       auto parentIds = Ids{block.id(), id};
-      reconstructTrack(m_papasEvent.track(id), 13, parentIds);
+      reconstructTrack(m_papasEvent.track(id), 11, parentIds);
     }
   }
 }

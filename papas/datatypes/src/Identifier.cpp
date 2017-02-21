@@ -14,13 +14,7 @@
 //
 
 namespace papas {
-
-// s_counter is a static counter which will be used to create a unique long
-// max value is 2** m_bitshift
-// TODO move this and reset elsewhere to allow this class to be parallelized
-//unsigned int Identifier::s_counter = 1;
-
-  //void Identifier::reset() { s_counter = 1; }
+// max index value is 2** m_bitshift
 
 IdType Identifier::makeId(unsigned int index, ItemType type, char subt, float val) {
 

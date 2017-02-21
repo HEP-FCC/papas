@@ -181,11 +181,14 @@ public:
    *   @brief  returns the merged history
    */
   const Nodes& history() const { return m_history; }
+  
   /**
    *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the Identifier counter
    */
   void clear();
-  unsigned int counter()  {m_objectCounter++; return m_objectCounter; }
+  void setEventNo(unsigned int eventNo) { m_eventNo = eventNo;}
+  unsigned int eventNo() const{return  m_eventNo;}
+  //unsigned int counter()  {m_objectCounter++; return m_objectCounter; }
 
 private:
   /**
@@ -213,7 +216,7 @@ private:
   Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
   PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found
   Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is found
-  int m_objectCounter;
+  unsigned int m_eventNo; ///<event number
 };
 
 template <class T>

@@ -8,6 +8,7 @@
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
+#include "papas/utility/log.h"
 class Detector;
 
 namespace papas {
@@ -28,6 +29,7 @@ Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particle
       m_history(history),
       m_propHelix(detector.field()->getMagnitude()) {
   for (auto p : particles) {
+
     simulateParticle(p);
   }
 }
@@ -39,6 +41,9 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
+  //if (Identifier::pretty(storedParticle.id()) == "ps3")
+  //   std::cout << Identifier::pretty(storedParticle.id()) << std::endl;
+
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
   } else if (abs(pdgid) == 11) {
@@ -56,7 +61,7 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagate( m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -65,6 +70,9 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
 }
 
 void Simulator::simulateHadron(PFParticle& ptc) {
+  //if (Identifier::pretty(ptc.id()) == "ps28" && m_papasEvent.eventNo() == 60)
+  //  std::cout << "ps3";
+  
   PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
@@ -81,27 +89,30 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-  propagate(ecal_sp->volumeCylinder().inner(), ptc);
-  double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
-  if (pathLength < std::numeric_limits<double>::max()) {
-    /// ecal path length can be infinite in case the ecal
-    /// has lambda_I = 0 (fully transparent to hadrons)
-    auto path = ptc.path();
-    double timeEcalInner = path->timeAtZ(path->namedPoint(papas::Position::kEcalIn).Z());
-    double deltaT = path->deltaT(pathLength);
-    double timeDecay = timeEcalInner + deltaT;
-    TVector3 pointDecay = path->pointAtTime(timeDecay);
-    path->addPoint(papas::Position::kEcalDecay, pointDecay);
-    if (ecal_sp->volumeCylinder().contains(pointDecay)) {
-      // fracEcal = randomgen::RandUniform(0., 0.7).next();
-      fracEcal = rootrandom::Random::uniform(0., 0.7);
-      auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
-      // const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
-      // For now, using the hcal resolution and acceptance for hadronic cluster
-      // in the Ecal. That's not a bug!
-      auto smeared = smearCluster(cluster, papas::Layer::kHcal);
-      if (acceptSmearedCluster(smeared, papas::Layer::kEcal)) {
-        storeSmearedEcalCluster(std::move(smeared), cluster.id());
+
+  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
+    double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
+    if (pathLength < std::numeric_limits<double>::max()) {
+      /// ecal path length can be infinite in case the ecal
+      /// has lambda_I = 0 (fully transparent to hadrons)
+      auto path = ptc.path();
+      double timeEcalInner = path->timeAtZ(path->namedPoint(papas::Position::kEcalIn).Z());
+      double deltaT = path->deltaT(pathLength);
+      double timeDecay = timeEcalInner + deltaT;
+      TVector3 pointDecay = path->pointAtTime(timeDecay);
+      path->addPoint(papas::Position::kEcalDecay, pointDecay);
+      if (ecal_sp->volumeCylinder().contains(pointDecay)) {
+        // fracEcal = randomgen::RandUniform(0., 0.7).next();
+        fracEcal = rootrandom::Random::uniform(0., 0.7);
+        auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
+        // const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
+        // For now, using the hcal resolution and acceptance for hadronic cluster
+        // in the Ecal. That's not a bug!
+        auto smeared = smearCluster(cluster, papas::Layer::kHcal);
+        if (acceptSmearedCluster(smeared, papas::Layer::kEcal)) {
+          storeSmearedEcalCluster(std::move(smeared), cluster.id());
+        }
       }
     }
   }
@@ -235,30 +246,49 @@ PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin,
 
 Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
-  TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
-  if (csize == -1.) {  // ie value not provided
-    csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
+  if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
+    TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
+
+    if (csize == -1.) {  // ie value not provided
+      csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
+    }
+    auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), Identifier::kEcalCluster, subtype);
+    IdType id = cluster.id();
+    addNode(id, ptc.id());
+    PDebug::write("Made {}", cluster);
+    m_ecalClusters.emplace(id, std::move(cluster));
+    return m_ecalClusters[id];
+  } else {
+    Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
+              "to EcalIn cylinder \n",
+              ptc, ptc.vertex().Perp(), ptc.vertex().Z());
+    std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
+                          "now, problem will be solved :-)";
+    throw message;
   }
-  auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), Identifier::kEcalCluster, subtype);
-  IdType id = cluster.id();
-  addNode(id, ptc.id());
-  PDebug::write("Made {}", cluster);
-  m_ecalClusters.emplace(id, std::move(cluster));
-  return m_ecalClusters[id];
 }
 
 Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
-  TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
-  if (csize == -1.) {  // ie value not provided
-    csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
+  if (ptc.hasNamedPoint(papas::Position::kHcalIn)) {
+    TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
+    if (csize == -1.) {  // ie value not provided
+      csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
+    }
+    auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), Identifier::kHcalCluster, subtype);
+    IdType id = cluster.id();
+    addNode(id, ptc.id());
+    PDebug::write("Made {}", cluster);
+    m_hcalClusters.emplace(id, std::move(cluster));
+    return m_hcalClusters[id];
+  } else {
+    Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
+              "to HcalIn cylinder \n",
+              ptc, ptc.vertex().Perp(), ptc.vertex().Z());
+    std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
+                          "now, problem will be solved :-)";
+    throw message;
   }
-  auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), Identifier::kHcalCluster, subtype);
-  IdType id = cluster.id();
-  addNode(id, ptc.id());
-  PDebug::write("Made {}", cluster);
-  m_hcalClusters.emplace(id, std::move(cluster));
-  return m_hcalClusters[id];
 }
 
 Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLayer) {
@@ -282,8 +312,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   return cluster;
 }
 
-bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster,
-                                     papas::Layer acceptLayer, bool accept) const {
+bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer, bool accept) const {
   // Determine if this smeared cluster will be detected
   if (acceptLayer == papas::Layer::kNone) acceptLayer = Identifier::layer(smearedCluster.id());
   if (m_detector.calorimeter(acceptLayer)->acceptance(smearedCluster) || accept) {
@@ -312,6 +341,7 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   IdType id = track.id();
   PDebug::write("Made {}", track);
+  
   m_tracks.emplace(id, std::move(track));
   addNode(id, ptc.id());
   return m_tracks.at(id);
@@ -392,6 +422,5 @@ std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const
       std::cout << "  " << r->value() << ": " << Identifier::itemType(r->value()) << std::endl;
   }
 }*/
-
 
 }  // end namespace papas

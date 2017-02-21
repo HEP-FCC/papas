@@ -16,9 +16,11 @@ void StraightLinePropagator::propagateOne(const PFParticle& ptc,
                                           double cylinderz,
                                           double cylinderradius) const {
   Path::Ptr line = ptc.path();
-  TVector3 udir = line->unitDirection();
-  TVector3 origin = line->origin();
+  auto udir = line->unitDirection();
+  auto origin = line->origin();
   double theta = udir.Theta();
+  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius)
+      return; //  particle created outside the cylinder
   double zbar = line->unitDirection().Z();  // Z of unit vex
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;

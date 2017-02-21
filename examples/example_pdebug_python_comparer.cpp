@@ -6,6 +6,7 @@
 #include "papas/detectors/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
+#include "papas/utility/log.h"
 #include "papas/utility/TRandom.h"
 // STL
 #include <TApplication.h>
@@ -29,17 +30,21 @@ int main(int argc, char* argv[]) {
     const char* lname = argv[2];
      PDebug::File(lname);  // physics debug output
   }
+  Log::init();
+  Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 1; //100;
+  unsigned int nEvents = 1000;
 
   auto start = std::chrono::steady_clock::now();
 
   // TApplication tapp("papas", &argc, argv );
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
+    // if (i==60)
+    //  std::cout << "6";
 
     PDebug::write("Event: {}", i);
     if (i % 10 == 0) {

@@ -117,7 +117,7 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9} ({})\n", Identifier::typeLetter(id), count, Identifier::pretty(id), id);
+    out.write("{:>7}{} = {:9} value={:8.4f} ({})\n", Identifier::typeLetter(id), count, Identifier::pretty(id), Identifier::value(id), id);
     count = count + 1;
   }
   return out.str();

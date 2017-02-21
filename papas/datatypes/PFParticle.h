@@ -35,13 +35,20 @@ public:
    @param[in] subtype Identifier subtype to be used when creating unique Identifier eg 'r' for reconstructed
    */
   PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int counter , char subtype = 'r');
-
-  const TVector3& pathPosition(papas::Position layer) const;  ///< returns position of particle path at given layer
-  void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle
+  /** check id this position exists in particle path 
+   @param[in] layer position to search for the path location
+   */
+  bool hasNamedPoint(papas::Position layer) const {return m_path->hasNamedPoint(layer);}
+  /** returns position of particle path at given layer
+  @param[in] layer position to search for the path location
+  */
+  const TVector3& pathPosition(papas::Position layer) const {return m_path->namedPoint(layer);}
+  //void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle
   bool isHelix() const { return m_isHelix; } ///< Helix or straighline
-  Path::Ptr path() const { return m_path; } ///< Return pointer to path
+  const Path::Ptr path() const { return m_path; } ///< Return pointer to path
   IdType id() const { return m_uniqueId; }  ///< unique Identifier for object
   bool isElectroMagnetic() const;  ///< Is it electroMagnetic
+  const TVector3& vertex() const { return m_vertex; }
 private:
   IdType m_uniqueId; ///< unique Identifier
   TVector3 m_vertex;  ///< start vertex (3d)

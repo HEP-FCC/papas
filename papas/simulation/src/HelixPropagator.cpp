@@ -1,10 +1,10 @@
 
 
 //#include <iostream>
-#include "papas/simulation/HelixPropagator.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Path.h"
+#include "papas/simulation/HelixPropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {
@@ -18,20 +18,26 @@ void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder&
   double udir_z = helix->unitDirection().Z();
 
   if (!is_looper) {
-    auto intersect = circleIntersection(helix->centerXY().X(), helix->centerXY().Y(), helix->rho(), cyl.radius());
+    try {
+      auto intersect = circleIntersection(helix->centerXY().X(), helix->centerXY().Y(), helix->rho(), cyl.radius());
+      double phi_m = helix->phi(intersect[0].first, intersect[0].second);
+      double phi_p = helix->phi(intersect[1].first, intersect[1].second);
 
-    double phi_m = helix->phi(intersect[0].first, intersect[0].second);
-    double phi_p = helix->phi(intersect[1].first, intersect[1].second);
+      TVector3 destination = helix->pointAtPhi(phi_p);
+      if (destination.Z() * udir_z < 0.) {
+        destination = helix->pointAtPhi(phi_m);
+      }
 
-    TVector3 destination = helix->pointAtPhi(phi_p);
-    if (destination.Z() * udir_z < 0.) {
-      destination = helix->pointAtPhi(phi_m);
+      if (fabs(destination.Z()) < cyl.z()) {
+        helix->addPoint(cyl.layer(), destination);
+      } else
+        is_looper = true;
+          }
+
+    catch (std::string s) {
+      //std::cout << s;
+      return;
     }
-
-    if (fabs(destination.Z()) < cyl.z()) {
-      helix->addPoint(cyl.layer(), destination);
-    } else
-      is_looper = true;
   }
   if (is_looper) {
     double destz = cyl.z();
@@ -39,6 +45,7 @@ void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder&
     TVector3 destination = helix->pointAtZ(destz);
     helix->addPoint(cyl.layer(), destination);
   }
+
 }
 
 }  // end namespace papas
