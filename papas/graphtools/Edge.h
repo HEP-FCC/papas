@@ -46,7 +46,7 @@ public:
   double distance() const { return m_distance; }  ///<distance between the two elements
   Edge::EdgeKey key() const { return m_key; }  ///<unique key for this edge that can be found from the end ids
   EdgeType edgeType() const ; ///<finds the EdgeType eg kEcalTrack
-  IdType otherid(IdType id) const;  /// return the id of the other end, or -1 if id is not part of this edge
+  IdType otherId(IdType id) const;  /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
   /**
     *   @brief  Static function that creates a unique key given two IdTypes

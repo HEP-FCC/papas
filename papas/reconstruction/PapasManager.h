@@ -82,13 +82,9 @@ public:
    *   @brief  return PapasEvent object
    *   @return  PapasEvent     */
   const PapasEvent& papasEvent() const { return m_papasEvent; }  //< Access the papasEvent
-  const Detector& detector() const { return m_detector; }        //< Access the papasEvent
-  void setEventNo(unsigned int eventNo) {m_papasEvent.setEventNo(eventNo);}
-
-                                                                 /**
-                                                                  *   @brief  clears all owned objects and the PapasEvent, resets the Identifier counter.
-                                                                  */
-  void clear();
+  const Detector& detector() const { return m_detector; }        ///< Access the detector
+  void setEventNo(unsigned int eventNo) { m_papasEvent.setEventNo(eventNo); }///< Set the event No
+  void clear(); ///<clears all owned objects and the PapasEvent
 
 protected:
   Clusters& createClusters();      // Create an empty concrete collection of clusters ready for filling by an algorithm
@@ -103,7 +99,7 @@ protected:
   std::list<Blocks> m_ownedBlocks;          //<Holds all the blocks collections created during an event
   std::list<PFParticles> m_ownedParticles;  //<Holds all the particles collections created during an event
   std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
- 
+
   // bool operator()(IdType i, IdType j);//todo reinstate was used for sorting ids
 };
 }

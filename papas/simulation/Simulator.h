@@ -66,8 +66,17 @@ public:
   Nodes& history() { return m_history; }                        /// return a reference to history nodes collection
   const PFParticles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
-
   /**
+   Smears a Cluster
+   @param[in] cluster the cluster that is to be smeared
+   @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
+   the cluster belongs Identifier for parent (used for history)
+   @return the smeared Cluster (moved)
+   */
+  Cluster smearCluster(const Cluster& cluster,
+                       papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
+
+  /** TODO move to gun example
    Makes a new PFParticle using random uniform distribution for theta, phi (-pi to +pi), energy
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
@@ -129,16 +138,7 @@ private:
    */
   Cluster makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
   Cluster makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
-  /**
-   Smears a Cluster
-   @param[in] cluster the cluster that is to be smeared
-   @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
-   the cluster belongs Identifier for parent (used for history)
-   @return the smeared Cluster (moved)
-   */
-  Cluster smearCluster(const Cluster& cluster,
-                       papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
-
+  
   /**
    Moves the smearedCluster into the smeared Ecals collection and updates the history
    @param[in] smearedCluster cluster to be stored

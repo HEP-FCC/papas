@@ -24,7 +24,7 @@ Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
   return key;
 }
   
-IdType Edge::otherid(IdType id) const {
+IdType Edge::otherId(IdType id) const {
   if (m_endIds[0] == id)
     return m_endIds[1];
   else if (m_endIds[1] == id)

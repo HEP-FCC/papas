@@ -17,24 +17,35 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 #include <iostream>
+#include "papas/utility/TRandom.h"
+#include "papas/utility/Log.h"
+#include "papas/utility/TRandom.h"
+
+#include <chrono>
+
 
 int main(int argc, char* argv[]) {
-  papas::PDebug::File("pdebug.txt");
+  
   rootrandom::Random::seed(0xdeadbeef);
-  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
-  if (argc != 2) {
-    std::cerr << "Usage: ./mainexe filename" << std::endl;
+  
+  if (argc < 2) {
+    std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
-  // open the Pythia file fname
+  auto pythiaConnector = PythiaConnector(fname);
+  
+  if (argc == 3) {
+    const char* lname = argv[2];
+    papas::PDebug::File(lname);  // physics debug output
+  }
+  papas::Log::init();
+  papas::Log::info("Logging Papas ");
+  
+  // Create CMS detector and PapasManager
+  papas::CMS CMSDetector;
+  papas::PapasManager papasManager{CMSDetector};
   try {
-    auto pythiaConnector = PythiaConnector(fname);
-
-    // Create CMS detector and PapasManager
-    papas::CMS CMSDetector;
-    auto papasManager = papas::PapasManager(CMSDetector);
-
     // read and process a single event
     unsigned int eventNo = 0;
     pythiaConnector.processEvent(eventNo, papasManager);
@@ -58,10 +69,6 @@ int main(int argc, char* argv[]) {
     // produce papas display
     TApplication tApp("theApp", &argc, argv);
     pythiaConnector.displayEvent(papasManager);
-    // tApp.Run();
-    // papasManager.display(false);
-    // papasManager.show();
-
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;
@@ -70,3 +77,5 @@ int main(int argc, char* argv[]) {
     std::cerr << c << ". Quitting." << std::endl;
   }
 }
+    
+

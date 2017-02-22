@@ -13,9 +13,9 @@
 
 namespace papas {
 
-PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int counter, char subtype, const TVector3& vertex, double field)
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype, const TVector3& vertex, double field)
     : Particle(pdgid, charge, tlv),
-      m_uniqueId(Identifier::makeId(counter, Identifier::kParticle,  subtype, tlv.E())),
+      m_uniqueId(Identifier::makeId(index, Identifier::kParticle,  subtype, tlv.E())),
       m_vertex(vertex),
       m_isHelix(fabs(charge) > 0.5) {
 
@@ -28,9 +28,9 @@ PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsi
     m_path = std::make_shared<Path>(tlv, vertex, field);
 }
 
-PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int counter, char subtype)
+PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index, char subtype)
     :  // for when particle is created via reconstruct track - it calls the above constructor
-      PFParticle(pdgid, charge, tlv,counter, subtype, track.path()->namedPoint(papas::Position::kVertex), track.path()->field()) {
+      PFParticle(pdgid, charge, tlv,index, subtype, track.path()->namedPoint(papas::Position::kVertex), track.path()->field()) {
   for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
     if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);
   }

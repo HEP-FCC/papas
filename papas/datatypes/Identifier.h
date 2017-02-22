@@ -48,9 +48,6 @@ public:
   /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock };
   typedef char SubType;
-
-  static void reset();  ///< Resets Id counter back to 0. NB care needed that Ids produced prior to this are thrown away
-
   /** Makes new identifier.
    @param[in]  type is an enum Identifier::ItemType to say whether this id is for a cluster, particle etc
    @param[in]  subtype is a single letter subtype code  eg 'm' for merged
@@ -88,9 +85,9 @@ public:
    */
   static float value(IdType id);  /// return the float value
 
-  /** Takes an identifier and returns the unique counter component of it
+  /** Takes an identifier and returns the index component of it
    @param[in] id: unique identifier
-   @return the unique counter
+   @return the  index
    */
   static unsigned int index(IdType id);  ///< Returns encoded unique id
   

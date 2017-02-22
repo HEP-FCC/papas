@@ -188,8 +188,7 @@ public:
   void clear();
   void setEventNo(unsigned int eventNo) { m_eventNo = eventNo;}
   unsigned int eventNo() const{return  m_eventNo;}
-  //unsigned int counter()  {m_objectCounter++; return m_objectCounter; }
-
+  
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that

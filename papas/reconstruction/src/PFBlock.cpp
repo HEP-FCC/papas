@@ -23,8 +23,8 @@ int PFBlock::tempBlockCount = 0;
     else
       return Identifier::itemType(id1) < Identifier::itemType(id2);}
   
-PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int counter, char subtype)
-    : m_uniqueId(Identifier::makeId(counter, Identifier::kBlock, subtype, element_ids.size())),
+PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
+    : m_uniqueId(Identifier::makeId(index, Identifier::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(blockIdComparer);
@@ -83,7 +83,7 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType
   std::list<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
     // if this is an edge that includes uniqueid
-    if (edge.second.isLinked() && edge.second.otherid(uniqueid) > 0) {
+    if (edge.second.isLinked() && edge.second.otherId(uniqueid) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
         linkedEdgeKeys.push_back(edge.first);
@@ -99,7 +99,7 @@ Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
   for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
-    linkedIds.push_back(found->second.otherid(uniqueid));
+    linkedIds.push_back(found->second.otherId(uniqueid));
   }
   return linkedIds;
 }

@@ -23,18 +23,20 @@ public:
    @param[in] charge charge
    @param[in] tlv 4-momentum, px, py, pz, E
    @param[in] vertex start vertex (3d point)
+   @param[in] index index to the collection to which thie particle will belown
    @param[in] field Magnetic field
    @param[in] subtype Identifier subtype to be used when creating unique Identifier eg 'r' for reconstructed
    */
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int counter , char subtype = 's', const TVector3& vertex = TVector3(0., 0., 0.), double field = 0. );
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype = 's', const TVector3& vertex = TVector3(0., 0., 0.), double field = 0. );
   /** Constructor
    @param[in] pdgid particle type
    @param[in] charge charge
    @param[in] tlv 4-momentum, px, py, pz, E
    @param[in] track The track to use in creating a particle
+   @param[in] index index to the collection to which thie particle will belown
    @param[in] subtype Identifier subtype to be used when creating unique Identifier eg 'r' for reconstructed
    */
-  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int counter , char subtype = 'r');
+  PFParticle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index , char subtype = 'r');
   /** check id this position exists in particle path 
    @param[in] layer position to search for the path location
    */
