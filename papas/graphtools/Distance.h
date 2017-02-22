@@ -38,12 +38,6 @@ public:
    * @param[in] cluster2 Second Cluster
    */
   Distance(const Cluster& cluster1, const Cluster& cluster2);
-  /** Constructor
-   * Finds distance to a cluster from a point
-   * @param[in] point position (3d)
-   * @param[in] cluster Cluster
-   */
-  void setDistanceToPoint(const TVector3& point, const Cluster& cluster);
   bool isLinked() const { return m_isLinked; }; ///< true if the items are linked
   double distance() const { return m_distance; };  ///< distance between items
 
