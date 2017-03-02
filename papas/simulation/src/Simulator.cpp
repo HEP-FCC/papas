@@ -8,7 +8,7 @@
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-#include "papas/utility/log.h"
+#include "papas/utility/Log.h"
 class Detector;
 
 namespace papas {
