@@ -126,9 +126,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");
     papasManager.buildBlocks("em", "hm", 's');
-      //papasManager.simplifyBlocks('r');
-    papasManager.mergeHistories();
-    papasManager.reconstruct('r');
+    papasManager.simplifyBlocks('r');
+      //papasManager.mergeHistories();
+    papasManager.reconstruct('s');
     }
     catch (std::string message){
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);

@@ -1,6 +1,6 @@
-#include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/PapasEvent.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
 #include <stdio.h>
@@ -9,27 +9,23 @@ namespace papas {
 /// PapasEvent holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
 
-PapasEvent::PapasEvent()
+  PapasEvent::PapasEvent(std::shared_ptr<Nodes> hist)
     : m_ecalClustersCollection(),
       m_hcalClustersCollection(),
       m_tracksCollection(),
       m_particlesCollection(),
       m_blocksCollection(),
-      m_historys()
+      m_history(hist)
   {};
 
 void PapasEvent::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
   if (clusters.size() == 0) return;
-  //std::cout << "Add clusters";
-  //std::cout << Identifier::pretty(clusters.begin()->first) << std::endl;
   if (Identifier::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
     addCollectionInternal<Cluster>(clusters, m_hcalClustersCollection);
 }
-
-void PapasEvent::addHistory(const Nodes& history) { m_historys.push_back(&history); }
 
 void PapasEvent::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
@@ -126,17 +122,14 @@ bool PapasEvent::hasObject(IdType id) const {
   return found;
 };
 
-void PapasEvent::mergeHistories() {
+void PapasEvent::extendHistory(const Nodes& history) {
   // A separate history is created at each stage.
-  // the following merges these separate histories into
-  // one single history that can be used for analysis
-  for (auto history : m_historys) {
-    for (const auto node : *history) {
+  // the following adds this history into the papasevent history
+    for (const auto node : history) {
       for (const auto& c : node.second.children()) {
-        makeHistoryLink(node.first, c->value(), m_history);
+        makeHistoryLink(node.first, c->value(), *m_history);
       }
     }
-  }
 }
 
 void PapasEvent::clear() {
@@ -145,7 +138,6 @@ void PapasEvent::clear() {
   m_tracksCollection.clear();
   m_particlesCollection.clear();
   m_blocksCollection.clear();
-  m_historys.clear();
-  m_history.clear();
+  m_history= 0;
 }
 }

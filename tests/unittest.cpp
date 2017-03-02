@@ -605,11 +605,14 @@ TEST_CASE("test_papasevent") {
 
 TEST_CASE("test_history") {
   auto papasEvent = PapasEvent();
+  //auto history =Nodes();
+  Nodes history;
+  //papasEvent.setHistory(history);
   auto ecals = Clusters();
   auto particles = PFParticles();
   IdType lastid = 0;
   IdType lastcluster = 0;
-  Nodes history;
+  
 
   // make a dummy papasevent including some history
   for (int i = 0; i < 2; i++) {
@@ -627,8 +630,8 @@ TEST_CASE("test_history") {
   }
   papasEvent.addCollection(ecals);
   papasEvent.addCollection(particles);
-  papasEvent.addHistory(history);
-  papasEvent.mergeHistories();
+  papasEvent.extendHistory(history);
+  //papasEvent.mergeHistories();
   auto hhelper = HistoryHelper(papasEvent);
   // find what is connected to the last particle created
   auto ids = hhelper.linkedIds(lastid);

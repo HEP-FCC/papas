@@ -9,8 +9,8 @@
 namespace papas {
 /**
  *  @brief The PapasEvent stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
- *  internal ClusterCollections, Track Collections etc. It also has a vector
- *  of one of more histories which describe the historical connections between the objects in the PapasEvent.
+ *  internal ClusterCollections, Track Collections etc. It also contains a shared pointer to a  history object
+ *  which records the historiccal connections between the objects in the PapasEvent.
  *
  *  The PapasEvent is a lightweight obejct that can be used from Papas Standalone or from
  *  Gaudi modules.
@@ -48,7 +48,7 @@ namespace papas {
 class PapasEvent {
 public:
   /// @brief  Constructor
-  PapasEvent();
+  PapasEvent(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the PapasEvent
    *   @param[in]  clusters unordered map of Clusters, all of which have the same Identifier typeAndSubtype.
@@ -74,19 +74,20 @@ public:
    */
   void addCollection(const PFParticles& particles);
   /**
-   *   @brief  adds a pointer to a hsitory Nodes collection (unordered map) into the PapasEvent
-   *   @param[in]  history unordered map of Nodes, all of which have the same Identifier typeAndSubtype.
-   *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
+   *   @brief  makes history in PapasEvent point to an external history object
+   *   @param[in]  history unordered map of Nodes,    *
    */
-  void addHistory(const Nodes& history);
+  void setHistory(Nodes& history) {
+    m_history = std::make_shared<Nodes>(history);
+  }
   /**
-   *   @brief  returns list of historys as a const reference
+   *   @brief adds new history into existing papasevent history
    *
    */
-  const ListNodes& histories() const { return m_historys; };
+  void extendHistory(const Nodes& history);
   /**
-   *   @brief  returns true if a collection with the same typeAndSubtype as the identifier is found
-   *   @param[in]  id The identifier of an object
+   *   @brief  returns true if a collection with  type and subtype  of id  is found
+   *   @param[in]  id the Identifier of an object
    */
   bool hasCollection(IdType id) const;
   /**
@@ -176,11 +177,11 @@ public:
   /**
    *   @brief  takes all the history collection and merged them into one single history
    */
-  void mergeHistories();
+  //void mergeHistories();
   /**
    *   @brief  returns the merged history
    */
-  const Nodes& history() const { return m_history; }
+  std::shared_ptr<const Nodes> history() const { return m_history; }
   
   /**
    *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the Identifier counter
@@ -208,9 +209,7 @@ private:
   CollectionPFParticles m_particlesCollection;
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
-  /// Vector of History objects.
-  ListNodes m_historys;
-  Nodes m_history;                 ///< Holds the merged history (built from the m_histories)
+  std::shared_ptr<Nodes> m_history;  ///< points tp the merged history (built from the sucessive histories)
   Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
   Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
   PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found

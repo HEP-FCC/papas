@@ -10,7 +10,9 @@
 
 namespace papas {
 
-PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_papasEvent() {}
+PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_papasEvent() {
+  
+}
 
 void PapasManager::simulate(const ListParticles& particles) {
 
@@ -25,7 +27,8 @@ void PapasManager::simulate(const ListParticles& particles) {
   auto& smearedHcalClusters = createClusters();
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
-  auto& history = createHistory();
+  auto history =createHistory();
+  m_papasEvent.setHistory(history);
   auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
@@ -40,8 +43,7 @@ void PapasManager::simulate(const ListParticles& particles) {
   m_papasEvent.addCollection(tracks);
   m_papasEvent.addCollection(smearedTracks);
   m_papasEvent.addCollection(simParticles);
-  m_papasEvent.addHistory(history);
-
+  m_papasEvent.extendHistory(history);
   }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
@@ -52,7 +54,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   auto ecalmerger = MergedClusterBuilder(m_papasEvent, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into papasEvent
   m_papasEvent.addCollection(mergedClusters);
-  m_papasEvent.addHistory(history);
+  m_papasEvent.extendHistory(history);
 }
 
 void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,
@@ -64,7 +66,7 @@ void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std:
       PFBlockBuilder(m_papasEvent, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the papasEvent
   m_papasEvent.addCollection(blocks);
-  m_papasEvent.addHistory(history);
+  m_papasEvent.extendHistory(history);
   // printHistory(m_papasEvent.history());
 }
 
@@ -76,9 +78,9 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
 
   // store a pointer to the outputs into the papasEvent
   m_papasEvent.addCollection(simplifiedblocks);
-  m_papasEvent.addHistory(history);
+  m_papasEvent.extendHistory(history);
 }
-void PapasManager::mergeHistories() { m_papasEvent.mergeHistories(); }
+  //void PapasManager::mergeHistories() { m_papasEvent.mergeHistories(); }
 
 void PapasManager::reconstruct(char blockSubtype) {
   auto& history = createHistory();
@@ -86,8 +88,8 @@ void PapasManager::reconstruct(char blockSubtype) {
 
   auto pfReconstructor = PFReconstructor(m_papasEvent, blockSubtype, m_detector, recParticles, history);
   m_papasEvent.addCollection(recParticles);
-  m_papasEvent.addHistory(history);
-  m_papasEvent.mergeHistories();
+  m_papasEvent.extendHistory(history);
+  //m_papasEvent.mergeHistories();
   // printHistory(m_papasEvent.history());
 }
 
