@@ -23,12 +23,10 @@ void PFEventDisplay::drawEvent(const Event& event) {
     addToRegister(gparticle, 2);
   }
   for (auto& cl : event.clusters("es")) {
-    // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }
   for (auto& cl : event.clusters("hs")) {
-    // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }
@@ -36,21 +34,5 @@ void PFEventDisplay::drawEvent(const Event& event) {
   draw();
 }
 
-// void PFEventDisplay::drawComparison(const PFEvent& pfEvent, const Particles& particles) {
-
-/*for (auto& pr : pfEvent.reconstructedParticles()) {
-  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 3, 1));
-  addToRegister(gparticle, 2);
-}
-for (auto& pr : particles) {
-  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 1, 1, 1));
-  addToRegister(gparticle, 2);
-}
-for (auto& pr : pfEvent.reconstructedParticles()) {
-  std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second, 2, 2, 2));
-  addToRegister(gparticle, 2);
-}*/
-// draw();
-//}
 
 }  // end namespace papas

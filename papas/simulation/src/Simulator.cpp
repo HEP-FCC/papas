@@ -69,9 +69,6 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
 }
 
 void Simulator::simulateHadron(PFParticle& ptc) {
-  //if (Identifier::pretty(ptc.id()) == "ps28" && m_event.eventNo() == 60)
-  //  std::cout << "ps3";
-  
   PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
@@ -411,15 +408,5 @@ void Simulator::clear() {
 }
 
 std::shared_ptr<const DetectorElement> Simulator::elem(papas::Layer layer) const { return m_detector.element(layer); }
-
-/*void Simulator::testing() {
-  DAG::BFSVisitor<PFNode> bfs;
-  for (auto p : m_particles) {
-    std::cout << "Connected to " << p.first << std::endl;
-    auto res = bfs.traverseUndirected(m_history[p.first]);
-    for (auto r : res)
-      std::cout << "  " << r->value() << ": " << Identifier::itemType(r->value()) << std::endl;
-  }
-}*/
 
 }  // end namespace papas

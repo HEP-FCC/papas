@@ -19,7 +19,6 @@ class VolumeCylinder;
 ///
 class CMSHCAL : public Calorimeter {
 public:
-  // TODO consider best approach for below?
   /** Constructor
    *
    * @param[in] volume The HCAL cyclinders

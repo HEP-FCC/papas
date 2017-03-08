@@ -19,7 +19,7 @@ Display::Display(std::list<ViewPane::Projection> views) {
       m_views[ViewPane::ProjectionStrings[view]] =
           std::unique_ptr<ViewPane>{new ViewPane(view, 100, -4, 4, 100, -4, 4)};
     } else if (view == ViewPane::Projection::ECAL_thetaphi ||
-               view == ViewPane::Projection::HCAL_thetaphi) {  // AJRTODO check this
+               view == ViewPane::Projection::HCAL_thetaphi) {
       m_views[ViewPane::ProjectionStrings[view]] =
           std::unique_ptr<ViewPane>{new ViewPane(view, 100, -M_PI / 2., M_PI / 2., 100, -M_PI, M_PI, 500, 1000)};
     }

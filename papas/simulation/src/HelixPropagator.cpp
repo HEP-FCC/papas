@@ -35,7 +35,6 @@ void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder&
           }
 
     catch (std::string s) {
-      //std::cout << s;
       return;
     }
   }

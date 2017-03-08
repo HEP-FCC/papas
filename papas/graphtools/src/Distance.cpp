@@ -17,8 +17,8 @@ namespace papas {
 
 Distance::Distance(const Cluster& cluster1, const Cluster& cluster2) : m_distance(-1), m_isLinked(false) {
   // TODO check this is a bottom layer cluster
-  m_distance = deltaR(cluster1.position().Theta(), cluster1.position().Phi(), cluster2.position().Theta(),
-                      cluster2.position().Phi());
+  m_distance = deltaR(cluster1.position().Theta(), cluster1.position().Phi(),
+                      cluster2.position().Theta(), cluster2.position().Phi());
   m_isLinked = (m_distance < cluster1.angularSize() + cluster2.angularSize());
 }
 
@@ -36,7 +36,8 @@ Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1),
     m_distance = (cluster.position() - pos).Mag();
     m_isLinked = m_distance < cluster.size();
   }
-  // TODO throw error
+  else
+    throw "No named point";
 }
 
 }  // end namespace papas

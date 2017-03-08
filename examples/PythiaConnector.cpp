@@ -21,7 +21,7 @@
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 
-#include "papas/display/AliceDisplay.h"
+#include "papas/display/PFApp.h"
 #include "papas/utility/Log.h"
 
 #include <exception>
@@ -127,15 +127,11 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     papasManager.mergeClusters("hs");
     papasManager.buildBlocks("em", "hm", 's');
     papasManager.simplifyBlocks('r');
-      //papasManager.mergeHistories();
     papasManager.reconstruct('s');
     }
     catch (std::string message){
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
-    // todo blockbuilder and reconstruct
-    // papasManager.testMergeClusters();
-    // papasManager.reconstructEvent();
     m_store.clear();
   }
 

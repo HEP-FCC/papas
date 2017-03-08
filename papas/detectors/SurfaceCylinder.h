@@ -31,7 +31,7 @@ private:
   double m_radius; ///<cylinder radius
   double m_z; ///<z value
 };
-  std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder);  // TODO m
+  std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder);  
 
 }  // end namespace papas
 #endif

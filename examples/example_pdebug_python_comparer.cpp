@@ -41,12 +41,8 @@ int main(int argc, char* argv[]) {
 
   auto start = std::chrono::steady_clock::now();
 
-  // TApplication tapp("papas", &argc, argv );
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
-    // if (i==60)
-    //  std::cout << "6";
-
-    PDebug::write("Event: {}", i);
+        PDebug::write("Event: {}", i);
     if (i % 10 == 0) {
       std::cout << "reading event " << i << std::endl;
     }

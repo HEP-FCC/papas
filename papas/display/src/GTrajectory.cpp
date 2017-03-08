@@ -20,8 +20,6 @@ GTrajectory::GTrajectory(const std::vector<double>& X, const std::vector<double>
   m_graphs["ECAL_thetaphi"] = std::unique_ptr<TGraph>{new TGraph(npoints, &tX[0], &tY[0])};
   m_graphs["HCAL_thetaphi"] = std::unique_ptr<TGraph>{new TGraph(npoints, &tX[0], &tY[0])};
 
-  // AJRTODO add in other projections
-
   // set graph styles
   for (auto const& graph : m_graphs) {
     graph.second->SetMarkerStyle(markerstyle);

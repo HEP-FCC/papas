@@ -36,9 +36,6 @@ namespace papas {
  *  @date    2016-12-06
  */
 
-// TODO: support a choice of subtype for the collections created by the various algorithms called
-// from this class
-// TODO: extend to support blockbuilder/reconstruct
 class PapasManager {
 public:
   /** Constructor

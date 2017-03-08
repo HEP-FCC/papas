@@ -52,8 +52,6 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     double totalenergy = 0.;
     for (const auto& c : ids) {
       totalenergy += clusters.at(c).energy();
-      //PDebug::write("Merged Cluster from Smeared{}",
-      //              clusters.at(c));  // hmmm not quite right we don't really know it is smeared
     }
     // create the merged Cluster
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated

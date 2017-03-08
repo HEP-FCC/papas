@@ -54,7 +54,7 @@ public:
    */
   double energyResolution(double energy, double eta = 0) const override;
 
-  /** TODO
+  /** TODO ask Colin for comment details
    */
   double energyResponse(double energy = 0, double eta = 0) const override;
 

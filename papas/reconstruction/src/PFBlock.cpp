@@ -89,8 +89,7 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType
         linkedEdgeKeys.push_back(edge.first);
     }
   }
-  // TODO consider sorting
-  return linkedEdgeKeys;
+  return linkedEdgeKeys; //todo consider sorting
 }
 
 Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {

@@ -24,9 +24,6 @@ void Log::init() {
   combined_logger->set_level(spdlog::level::debug);
 }
   
- 
-
-
 std::shared_ptr<spdlog::logger> Log::log() {
   if (!logInitialized) {
     Log::init();

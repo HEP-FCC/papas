@@ -22,14 +22,14 @@ public:
   using DetectorElement::DetectorElement;
 
   /** energy Resolution of ECAL
-   @param[in] energy : TODO
+   @param[in] energy : energy
    @param[in] eta : angle of arrival
    @return minimum energy resolution of the detector
    */
   virtual double energyResolution(double energy, double eta) const = 0;
 
   /** energy response of ECAL
-   @param[in] energy : TODO
+   @param[in] energy : energy
    @param[in] eta : angle of arrival
    @return TODO ask COLIN
    */

@@ -3,7 +3,7 @@
 #define deltar_h
 namespace papas {
   
-/** TODO ask Colin
+/** TODO ask Colin what this is
 */
 double deltaR(double e1, double p1, double e2, double p2);
   

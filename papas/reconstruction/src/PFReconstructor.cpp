@@ -30,7 +30,6 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
-    //std::cout << Identifier::pretty(block.id()) << block.elementIds().size()<<" :" << block.shortName()<<std::endl;
     reconstructBlock(block);
   }
   if (m_unused.size() > 0) {

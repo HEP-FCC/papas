@@ -71,8 +71,12 @@ unsigned int Identifier::uniqueId(IdType id)  {
 char Identifier::typeLetter(IdType id) {
   // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
   std::string typelist = ".ehtpb....";
-  return typelist[(unsigned int)Identifier::itemType(id)];
-  // TODO error handling
+  
+  auto index = (unsigned int)Identifier::itemType(id);
+  if (index < 6)
+    return typelist[(unsigned int)Identifier::itemType(id)];
+  else
+    throw "Error in Identifier typeLetter";
 }
 
 Identifier::ItemType Identifier::itemType(char s) {

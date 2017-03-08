@@ -1,13 +1,9 @@
-//
-//  AliceDisplay.hpp
-//  papas
-//
 //  Used for code experimentation
 //  (Colin you can ignore for now)
 //
 
-#ifndef AliceDisplay_hpp
-#define AliceDisplay_hpp
+#ifndef PFApp_hpp
+#define PFApp_hpp
 
 #include "papas/display/Display.h"
 //#include "TApplication.h"
@@ -50,4 +46,4 @@ private:
 
 }  // end namespace papas
 
-#endif /* AliceDisplay_h */
+#endif /* PFAPP_h */

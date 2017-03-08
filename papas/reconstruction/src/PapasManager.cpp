@@ -67,7 +67,6 @@ void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std:
   // store a pointer to the ouputs into the event
   m_event.addCollection(blocks);
   m_event.extendHistory(history);
-  // printHistory(m_event.history());
 }
 
 void PapasManager::simplifyBlocks(char blockSubtype) {
@@ -80,8 +79,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   m_event.addCollection(simplifiedblocks);
   m_event.extendHistory(history);
 }
-  //void PapasManager::mergeHistories() { m_event.mergeHistories(); }
-
+  
 void PapasManager::reconstruct(char blockSubtype) {
   auto& history = createHistory();
   auto& recParticles = createParticles();
@@ -89,12 +87,9 @@ void PapasManager::reconstruct(char blockSubtype) {
   auto pfReconstructor = PFReconstructor(m_event, blockSubtype, m_detector, recParticles, history);
   m_event.addCollection(recParticles);
   m_event.extendHistory(history);
-  //m_event.mergeHistories();
-  // printHistory(m_event.history());
 }
 
 void PapasManager::clear() {
-  //Identifier::reset();
   m_event.clear();
   m_ownedHistory.clear();
   m_ownedClusters.clear();
