@@ -10,7 +10,7 @@
 #define PFEventDisplay_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/display/Display.h"
 #include "papas/display/ViewPane.h"
 
@@ -20,7 +20,7 @@ namespace papas {
 class PFEventDisplay : public Display {
 public:
   PFEventDisplay(std::list<ViewPane::Projection> views = {});
-  void drawEvent(const PapasEvent& papasEvent);
+  void drawEvent(const Event& event);
   // void drawComparison(const PFEvent& pfEvent, const Particles& particles);
 
 private:

@@ -51,20 +51,20 @@ int main(int argc, char* argv[]) {
     pythiaConnector.processEvent(eventNo, papasManager);
 
     // write out the reconstructed particles to a root file
-    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.papasEvent().particles('r'));
+    pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.event().particles('r'));
 
     // write inputs and outputs to screen
     std::cout << "Generated Stable Particles" << std::endl;
-    for (const auto& p : papasManager.papasEvent().particles('s')) {
+    for (const auto& p : papasManager.event().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
     std::cout << "Reconstructed Particles" << std::endl;
-    for (const auto& p : papasManager.papasEvent().particles('r')) {
+    for (const auto& p : papasManager.event().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
 
     // testing (move elsewhere)
-    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.papasEvent().clusters("em"));
+    pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.event().clusters("em"));
 
     // produce papas display
     TApplication tApp("theApp", &argc, argv);

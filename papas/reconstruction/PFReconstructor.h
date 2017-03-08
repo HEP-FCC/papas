@@ -3,13 +3,13 @@
 
 #include "TVector3.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/detectors/Detector.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 
 namespace papas {
 class PFReconstructor {
-  /** Handles reconstruction of particles from a PapasEvent
+  /** Handles reconstruction of particles from a Event
    * The PFevent contains the merged clusters and tracks and the history nodes and should already contain
    * blocks of connected elements,
    * The PFevent may (in theory) be constructed from clusters and tracks read in from file or may be simulated in PAPAS
@@ -69,13 +69,13 @@ class PFReconstructor {
    */
 public:
   /** Constructor
-   papasEvent must contain PFBlocks of linked tracks and clusters of type blockSubtype
+   event must contain PFBlocks of linked tracks and clusters of type blockSubtype
    blockSubtype single character describing which blocks to use eg 's' for split blocks
    detector the detector being used
    particles a collection (owned elsewhere) into which the reconstructed particles will be added
    history a colelction of Nodes (owned elsewhere) into which history information will be added
   */
-  PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector, PFParticles& particles,
+  PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, PFParticles& particles,
                   Nodes& history);
   
   
@@ -139,7 +139,7 @@ private:
    @param cluster
    */
   double nsigmaHcal(const Cluster& cluster) const;
-  const PapasEvent& m_papasEvent; ///< Contains history information and collections of clusters/blocks/tracks
+  const Event& m_event; ///< Contains history information and collections of clusters/blocks/tracks
   const Detector& m_detector; ///< Detector
   PFParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added

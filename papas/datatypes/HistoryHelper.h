@@ -3,13 +3,13 @@
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
 namespace papas {
 /**
- *  @brief The HistoryHelper is used to access history information stored in a PapasEvent.
- *  The PapasEvent contains history information eg which clusters and tracks were used
+ *  @brief The HistoryHelper is used to access history information stored in a Event.
+ *  The Event contains history information eg which clusters and tracks were used
  *  to reconstruct a particle. The HistoryHelper allows questions such as -
  *  what simulation particles(s) gave rise to this reconstructed particle, or what was
  *  reconstructed from this simulation particle.
@@ -17,7 +17,7 @@ namespace papas {
  
  @code
  Usage example:
- auto hhelper = HistoryHelper(papasEvent);
+ auto hhelper = HistoryHelper(event);
  //find what is connected to (say) a reconstructed particle
  auto ids =hhelper.linkedIds(id);
  //filter the connected ids selecting only the ecals of subtype 'm'
@@ -28,9 +28,9 @@ namespace papas {
 class HistoryHelper {
 public:
   /** @brief  Constructor
-      @param[in]  papasEvent papasEvent whose history is to be investigated
+      @param[in]  event event whose history is to be investigated
   */
-  HistoryHelper(const PapasEvent& papasEvent);
+  HistoryHelper(const Event& event);
   /**
    *   @brief Finds all ids which have a history link with the input id
    *   @param[in] id Identifier for which we want to find connected items
@@ -62,7 +62,7 @@ public:
   Ids filteredIds(Ids ids, const std::string& typeAndSubtype) const;
 
 private:
-  const PapasEvent& m_papasEvent;  ///< Contains pointers to data collections and to history
+  const Event& m_event;  ///< Contains pointers to data collections and to history
 };
 }
 

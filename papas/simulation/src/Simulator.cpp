@@ -13,11 +13,11 @@ class Detector;
 
 namespace papas {
 
-Simulator::Simulator(const PapasEvent& papasevent, const ListParticles& particles, const Detector& detector,
+Simulator::Simulator(const Event& papasevent, const ListParticles& particles, const Detector& detector,
                      Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
                      Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles,
                      Nodes& history)
-    : m_papasEvent(papasevent),
+    : m_event(papasevent),
       m_detector(detector),
       m_ecalClusters(ecalClusters),
       m_hcalClusters(hcalClusters),
@@ -69,7 +69,7 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
 }
 
 void Simulator::simulateHadron(PFParticle& ptc) {
-  //if (Identifier::pretty(ptc.id()) == "ps28" && m_papasEvent.eventNo() == 60)
+  //if (Identifier::pretty(ptc.id()) == "ps28" && m_event.eventNo() == 60)
   //  std::cout << "ps3";
   
   PDebug::write("Simulating Hadron");

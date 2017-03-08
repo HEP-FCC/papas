@@ -15,12 +15,12 @@
 namespace papas {
 PFApp::PFApp() {}
 
-void PFApp::display(const PapasEvent& papasEvent, const Detector& det) {
+void PFApp::display(const Event& event, const Detector& det) {
 
   m_display = new PFEventDisplay({ViewPane::Projection::xy, ViewPane::Projection::yz});
   m_gdetector = std::make_shared<GDetector>(GDetector(det));
   m_display->addToRegister(m_gdetector, 0);
-  m_display->drawEvent(papasEvent);
+  m_display->drawEvent(event);
 }
 
 void PFApp::jpg() { m_display->saveAs(); }

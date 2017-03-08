@@ -2,9 +2,9 @@
 #define MergedClusterBuilder_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/graphtools/DefinitionsNodes.h"
-#include "papas/graphtools/PapasEventRuler.h"
+#include "papas/graphtools/EventRuler.h"
 
 #include <iostream>
 
@@ -21,13 +21,13 @@ namespace papas {
 class MergedClusterBuilder {
 public:
   /** Constructor
-   * @param[in] PapasEvent must contain the Clusters collection that is to be merged
+   * @param[in] Event must contain the Clusters collection that is to be merged
    * @param[in] typeAndSubtype the tyepAndSubType of the clusters collection that is to be merged (as a string)
    * @param[in] ruler measures distance between clusters
    * @param[in] merged an empty unordered_map into which the merged Clusters will be place
    * @param[inout] history an unordered_map into which new history will be added
    */
-  MergedClusterBuilder(const PapasEvent& papasEvent, const std::string& typeAndSubtype, const PapasEventRuler& ruler,
+  MergedClusterBuilder(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler,
                        Clusters& merged, Nodes& history);
 private:
   Clusters& m_merged;  ///< external collection to which the merged Clusters will be added

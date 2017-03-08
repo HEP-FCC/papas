@@ -1,14 +1,14 @@
-#include "papas/graphtools/PapasEventRuler.h"
+#include "papas/graphtools/EventRuler.h"
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Distance.h"
 
 namespace papas {
 
-PapasEventRuler::PapasEventRuler(const PapasEvent& papasevent) : m_ruler(), m_papasEvent(papasevent) {}
+EventRuler::EventRuler(const Event& papasevent) : m_ruler(), m_event(papasevent) {}
 
-Distance PapasEventRuler::distance(IdType id1, IdType id2) const {
+Distance EventRuler::distance(IdType id1, IdType id2) const {
   //figure out the object types and then call ClusterCluster or ClusterTrack distance measures
   if (Identifier::isCluster(id1) && Identifier::isCluster(id2))
     if (Identifier::itemType(id1) == Identifier::itemType(id2))
@@ -26,17 +26,17 @@ Distance PapasEventRuler::distance(IdType id1, IdType id2) const {
   return std::move(Distance());
 }
 
-Distance PapasEventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
+Distance EventRuler::clusterClusterDistance(IdType id1, IdType id2) const {
   //find the objects and use ruler to find distance
-  const Cluster& cluster1 = m_papasEvent.cluster(id1);
-  const Cluster& cluster2 = m_papasEvent.cluster(id2);
+  const Cluster& cluster1 = m_event.cluster(id1);
+  const Cluster& cluster2 = m_event.cluster(id2);
   return m_ruler.clusterClusterDistance(cluster1, cluster2);
 }
 
-Distance PapasEventRuler::clusterTrackDistance(IdType clustId, IdType trackId) const {
+Distance EventRuler::clusterTrackDistance(IdType clustId, IdType trackId) const {
   //find the objects and use ruler to find distance
-  const Cluster& cluster = m_papasEvent.cluster(clustId);
-  const Track& track = m_papasEvent.track(trackId);
+  const Cluster& cluster = m_event.cluster(clustId);
+  const Track& track = m_event.track(trackId);
   return m_ruler.clusterTrackDistance(cluster, track);
 }
 

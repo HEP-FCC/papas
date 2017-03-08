@@ -7,7 +7,7 @@
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/PFParticle.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/simulation/HelixPropagator.h"
@@ -32,7 +32,7 @@ public:
    */
   // Simulator(const Detector&);
   /** Constructor
-   @param[in] papasEvent papas Event structure (TODO double check its needed)
+   @param[in] event papas Event structure (TODO double check its needed)
    @param[in] particles list of gen particles which are to be simulated
    @param[in] detector Detector
    @param[in] ecalClusters structure into which new Ecals are stored
@@ -44,7 +44,7 @@ public:
    @param[in] simParticles structure into which new Simulation particles are stored
    @param[in] history structure into which new history can be added, may be empty at start
   */
-  Simulator(const PapasEvent& papasEvent, const ListParticles& particles, const Detector& detector,
+  Simulator(const Event& event, const ListParticles& particles, const Detector& detector,
             Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
             Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, PFParticles& simParticles,
             Nodes& history);
@@ -218,7 +218,7 @@ private:
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
   // void testing();
-  const PapasEvent& m_papasEvent;   ///< PapasEvent (for consistent Algoritm arguments)
+  const Event& m_event;   ///< Event (for consistent Algorithm arguments)?
   const Detector& m_detector;       ///< the Detector
   Clusters& m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters& m_hcalClusters;         ///< hcal clusters (prior to smearing)

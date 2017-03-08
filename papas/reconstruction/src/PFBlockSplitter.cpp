@@ -1,20 +1,20 @@
 
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/graphtools/Distance.h"
-#include "papas/graphtools/PapasEventRuler.h"
+#include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/datatypes/Identifier.h"
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const PapasEvent& papasEvent, char blockSubtype, Blocks& simplifiedblocks,
+PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& simplifiedblocks,
                                  Nodes& history)
-    : m_papasEvent(papasEvent), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
-  const auto& blocks = m_papasEvent.blocks(blockSubtype);
-  auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
+    : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
+  const auto& blocks = m_event.blocks(blockSubtype);
+  auto blockids = m_event.collectionIds<Blocks>(blocks);
 #if WITHSORT
   blockids.sort(std::greater<uint64_t>());
 #endif

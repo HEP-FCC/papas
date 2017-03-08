@@ -7,7 +7,7 @@
 //
 
 #include "papas/reconstruction/PFEventDisplay.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GTrajectories.h"
 #include "papas/display/ViewPane.h"
@@ -17,17 +17,17 @@ namespace papas {
 
 PFEventDisplay::PFEventDisplay(std::list<ViewPane::Projection> views) : Display(views) {}
 
-void PFEventDisplay::drawEvent(const PapasEvent& papasEvent) {
-  for (auto& pr : papasEvent.particles('s')) {
+void PFEventDisplay::drawEvent(const Event& event) {
+  for (auto& pr : event.particles('s')) {
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second));
     addToRegister(gparticle, 2);
   }
-  for (auto& cl : papasEvent.clusters("es")) {
+  for (auto& cl : event.clusters("es")) {
     // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }
-  for (auto& cl : papasEvent.clusters("hs")) {
+  for (auto& cl : event.clusters("hs")) {
     // std::cout << cl.second;
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);

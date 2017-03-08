@@ -19,11 +19,11 @@
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(const PapasEvent& papasEvent, char blockSubtype, const Detector& detector,
+PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
                                  PFParticles& particles, Nodes& history)
-    : m_papasEvent(papasEvent), m_detector(detector), m_particles(particles), m_history(history) {
-  const auto& blocks = m_papasEvent.blocks(blockSubtype);
-  auto blockids = m_papasEvent.collectionIds<Blocks>(blocks);
+    : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
+  const auto& blocks = m_event.blocks(blockSubtype);
+  auto blockids = m_event.collectionIds<Blocks>(blocks);
 #if WITHSORT
   blockids.sort(std::greater<IdType>());
 #endif
@@ -61,11 +61,11 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
     IdType id = *uids.begin();
     auto parentIds = Ids{block.id(), id};
     if (Identifier::isEcal(id)) {
-      reconstructCluster(m_papasEvent.cluster(id), papas::Layer::kEcal, parentIds);
+      reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
     } else if (Identifier::isHcal(id)) {
-      reconstructCluster(m_papasEvent.cluster(id), papas::Layer::kHcal, parentIds);
+      reconstructCluster(m_event.cluster(id), papas::Layer::kHcal, parentIds);
     } else if (Identifier::isTrack(id)) {
-      reconstructTrack(m_papasEvent.track(id), 211, parentIds);
+      reconstructTrack(m_event.track(id), 211, parentIds);
     } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
               // TODO
     }
@@ -80,7 +80,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons*/
         auto parentIds = Ids{block.id(), id};
-        reconstructTrack(m_papasEvent.track(id), 211, parentIds);
+        reconstructTrack(m_event.track(id), 211, parentIds);
         for (auto idlink : block.linkedIds(id, Edge::EdgeType::kEcalTrack)) {
           // TODO ask colin what happened to possible photons here:
           // TODO add in extra photons but decide where they should go?
@@ -106,7 +106,7 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
 
       auto parentIds = Ids{block.id(), id};
-      reconstructTrack(m_papasEvent.track(id), 13, parentIds);
+      reconstructTrack(m_event.track(id), 13, parentIds);
     }
   }
 }
@@ -125,7 +125,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
       auto parentIds = Ids{block.id(), id};
-      reconstructTrack(m_papasEvent.track(id), 11, parentIds);
+      reconstructTrack(m_event.track(id), 11, parentIds);
     }
   }
 }
@@ -148,11 +148,11 @@ bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtyp
   /*returns: True if object unique_id comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
-  auto historyHelper = HistoryHelper(m_papasEvent);
+  auto historyHelper = HistoryHelper(m_event);
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
   bool isFromPdgId = false;
   for (auto pid : parentIds) {
-    if (abs(m_papasEvent.particle(pid).pdgId()) == abs(pdgid)) isFromPdgId = true;
+    if (abs(m_event.particle(pid).pdgId()) == abs(pdgid)) isFromPdgId = true;
   }
   return isFromPdgId;
 }
@@ -231,14 +231,14 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   ecalIds.sort(std::greater<IdType>());
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
-  const Cluster& hcal = m_papasEvent.cluster(hcalId);
+  const Cluster& hcal = m_event.cluster(hcalId);
   double hcalEnergy = hcal.energy();
   double ecalEnergy = 0.;
   double trackEnergy = 0.;
 
   if (!trackIds.empty()) {
     for (auto id : trackIds) {
-      const Track& track = m_papasEvent.track(id);
+      const Track& track = m_event.track(id);
       auto parentIds = Ids{block.id(), id};
       auto ecalLinks = block.linkedIds(id, Edge::kEcalTrack);
       parentIds.insert(parentIds.end(), ecalLinks.begin(), ecalLinks.end());
@@ -248,7 +248,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
       trackEnergy += track.energy();
     }
     for (auto id : ecalIds) {
-      ecalEnergy += m_papasEvent.cluster(id).energy();
+      ecalEnergy += m_event.cluster(id).energy();
     }
     double deltaERel = (hcalEnergy + ecalEnergy) / trackEnergy - 1.;
     double caloERes = neutralHadronEnergyResolution(trackEnergy, hcal.eta());

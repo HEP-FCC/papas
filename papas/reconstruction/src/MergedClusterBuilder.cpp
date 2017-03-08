@@ -6,21 +6,21 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/GraphBuilder.h"
-#include "papas/graphtools/PapasEventRuler.h"
+#include "papas/graphtools/EventRuler.h"
 #include "papas/utility/PDebug.h"
 
 #include <algorithm>
 
 namespace papas {
 
-MergedClusterBuilder::MergedClusterBuilder(const PapasEvent& papasEvent,
+MergedClusterBuilder::MergedClusterBuilder(const Event& event,
                                            const std::string& typeAndSubtype,
-                                           const PapasEventRuler& ruler,
+                                           const EventRuler& ruler,
                                            Clusters& merged,
                                            Nodes& history)
     : m_merged(merged), m_history(history) {
-  // extract the clusters collection from the papasEvent
-  const auto& clusters = papasEvent.clusters(typeAndSubtype);
+  // extract the clusters collection from the event
+  const auto& clusters = event.clusters(typeAndSubtype);
   // make list of all the ids in this collection
   Ids uniqueids;
   for (auto const& cluster : clusters) {

@@ -1,14 +1,14 @@
 
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
 namespace papas {
 
-HistoryHelper::HistoryHelper(const PapasEvent& papasEvent) : m_papasEvent(papasEvent) {}
+HistoryHelper::HistoryHelper(const Event& event) : m_event(event) {}
 
 Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
-  const auto history = m_papasEvent.history();
+  const auto history = m_event.history();
   auto& startnode = history->at(id);
   auto bfs = DAG::BFSRecurseVisitor<PFNode>();
   auto nodes = bfs.traverseNodes(startnode, direction);

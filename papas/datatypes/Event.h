@@ -1,5 +1,5 @@
-#ifndef PapasEvent_h
-#define PapasEvent_h
+#ifndef Event_h
+#define Event_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Identifier.h"
@@ -8,13 +8,13 @@
 
 namespace papas {
 /**
- *  @brief The PapasEvent stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
+ *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
  *  internal ClusterCollections, Track Collections etc. It also contains a shared pointer to a  history object
- *  which records the historiccal connections between the objects in the PapasEvent.
+ *  which records the historiccal connections between the objects in the Event.
  *
- *  The PapasEvent is a lightweight obejct that can be used from Papas Standalone or from
+ *  The Event is a lightweight obejct that can be used from Papas Standalone or from
  *  Gaudi modules.
- *    The collections stored in the PapasEvent are unordered_maps of unordered_maps eg an unordered map of Clusters.
+ *    The collections stored in the Event are unordered_maps of unordered_maps eg an unordered map of Clusters.
  *    The collections are indexed by the typeAndSubtype of the identifiers of each item
  *    (eg of each Cluster in Clusters).
  *       Therefore each collection to be stored must contain only one typeAndSubtype
@@ -36,45 +36,45 @@ namespace papas {
  *        r = reconstructed
  *        m = merged
  Usage example:
-  m_papasEvent.addCollection(ecalClusters);
-  m_papasEvent.addCollection(hcalClusters);
+  m_event.addCollection(ecalClusters);
+  m_event.addCollection(hcalClusters);
   ...
-  const Cluster& cluster1 = m_papasEvent.cluster(id1);
+  const Cluster& cluster1 = m_event.cluster(id1);
  @endcode
  *
  * @author  Alice Robson
  * @date    2016-12-01
  */
-class PapasEvent {
+class Event {
 public:
   /// @brief  Constructor
-  PapasEvent(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
+  Event(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
   /**
-   *   @brief  adds a pointer to a Clusters collection (unordered map) into the PapasEvent
+   *   @brief  adds a pointer to a Clusters collection (unordered map) into the Event
    *   @param[in]  clusters unordered map of Clusters, all of which have the same Identifier typeAndSubtype.
    *               The typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
   void addCollection(const Clusters& clusters);
   /**
-   *   @brief  adds a pointer to a Tracks collection (unordered map) into the PapasEvent
+   *   @brief  adds a pointer to a Tracks collection (unordered map) into the Event
    *   @param[in]  tracks unordered map of Tracks, all of which have the same Identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
   void addCollection(const Tracks& tracks);
   /**
-   *   @brief  adds a pointer to a Blocks collection (unordered map) into the PapasEvent
+   *   @brief  adds a pointer to a Blocks collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of Blocks, all of which have the same Identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
   void addCollection(const Blocks& blocks);
   /**
-   *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the PapasEvent
+   *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const PFParticles& particles);
   /**
-   *   @brief  makes history in PapasEvent point to an external history object
+   *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
    */
   void setHistory(Nodes& history) {
@@ -97,7 +97,7 @@ public:
    */
   bool hasCollection(const Identifier::ItemType type, const Identifier::SubType subtype) const;
   /**
-   *   @brief  returns true if an object matching the Identifier is found in the PapasEvent collections
+   *   @brief  returns true if an object matching the Identifier is found in the Event collections
    *   @param[in]  id the Identifier of an object
    */
   bool hasObject(IdType id) const;
@@ -193,7 +193,7 @@ public:
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
-   *           this collection type does not already exist. It then adds the collection into the PapasEvent.
+   *           this collection type does not already exist. It then adds the collection into the Event.
    */
   template <class T>
   void
@@ -218,7 +218,7 @@ private:
 };
 
 template <class T>
-void PapasEvent::addCollectionInternal(
+void Event::addCollectionInternal(
     const std::unordered_map<IdType, T>& collection,
     std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections) {
   IdType firstId = 0;
@@ -237,7 +237,7 @@ void PapasEvent::addCollectionInternal(
 }
 
 template <class T>
-Ids PapasEvent::collectionIds(const T& collection) const {
+Ids Event::collectionIds(const T& collection) const {
   Ids ids;
   for (const auto& item : collection) {
     ids.push_back(item.first);
@@ -246,4 +246,4 @@ Ids PapasEvent::collectionIds(const T& collection) const {
 }
 }
 
-#endif /* PapasEvent_h */
+#endif /* Event_h */

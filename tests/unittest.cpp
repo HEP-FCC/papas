@@ -44,9 +44,9 @@
 #include "papas/graphtools/Edge.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/simulation/Simulator.h"
-#include "papas/graphtools/PapasEventRuler.h"
+#include "papas/graphtools/EventRuler.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/PapasEvent.h"
+#include "papas/datatypes/Event.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PapasManagerTester.h"
@@ -478,10 +478,10 @@ TEST_CASE("BlockSplitter") {
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
-  auto papasEvent = PapasEvent();
-  papasEvent.addCollection(blocks);
+  auto event = Event();
+  event.addCollection(blocks);
   Blocks simplifiedBlocks = Blocks();
-  auto splitter = PFBlockSplitter(papasEvent, 'r', simplifiedBlocks, emptyNodes);
+  auto splitter = PFBlockSplitter(event, 'r', simplifiedBlocks, emptyNodes);
   REQUIRE(simplifiedBlocks.size() == 2);
   return;
 }
@@ -494,11 +494,11 @@ TEST_CASE("Merge") {
   eclusters.emplace(cluster2.id(), cluster2);
   Clusters mergedClusters;
   Nodes nodes;
-  auto papasEvent = PapasEvent();
-  papasEvent.addCollection(eclusters);
+  auto event = Event();
+  event.addCollection(eclusters);
 
-  auto ruler = papas::PapasEventRuler(papasEvent);
-  auto builder = MergedClusterBuilder(papasEvent, "et", ruler, mergedClusters, nodes);
+  auto ruler = papas::EventRuler(event);
+  auto builder = MergedClusterBuilder(event, "et", ruler, mergedClusters, nodes);
   
   REQUIRE(mergedClusters.size() == 1);
   for (auto mergedCluster : mergedClusters) {
@@ -523,11 +523,11 @@ TEST_CASE("merge_pair") {
   Clusters mergedClusters;
   ;
   Nodes nodes;
-  auto papasEvent = PapasEvent();
-  papasEvent.addCollection(hclusters);
+  auto event = Event();
+  event.addCollection(hclusters);
 
-  auto ruler = papas::PapasEventRuler(papasEvent);
-  auto builder = MergedClusterBuilder(papasEvent, "ht", ruler, mergedClusters, nodes);
+  auto ruler = papas::EventRuler(event);
+  auto builder = MergedClusterBuilder(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
   return;
@@ -543,11 +543,11 @@ TEST_CASE("merge_pair_away") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  auto papasEvent = PapasEvent();
-  papasEvent.addCollection(hclusters);
+  auto event = Event();
+  event.addCollection(hclusters);
 
-  auto ruler = papas::PapasEventRuler(papasEvent);
-  auto builder = MergedClusterBuilder(papasEvent, "ht", ruler, mergedClusters, nodes);
+  auto ruler = papas::EventRuler(event);
+  auto builder = MergedClusterBuilder(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 2);
   return;
@@ -565,14 +565,14 @@ TEST_CASE("merge_different_layers") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  auto papasEvent = PapasEvent();
-  REQUIRE_THROWS(papasEvent.addCollection(hclusters));
+  auto event = Event();
+  REQUIRE_THROWS(event.addCollection(hclusters));
 
   return;
 }
 
 TEST_CASE("test_papasevent") {
-  auto papasEvent = PapasEvent();
+  auto event = Event();
   auto ecals = Clusters();
   auto tracks = Tracks();
   IdType lastid = 0;
@@ -586,28 +586,28 @@ TEST_CASE("test_papasevent") {
     tracks.emplace(track.id(), std::move(track));
     lastid = track.id();
   }
-  papasEvent.addCollection(ecals);
-  papasEvent.addCollection(tracks);
+  event.addCollection(ecals);
+  event.addCollection(tracks);
   // check that adding the same collection twice fails
-  REQUIRE_THROWS(papasEvent.addCollection(ecals));
+  REQUIRE_THROWS(event.addCollection(ecals));
 
   // check we can get back collections OK
-  REQUIRE(papasEvent.clusters("et").size() == 2);
-  REQUIRE(papasEvent.hasCollection(499) == false);
-  REQUIRE(papasEvent.hasCollection(Identifier::kEcalCluster, 't') == true);
-  REQUIRE(papasEvent.hasCollection(lastid) == true);
-  REQUIRE_NOTHROW(papasEvent.track(lastid));
-  REQUIRE_NOTHROW(papasEvent.cluster(lastcluster));
-  REQUIRE_THROWS(papasEvent.track(500));
-  REQUIRE(papasEvent.hasObject(499) == false);
-  REQUIRE(papasEvent.hasObject(lastid) == true);
+  REQUIRE(event.clusters("et").size() == 2);
+  REQUIRE(event.hasCollection(499) == false);
+  REQUIRE(event.hasCollection(Identifier::kEcalCluster, 't') == true);
+  REQUIRE(event.hasCollection(lastid) == true);
+  REQUIRE_NOTHROW(event.track(lastid));
+  REQUIRE_NOTHROW(event.cluster(lastcluster));
+  REQUIRE_THROWS(event.track(500));
+  REQUIRE(event.hasObject(499) == false);
+  REQUIRE(event.hasObject(lastid) == true);
 }
 
 TEST_CASE("test_history") {
-  auto papasEvent = PapasEvent();
+  auto event = Event();
   //auto history =Nodes();
   Nodes history;
-  //papasEvent.setHistory(history);
+  //event.setHistory(history);
   auto ecals = Clusters();
   auto particles = PFParticles();
   IdType lastid = 0;
@@ -628,11 +628,11 @@ TEST_CASE("test_history") {
     history.emplace(lastid, std::move(pnode));
     history.at(lastid).addChild(history.at(lastcluster));
   }
-  papasEvent.addCollection(ecals);
-  papasEvent.addCollection(particles);
-  papasEvent.extendHistory(history);
-  //papasEvent.mergeHistories();
-  auto hhelper = HistoryHelper(papasEvent);
+  event.addCollection(ecals);
+  event.addCollection(particles);
+  event.extendHistory(history);
+  //event.mergeHistories();
+  auto hhelper = HistoryHelper(event);
   // find what is connected to the last particle created
   auto ids = hhelper.linkedIds(lastid);
   // filter the ecals from the linked ids
