@@ -36,8 +36,6 @@ Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1),
     m_distance = (cluster.position() - pos).Mag();
     m_isLinked = m_distance < cluster.size();
   }
-  else
-    throw "No named point";
+  //otherwise is probably a looper
 }
-
 }  // end namespace papas

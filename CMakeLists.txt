@@ -67,6 +67,7 @@ include(CTest)
 #endif()
 
 
+
 #--- add version files ---------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/papasVersion.h
               ${CMAKE_CURRENT_BINARY_DIR}/papasVersion.h )
