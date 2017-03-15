@@ -209,7 +209,7 @@ private:
   CollectionPFParticles m_particlesCollection;
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
-  std::shared_ptr<Nodes> m_history;  ///< points tp the merged history (built from the sucessive histories)
+  std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
   Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
   Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
   PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found
