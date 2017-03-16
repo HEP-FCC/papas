@@ -73,8 +73,10 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
     // so as to match python approach (for now)
     // otherwise ids do not align
 
+    //TODO make single if
+    //TODO make PFParticle directly and rename pFPArticle in code
     if (ptc.core().status == 1) {  // only stable ones
-
+      
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
 
         auto particle =
