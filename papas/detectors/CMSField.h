@@ -14,7 +14,6 @@ class VolumeCylinder;
 ///
 class CMSField : public Field {
 public:
-  // TODO consider best approach for below?
   /** Constructor
    *
    * @param[in] volume The field cyclinders

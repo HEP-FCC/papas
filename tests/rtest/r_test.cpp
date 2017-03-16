@@ -22,16 +22,16 @@
 // gtest test
 #include "gtest/gtest.h"
 
-#include "detectors/papas/CMS.h"
-#include "datatypes/papas/Cluster.h"
 #include "PFParticle.h"
 #include "Particle.h"
-#include "datatypes/papas/Path.h"
-#include "simulation/papas/Simulator.h"
 #include "TVector3.h"
 #include "Track.h"
+#include "datatypes/papas/Cluster.h"
+#include "datatypes/papas/Path.h"
+#include "detectors/papas/CMS.h"
 #include "geometry.h"
 #include "material.h"
+#include "simulation/papas/Simulator.h"
 
 using namespace papas;
 void tryR(int argc, char* argv[]);

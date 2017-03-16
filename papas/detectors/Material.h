@@ -5,31 +5,28 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-//#include <string>
-//#include <limits>
-#include "papas/datatypes/Definitions.h"
-#include "papas/utility/Random.h"
+#include <string>
 
 namespace papas {
-
-/// Detector Material - users need to define material properties for their detector elements
+/// @brief Describes material used in a detector layer.
 class Material {
 public:
-  Material(double x0, double lambda);
+  /** Constructor
+   @param[in] name name of material
+   @param[in] x0 radiation length
+   @param[in] lambda interaction length
+   */
+  Material(std::string name,  double x0, double lambda);
+  /** path  length before decay within material
+   @param[in] isEm boolean to say whether the particle is Electromagnetic
+  */
   virtual double pathLength(bool isEm) const;
-
+  std::string name() const { return m_name; }  ///< Material name
 private:
-  double m_x0;
-  double m_lambdaI;
+  std::string m_name; ///< name of material
+  double m_x0; ///<radiation length
+  double m_lambdaI; ///< interaction length
 };
 
-/*// Temporary //TODO
-class TestMaterial : public Material {
-public:
-TestMaterial(double x0, double lambda);
-double PathLength();
-
-private:
-};*/
 }  // end namespace papas
 #endif

@@ -6,13 +6,13 @@
 //
 //
 
-#include "datatypes/papas/Cluster.h"
-#include "graphtools/papas/Distance.h"
-#include "datatypes/papas/Id.h"
-#include "datatypes/papas/Path.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "datatypes/papas/Cluster.h"
+#include "datatypes/papas/Id.h"
+#include "datatypes/papas/Path.h"
 #include "datatypes/papas/Track.h"
+#include "graphtools/papas/Distance.h"
 #include "gtest/gtest.h"
 
 namespace papas {

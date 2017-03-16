@@ -1,25 +1,25 @@
-# Writing a new Detector
+# Writing a new Detector test
 
-An example of the implementation of the CMS detetctor can be found in papas/detectors
+An example of the implementation of the CMS detector can be found in papas/detectors
 
-CMS.h/ CMS.cpp
-CMSEcal.h/ CMSEcal.cpp
-CMSHcal.h/ CMSHcal.cpp
-CMSTracker.h/ CMSTracker.cpp
-CMSField.h/ CMSField.cpp
+ * CMS.h / CMS.cpp
+ * CMSEcal.h / CMSEcal.cpp
+ * CMSHcal.h / CMSHcal.cpp
+ * CMSTracker.h / CMSTracker.cpp
+ * CMSField.h / CMSField.cpp
 
 ## Calorimeters
 
 The detector calorimeter implementations of HCAL and ECAL should inherit from the PAPAS Calorimeter class.
 They should each implement detector specific versions of
 
-    clusterSize - minimum detectable cluster size
-    acceptance - whether or not a cluster will be recorded by the calorimeter
-    energyResolution - granularity of the energy detected
-    energyResponse -??
+ * clusterSize - minimum detectable cluster size
+ * acceptance - whether or not a cluster will be recorded by the calorimeter
+ * energyResolution - granularity of the energy detected
+ * energyResponse -??
 
 For example:
-
+```c++
     class CMSECAL : public Calorimeter {
     CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
     std::vector<std::vector<double>> eres);
@@ -30,7 +30,6 @@ For example:
     double energyResponse(double energy = 0, double eta = 0) const override;
     ...
     };
-
 
     double CMSECAL::clusterSize(const Particle& ptc) const {
 
@@ -51,8 +50,8 @@ For example:
     else
       return false;
     }
+```
 
- etc
 
 
 ## Tracker
@@ -61,47 +60,55 @@ This should be defined in a similar way to the two Calorimeters.
 
 The following functions must be provided by the user:
 
-    ptResolution - momentum detection resolution of the tracker
-    acceptance - whether a track will be detected
+ * ptResolution - momentum detection resolution of the tracker
+ * acceptance - whether a track will be detected
 
-eg
+eg.
 
-    bool CMSTracker::acceptance(const Track& track) const {
-    double pt = track.pt();
-    double eta = fabs(track.eta());
-    randomgen::RandUniform rUniform{0, 1};
-    bool accept = false;
-    if (eta < 1.35 && pt > 0.5) {
-      accept = rUniform.next() < 0.95;
-    } else if (eta < 2.5 && pt > 0.5) {
-      accept = rUniform.next() < 0.9;
-    }
-    return accept;
-    }
+```c++
+bool CMSTracker::acceptance(const Track& track) const {
+double pt = track.pt();
+double eta = fabs(track.eta());
+randomgen::RandUniform rUniform{0, 1};
+bool accept = false;
+if (eta < 1.35 && pt > 0.5) {
+  accept = rUniform.next() < 0.95;
+} else if (eta < 2.5 && pt > 0.5) {
+  accept = rUniform.next() < 0.9;
+}
+return accept;
+}
+```
 
+## Field
 
-## Field (eg CMSField.h/CMSField.cpp)
+See CMSField.h / CMSField.cpp
 
 Allows the magnitude of the field to be defined. At present no other functions need to be defined.
 
-
+```c++
     field = std::shared_ptr<const Field>{new CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8)};
-   
+```
 
 
-## Main detector definition (eg CMS.h/CMS.cpp)
+## Main detector definition
+
+eg CMS.h / CMS.cpp
 
 Once the detector elements are written, the detector class can created. The new detector class inherits from the provided PAPAS Detector class
 eg
 
+```c++
     class CMS : public Detector {
     public:
     CMS();
     private:
     };
+```
 
 Then define in the Detector constructor each of the detector elements (ECAL, HCAL, tracker, field)
 
+```c++
     CMS::CMS() : Detector() {
     // ECAL detector Element
     m_ecal = std::shared_ptr<const class Calorimeter>{
@@ -125,14 +132,4 @@ Then define in the Detector constructor each of the detector elements (ECAL, HCA
     // Field detector element
     m_field = std::shared_ptr<const Field>{new CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8)};
     }
-
-
-
-
-
-
-
-
-
-  
-        
+```

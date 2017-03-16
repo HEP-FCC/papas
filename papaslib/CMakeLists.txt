@@ -70,55 +70,51 @@ FILE(GLOB files6 "${CMAKE_SOURCE_DIR}/papas/display/*.h")
 INSTALL(FILES ${files6} DESTINATION include/papas/display/)
 FILE(GLOB files7 "${CMAKE_SOURCE_DIR}/papas/utility/*.h")
 INSTALL(FILES ${files7} DESTINATION include/papas/utility/)
+FILE(GLOB files8 "${CMAKE_SOURCE_DIR}/spdlog/*.h")
+INSTALL(FILES ${files8} DESTINATION include/papas/spdlog/)
+FILE(GLOB files9 "${CMAKE_SOURCE_DIR}/spdlog/details/*.h")
+INSTALL(FILES ${files9} DESTINATION include/papas/spdlog/details/)
+FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sink/*.h")
+INSTALL(FILES ${files10} DESTINATION include/papas/spdlog/sink/)
 
 
-
-project(event)
-
-## You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
-##   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmak#e
-##   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
-#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} )
-
-#set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
-#find_package(ROOT REQUIRED )
-
-#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-#include(${ROOT_USE_FILE}  )
-
-#include_directories(${CMAKE_SOURCE_DIR}/papas/datatypes/ 
-#${CMAKE_SOURCE_DIR}/papas/simulation
-#${CMAKE_SOURCE_DIR}/papas/reconstruction
-#${CMAKE_SOURCE_DIR}/papas/display
-#${CMAKE_SOURCE_DIR}/papas/graphtools
-#${CMAKE_SOURCE_DIR}/papas/detectors
-#${CMAKE_SOURCE_DIR}/papas/utility
-# ${ROOT_INCLUDE_DIRS})
-#add_definitions(${ROOT_CXX_FLAGS})
+project(papaslib)
 
 include_directories(
 ${CMAKE_SOURCE_DIR}
 )
 
-REFLEX_GENERATE_DICTIONARY(papascppstuffDict ${headers} SELECTION selection.xml)
+REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
 
-add_library(papascppstuff SHARED ${sources} ${headers} papascppstuffDict.cxx)
-target_link_libraries(papascppstuff ${ROOT_LIBRARIES}  ${ROOT_COMPONENT_LIBRARIES}) 
-install(TARGETS papascppstuff DESTINATION lib)
+add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
+add_dependencies(papasDict papas-dictgen )
+target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
+add_library(papas SHARED ${sources} )
+target_link_libraries(  papas ${ROOT_LIBRARIES} )
+target_compile_definitions(papas PRIVATE WITHSORT=1)
+install(TARGETS papas DESTINATION lib)
+install(TARGETS papasDict DESTINATION lib)
+
+
+
+# Install the dictionary
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
+
+
 
 
 #install(DIRECTORY sources DESTINATION include)
 
 ### Install the dictionary
-if (${ROOT_VERSION} GREATER 6)
-install(FILES
-"${PROJECT_BINARY_DIR}/papascppstuffDict_rdict.pcm"
-DESTINATION lib COMPONENT dev)
-endif()
+#if (${ROOT_VERSION} GREATER 6)
+#install(FILES
+#"${PROJECT_BINARY_DIR}/papas_rdict.pcm"
+#DESTINATION lib COMPONENT dev)
+#endif()
 
 
 

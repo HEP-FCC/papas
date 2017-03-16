@@ -5,8 +5,8 @@
 //  Created by Alice Robson on 15/04/16.
 //
 //
-#include "graphtools/papas/FloodFill.h"
 #include "directedacyclicgraph.h"
+#include "graphtools/papas/FloodFill.h"
 #include "gtest/gtest.h"
 #include <unordered_map>
 

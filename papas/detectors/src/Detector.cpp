@@ -26,7 +26,6 @@ std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) con
 }
 
 std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
-
   switch (layer) {
   case papas::Layer::kEcal:
     return m_ecal;
@@ -39,5 +38,4 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
     // TODO add track and field
   }
 }
-
 }  // end namespace papas

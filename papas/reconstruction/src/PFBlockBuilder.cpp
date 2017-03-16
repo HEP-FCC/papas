@@ -1,38 +1,31 @@
-//
-//  PFBlockBuilder.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 17/04/16.
-//
-//
 #include "papas/reconstruction/PFBlockBuilder.h"
-#include "papas/reconstruction/BlockBuilder.h"
 #include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/Event.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
+#include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/reconstruction/PFEvent.h"
-
-// temp
-#include "papas/datatypes/Id.h"
+#include "papas/datatypes/Identifier.h"
 
 namespace papas {
 
-PFBlockBuilder::PFBlockBuilder(const Ids& ids, PFEvent& pfevent)
-    : m_pfEvent(pfevent), m_historyNodes(pfevent.historyNodes()), m_uniqueIds(ids) {
+PFBlockBuilder::PFBlockBuilder(const Event& event, const std::string& ecalTypeAndSubtype,
+                               const std::string& hcalTypeAndSubtype, char trackSubtype, Blocks& blocks, Nodes& history)
+    : m_event(event), m_blocks(blocks), m_history(history), m_uniqueIds() {
 
-  if (m_historyNodes.size() == 0) {
-    // create local nodes ready to use to make the blocks
-    for (auto id : m_uniqueIds)
-      m_historyNodes.emplace(id, PFNode(id));
-  }
+  const auto& ecals = m_event.clusters(ecalTypeAndSubtype);
+  const auto& hcals = m_event.clusters(hcalTypeAndSubtype);
+  const auto& tracks = m_event.tracks(trackSubtype);
+  auto ids = m_event.collectionIds<Clusters>(ecals);
+  for (auto id : m_event.collectionIds<Clusters>(hcals))
+    ids.push_back(id);
+  for (auto id : m_event.collectionIds<Tracks>(tracks))
+    ids.push_back(id);
 
-  // TODO think hard about best way to deal with distance /ruler / edges etc
-  // compute edges between each pair of nodes
   Edges edges;
-  EventRuler ruler(pfevent);
-  for (auto id1 : m_uniqueIds) {
-    for (auto id2 : m_uniqueIds) {
+  EventRuler ruler(m_event);
+  for (auto id1 : ids) {
+    for (auto id2 : ids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
@@ -41,8 +34,7 @@ PFBlockBuilder::PFBlockBuilder(const Ids& ids, PFEvent& pfevent)
       }
     }
   }
-  BlockBuilder bb(m_uniqueIds, std::move(edges), m_historyNodes);
-  m_blocks = bb.moveBlocks();
+  BlockBuilder bb(ids, std::move(edges), m_history, blocks, 'r');
 }
 
 }  // end namespace papas

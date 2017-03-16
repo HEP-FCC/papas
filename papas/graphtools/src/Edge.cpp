@@ -1,51 +1,46 @@
 #include "papas/graphtools/Edge.h"
+#include "math.h"
 
 namespace papas {
 
-Edge::Edge(IdType id1, IdType id2, bool isLinked, double distance)
-    : m_id1(id1),
-      m_id2(id2),
-      m_isLinked(isLinked),
+Edge::Edge(IdType endId1, IdType endId2, bool isLinked, double distance)
+  : m_endIds({{endId1, endId2}}), //extra braces to shutup buggy xcode warning
+  m_isLinked(isLinked),
       m_distance(distance),
-      m_edgeType(makeEdgeType()),
-      m_key(Edge::makeKey(id1, id2)) {}
+      m_key(Edge::makeKey(endId1, endId2)) {}
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
 Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
-
   EdgeKey key;
-  IdType uid1 = Id::uniqueId(id1);
-  IdType uid2 = Id::uniqueId(id2);
-
+  IdType uid1 = Identifier::uniqueId(id1);
+  IdType uid2 = Identifier::uniqueId(id2);
+  
   if (id1 > id2)  // ensure that the order of the ids does not matter
-    key = (((uint64_t)uid1) << Id::bitshift) | ((uint64_t)uid2);
+    key = (((uint64_t)uid1) << 32 ) | ((uint64_t)uid2);
   else
-    key = (((uint64_t)uid2) << Id::bitshift) | ((uint64_t)uid1);
-
+    key = (((uint64_t)uid2) << 32 ) | ((uint64_t)uid1);
+  
   return key;
 }
-
-IdType Edge::otherid(IdType id) const {
-  if (m_id1 == id)
-    return m_id2;
-  else if (m_id2 == id)
-    return m_id1;
+  
+IdType Edge::otherId(IdType id) const {
+  if (m_endIds[0] == id)
+    return m_endIds[1];
+  else if (m_endIds[1] == id)
+    return m_endIds[0];
   return 0;
 }
 
-Edge::EdgeType Edge::makeEdgeType() const {
+  //perhaps this should live somewhere else as it makes Edge class less general
+Edge::EdgeType Edge::edgeType() const{
   // Produces an EdgeType enumeration such as kEcalTrack
-  // the order of id1 an id2 does not matter,
-  // eg for one track and one ecal the type will always be kEcalTrack (and never be a kTrackEcal)
+  // NB for one track and one ecal the type will always be kEcalTrack (and never be a kTrackEcal)
 
   // get one letter abbreviation of type eg 't' for a track
-  auto shortid1 = Id::typeShortCode(m_id1);
-  auto shortid2 = Id::typeShortCode(m_id2);
+  auto shortid1 = Identifier::typeLetter(m_endIds[0]);
+  auto shortid2 = Identifier::typeLetter(m_endIds[1]);
 
-  /*if (Id::pretty(m_id1).compare(0,4, "h829")==0)
-    std::cout <<"id1";
-  */
   if (shortid1 == shortid2) {
     if (shortid1 == 'h')
       return EdgeType::kHcalHcal;
@@ -63,7 +58,7 @@ Edge::EdgeType Edge::makeEdgeType() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Edge& edge) {
-  os << "Edge: " << edge.m_id1 << "<->" << edge.m_id2 << ": " << edge.m_distance;
+  os << "Edge: " << edge.m_endIds[0] << "<->" << edge.m_endIds[1] << ": " << edge.m_distance;
   os << " (link = " << std::boolalpha << edge.m_isLinked << ")";
   return os;
 }

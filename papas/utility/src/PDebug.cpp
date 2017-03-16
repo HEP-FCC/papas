@@ -20,10 +20,10 @@ bool PDebug::s_On = false;
 void PDebug::init() {  // we either create a null sink or we sink to a file
   logInitialized = true;
   if (PDebug::s_fname == "") {  // no output
-    m_sinks.push_back(std::make_shared<spdlog::sinks::null_sink_st>());
+    m_sinks.push_back(std::make_shared<spdlog::sinks::null_sink_mt>());
   } else {  // output to named file //TODO error checking
     if (PDebug::slevel == spdlog::level::info) std::remove(PDebug::s_fname.c_str());  // delete file
-    m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_st>(PDebug::s_fname.c_str(), true));
+    m_sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_mt>(PDebug::s_fname.c_str(), true));
   }
   auto plogger = std::make_shared<spdlog::logger>("pdebug", begin(m_sinks), end(m_sinks));
   plogger->set_level(PDebug::slevel);  // what level output will be sent to log

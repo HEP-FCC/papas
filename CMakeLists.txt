@@ -6,7 +6,6 @@ set( papas_VERSION_MINOR 1 )
 set( papas_VERSION_PATCH 0 )
 set( papas_VERSION "${papas_VERSION_MAJOR}.${papas_VERSION_MINOR}" )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
@@ -15,17 +14,19 @@ endif(APPLE)
 #--- Declare options -----------------------------------------------------------
 option(papas_documentation "Whether or not to create doxygen doc target." ON)
 
-
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 
 #--- Declare ROOT dependency ---------------------------------------------------
 if(APPLE)
 	set(CMAKE_MACOSX_RPATH 1)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
-  find_package(ROOT REQUIRED HINTS $ENV{ROOTSYS})
+  find_package(ROOT REQUIRED COMPONENTS RIO Tree)
+  include_directories(${ROOT_INCLUDE_DIRS})
   add_definitions(${ROOT_CXX_FLAGS})
   include("${ROOT_USE_FILE}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -stdlib=libc++")
 else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
   set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
   find_package(ROOT REQUIRED COMPONENTS RIO Tree)
   include_directories(${ROOT_INCLUDE_DIR})
@@ -66,6 +67,7 @@ include(CTest)
 #endif()
 
 
+
 #--- add version files ---------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/papasVersion.h
               ${CMAKE_CURRENT_BINARY_DIR}/papasVersion.h )
@@ -82,11 +84,10 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
         DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 
-add_subdirectory(papascpp)
-#add_subdirectory(papaslib)
+#add_subdirectory(papascpp)
+add_subdirectory(papaslib)
 add_subdirectory(examples)
 add_subdirectory(tests)
-#
 #add_subdirectory(graphtools)
 #add_subdirectory(dageg)
 

@@ -17,13 +17,12 @@ class VolumeCylinder;
 
 /// CMS specific ECAL calorimeter implementation
 ///
-///  It is intended to be replaced by users to match the required detector characteristics
+///  It is intended to be replicated/modfied by users to match other required detector characteristics
 ///
 /// CMSECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution etc methods
 
 class CMSECAL : public Calorimeter {
 public:
-  // AJRTODO check whether both constructors are needed
   /** Constructor
    *
    * @param[in] volume The ECAL cyclinders
@@ -35,10 +34,6 @@ public:
   CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
           std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp);
 
-  // constructor - requires the Material and Volume to be already in existance
-  /*ECAL(papas::Layer layer, const VolumeCylinder& volume,
-       const Material& material , double eta_crack, double emin,
-       const std::vector<double>& eres);*/
 
   /** Minimum size that will be seen by a detector
    @param[in]  ptc  particle that is to be detected
@@ -53,13 +48,13 @@ public:
   bool acceptance(const Cluster& cluster) const override;
 
   /** energy Resolution of ECAL
-   @param[in] energy TODO
+   @param[in] energy 
    @param[in] eta angle of arrival
    @return minimum energy resolution of the detector
    */
   double energyResolution(double energy, double eta = 0) const override;
 
-  /** TODO
+  /** TODO ask Colin for comment details
    */
   double energyResponse(double energy = 0, double eta = 0) const override;
 

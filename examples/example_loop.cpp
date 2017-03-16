@@ -8,18 +8,20 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "PythiaConnector.h"
+#include "papas/detectors/CMS.h"
+#include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/PDebug.h"
+#include "papas/utility/TRandom.h"
 
 // STL
 #include <chrono>
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-  // papas::PDebug::On("physics.txt");
-  randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  papas:: PDebug::File("physics.txt");
+  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
+  rootrandom::Random::seed(0xdeadbeef);
 
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
@@ -32,14 +34,14 @@ int main(int argc, char* argv[]) {
 #if WITHSORT
     std::cout << "doing sorting";
 #else
-    std::cout << "nosort";
+    std::cout << "no sort";
 #endif
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    papas::PapasManager papasManager{CMSDetector};
+    auto papasManager = papas::PapasManager(CMSDetector);
 
     unsigned int eventNo = 0;
-    unsigned int nEvents = 10000;
+    unsigned int nEvents = 100;
 
     auto start = std::chrono::steady_clock::now();
 

@@ -9,28 +9,28 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "papas/utility/PDebug.h"
 #include "TApplication.h"
 #include "TROOT.h"
+#include "papas/utility/PDebug.h"
 //#include "gtest/gtest.h"
 
-#include "papas/detectors/CMS.h"
 #include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/Path.h"
+#include "papas/datatypes/SimParticle.h"
+#include "papas/datatypes/Track.h"
+#include "papas/detectors/CMS.h"
+#include "papas/graphtools/Ruler.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFEvent.h"
 #include "papas/reconstruction/PFEventDisplay.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/datatypes/Path.h"
-#include "papas/graphtools/Ruler.h"
-#include "papas/datatypes/SimParticle.h"
 #include "papas/simulation/Simulator.h"
-#include "papas/datatypes/Track.h"
 #include "papas/utility/Random.h"
 
-#include "papas/display/AliceDisplay.h"
 #include "papas/datatypes/Id.h"
+#include "papas/display/AliceDisplay.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/StringFormatter.h"
 

@@ -2,24 +2,25 @@
 
 //#include <iostream>
 #include "papas/simulation/StraightLinePropagator.h"
-#include "papas/utility/GeoTools.h"
 #include "papas/datatypes/Helix.h"
+#include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/SimParticle.h"
+#include "papas/utility/GeoTools.h"
 
 namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(const SimParticle& ptc,
+void StraightLinePropagator::propagateOne(const PFParticle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius) const {
   Path::Ptr line = ptc.path();
-  TVector3 udir = line->unitDirection();
-  TVector3 origin = line->origin();
+  auto udir = line->unitDirection();
+  auto origin = line->origin();
   double theta = udir.Theta();
-
+  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius)
+      return; //  particle created outside the cylinder
   double zbar = line->unitDirection().Z();  // Z of unit vex
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
@@ -53,7 +54,7 @@ void StraightLinePropagator::propagateOne(const SimParticle& ptc,
   }
 }
 
-void StraightLinePropagator::propagateOne(const SimParticle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
   propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 
