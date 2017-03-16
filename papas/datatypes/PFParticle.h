@@ -58,7 +58,7 @@ private:
   bool m_isHelix; ///< Boolean to say if path is Helix or straightline
 };
 
-std::ostream& operator<<(std::ostream& os, const PFParticle& particle);
+std::ostream& operator<<(std::ostream& os, const Particle& particle);
 
 }  // end namespace papas
 #endif  // PFParticle_H

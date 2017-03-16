@@ -116,7 +116,7 @@ Blocks& PapasManager::createBlocks() {
   return m_ownedBlocks.back();
 }
 
-PFParticles& PapasManager::createParticles() {
+Particles& PapasManager::createParticles() {
   m_ownedParticles.emplace_back(PFParticles());
   return m_ownedParticles.back();
 }

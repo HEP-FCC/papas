@@ -72,7 +72,7 @@ public:
    *   @param[in]  blocks unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
-  void addCollection(const PFParticles& particles);
+  void addCollection(const Particles& particles);
   /**
    *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
@@ -142,17 +142,17 @@ public:
    *   @brief  returns a Particles collection matching type and subtype
    *   @param[in]  subtype The subtype of the particle eg 'r' for reconstructed
    */
-  const PFParticles& particles(const Identifier::SubType subtype) const;
+  const Particles& particles(const Identifier::SubType subtype) const;
   /**
    *   @brief  returns a PFParticles collection with typeAndSubtype that match the identifier
    *   @param[in]  id the Identifier of an object
    */
-  const PFParticles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
+  const Particles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
   /**
    *   @brief  returns a PFParticle with the required id
    *   @param[in]  id the Identifier of an object
    */
-  const PFParticle& particle(IdType id) const { return particles(id).at(id); };
+  const Particle& particle(IdType id) const { return particles(id).at(id); };
   /**
    *   @brief  returns a Blocks collection matching type and subtype
    *   @param[in]  subtype The subtype of the block eg 'r' for reconstructed

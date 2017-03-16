@@ -17,16 +17,46 @@
 
 namespace papas {
 
-Particle::Particle() : m_pdgId(0), m_charge(0), m_status(0) {}
+// Particle::Particle() : m_pdgId(0), m_charge(0), m_status(0) {}
 
-Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, double status, const TVector3& startVertex,
-                   const TVector3& endVertex)
+Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
+                   double status, const TVector3& startVertex,const TVector3& endVertex)
     : m_tlv(tlv),
       m_pdgId(pdgid),
       m_charge(charge),
       m_status(status),
       m_startVertex(startVertex),
-      m_endVertex(endVertex) {}
+      m_endVertex(endVertex),
+      m_uniqueId(Identifier::makeId(index, Identifier::kParticle, subtype, tlv.E()))
+      {
+      }
+
+  /*if (m_isHelix)
+    if (field > 0)
+      m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
+    else
+      throw "Non zero field required for Charged particle";
+  else
+    m_path = std::make_shared<Path>(tlv, vertex, field);*/
+
+
+/*Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index,
+                       char subtype)
+    :  // for when particle is created via reconstruct track - it calls the above constructor
+      Particle(pdgid, charge, tlv, index, subtype, track.path()->namedPoint(papas::Position::kVertex),
+                 track.path()->field()) {
+  for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
+    if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);
+  }
+}*/
+
+bool Particle::isElectroMagnetic() const {
+  unsigned int kind = abs(pdgId());
+  if (kind == 11 || kind == 22) {
+    return true;
+  } else
+    return false;
+};
 
 std::string Particle::info() const {
   fmt::MemoryWriter out;
@@ -37,7 +67,8 @@ std::string Particle::info() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Particle& particle) {
-  os << "Particle :" << ":" << particle.info();
+  os << "Particle :" << std::setw(6) << std::left << Identifier::pretty(particle.id()) << ":" << particle.id() << ": "
+     << particle.info();
   return os;
 }
 

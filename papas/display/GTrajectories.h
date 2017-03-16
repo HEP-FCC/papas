@@ -29,7 +29,7 @@ public:
   /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
   GTrajectories(const Cluster& cluster);
   GTrajectories(const Track& track);
-  GTrajectories(const PFParticle& particle);
+  GTrajectories(const Particle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
   void Draw(const std::string& projection) override;
   void addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);

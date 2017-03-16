@@ -20,7 +20,7 @@
 namespace papas {
 
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
-                                 PFParticles& particles, Nodes& history)
+                                 Particles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
   auto blockids = m_event.collectionIds<Blocks>(blocks);

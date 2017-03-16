@@ -75,11 +75,11 @@ public:
    particles a collection (owned elsewhere) into which the reconstructed particles will be added
    history a colelction of Nodes (owned elsewhere) into which history information will be added
   */
-  PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, PFParticles& particles,
+  PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
                   Nodes& history);
   
   
-  //const PFParticles& particles() const { return m_particles; }  //
+  //const Particles& particles() const { return m_particles; }  //
 private:
   /** Takes a block and reconstructs particles from if
       block the block to be reconstructed
@@ -141,7 +141,7 @@ private:
   double nsigmaHcal(const Cluster& cluster) const;
   const Event& m_event; ///< Contains history information and collections of clusters/blocks/tracks
   const Detector& m_detector; ///< Detector
-  PFParticles& m_particles;  ///< the reconstructed particles created by this class
+  Particles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
   Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
   std::unordered_map<IdType, bool> m_locked; ///< map of unique ids which have already been used in reconstruction

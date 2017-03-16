@@ -146,7 +146,7 @@ void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   // gSystem->ProcessEvents();
 }
 
-void PythiaConnector::writeParticlesROOT(const char* fname, const papas::PFParticles& particles) {
+void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
 
   podio::ROOTWriter writer(fname, &m_store);
 

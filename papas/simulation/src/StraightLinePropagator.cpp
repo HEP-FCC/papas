@@ -11,7 +11,7 @@ namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(const PFParticle& ptc,
+void StraightLinePropagator::propagateOne(const Particle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius) const {
@@ -54,7 +54,7 @@ void StraightLinePropagator::propagateOne(const PFParticle& ptc,
   }
 }
 
-void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const {
   propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 

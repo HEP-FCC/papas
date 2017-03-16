@@ -46,7 +46,7 @@ public:
   */
   Simulator(const Event& event, const ListParticles& particles, const Detector& detector,
             Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, PFParticles& simParticles,
+            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, Particles& simParticles,
             Nodes& history);
   /** Simulate using a gen particle to produce a Simulated particle, plus tracks, smearedtracks and clusters/
    smearedclusters
@@ -64,7 +64,7 @@ public:
   const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
   const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
   Nodes& history() { return m_history; }                        /// return a reference to history nodes collection
-  const PFParticles& particles() const { return m_particles; }  ///< Return particles collection
+  const Particles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
   /**
    Smears a Cluster
@@ -136,8 +136,8 @@ private:
    @param[in] parentId Identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
-  Cluster makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
-  Cluster makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
+  Cluster makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
+  Cluster makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
   
   /**
    Moves the smearedCluster into the smeared Ecals collection and updates the history
@@ -158,7 +158,7 @@ private:
    @param[in] ptc particle from which to construct track
    @return the new stored Track
    */
-  const Track& makeAndStoreTrack(const PFParticle& ptc);
+  const Track& makeAndStoreTrack(const Particle& ptc);
   /**
    Smears a track by randomisation of the energy of a track
    @param[in] track the unsmeared track
@@ -226,7 +226,7 @@ private:
   Clusters& m_smearedHcalClusters;  ///< smeared hcal clusters
   Tracks& m_tracks;                 ///< tracks
   Tracks& m_smearedTracks;          ///< smeared tracks
-  PFParticles& m_particles;         ///< all particles
+  Particles& m_particles;         ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
 
   StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles

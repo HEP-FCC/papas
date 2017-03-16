@@ -15,7 +15,7 @@ namespace papas {
 
 Simulator::Simulator(const Event& papasevent, const ListParticles& particles, const Detector& detector,
                      Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles,
+                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, Particles& simParticles,
                      Nodes& history)
     : m_event(papasevent),
       m_detector(detector),
@@ -240,7 +240,7 @@ PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin,
   return makeAndStorePFParticle(pdgid, charge, p4, vertex);
 }
 
-Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
+Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
@@ -264,7 +264,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
   }
 }
 
-Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
+Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.hasNamedPoint(papas::Position::kHcalIn)) {
     TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
@@ -333,7 +333,7 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, IdTy
   return m_smearedHcalClusters[id];
 }
 
-const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
+const Track& Simulator::makeAndStoreTrack(const Particle& ptc) {
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   IdType id = track.id();
   PDebug::write("Made {}", track);

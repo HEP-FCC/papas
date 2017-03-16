@@ -87,7 +87,7 @@ protected:
   Clusters& createClusters();      // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();          // Create an empty concrete collection of tracks ready for filling by an algorithm
   Blocks& createBlocks();          // Create an empty concrete collection of blocks ready for filling by an algorithm
-  PFParticles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
+  Particles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
   Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
   

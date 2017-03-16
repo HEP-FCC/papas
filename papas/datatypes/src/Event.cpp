@@ -29,7 +29,7 @@ void Event::addCollection(const Clusters& clusters) {
 
 void Event::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
-void Event::addCollection(const PFParticles& particles) {
+void Event::addCollection(const Particles& particles) {
   addCollectionInternal<PFParticle>(particles, m_particlesCollection);
 };
 
@@ -59,7 +59,7 @@ const Tracks& Event::tracks(const Identifier::SubType subtype) const {
   return *m_tracksCollection.at(subtype);
 }
 
-const PFParticles& Event::particles(const Identifier::SubType subtype) const {
+const Particles& Event::particles(const Identifier::SubType subtype) const {
   if (!hasCollection(Identifier::ItemType::kParticle, subtype)) return m_emptyPFParticles;
   return *m_particlesCollection.at(subtype);
 }
