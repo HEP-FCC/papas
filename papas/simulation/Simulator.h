@@ -6,7 +6,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
@@ -85,28 +85,28 @@ public:
    @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
    @param[in] double ptmax: maximum pt
    @param[in] const TVector3& vertex: start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
   // move this somewhere else
-  PFParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
+  Particle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                              const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
 private:
-  void simulatePhoton(PFParticle& ptc);    ///< Simulates cluster from a Photon
-  void simulateHadron(PFParticle& ptc);    ///< Simulates clusters and track from a Hadron
-  void simulateNeutrino(PFParticle& ptc);  ///< Simulates a neutrino
-  void smearElectron(PFParticle& ptc);     ///< Does not smear so far as I can see
-  void simulateElectron(PFParticle& ptc);  ///< Simulates an electron (no smearing)
-  void smearMuon(PFParticle& ptc);  ///< Does not smear so far as I can see
-  void simulateMuon(PFParticle& ptc); ///< Simulates a muon(no smearing)
+  void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon
+  void simulateHadron(Particle& ptc);    ///< Simulates clusters and track from a Hadron
+  void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
+  void smearElectron(Particle& ptc);     ///< Does not smear so far as I can see
+  void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
+  void smearMuon(Particle& ptc);  ///< Does not smear so far as I can see
+  void simulateMuon(Particle& ptc); ///< Simulates a muon(no smearing)
   /**
    Makes a new PFParticle
    @param[in] pdgid particle id (eg 22 for a photon)
    @param[in] tlv particle momentum
    @param[in] vertex start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
-  PFParticle& makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
+  Particle& makeAndStoreParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                      const TVector3& vertex = TVector3(0., 0., 0.));
   /**
    Makes a new PFParticle
@@ -116,9 +116,9 @@ private:
    @param[in] phi initial direction of particle
    @param[in] energy energy of particle
    @param[in] vertex start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
-  PFParticle& makeAndStorePFParticle(int pdgid, double charge, double theta, double phi, double energy,
+  Particle& makeAndStoreParticle(int pdgid, double charge, double theta, double phi, double energy,
                                      const TVector3& vertex = TVector3(0., 0., 0.));
   /**
    Determines if a smeared Cluster is detectable
@@ -198,12 +198,12 @@ private:
    @param[in] cylinder the cylinder where  we want to know where the particle arrives
    @param[in] ptc the particle to be propagated
    */
-  void propagate(const SurfaceCylinder& cylinder, PFParticle& ptc);
+  void propagate(const SurfaceCylinder& cylinder, Particle& ptc);
   /**
    Propagates a particle to the ECAL and Hcal cyclinders
    @param[in] ptc the particle to be propagated
    */
-  void propagateAllLayers(PFParticle& ptc);
+  void propagateAllLayers(Particle& ptc);
   /**
    Update the History
    @param[in] newid the new object being added to history

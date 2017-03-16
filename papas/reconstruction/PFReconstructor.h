@@ -115,12 +115,12 @@ private:
    @param block Block in which to check for and reconstruct muons
    */
   void reconstructMuons(const PFBlock& block);
-  // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
+  // void insertParticle(const PFBlock& block, Particle&& particle);  ///< moves particle and adds into history
   /** Add new particle into history
    @param Ids Unique identifiers of parents of the new particle
    @param newparticle New particle that is to be added into history
    */
-  void insertParticle(const Ids& parentIds, PFParticle& newparticle);
+  void insertParticle(const Ids& parentIds, Particle& newparticle);
   /**  Checks if object unique_id comes, directly or indirectly,
    from a particle of type typeAndSubtype, with this absolute pdgid.
    

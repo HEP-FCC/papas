@@ -31,6 +31,8 @@ public:
   Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
   /** Constructor */
   Path();
+  
+  void setField(double field) { m_field=field;} ///< set the field
   /** Add a new point to path
    * @param layer for the new point which is used to index unordered map of points
    * @param vec new point to be added
@@ -74,7 +76,7 @@ protected:
   TVector3 m_origin; ///< start vertex (3d)
   Points m_points; ///< Map of path points indexed by position
   double m_field;  ///< Magnetic field which is set to 0 for a straightline
-private:
+  private:
 };
 
 /// Alternative name for Path class

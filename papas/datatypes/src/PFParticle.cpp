@@ -1,4 +1,4 @@
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include <cmath>
 #include <iostream>
 #include <utility>

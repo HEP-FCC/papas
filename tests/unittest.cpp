@@ -33,7 +33,7 @@
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/datatypes/Identifier.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -85,7 +85,7 @@ TEST_CASE("Identifier") {
 TEST_CASE("Helix") {  /// Helix path test
   TLorentzVector p4 = TLorentzVector();
   p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-  Helix helix(p4, TVector3(0, 0, 0), 3.8, 1);
+  Helix helix(p4, TVector3(0, 0, 0), 1, 3.8);
   double length = helix.pathLength(1.0e-9);
   TVector3 junk = helix.pointAtTime(1e-9);
 
@@ -590,7 +590,7 @@ TEST_CASE("test_history") {
   auto event = Event();
   Nodes history;
   auto ecals = Clusters();
-  auto particles = PFParticles();
+  auto particles = Particles();
   IdType lastid = 0;
   IdType lastcluster = 0;
 

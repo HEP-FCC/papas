@@ -6,8 +6,8 @@
 //
 //
 
-#include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Definitions.h"
+#include "papas/datatypes/Helix.h"
 #include "papas/utility/DeltaR.h"
 
 namespace papas {
@@ -15,24 +15,31 @@ extern double gconstc;
 
 Helix::Helix() {}
 
-Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double field, double charge)
-    : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
-  if (charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
-  m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
-  m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
-  TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();
-  TVector3 origin_xy = TVector3(origin.X(), origin.Y(), 0.);
-  m_centerXY = origin_xy - charge * momperp_xy * m_rho;
-  m_extremePointXY = TVector3(m_rho, 0., 0.);
+Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, double field)
+    : Path(p4, origin, field), m_charge(charge), m_vOverOmega(p4.Vect()) {}
 
-  if (m_centerXY.X() != 0 or m_centerXY.Y() != 0) m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
+void Helix::setField(double field) {
+  if (field != m_field) {
+    m_field = field;
+    if (m_charge * m_field == 0) throw "invalid parameters for Helix: charge or field are zero";
+    m_vOverOmega = m_p4.Vect();
+    m_vOverOmega *= 1. / (m_charge * m_field) * 1e9 / gconstc;
+    m_omega = m_charge * m_field * gconstc * gconstc / (m_p4.M() * m_p4.Gamma() * 1e9);
+    m_rho = m_p4.Perp() / (fabs(m_charge) * m_field) * 1e9 / gconstc;
+    TVector3 momperp_xy = TVector3(-m_p4.Y(), m_p4.X(), 0.).Unit();
+    TVector3 origin_xy = TVector3(m_origin.X(), m_origin.Y(), 0.);
 
-  // calculate phi range with the origin at the center,
-  // for display purposes
-  TVector3 center_to_origin = origin_xy - m_centerXY;
-  m_phi0 = center_to_origin.Phi();
-  m_phiMin = m_phi0 * 180 / M_PI;
-  m_phiMax = m_phiMin + 360.;
+    m_centerXY = origin_xy - m_charge * momperp_xy * m_rho;
+    m_extremePointXY = TVector3(m_rho, 0., 0.);
+    if (m_centerXY.X() != 0 or m_centerXY.Y() != 0) m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
+
+    // calculate phi range with the origin at the center,
+    // for display purposes
+    TVector3 center_to_origin = origin_xy - m_centerXY;
+    m_phi0 = center_to_origin.Phi();
+    m_phiMin = m_phi0 * 180 / M_PI;
+    m_phiMax = m_phiMin + 360.;
+  }
 }
 
 std::vector<double> Helix::polarAtTime(double time) const {
@@ -96,8 +103,6 @@ double Helix::maxTime() const {
     return timeAtZ(minz);
 }
 
-double Helix::pathLength(double deltat) const {
-  return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat;
-}
+double Helix::pathLength(double deltat) const { return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat; }
 
 }  // end namespace papas

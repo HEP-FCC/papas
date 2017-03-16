@@ -80,7 +80,7 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
 
         auto particle =
-            papas::Particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
+        papas::Particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex, endVertex, ptc.core().status);
         particles.push_back(std::move(particle));
         // papas::PDebug::write("Selected Papas{}", particle);
       }

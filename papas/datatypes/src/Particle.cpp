@@ -11,6 +11,7 @@
 
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/Helix.h"
 #include "spdlog/details/format.h"
 #include <iostream>
 //#include <sstream>  //AJRTODO temp
@@ -20,7 +21,7 @@ namespace papas {
 // Particle::Particle() : m_pdgId(0), m_charge(0), m_status(0) {}
 
 Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
-                   double status, const TVector3& startVertex,const TVector3& endVertex)
+                    const TVector3& startVertex,const TVector3& endVertex, double status)
     : m_tlv(tlv),
       m_pdgId(pdgid),
       m_charge(charge),
@@ -29,16 +30,13 @@ Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned
       m_endVertex(endVertex),
       m_uniqueId(Identifier::makeId(index, Identifier::kParticle, subtype, tlv.E()))
       {
-      }
+      
 
-  /*if (m_isHelix)
-    if (field > 0)
-      m_path = std::make_shared<Helix>(tlv, vertex, field, charge);
-    else
-      throw "Non zero field required for Charged particle";
+  if (charge!=0)
+      m_path = std::make_shared<Helix>(tlv, m_startVertex, m_charge);
   else
-    m_path = std::make_shared<Path>(tlv, vertex, field);*/
-
+      m_path = std::make_shared<Path>(tlv, m_startVertex);
+      }
 
 /*Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index,
                        char subtype)

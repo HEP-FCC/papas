@@ -94,7 +94,7 @@ protected:
   std::list<Clusters> m_ownedClusters;      //<Holds all the clusters collections created during an event
   std::list<Tracks> m_ownedTracks;          //<Holds all the tracks collections created during an event
   std::list<Blocks> m_ownedBlocks;          //<Holds all the blocks collections created during an event
-  std::list<PFParticles> m_ownedParticles;  //<Holds all the particles collections created during an event
+  std::list<Particles> m_ownedParticles;  //<Holds all the particles collections created during an event
   std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
   Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
 

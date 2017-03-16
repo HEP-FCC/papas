@@ -42,7 +42,7 @@ class PapasManager;
 class PythiaConnector {
 public:
   PythiaConnector(const char* fname);
-  void writeParticlesROOT(const char* fname, const papas::PFParticles& particles);
+  void writeParticlesROOT(const char* fname, const papas::Particles& particles);
   void writeClustersROOT(const char* fname, const papas::Clusters& clusters);
 
   // todo find new home;

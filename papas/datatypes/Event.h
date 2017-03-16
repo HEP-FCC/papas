@@ -68,8 +68,8 @@ public:
    */
   void addCollection(const Blocks& blocks);
   /**
-   *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the Event
-   *   @param[in]  blocks unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
+   *   @brief  adds a pointer to a  Particles collection (unordered map) into the Event
+   *   @param[in]  blocks unordered map of Particles, all of which have the same Identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const Particles& particles);
@@ -144,12 +144,12 @@ public:
    */
   const Particles& particles(const Identifier::SubType subtype) const;
   /**
-   *   @brief  returns a PFParticles collection with typeAndSubtype that match the identifier
+   *   @brief  returns a Particles collection with typeAndSubtype that match the identifier
    *   @param[in]  id the Identifier of an object
    */
   const Particles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
   /**
-   *   @brief  returns a PFParticle with the required id
+   *   @brief  returns a Particle with the required id
    *   @param[in]  id the Identifier of an object
    */
   const Particle& particle(IdType id) const { return particles(id).at(id); };
@@ -205,14 +205,14 @@ private:
   CollectionClusters m_hcalClustersCollection;
   /// Unordered map of pointers to unordered map of (concrete) Tracks
   CollectionTracks m_tracksCollection;
-  /// Unordered map of pointers to unordered map of (concrete) PFParticles
+  /// Unordered map of pointers to unordered map of (concrete) Particles
   CollectionPFParticles m_particlesCollection;
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
   std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
   Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
   Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
-  PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found
+  Particles m_emptyParticles;  ///<Used to return an empty collection when no collection is found
   Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is found
   unsigned int m_eventNo; ///<event number
 };

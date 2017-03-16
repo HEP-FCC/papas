@@ -3,7 +3,7 @@
 //#include <iostream>
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/utility/GeoTools.h"
 
@@ -11,11 +11,19 @@ namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(const Particle& ptc,
+void StraightLinePropagator::propagateOne(Particle& ptc,
                                           papas::Position layer,
                                           double cylinderz,
                                           double cylinderradius) const {
-  Path::Ptr line = ptc.path();
+  
+  auto path = ptc.path();
+  if (path == nullptr) {
+    path = std::make_shared<Path>(Path( ptc.p4(), ptc.startVertex(),ptc.charge()));
+    ptc.setPath(path);
+  }
+  auto line = ptc.path();
+  
+
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();
@@ -54,7 +62,7 @@ void StraightLinePropagator::propagateOne(const Particle& ptc,
   }
 }
 
-void StraightLinePropagator::propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
   propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 

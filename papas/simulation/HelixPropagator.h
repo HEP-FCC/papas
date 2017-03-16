@@ -19,7 +19,7 @@ public:
    ptc particle that is to be propagated
    cyl cylinder to which the particle is to be propagated.
    */
-  virtual void propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const;
+  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const;
 
 private:
   double m_field;///<Magnetic field in Tesla (?)

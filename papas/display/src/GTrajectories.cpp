@@ -5,7 +5,7 @@
 
 #include "papas/display/GTrajectories.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
 //#include "papas/datatypes/Identifier.h"

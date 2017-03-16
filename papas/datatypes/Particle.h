@@ -34,7 +34,7 @@ public:
    @param[in] startvertex start vertex (3d point)
    @param[in] endvertex end vertex (3d point)
    */
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype, double status = 1, const TVector3& startvertex = TVector3(0., 0., 0.), const TVector3& endvertex = TVector3(0., 0., 0.) );
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,  const TVector3& startvertex = TVector3(0., 0., 0.), const TVector3& endvertex = TVector3(0., 0., 0.) ,double status = 1);
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
   double e() const { return m_tlv.E(); }               ///<Energy
@@ -65,7 +65,7 @@ public:
   const TVector3& pathPosition(papas::Position layer) const {return m_path->namedPoint(layer);}
   //void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle
   bool isHelix() const { return m_isHelix; } ///< Helix or straighline
-  void setPath(Path::Ptr path);
+  void setPath(Path::Ptr path) { m_path = path;}
   const Path::Ptr path() const { return m_path; } ///< Return pointer to path
   IdType id() const { return m_uniqueId; }  ///< unique Identifier for object
   bool isElectroMagnetic() const;  ///< Is it electroMagnetic
