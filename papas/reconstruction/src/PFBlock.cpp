@@ -18,10 +18,10 @@ namespace papas {
 int PFBlock::tempBlockCount = 0;
   
   bool blockIdComparer (Identifier id1, Identifier id2) {
-    if (IdCoder::itemType(id1) ==IdCoder::itemType(id2))
+    if (IdCoder::type(id1) ==IdCoder::type(id2))
       return id1>id2;
     else
-      return IdCoder::itemType(id1) < IdCoder::itemType(id2);}
+      return IdCoder::type(id1) < IdCoder::type(id2);}
   
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),

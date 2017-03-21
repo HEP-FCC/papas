@@ -70,7 +70,7 @@ TEST_CASE("IdCoder") {
   REQUIRE(IdCoder::value(idvec[3]) == 0.25);
 
   auto id = IdCoder::makeId(1, IdCoder::ItemType::kEcalCluster, 'g', 3.1);
-  REQUIRE(IdCoder::itemType('e') == IdCoder::kEcalCluster);
+  REQUIRE(IdCoder::type('e') == IdCoder::kEcalCluster);
 
   for (int j = 0; j < 6; j++) {
     IdCoder::ItemType e = IdCoder::ItemType::kEcalCluster;

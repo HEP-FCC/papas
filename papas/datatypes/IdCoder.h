@@ -62,7 +62,7 @@ public:
    @param[in] id: the identifier
    @return an enum IdCoder::ItemType
    */
-  static ItemType itemType(Identifier id);  ///< Returns encoded ItemType eg kParticle etc;
+  static ItemType type(Identifier id);  ///< Returns encoded ItemType eg kParticle etc;
 
   /** returns the subtype of the identifier eg 'm'
    Some possible existing uses
@@ -103,12 +103,12 @@ public:
   /** boolean test of whether identifier is from an ecal cluster
   @param ident: identifier
    */
-  static bool isEcal(Identifier id) { return (IdCoder::itemType(id) == kEcalCluster); }
+  static bool isEcal(Identifier id) { return (IdCoder::type(id) == kEcalCluster); }
 
   /** boolean test of whether identifier is from an hcal cluster
    @param ident: identifier
    */
-  static bool isHcal(Identifier id) { return (IdCoder::itemType(id) == kHcalCluster); }
+  static bool isHcal(Identifier id) { return (IdCoder::type(id) == kHcalCluster); }
 
   /** boolean test of whether identifier is from a cluster
    @param ident: identifier
@@ -118,24 +118,24 @@ public:
   /** boolean test of whether identifier is from an track
    @param ident: identifier
    */
-  static bool isTrack(Identifier id) { return (IdCoder::itemType(id) == kTrack); }
+  static bool isTrack(Identifier id) { return (IdCoder::type(id) == kTrack); }
 
   /** boolean test of whether identifier is from a particle
    @param ident: identifier
    */
-  static bool isParticle(Identifier id) { return (IdCoder::itemType(id) == kParticle); }
+  static bool isParticle(Identifier id) { return (IdCoder::type(id) == kParticle); }
 
   /** boolean test of whether identifier is from a block
    @param ident: identifier
    */
-  static bool isBlock(Identifier id) { return (IdCoder::itemType(id) == kBlock); }
+  static bool isBlock(Identifier id) { return (IdCoder::type(id) == kBlock); }
 
   /** Uses detector layer to work out what itemType is appropriate
    @param layer: detector layer as an enumeration eg kEcal
    @return ItemType enumeration value eg kEcalCluster
    */
-  static ItemType itemType(papas::Layer layer);  ///< Uses detector layer to work out itemType
-  static ItemType itemType(char s);
+  static ItemType type(papas::Layer layer);  ///< Uses detector layer to work out itemType
+  static ItemType type(char s);
 
   /** Uses identifier type to work out what detector layer the item belongs to, may be kNone
    @param id: identifier

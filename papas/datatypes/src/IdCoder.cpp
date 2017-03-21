@@ -29,7 +29,7 @@ Identifier IdCoder::makeId(unsigned int index, ItemType type, char subt, float v
   // if the m_bitshift is 32 or more the shift is undefined and can return 0
 
   Identifier typeShift = (uint64_t)type << m_bitshift1;
-  Identifier valueShift = (uint64_t)IdCoder::floatToBits(val) << m_bitshift;
+  Identifier valueShift = (uint64_t)floatToBits(val) << m_bitshift;
   Identifier subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << m_bitshift2;
   Identifier uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | index;
 
@@ -37,7 +37,7 @@ Identifier IdCoder::makeId(unsigned int index, ItemType type, char subt, float v
   return uid;
 }
 
-IdCoder::ItemType IdCoder::itemType(Identifier id) {
+IdCoder::ItemType IdCoder::type(Identifier id) {
   return static_cast<ItemType>((id >> m_bitshift1) & (uint64_t)(pow(2, 3) - 1));
 }
 
@@ -58,10 +58,10 @@ unsigned int IdCoder::uniqueId(Identifier id)  {
     //For some purposes we want a smaller uniqueid without the value information
     //here we consruct a 32 bit uniqueid out of the index and the type and subtype
     unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
-    Identifier typeShift = (uint32_t)IdCoder::itemType(id) << bitshift;
-    Identifier subtypeShift = (uint32_t) static_cast<int>(tolower(IdCoder::subtype(id))) << m_bitshift;
+    Identifier typeShift = (uint32_t)type(id) << bitshift;
+    Identifier subtypeShift = (uint32_t) static_cast<int>(tolower(subtype(id))) << m_bitshift;
     //binary printout std::cout <<"Index" << std::bitset<32>(IdCoder::index(id)) <<std::endl;
-    uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)IdCoder::index(id);
+    uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)index(id);
     if (!checkUIDValid(id, uniqueid))
       throw "unique id part of identifier not valid";
     return uniqueid;
@@ -72,14 +72,14 @@ char IdCoder::typeLetter(Identifier id) {
   // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
   std::string typelist = ".ehtpb....";
   
-  auto index = (unsigned int)IdCoder::itemType(id);
+  auto index = (unsigned int)type(id);
   if (index < 6)
-    return typelist[(unsigned int)IdCoder::itemType(id)];
+    return typelist[(unsigned int)type(id)];
   else
     throw "Error in identifier typeLetter";
 }
 
-IdCoder::ItemType IdCoder::itemType(char s) {
+IdCoder::ItemType IdCoder::type(char s) {
   // converts from the a single letter decriptor eg 'e' into the type enumeration such as kEcalCluster
   std::string typelist = ".ehtpb";
   auto found = typelist.find(s);
@@ -99,17 +99,17 @@ std::string IdCoder::pretty(Identifier id) {
 }
 
 papas::Layer IdCoder::layer(Identifier id) {
-  if (IdCoder::isEcal(id))
+  if (isEcal(id))
     return papas::Layer::kEcal;
-  else if (IdCoder::isHcal(id))
+  else if (isHcal(id))
     return papas::Layer::kHcal;
-  else if (IdCoder::isTrack(id))
+  else if (isTrack(id))
     return papas::Layer::kTracker;
   else
     return papas::Layer::kNone;
 }
 
-IdCoder::ItemType IdCoder::itemType(papas::Layer layer) {
+IdCoder::ItemType IdCoder::type(papas::Layer layer) {
   if (layer == papas::Layer::kEcal)
     return ItemType::kEcalCluster;
   else if (layer == papas::Layer::kHcal)
@@ -120,11 +120,11 @@ IdCoder::ItemType IdCoder::itemType(papas::Layer layer) {
     return ItemType::kNone;
 }
 
-bool IdCoder::checkValid(Identifier uid, ItemType type, char subt, float val, unsigned int indx) {
+bool IdCoder::checkValid(Identifier uid, ItemType itype, char subt, float val, unsigned int indx) {
   // verify that it all works, the id should match the items from which it was constructed
   if (index(uid) != indx) return false;
   if (val != 0) {
-    if ((fabs(value(uid) - val) >= fabs(val) * 10e-6) | (itemType(uid) != type) | (subtype(uid) != subt)) return false;
+    if ((fabs(value(uid) - val) >= fabs(val) * 10e-6) | (type(uid) != itype) | (subtype(uid) != subt)) return false;
   }
   return true;
 }
@@ -135,7 +135,7 @@ bool IdCoder::checkValid(Identifier uid, ItemType type, char subt, float val, un
     ItemType it = static_cast<ItemType>((uniqueid >> bitshift) & (uint32_t)(pow(2, 3) - 1));
     char st = static_cast<char>((uniqueid >> m_bitshift) & (uint64_t)(pow(2,bitshift - m_bitshift) - 1));
     unsigned idx = ((uniqueid) & (uint32_t)(pow(2, m_bitshift) - 1));
-    if (it != itemType(id) || st != subtype(id) || idx != index(id))
+    if (it != type(id) || st != subtype(id) || idx != index(id))
       return false;
     return true;
   }

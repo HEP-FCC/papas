@@ -46,12 +46,12 @@ const Clusters& Event::clusters(IdCoder::ItemType type, const IdCoder::SubType s
 
 const Clusters& Event::clusters(Identifier id) const {
   // return the corresponding collection with the same type and subtype as this id
-  return clusters(IdCoder::itemType(id), IdCoder::subtype(id));
+  return clusters(IdCoder::type(id), IdCoder::subtype(id));
 };
 
 const Clusters& Event::clusters(const std::string& typeAndSubtype) const {
   // return the corresponding collection with this type and subtype
-  return clusters(IdCoder::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
+  return clusters(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 
 const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
@@ -93,13 +93,13 @@ bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype
 };
 
 bool Event::hasCollection(Identifier id) const {
-  return hasCollection(IdCoder::itemType(id), IdCoder::subtype(id));
+  return hasCollection(IdCoder::type(id), IdCoder::subtype(id));
 };
 
 bool Event::hasObject(Identifier id) const {
   // check if this object id is present
   auto found = false;
-  auto type = IdCoder::itemType(id);
+  auto type = IdCoder::type(id);
   if (hasCollection(id)) {
     switch (type) {
     case IdCoder::kEcalCluster:

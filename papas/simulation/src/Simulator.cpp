@@ -303,7 +303,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   else
     counter = m_smearedHcalClusters.size();
   // energy = fmax(0., energy);  // energy always positive
-  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, IdCoder::itemType(parent.id()), 's');
+  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, IdCoder::type(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }

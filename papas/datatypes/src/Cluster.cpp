@@ -14,8 +14,8 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType idtype, char subtype)
-    : m_id(IdCoder::makeId(index, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
+Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type, char subtype)
+    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
@@ -78,7 +78,7 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  if (IdCoder::itemType(m_id) != IdCoder::itemType(rhs.id())) {
+  if (IdCoder::type(m_id) != IdCoder::type(rhs.id())) {
     throw "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();

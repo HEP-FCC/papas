@@ -28,7 +28,7 @@ Ids HistoryHelper::linkedIds(Identifier id, const std::string& typeAndSubtype, D
 Ids HistoryHelper::filteredIds(Ids ids, const IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   Ids matchedIds;
   for (auto id : ids) {
-    if (IdCoder::itemType(id) == type && IdCoder::subtype(id) == subtype) {
+    if (IdCoder::type(id) == type && IdCoder::subtype(id) == subtype) {
       matchedIds.push_back(id);
     }
   }
