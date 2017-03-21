@@ -16,7 +16,7 @@ namespace papas {
 
  Usage example:
  @code
- auto builder = BlockBuilder (ids, edges, history, blocks, 'r');
+ BlockBuilder builder(ids, edges, history, blocks, 'r');
 
  }
  @endcode

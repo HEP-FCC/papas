@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   const char* fname = argv[1];
-  auto pythiaConnector = PythiaConnector(fname);
+  PythiaConnector pythiaConnector(fname);
 
   // Create CMS detector and PapasManager
   CMS CMSDetector;

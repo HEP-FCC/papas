@@ -14,10 +14,8 @@ PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& 
                                  Nodes& history)
     : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-  auto blockids = m_event.collectionIds<Blocks>(blocks);
-#if WITHSORT
-  blockids.sort(std::greater<uint64_t>());
-#endif
+  const auto& blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
+
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
@@ -41,7 +39,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
     // no change to this block
     // make a copy of the block and put it in the simplified blocks
     Edges newedges = block.edges();  // copy edges
-    auto newblock = PFBlock(block.elementIds(), newedges, m_simplifiedBlocks.size(), 's');
+    PFBlock newblock(block.elementIds(), newedges, m_simplifiedBlocks.size(), 's');
     PDebug::write("Made {}", newblock);
     m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
     // update history
@@ -57,7 +55,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
       modifiedEdges.emplace(e.key(), std::move(e));
     }
     // Blockbuilder will add the blocks it creates into m_simplifiedBlocks
-    auto bbuilder = BlockBuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
+   BlockBuilder bbuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
   }
 }
 

@@ -18,15 +18,15 @@ namespace papas {
 PFEventDisplay::PFEventDisplay(std::list<ViewPane::Projection> views) : Display(views) {}
 
 void PFEventDisplay::drawEvent(const Event& event) {
-  for (auto& pr : event.particles('s')) {
+  for (const auto& pr : event.particles('s')) {
     std::shared_ptr<GTrajectories> gparticle(new GTrajectories(pr.second));
     addToRegister(gparticle, 2);
   }
-  for (auto& cl : event.clusters("es")) {
+  for (const auto& cl : event.clusters("es")) {
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }
-  for (auto& cl : event.clusters("hs")) {
+  for (const auto& cl : event.clusters("hs")) {
     std::shared_ptr<GTrajectories> gcluster(new GTrajectories(cl.second));
     addToRegister(gcluster, 2);
   }

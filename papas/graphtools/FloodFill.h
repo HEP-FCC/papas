@@ -66,7 +66,7 @@ std::vector<typename FloodFill<T>::Nodevector> FloodFill<T>::traverse(FloodFill<
   m_visited.clear();
   BFSVisitor<TNode> bfs;
 
-  for (auto& elem : nodes) {
+  for (const auto& elem : nodes) {
 
     if (m_visited.find(&elem.second) != m_visited.end()) continue;  // already done this node so skip the rest
 

@@ -20,21 +20,23 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
   }
   DAG::FloodFill<IdType> FFill;
   // traverse does the work and returns a vector of connected node groups
-  for (auto& group : FFill.traverse(m_localNodes)) {
+  for (const auto& group : FFill.traverse(m_localNodes)) {
     // each of the nodevectors is about to become a separate block
     // we need the vector of ids and the map of edges in order to make the block
     Ids subgraph;
-    for (auto& node : group) {
+    for (const auto& node : group) {
       subgraph.push_back(node->value());
     }
+    #if WITHSORT
+    sortIds(subgraph); //sort in descending order
+    #endif
     m_subGraphs.push_back(subgraph);
   }
 }
 
 void GraphBuilder::sortIds(Ids& ids) {
-#if WITHSORT
   ids.sort(std::greater<uint64_t>()); //sort in descending order
-#endif
+
 }
 
 }  // end namespace papas

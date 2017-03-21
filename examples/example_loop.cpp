@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
   const char* fname = argv[1];
   // open the Pythia file fname
   try {
-    auto pythiaConnector = PythiaConnector(fname);
+    PythiaConnector pythiaConnector(fname);
 #if WITHSORT
     std::cout << "doing sorting";
 #else
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 #endif
     // Create CMS detector and PapasManager
     papas::CMS CMSDetector;
-    auto papasManager = papas::PapasManager(CMSDetector);
+    papas::PapasManager papasManager(CMSDetector);
 
     unsigned int eventNo = 0;
     unsigned int nEvents = 100;
