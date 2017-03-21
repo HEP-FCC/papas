@@ -1,5 +1,5 @@
-#ifndef Identifier_h
-#define Identifier_h
+#ifndef IdCoder_h
+#define IdCoder_h
 
 #include "papas/datatypes/Definitions.h"
 #include <inttypes.h>
@@ -8,15 +8,15 @@
 namespace papas {
 
 /**
-  @brief An Identifier is a uniqueid that contains encoded information about an element
+  @brief An IdCoder is a uniqueid that contains encoded information about an element
 
- Identifiers are used to uniquely identify all clusters, tracks, blocks etc in PAPAS
+ IdCoders are used to uniquely identify all clusters, tracks, blocks etc in PAPAS
  They are also used in Nodes which store the history (linkages) between items.
 
  Given an identifier, we can determine the type of an object, for example an ecal_cluster.
  and then use this to retrieve the cluster from a cluster collection.
 
- The Identifier class consists of a set of static methods that can be used
+ The IdCoder class consists of a set of static methods that can be used
  to create(encode) and to dissect(decode) identifiers.
 
  The identifier is 64 bits wide and stores info as follows
@@ -35,21 +35,21 @@ namespace papas {
 
  Usage example:
  @code
- IdType uid=Identifier::MakeId(kEcalCluster, 's', 4.35);
+ IdType uid=IdCoder::MakeId(kEcalCluster, 's', 4.35);
  @endcode
  *
  *  @author  Alice Robson
  *  @date    2016-04-06
  */
-class Identifier {
+class IdCoder {
 public:
-  Identifier(){};
+  IdCoder(){};
 
   /// @enum the type of the item eg Particle, Cluster etc
   enum ItemType { kNone = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock };
   typedef char SubType;
   /** Makes new identifier.
-   @param[in]  type is an enum Identifier::ItemType to say whether this id is for a cluster, particle etc
+   @param[in]  type is an enum IdCoder::ItemType to say whether this id is for a cluster, particle etc
    @param[in]  subtype is a single letter subtype code  eg 'm' for merged
    @param[in]  value: a float representing energy or momentum etc
    @param[in]  uniqueid: not used in normal use
@@ -60,7 +60,7 @@ public:
   /** returns the item type of the the identifier
    This is one of: None = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock
    @param[in] id: the unique identifier
-   @return an enum Identifier::ItemType
+   @return an enum IdCoder::ItemType
    */
   static ItemType itemType(IdType id);  ///< Returns encoded ItemType eg kParticle etc;
 
@@ -104,32 +104,32 @@ public:
   /** boolean test of whether identifier is from an ecal cluster
   @param ident: unique identifier
    */
-  static bool isEcal(IdType id) { return (Identifier::itemType(id) == kEcalCluster); }
+  static bool isEcal(IdType id) { return (IdCoder::itemType(id) == kEcalCluster); }
 
   /** boolean test of whether identifier is from an hcal cluster
    @param ident: unique identifier
    */
-  static bool isHcal(IdType id) { return (Identifier::itemType(id) == kHcalCluster); }
+  static bool isHcal(IdType id) { return (IdCoder::itemType(id) == kHcalCluster); }
 
   /** boolean test of whether identifier is from a cluster
    @param ident: unique identifier
    */
-  static bool isCluster(IdType id) { return (Identifier::isEcal(id) || Identifier::isHcal(id)); }
+  static bool isCluster(IdType id) { return (IdCoder::isEcal(id) || IdCoder::isHcal(id)); }
 
   /** boolean test of whether identifier is from an track
    @param ident: unique identifier
    */
-  static bool isTrack(IdType id) { return (Identifier::itemType(id) == kTrack); }
+  static bool isTrack(IdType id) { return (IdCoder::itemType(id) == kTrack); }
 
   /** boolean test of whether identifier is from a particle
    @param ident: unique identifier
    */
-  static bool isParticle(IdType id) { return (Identifier::itemType(id) == kParticle); }
+  static bool isParticle(IdType id) { return (IdCoder::itemType(id) == kParticle); }
 
   /** boolean test of whether identifier is from a block
    @param ident: unique identifier
    */
-  static bool isBlock(IdType id) { return (Identifier::itemType(id) == kBlock); }
+  static bool isBlock(IdType id) { return (IdCoder::itemType(id) == kBlock); }
 
   /** Uses detector layer to work out what itemType is appropriate
    @param layer: detector layer as an enumeration eg kEcal
@@ -158,4 +158,4 @@ private:
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };
 }  // end namespace
-#endif /* Identifier_h */
+#endif /* IdCoder_h */

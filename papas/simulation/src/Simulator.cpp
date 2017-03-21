@@ -1,6 +1,6 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
@@ -40,8 +40,8 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  //if (Identifier::pretty(storedParticle.id()) == "ps3")
-  //   std::cout << Identifier::pretty(storedParticle.id()) << std::endl;
+  //if (IdCoder::pretty(storedParticle.id()) == "ps3")
+  //   std::cout << IdCoder::pretty(storedParticle.id()) << std::endl;
 
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
@@ -193,9 +193,9 @@ void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
 }
 
 const Cluster& Simulator::cluster(IdType clusterId) const {
-  if (Identifier::isEcal(clusterId))
+  if (IdCoder::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);
-  else if (Identifier::isHcal(clusterId))
+  else if (IdCoder::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
   throw std::out_of_range("Cluster not found");
 }
@@ -248,7 +248,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
     }
-    auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), Identifier::kEcalCluster, subtype);
+    auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
     IdType id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
@@ -271,7 +271,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }
-    auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), Identifier::kHcalCluster, subtype);
+    auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
     IdType id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
@@ -292,25 +292,25 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   // NB It is not always the same layer as the new smeared cluster
   // The smeared cluster will have the same layer as the parent cluster
   if (detectorLayer == papas::Layer::kNone)
-    detectorLayer = Identifier::layer(parent.id());  // default to same layer as cluster
+    detectorLayer = IdCoder::layer(parent.id());  // default to same layer as cluster
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detectorLayer);
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
   unsigned int counter;
-  if (Identifier::layer(parent.id()) == Layer::kEcal)
+  if (IdCoder::layer(parent.id()) == Layer::kEcal)
     counter = m_smearedEcalClusters.size();
   else
     counter = m_smearedHcalClusters.size();
   // energy = fmax(0., energy);  // energy always positive
-  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, Identifier::itemType(parent.id()), 's');
+  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, IdCoder::itemType(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer, bool accept) const {
   // Determine if this smeared cluster will be detected
-  if (acceptLayer == papas::Layer::kNone) acceptLayer = Identifier::layer(smearedCluster.id());
+  if (acceptLayer == papas::Layer::kNone) acceptLayer = IdCoder::layer(smearedCluster.id());
   if (m_detector.calorimeter(acceptLayer)->acceptance(smearedCluster) || accept) {
     return true;
   } else {

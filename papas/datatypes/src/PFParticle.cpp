@@ -15,7 +15,7 @@ namespace papas {
 
 PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype, const TVector3& vertex, double field)
     : Particle(pdgid, charge, tlv),
-      m_uniqueId(Identifier::makeId(index, Identifier::kParticle,  subtype, tlv.E())),
+      m_uniqueId(IdCoder::makeId(index, IdCoder::kParticle,  subtype, tlv.E())),
       m_vertex(vertex),
       m_isHelix(fabs(charge) > 0.5) {
 
@@ -45,7 +45,7 @@ bool PFParticle::isElectroMagnetic() const {
 };
 
 std::ostream& operator<<(std::ostream& os, const PFParticle& particle) {
-  os << "Particle :" << std::setw(6) << std::left << Identifier::pretty(particle.id()) << ":" << particle.id() << ": "
+  os << "Particle :" << std::setw(6) << std::left << IdCoder::pretty(particle.id()) << ":" << particle.id() << ": "
      << particle.info();
   return os;
 }

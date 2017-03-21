@@ -9,7 +9,7 @@
 #define EventRuler_h
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Ruler.h"
 #include <stdio.h>

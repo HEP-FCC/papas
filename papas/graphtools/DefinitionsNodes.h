@@ -9,7 +9,7 @@
 #ifndef DefinitionsNodes_h
 #define DefinitionsNodes_h
 
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 #include <map>
 namespace papas {
@@ -43,7 +43,7 @@ inline void makeHistoryLinks(const Ids& parentids, const Ids& childids, Nodes& h
 inline void printHistory(const Nodes& history) {
   for (auto node : history)
     for (auto cnode : node.second.children())
-      std::cout << Identifier::pretty(node.first) << ":" << Identifier::pretty(cnode->value()) << "   ";
+      std::cout << IdCoder::pretty(node.first) << ":" << IdCoder::pretty(cnode->value()) << "   ";
 }
 
 }  // end namespace papas

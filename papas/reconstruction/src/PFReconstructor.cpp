@@ -59,23 +59,23 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     IdType id = *uids.begin();
     auto parentIds = Ids{block.id(), id};
-    if (Identifier::isEcal(id)) {
+    if (IdCoder::isEcal(id)) {
       reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
-    } else if (Identifier::isHcal(id)) {
+    } else if (IdCoder::isHcal(id)) {
       reconstructCluster(m_event.cluster(id), papas::Layer::kHcal, parentIds);
-    } else if (Identifier::isTrack(id)) {
+    } else if (IdCoder::isTrack(id)) {
       reconstructTrack(m_event.track(id), 211, parentIds);
     } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
               // TODO
     }
   } else {
     for (auto id : uids) {
-      if (Identifier::isHcal(id)) {
+      if (IdCoder::isHcal(id)) {
         reconstructHcal(block, id);
       }
     }
     for (auto id : ids) {
-      if (Identifier::isTrack(id) && !m_locked[id]) {
+      if (IdCoder::isTrack(id) && !m_locked[id]) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons*/
         auto parentIds = Ids{block.id(), id};
@@ -102,7 +102,7 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   ids.sort(std::greater<IdType>());
 #endif
   for (auto id : ids) {
-    if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
+    if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 13)) {
 
       auto parentIds = Ids{block.id(), id};
       reconstructTrack(m_event.track(id), 13, parentIds);
@@ -121,7 +121,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   # therefore, one should not lock the ecal clusters linked to the
   # electron track as these clusters are coming from other particles.*/
   for (auto id : ids) {
-    if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
+    if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
       auto parentIds = Ids{block.id(), id};
       reconstructTrack(m_event.track(id), 11, parentIds);

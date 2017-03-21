@@ -1,7 +1,7 @@
 #ifndef RECONSTRUCTION_EDGE_H
 #define RECONSTRUCTION_EDGE_H
 
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "array"
 #include <iostream>
 

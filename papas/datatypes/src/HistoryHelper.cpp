@@ -25,10 +25,10 @@ Ids HistoryHelper::linkedIds(IdType id, const std::string& typeAndSubtype, DAG::
   return fids;
 }
 
-Ids HistoryHelper::filteredIds(Ids ids, const Identifier::ItemType type, const Identifier::SubType subtype) const {
+Ids HistoryHelper::filteredIds(Ids ids, const IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   Ids matchedIds;
   for (auto id : ids) {
-    if (Identifier::itemType(id) == type && Identifier::subtype(id) == subtype) {
+    if (IdCoder::itemType(id) == type && IdCoder::subtype(id) == subtype) {
       matchedIds.push_back(id);
     }
   }
@@ -38,7 +38,7 @@ Ids HistoryHelper::filteredIds(Ids ids, const Identifier::ItemType type, const I
 Ids HistoryHelper::filteredIds(Ids ids, const std::string& typeAndSubtype) const {
   Ids matchedIds;
   for (auto id : ids) {
-    if (Identifier::typeAndSubtype(id) == typeAndSubtype) {
+    if (IdCoder::typeAndSubtype(id) == typeAndSubtype) {
       matchedIds.push_back(id);
     }
   }

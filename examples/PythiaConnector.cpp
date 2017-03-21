@@ -197,7 +197,7 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
 
   auto checkClusters = ConvertClustersToPapas(ccoll,
                                               0,  // size or 0 for merged
-                                              papas::Identifier::ItemType::kEcalCluster,
+                                              papas::IdCoder::ItemType::kEcalCluster,
                                               's');
 
   writer.writeEvent();
@@ -207,7 +207,7 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
 
 papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
                                                         float size,
-                                                        papas::Identifier::ItemType itemtype,
+                                                        papas::IdCoder::ItemType itemtype,
                                                         char subtype) const {
   papas::Clusters clusters;
   for (const auto& c : fccClusters) {

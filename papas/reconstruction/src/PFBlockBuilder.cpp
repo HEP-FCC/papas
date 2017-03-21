@@ -5,7 +5,7 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 

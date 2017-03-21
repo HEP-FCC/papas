@@ -32,7 +32,7 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
@@ -53,31 +53,31 @@
 
 using namespace papas;
 
-TEST_CASE("Identifier") {
+TEST_CASE("IdCoder") {
 
-  auto uid = Identifier::makeId(1, Identifier::ItemType::kTrack, 's', 1.23456);
-  auto id1 = Identifier::makeId(2, Identifier::ItemType::kTrack, 's', 12.782);
-  REQUIRE(Identifier::pretty(id1) == "ts2");
+  auto uid = IdCoder::makeId(1, IdCoder::ItemType::kTrack, 's', 1.23456);
+  auto id1 = IdCoder::makeId(2, IdCoder::ItemType::kTrack, 's', 12.782);
+  REQUIRE(IdCoder::pretty(id1) == "ts2");
   std::vector<IdType> idvec;
   for (int i = -2; i < 2; i++) {
-    uid = Identifier::makeId(i + 6, Identifier::ItemType::kTrack, 's', pow(2, i));
+    uid = IdCoder::makeId(i + 6, IdCoder::ItemType::kTrack, 's', pow(2, i));
     idvec.push_back(uid);
   }
   std::sort(idvec.begin(), idvec.end(), std::greater<IdType>());
-  REQUIRE(Identifier::pretty(idvec[0]) == "ts7");
-  REQUIRE(Identifier::value(idvec[0]) == 2.0);
-  REQUIRE(Identifier::pretty(idvec[3]) == "ts4");
-  REQUIRE(Identifier::value(idvec[3]) == 0.25);
+  REQUIRE(IdCoder::pretty(idvec[0]) == "ts7");
+  REQUIRE(IdCoder::value(idvec[0]) == 2.0);
+  REQUIRE(IdCoder::pretty(idvec[3]) == "ts4");
+  REQUIRE(IdCoder::value(idvec[3]) == 0.25);
 
-  auto id = Identifier::makeId(1, Identifier::ItemType::kEcalCluster, 'g', 3.1);
-  REQUIRE(Identifier::itemType('e') == Identifier::kEcalCluster);
+  auto id = IdCoder::makeId(1, IdCoder::ItemType::kEcalCluster, 'g', 3.1);
+  REQUIRE(IdCoder::itemType('e') == IdCoder::kEcalCluster);
 
   for (int j = 0; j < 6; j++) {
-    Identifier::ItemType e = Identifier::ItemType::kEcalCluster;
+    IdCoder::ItemType e = IdCoder::ItemType::kEcalCluster;
     for (int i = 1; i < 21; i++) {
       int n = pow(2, i);
       // makeId is self testing
-      id = Identifier::makeId(i, e, 't', (float)(1. / n));
+      id = IdCoder::makeId(i, e, 't', (float)(1. / n));
     }
   }
 }
@@ -135,7 +135,7 @@ TEST_CASE("Cylinder") {
 TEST_CASE("ClusterPT") {
 
   /// Test that pT is correctly set
-  auto cluster = Cluster(10., TVector3(1, 0, 0), 1., 1, Identifier::ItemType::kEcalCluster, 't');
+  auto cluster = Cluster(10., TVector3(1, 0, 0), 1., 1, IdCoder::ItemType::kEcalCluster, 't');
   REQUIRE(cluster.pt() == Approx(10.000));
   cluster.setEnergy(5.);
   REQUIRE(cluster.pt() == Approx(5.000));
@@ -145,7 +145,7 @@ TEST_CASE("ClusterSmear") {
 
   // Make a cluster
   double energy = 10.;
-  auto cluster = Cluster(energy, TVector3(1, 0, 0), 1., 2, Identifier::kEcalCluster);
+  auto cluster = Cluster(energy, TVector3(1, 0, 0), 1., 2, IdCoder::kEcalCluster);
   auto CMSDetector = CMS();
   auto ecal = CMSDetector.ecal();
   auto tester = PapasManagerTester(CMSDetector);
@@ -287,8 +287,8 @@ TEST_CASE("dummy") {
 }
 
 TEST_CASE("Distance") {
-  auto c1 = Cluster(1, TVector3(1, 0, 0), 1., 1, Identifier::kEcalCluster, 't');
-  auto c2 = Cluster(2, TVector3(1, 0, 0), 1., 2, Identifier::kHcalCluster, 't');
+  auto c1 = Cluster(1, TVector3(1, 0, 0), 1., 1, IdCoder::kEcalCluster, 't');
+  auto c2 = Cluster(2, TVector3(1, 0, 0), 1., 2, IdCoder::kHcalCluster, 't');
   auto p3 = c1.position().Unit() * 100.;
   auto p4 = TLorentzVector();
   p4.SetVectM(p3, 1.);
@@ -304,15 +304,15 @@ TEST_CASE("Distance") {
 }
 
 TEST_CASE("Distance2") {
-  auto c1 = Cluster(10, TVector3(1, 0, 0), 4., 1, Identifier::ItemType::kEcalCluster, 't');
-  auto c2 = Cluster(20, TVector3(1, 0, 0), 4., 2, Identifier::ItemType::kHcalCluster, 't');
+  auto c1 = Cluster(10, TVector3(1, 0, 0), 4., 1, IdCoder::ItemType::kEcalCluster, 't');
+  auto c2 = Cluster(20, TVector3(1, 0, 0), 4., 2, IdCoder::ItemType::kHcalCluster, 't');
   auto dist1 = Distance(c1, c2);
   REQUIRE(dist1.isLinked());
   REQUIRE(dist1.distance() == 0);
 
   auto pos3 = TVector3(c1.position());
   pos3.RotateZ(0.059);
-  auto c3 = Cluster(30, pos3, 5., 3, Identifier::ItemType::kHcalCluster, 't');
+  auto c3 = Cluster(30, pos3, 5., 3, IdCoder::ItemType::kHcalCluster, 't');
   auto dist2 = Distance(c1, c3);
   REQUIRE(dist2.isLinked());
   REQUIRE(dist2.distance() == 0.059);
@@ -329,7 +329,7 @@ void test_graphs() {  // Testing graphics
   // ,papas::ViewPane::Projection::HCAL_thetaphi });
 
   TVector3 vpos(1., .5, .3);
-  Cluster cluster = Cluster(10., vpos, 1., 1, Identifier::ItemType::kEcalCluster, 't');
+  Cluster cluster = Cluster(10., vpos, 1., 1, IdCoder::ItemType::kEcalCluster, 't');
   std::vector<TVector3> tvec;
   tvec.push_back(TVector3(0., 0., 0.));
   tvec.push_back(TVector3(1., 1., 1.));
@@ -369,9 +369,9 @@ void test_graphs() {  // Testing graphics
 
 TEST_CASE("Edges") {
   using namespace papas;
-  IdType id1 = Identifier::makeId(1, Identifier::kEcalCluster, 't');
-  IdType id2 = Identifier::makeId(2, Identifier::kHcalCluster, 't');
-  IdType id3 = Identifier::makeId(3, Identifier::kTrack, 't');
+  IdType id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
+  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
 
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
@@ -385,13 +385,13 @@ TEST_CASE("Edges") {
 
 TEST_CASE("PFBlocks") {
   using namespace papas;
-  IdType id1 = Identifier::makeId(1, Identifier::kEcalCluster, 't');
-  IdType id2 = Identifier::makeId(2, Identifier::kHcalCluster, 't');
-  IdType id3 = Identifier::makeId(3, Identifier::kTrack, 't');
+  IdType id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
+  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
 
-  IdType id4 = Identifier::makeId(4, Identifier::kEcalCluster, 't');
-  IdType id5 = Identifier::makeId(5, Identifier::kHcalCluster, 't');
-  IdType id6 = Identifier::makeId(6, Identifier::kTrack, 't');
+  IdType id4 = IdCoder::makeId(4, IdCoder::kEcalCluster, 't');
+  IdType id5 = IdCoder::makeId(5, IdCoder::kHcalCluster, 't');
+  IdType id6 = IdCoder::makeId(6, IdCoder::kTrack, 't');
 
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
@@ -423,7 +423,7 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.shortName() == "E1H1T1");
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
-  REQUIRE(Identifier::isBlock(block2.id()) == true);
+  REQUIRE(IdCoder::isBlock(block2.id()) == true);
   REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
   REQUIRE_THROWS(block2.findEdge(edge1.key()));
@@ -434,9 +434,9 @@ TEST_CASE("PFBlocks") {
 }
 
 TEST_CASE("BlockSplitter") {
-  IdType id1 = Identifier::makeId(1, Identifier::kHcalCluster, 't');
-  IdType id2 = Identifier::makeId(2, Identifier::kHcalCluster, 't');
-  IdType id3 = Identifier::makeId(3, Identifier::kTrack, 't');
+  IdType id1 = IdCoder::makeId(1, IdCoder::kHcalCluster, 't');
+  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
   Ids ids{id1, id2, id3};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
@@ -470,8 +470,8 @@ TEST_CASE("BlockSplitter") {
 }
 
 TEST_CASE("Merge") {
-  auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, 1, Identifier::kEcalCluster, 't');
-  auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, 2, Identifier::kEcalCluster, 't');
+  auto cluster1 = Cluster(10., TVector3(0., 1., 0.), 0.04, 1, IdCoder::kEcalCluster, 't');
+  auto cluster2 = Cluster(20., TVector3(0., 1., 0), 0.06, 2, IdCoder::kEcalCluster, 't');
   Clusters eclusters;
   eclusters.emplace(cluster1.id(), cluster1);
   eclusters.emplace(cluster2.id(), cluster2);
@@ -498,8 +498,8 @@ TEST_CASE("Merge") {
 
 TEST_CASE("merge_pair") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, 1, Identifier::kHcalCluster, 't');
-  auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, 2, Identifier::kHcalCluster, 't');
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.1, 1, IdCoder::kHcalCluster, 't');
+  auto cluster2 = Cluster(20., TVector3(1, 0.05, 0.), 0.1, 2, IdCoder::kHcalCluster, 't');
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
@@ -518,8 +518,8 @@ TEST_CASE("merge_pair") {
 
 TEST_CASE("merge_pair_away") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, 1, Identifier::kHcalCluster, 't');
-  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, 2, Identifier::kHcalCluster, 't');
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, 1, IdCoder::kHcalCluster, 't');
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, 2, IdCoder::kHcalCluster, 't');
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);
@@ -538,8 +538,8 @@ TEST_CASE("merge_pair_away") {
 
 TEST_CASE("merge_different_layers") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, 1, Identifier::kEcalCluster, 't');
-  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, 2, Identifier::kHcalCluster, 't');
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.04, 1, IdCoder::kEcalCluster, 't');
+  auto cluster2 = Cluster(20., TVector3(1, 1.1, 0.), 0.04, 2, IdCoder::kHcalCluster, 't');
   Clusters hclusters;
   Clusters eclusters;
   hclusters.emplace(cluster1.id(), cluster1);
@@ -562,7 +562,7 @@ TEST_CASE("test_papasevent") {
   IdType lastcluster = 0;
 
   for (int i = 0; i < 2; i++) {
-    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., i, Identifier::kEcalCluster, 't');
+    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., i, IdCoder::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
     auto track = Track(TVector3(0, 0, 0), i, std::make_shared<Path>(), 't');
@@ -577,7 +577,7 @@ TEST_CASE("test_papasevent") {
   // check we can get back collections OK
   REQUIRE(event.clusters("et").size() == 2);
   REQUIRE(event.hasCollection(499) == false);
-  REQUIRE(event.hasCollection(Identifier::kEcalCluster, 't') == true);
+  REQUIRE(event.hasCollection(IdCoder::kEcalCluster, 't') == true);
   REQUIRE(event.hasCollection(lastid) == true);
   REQUIRE_NOTHROW(event.track(lastid));
   REQUIRE_NOTHROW(event.cluster(lastcluster));
@@ -596,7 +596,7 @@ TEST_CASE("test_history") {
 
   // make a dummy papasevent including some history
   for (int i = 0; i < 2; i++) {
-    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., 1, Identifier::kEcalCluster, 't');
+    auto cluster = Cluster(10., TVector3(0, 0, 1), 2., 1, IdCoder::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
     auto cnode = PFNode(lastcluster);
@@ -616,19 +616,19 @@ TEST_CASE("test_history") {
   auto ids = hhelper.linkedIds(lastid);
   // filter the ecals from the linked ids
   REQUIRE(ids.size() == 2);
-  auto fids = hhelper.filteredIds(ids, Identifier::kEcalCluster, 't');
+  auto fids = hhelper.filteredIds(ids, IdCoder::kEcalCluster, 't');
   REQUIRE(fids.size() == 1);
   REQUIRE(*fids.begin() == lastcluster);
   // filter the particle from the linked ids
-  fids = hhelper.filteredIds(ids, Identifier::kParticle, 'r');
+  fids = hhelper.filteredIds(ids, IdCoder::kParticle, 'r');
   REQUIRE(fids.size() == 1);
   REQUIRE(*fids.begin() == lastid);
 }
 
 TEST_CASE("merge_inside") {
 
-  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, 1, Identifier::kHcalCluster, 't');
-  auto cluster2 = Cluster(20., TVector3(1., 0.1, 0.0), 0.055, 2, Identifier::kHcalCluster, 't');
+  auto cluster1 = Cluster(20, TVector3(1, 0, 0), 0.055, 1, IdCoder::kHcalCluster, 't');
+  auto cluster2 = Cluster(20., TVector3(1., 0.1, 0.0), 0.055, 2, IdCoder::kHcalCluster, 't');
   Clusters hclusters;
   hclusters.emplace(cluster1.id(), cluster1);
   hclusters.emplace(cluster2.id(), cluster2);

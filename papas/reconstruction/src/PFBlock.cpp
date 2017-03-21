@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/utility/PDebug.h"
 #include "spdlog/details/format.h"
@@ -18,13 +18,13 @@ namespace papas {
 int PFBlock::tempBlockCount = 0;
   
   bool blockIdComparer (IdType id1, IdType id2) {
-    if (Identifier::itemType(id1) ==Identifier::itemType(id2))
+    if (IdCoder::itemType(id1) ==IdCoder::itemType(id2))
       return id1>id2;
     else
-      return Identifier::itemType(id1) < Identifier::itemType(id2);}
+      return IdCoder::itemType(id1) < IdCoder::itemType(id2);}
   
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
-    : m_uniqueId(Identifier::makeId(index, Identifier::kBlock, subtype, element_ids.size())),
+    : m_uniqueId(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(blockIdComparer);
@@ -44,17 +44,17 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char 
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -116,7 +116,7 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", Identifier::typeLetter(id), count, Identifier::pretty(id), Identifier::value(id), id);
+    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", IdCoder::typeLetter(id), count, IdCoder::pretty(id), IdCoder::value(id), id);
     count = count + 1;
   }
   return out.str();
@@ -143,7 +143,7 @@ std::string PFBlock::edgeMatrixString() const {
     out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
-      shortid = Identifier::typeLetter(e1) + std::to_string(count);
+      shortid = IdCoder::typeLetter(e1) + std::to_string(count);
       out.write("{:>8}", shortid);
       count += 1;
     }
@@ -152,7 +152,7 @@ std::string PFBlock::edgeMatrixString() const {
     int countrow = 0;
     for (auto e1 : m_elementIds) {  // each iteration produces the next row of the matrix
       // make short name for the row element eg E3, H5 etc
-      shortid = Identifier::typeLetter(e1) + std::to_string(countrow);
+      shortid = IdCoder::typeLetter(e1) + std::to_string(countrow);
       out.write("\n{:>8}", shortid);
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
@@ -183,7 +183,7 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
 }
   std::string PFBlock::info() const { //One liner summary of PFBlock
   fmt::MemoryWriter out;
-  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
+  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_uniqueId), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

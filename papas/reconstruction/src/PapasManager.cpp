@@ -1,5 +1,5 @@
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Event.h"
 #include "papas/reconstruction/MergedClusterBuilder.h"
 #include "papas/reconstruction/PFBlockBuilder.h"

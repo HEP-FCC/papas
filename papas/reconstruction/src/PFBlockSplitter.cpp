@@ -6,7 +6,7 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
@@ -69,7 +69,7 @@ Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {
-      if (Identifier::isTrack(id)) {
+      if (IdCoder::isTrack(id)) {
         linkedIds = block.linkedIds(id, Edge::EdgeType::kHcalTrack);
         if (linkedIds.size() > 0) {
           firstHCAL = true;

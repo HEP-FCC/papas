@@ -2,7 +2,7 @@
 #define Event_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/reconstruction/PFBlock.h"
 
@@ -22,7 +22,7 @@ namespace papas {
  *       Examples of typeAndSubtype are:
  *       "es" ecal-smeared
  *       "ps" particle-simulated
- *       etc see also Identifier class
+ *       etc see also IdCoder class
  *      The types are
  *        e = ecal
  *        h = hcal
@@ -51,25 +51,25 @@ public:
   Event(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the Event
-   *   @param[in]  clusters unordered map of Clusters, all of which have the same Identifier typeAndSubtype.
+   *   @param[in]  clusters unordered map of Clusters, all of which have the same IdCoder typeAndSubtype.
    *               The typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
   void addCollection(const Clusters& clusters);
   /**
    *   @brief  adds a pointer to a Tracks collection (unordered map) into the Event
-   *   @param[in]  tracks unordered map of Tracks, all of which have the same Identifier typeAndSubtype
+   *   @param[in]  tracks unordered map of Tracks, all of which have the same IdCoder typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
   void addCollection(const Tracks& tracks);
   /**
    *   @brief  adds a pointer to a Blocks collection (unordered map) into the Event
-   *   @param[in]  blocks unordered map of Blocks, all of which have the same Identifier typeAndSubtype
+   *   @param[in]  blocks unordered map of Blocks, all of which have the same IdCoder typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
   void addCollection(const Blocks& blocks);
   /**
    *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the Event
-   *   @param[in]  blocks unordered map of PFParticles, all of which have the same Identifier typeAndSubtype
+   *   @param[in]  blocks unordered map of PFParticles, all of which have the same IdCoder typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const PFParticles& particles);
@@ -87,31 +87,31 @@ public:
   void extendHistory(const Nodes& history);
   /**
    *   @brief  returns true if a collection with  type and subtype  of id  is found
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   bool hasCollection(IdType id) const;
   /**
    *   @brief  returns true if a collection with matching type and subtype  is found
-   *   @param[in]  type The type of an object eg Identifier::kEcalCluster
+   *   @param[in]  type The type of an object eg IdCoder::kEcalCluster
    *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
-  bool hasCollection(const Identifier::ItemType type, const Identifier::SubType subtype) const;
+  bool hasCollection(const IdCoder::ItemType type, const IdCoder::SubType subtype) const;
   /**
-   *   @brief  returns true if an object matching the Identifier is found in the Event collections
-   *   @param[in]  id the Identifier of an object
+   *   @brief  returns true if an object matching the IdCoder is found in the Event collections
+   *   @param[in]  id the IdCoder of an object
    */
   bool hasObject(IdType id) const;
   /**
    *   @brief  returns a Clusters collection with typeAndSubtype that match the identifier
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   const Clusters& clusters(IdType id) const;
   /**
    *   @brief  returns a Clusters collection matching type and subtype
-   *   @param[in]  type The type of an object eg Identifier::kEcalCluster
+   *   @param[in]  type The type of an object eg IdCoder::kEcalCluster
    *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
-  const Clusters& clusters(const Identifier::ItemType type, const Identifier::SubType subtype) const;
+  const Clusters& clusters(const IdCoder::ItemType type, const IdCoder::SubType subtype) const;
   /**
    *   @brief  returns a Clusters collection matching type and subtype as a string
    *   @param[in]  typeAndSubtype The type and subtype of an object as a string eg "em" for ecals-merged.
@@ -119,7 +119,7 @@ public:
   const Clusters& clusters(const std::string& typeAndSubtype) const;
   /**
    *   @brief  returns a Cluster with the required id
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   const Cluster& cluster(IdType id) const { return clusters(id).at(id); };
 
@@ -127,45 +127,45 @@ public:
    *   @brief  returns a Tracks collection matching type and subtype
    *   @param[in]  subtype The subtype of the track eg 's' for smeared
    */
-  const Tracks& tracks(const Identifier::SubType subtype) const;
+  const Tracks& tracks(const IdCoder::SubType subtype) const;
   /**
    *   @brief  returns a Tracks collection with typeAndSubtype that match the identifier
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
-  const Tracks& tracks(IdType id) const { return tracks(Identifier::subtype(id)); };
+  const Tracks& tracks(IdType id) const { return tracks(IdCoder::subtype(id)); };
   /**
    *   @brief  returns a Track with the required id
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   const Track& track(IdType id) const { return tracks(id).at(id); };
   /**
    *   @brief  returns a Particles collection matching type and subtype
    *   @param[in]  subtype The subtype of the particle eg 'r' for reconstructed
    */
-  const PFParticles& particles(const Identifier::SubType subtype) const;
+  const PFParticles& particles(const IdCoder::SubType subtype) const;
   /**
    *   @brief  returns a PFParticles collection with typeAndSubtype that match the identifier
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
-  const PFParticles& particles(IdType id) const { return particles(Identifier::subtype(id)); };
+  const PFParticles& particles(IdType id) const { return particles(IdCoder::subtype(id)); };
   /**
    *   @brief  returns a PFParticle with the required id
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   const PFParticle& particle(IdType id) const { return particles(id).at(id); };
   /**
    *   @brief  returns a Blocks collection matching type and subtype
    *   @param[in]  subtype The subtype of the block eg 'r' for reconstructed
    */
-  const Blocks& blocks(const Identifier::SubType subtype) const;
+  const Blocks& blocks(const IdCoder::SubType subtype) const;
   /**
    *   @brief  returns a Blocks collection with typeAndSubtype that match the identifier
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
-  const Blocks& blocks(IdType id) const { return blocks(Identifier::subtype(id)); };
+  const Blocks& blocks(IdType id) const { return blocks(IdCoder::subtype(id)); };
   /**
    *   @brief  returns a Block with the required id
-   *   @param[in]  id the Identifier of an object
+   *   @param[in]  id the IdCoder of an object
    */
   const PFBlock& block(IdType id) const { return blocks(id).at(id); };
   /**
@@ -184,7 +184,7 @@ public:
   std::shared_ptr<const Nodes> history() const { return m_history; }
   
   /**
-   *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the Identifier counter
+   *   @brief  resets everything, deletes all the clusters, tracks etc etc and resets the IdCoder counter
    */
   void clear();
   void setEventNo(unsigned int eventNo) { m_eventNo = eventNo;}
@@ -198,7 +198,7 @@ private:
   template <class T>
   void
   addCollectionInternal(const std::unordered_map<IdType, T>& collection,
-                        std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections);
+                        std::unordered_map<IdCoder::SubType, const std::unordered_map<IdType, T>*>& collections);
   /// Unordered map of pointers to unordered map of (concrete) Ecal Clusters
   CollectionClusters m_ecalClustersCollection;
   /// Unordered map of pointers to unordered map of (concrete) Hcal Clusters
@@ -220,7 +220,7 @@ private:
 template <class T>
 void Event::addCollectionInternal(
     const std::unordered_map<IdType, T>& collection,
-    std::unordered_map<Identifier::SubType, const std::unordered_map<IdType, T>*>& collections) {
+    std::unordered_map<IdCoder::SubType, const std::unordered_map<IdType, T>*>& collections) {
   IdType firstId = 0;
   if (collection.size() == 0) return;
   for (const auto& it : collection) {
@@ -228,12 +228,12 @@ void Event::addCollectionInternal(
       firstId = it.first;
       if (hasCollection(firstId)) throw "Collection already exists";
     }
-    if (Identifier::typeAndSubtype(it.first) != Identifier::typeAndSubtype(firstId)) {
-      std::cout << Identifier::pretty(it.first) << " : " << Identifier::pretty(firstId) << std::endl;
+    if (IdCoder::typeAndSubtype(it.first) != IdCoder::typeAndSubtype(firstId)) {
+      std::cout << IdCoder::pretty(it.first) << " : " << IdCoder::pretty(firstId) << std::endl;
       throw "more than one typeandSubtype found in collection";
     }
   }
-  collections.emplace(Identifier::subtype(firstId), &collection);
+  collections.emplace(IdCoder::subtype(firstId), &collection);
 }
 
 template <class T>

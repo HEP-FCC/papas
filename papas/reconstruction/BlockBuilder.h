@@ -12,7 +12,7 @@ namespace papas {
  * Each element will end up in one (and only one) block.
  * Blocks retain information of the elements and the distances between elements.
  * The blocks can be used for future particle reconstruction.
- * The ids must be unique and are expected to come from the Identifier class.
+ * The ids must be unique and are expected to come from the IdCoder class.
 
  Usage example:
  @code

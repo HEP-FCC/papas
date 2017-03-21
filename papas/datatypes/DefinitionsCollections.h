@@ -9,7 +9,7 @@
 #define DefinitionsCollections_h
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
@@ -35,9 +35,9 @@ typedef std::unordered_map<IdType, Track> Tracks;            ///< collection of 
 typedef std::unordered_map<IdType, PFBlock> Blocks;          ///< collection of Blocks
 typedef std::unordered_map<IdType, Cluster> Clusters;        ///< collection of Clusters
 
-typedef std::unordered_map<Identifier::SubType, const PFParticles*> CollectionPFParticles;  ///< collection of PFParticles
-typedef std::unordered_map<Identifier::SubType, const Tracks*> CollectionTracks;          ///< collection of Tracks
-typedef std::unordered_map<Identifier::SubType, const Clusters*> CollectionClusters;      ///< collection of Clusters
-typedef std::unordered_map<Identifier::SubType, const Blocks*> CollectionBlocks;          ///< collection of Clusters
+typedef std::unordered_map<IdCoder::SubType, const PFParticles*> CollectionPFParticles;  ///< collection of PFParticles
+typedef std::unordered_map<IdCoder::SubType, const Tracks*> CollectionTracks;          ///< collection of Tracks
+typedef std::unordered_map<IdCoder::SubType, const Clusters*> CollectionClusters;      ///< collection of Clusters
+typedef std::unordered_map<IdCoder::SubType, const Blocks*> CollectionBlocks;          ///< collection of Clusters
 }
 #endif /* DefinitionsCollections_h */

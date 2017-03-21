@@ -2,7 +2,7 @@
 #define HistoryHelper_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Event.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
@@ -21,7 +21,7 @@ namespace papas {
  //find what is connected to (say) a reconstructed particle
  auto ids =hhelper.linkedIds(id);
  //filter the connected ids selecting only the ecals of subtype 'm'
- auto fids = hhelper.filteredIds(ids, Identifier::kEcalCluster, 'm');
+ auto fids = hhelper.filteredIds(ids, IdCoder::kEcalCluster, 'm');
  ...
  @endcode
   */
@@ -33,12 +33,12 @@ public:
   HistoryHelper(const Event& event);
   /**
    *   @brief Finds all ids which have a history link with the input id
-   *   @param[in] id Identifier for which we want to find connected items
+   *   @param[in] id IdCoder for which we want to find connected items
    *   @param[in] direction whether to search parents, children or both
    */
   Ids linkedIds(IdType id, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
-   *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id Identifier for which we want to find connected items
+   *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id IdCoder for which we want to find connected items
    *   @param[in] typeAndSubType The identifier type and subtype for which we are searching eg "pr"
    for a reconstructed particle, should be a string of length 2
    *   @param[in] direction whether to search parents, children or both
@@ -49,10 +49,10 @@ public:
    *   @brief  Filters a vector of ids to find a subset which have the required type and subtype
    *         for example could be used to identify all ids which are merged Ecal clusters.
    *   @param[in]  ids vector of identifiers that is to be filtered
-   *   @param[in]  type Itemtype for which we are filtering eg Identifier::kEcalCluster
+   *   @param[in]  type Itemtype for which we are filtering eg IdCoder::kEcalCluster
    *   @param[in]  subtype Subtype for the filtered items eg 'm' for merged
    */
-  Ids filteredIds(Ids ids, const Identifier::ItemType type, const Identifier::SubType subtype) const;
+  Ids filteredIds(Ids ids, const IdCoder::ItemType type, const IdCoder::SubType subtype) const;
   /**
    *   @brief  Filters a vector of ids to find a subset which have the required typeAndSubtype
    *         for example could be used to identify all ids which are merged Ecal clusters.
