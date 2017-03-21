@@ -53,7 +53,7 @@ public:
    @param[in] ptc the gen particle to be simulated
   */
   void simulateParticle(const Particle& ptc);
-  /* Find the cluster with the specified unique IdCoder
+  /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
    */
   const Cluster& cluster(IdType clusterId) const;

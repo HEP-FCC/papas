@@ -144,7 +144,7 @@ void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newpartic
 }
 
 bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const {
-  /*returns: True if object unique_id comes, directly or indirectly,
+  /*returns: True if object identifier comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
   auto historyHelper = HistoryHelper(m_event);

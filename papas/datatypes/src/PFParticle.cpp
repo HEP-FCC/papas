@@ -15,7 +15,7 @@ namespace papas {
 
 PFParticle::PFParticle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype, const TVector3& vertex, double field)
     : Particle(pdgid, charge, tlv),
-      m_uniqueId(IdCoder::makeId(index, IdCoder::kParticle,  subtype, tlv.E())),
+      m_id(IdCoder::makeId(index, IdCoder::kParticle,  subtype, tlv.E())),
       m_vertex(vertex),
       m_isHelix(fabs(charge) > 0.5) {
 

@@ -18,8 +18,8 @@ namespace papas {
 
  class attributes:
 
- IdType m_uniqueid : the block's unique id generated from Id class
- Ids m_elementIds : list of uniqueids of its elements
+ IdType m_id : the block's identifier generated from IdCoder class
+ Ids m_elementIds : list of identifiers of its elements
 
  Edges m_edges : Unordered map of all the edge combinations in the block
           use  edge(id1,id2) to find an edge
@@ -34,7 +34,7 @@ class PFBlock {
 
 public:
   /** Constructor
-   @param[in] element_ids vector of uniqueids of the elements to go in this block [id1,id2,...]
+   @param[in] element_ids vector of identifiers of the elements to go in this block [id1,id2,...]
    @param[inout] edges is an unordered map of edges, it must contain at least all needed edges. It is not a
    problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are
    extracted will be removed from the Edges object and will become owned by the PFBlock
@@ -48,26 +48,26 @@ public:
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
-  @param[in] uniqueid : is the id of item of interest
+  @param[in] id : is the identifier of item of interest
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
  */
-  std::list<Edge::EdgeKey> linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::list<Edge::EdgeKey> linkedEdgeKeys(IdType id, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
-   @param[in] uniqueId : is the id of item of interest
+   @param[in] id : is the identifier of item of interest
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
-   @return vector of ids that are linked to the uniqueid
+   @return vector of ids that are linked to the id
   */
-  Ids linkedIds(IdType uniqueId, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+  Ids linkedIds(IdType id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const { return m_elementIds.size(); } ///< length of the element_unqiueids
-  IdType id() const { return m_uniqueId; };  ///<Unique ID of the block
+  IdType id() const { return m_id; };  ///<Unique ID of the block
   const Edges& edges() const { return m_edges; } ///<Unordered map of all the edges in a block
   std::string info() const; ///< printable one line summary of a Block
   std::string elementsString() const; ///< String listing all elements in a Block
@@ -79,7 +79,7 @@ private:
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
 
-  IdType m_uniqueId;          ///<  uniqueid for this block
+  IdType m_id;          ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
   Edges m_edges;              ///< all the edges for elements in this block
   static int tempBlockCount;  ///< sequential numbering of blocks, not essential but helpful for debugging

@@ -24,7 +24,7 @@ int PFBlock::tempBlockCount = 0;
       return IdCoder::itemType(id1) < IdCoder::itemType(id2);}
   
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
-    : m_uniqueId(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),
+    : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(blockIdComparer);
@@ -73,17 +73,17 @@ const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   return edge->second;
 }
 
-std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
+std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType id, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    Arguments:
-   uniqueid : is the id of item of interest
+   id : is the identifier of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    */
   std::list<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
-    // if this is an edge that includes uniqueid
-    if (edge.second.isLinked() && edge.second.otherId(uniqueid) > 0) {
+    // if this is an edge that includes the id
+    if (edge.second.isLinked() && edge.second.otherId(id) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
         linkedEdgeKeys.push_back(edge.first);
@@ -92,13 +92,13 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType
   return linkedEdgeKeys; //todo consider sorting
 }
 
-Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype) const {
+Ids PFBlock::linkedIds(IdType id, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   Ids linkedIds;
-  for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
+  for (auto key : linkedEdgeKeys(id, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
-    linkedIds.push_back(found->second.otherId(uniqueid));
+    linkedIds.push_back(found->second.otherId(id));
   }
   return linkedIds;
 }
@@ -183,7 +183,7 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
 }
   std::string PFBlock::info() const { //One liner summary of PFBlock
   fmt::MemoryWriter out;
-  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_uniqueId), countEcal(),
+  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

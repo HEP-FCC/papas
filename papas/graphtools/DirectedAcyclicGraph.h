@@ -49,7 +49,7 @@
  *  For example if the nodes were either tracks or clusters then
  *  we need:- stl::unordered_map<id,cluster>
  *  stl::unordered_map<id,track>
- *  And the user must generate a unique id for each cluster and track
+ *  And the user must generate an identifier for each cluster and track
  *  The identifier class provides an example of the encoding and decoding of node information
  *
  *  (ii) Polymorphic classes

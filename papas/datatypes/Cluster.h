@@ -44,7 +44,7 @@ public:
   double energy() const { return m_energy; }                 ///< Energy
   double eta() const { return m_p3.Eta(); }                  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
   double theta() const { return M_PI / 2. - m_p3.Theta(); }  ///< Angle w/r to transverse plane
-  IdType id() const { return m_uniqueId; }                   ///< Unique identifier
+  IdType id() const { return m_id; }                   ///< Unique identifier
   const TVector3& position() const { return m_p3; }          ///< position (x, y, z)
   void setEnergy(double energy);                             ///< Set cluster energy
   void setSize(double value);                                ///< Set cluster size
@@ -55,7 +55,7 @@ public:
     return s_maxEnergy;
   };  ///< static that returns max cluster energy (intended for display purposes)
 protected:
-  IdType m_uniqueId;                        ///< Unique IdCoder for Cluster
+  IdType m_id;                        ///< Unique IdCoder for Cluster
   double m_size;                            ///< Cluster size (radius?)
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
   double m_pt;                              ///< Transverse momentum (magnitude of p3 in transverse plane)

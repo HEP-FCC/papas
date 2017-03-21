@@ -25,7 +25,7 @@ namespace papas {
 class BlockBuilder : public GraphBuilder {
 public:
   /** Constructor
-   * @param[in] ids : list of unique identifiers eg of tracks, clusters etc
+   * @param[in] ids : list of identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more)
    *            an edge records the distance and links between two ids
    * @param[inout] history : external collection of Nodes to which parent child relations can be added

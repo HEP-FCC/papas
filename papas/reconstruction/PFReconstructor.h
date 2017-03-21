@@ -87,7 +87,7 @@ private:
   void reconstructBlock(const PFBlock& block);
   /** Reconstructs particles from na hcal cluster
       @param block the block to which the hcal structure belongs
-      @param hcalId the unique identifier of the Hcal cluster
+      @param hcalId the identifier of the Hcal cluster
   */
   void reconstructHcal(const PFBlock& block, IdType hcalId);
   /** Reconstructs a charged hadron/electron/muon from an Hcal
@@ -121,7 +121,7 @@ private:
    @param newparticle New particle that is to be added into history
    */
   void insertParticle(const Ids& parentIds, PFParticle& newparticle);
-  /**  Checks if object unique_id comes, directly or indirectly,
+  /**  Checks if object identifier comes, directly or indirectly,
    from a particle of type typeAndSubtype, with this absolute pdgid.
    
    @param id Unique IdCoder of object
@@ -144,7 +144,7 @@ private:
   PFParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
   Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
-  std::unordered_map<IdType, bool> m_locked; ///< map of unique ids which have already been used in reconstruction
+  std::unordered_map<IdType, bool> m_locked; ///< map of identifiers which have already been used in reconstruction
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */

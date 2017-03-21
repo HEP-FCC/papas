@@ -7,7 +7,7 @@
 #include <bitset>
 
 //
-// Encode information into a unique identifier
+// Encode information into an identifier
 //
 // accessible intro to use of bitwise operations can be found here
 // http://stackoverflow.com/questions/6556961/use-of-the-bitwise-operators-to-pack-multiple-values-in-one-int
@@ -22,7 +22,7 @@ IdType IdCoder::makeId(unsigned int index, ItemType type, char subt, float val) 
     throw "Id must have a valid type";
   }
 
-  if (index >= pow(2, m_bitshift) - 1) throw "IdCoder unique id is too big: too many identifiers";
+  if (index >= pow(2, m_bitshift) - 1) throw "IdCoder: index is too big: too many identifiers";
 
   // Shift all the parts and join together
   // NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise

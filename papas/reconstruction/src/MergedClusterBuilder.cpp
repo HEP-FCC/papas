@@ -22,18 +22,18 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
   // make list of all the ids in this collection
-  Ids uniqueids;
+  Ids ids;
   for (auto const& cluster : clusters) {
-    uniqueids.push_back(cluster.first);
+    ids.push_back(cluster.first);
   }
 #if WITHSORT
-  uniqueids.sort(std::greater<IdType>()); //sort in descending order
+  ids.sort(std::greater<IdType>()); //sort in descending order
 #endif
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
   Edges edges;
-  for (auto id1 : uniqueids) {
-    for (auto id2 : uniqueids) {
+  for (auto id1 : ids) {
+    for (auto id2 : ids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
@@ -43,12 +43,12 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
   }
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
-   auto grBuilder = GraphBuilder(uniqueids, std::move(edges));
-  for (auto ids : grBuilder.subGraphs()) {
+   auto grBuilder = GraphBuilder(ids, std::move(edges));
+  for (auto subgraph : grBuilder.subGraphs()) {
 #if WITHSORT
-    ids.sort(std::greater<IdType>()); //sort in descending order
+    subgraph.sort(std::greater<IdType>()); //sort in descending order
 #endif
-    auto id = *ids.begin();
+    auto id = *subgraph.begin();
     double totalenergy = 0.;
     for (const auto& c : ids) {
       totalenergy += clusters.at(c).energy();
@@ -64,13 +64,13 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     // merge the original clusters into the new merged cluster
     // also add in the links between the block elements and the block into the history_nodes
     if (ids.size() > 1) {
-      for (auto elemid : ids) {
+      for (auto elemid : subgraph) {
         if (elemid != id) {  // we have already handled the first element
           mergedCluster += clusters.at(elemid);
         }
       }
     }
-    makeHistoryLinks(ids, {mergedCluster.id()}, m_history);
+    makeHistoryLinks(subgraph, {mergedCluster.id()}, m_history);
     PDebug::write("Made Merged{}", mergedCluster);
     m_merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
   }

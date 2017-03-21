@@ -15,14 +15,14 @@ namespace papas {
 double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType idtype, char subtype)
-    : m_uniqueId(IdCoder::makeId(index, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
+    : m_id(IdCoder::makeId(index, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
 }
 
 Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, char subtype, float val)
-    : m_uniqueId(IdCoder::makeId(index, type, subtype, val)),
+    : m_id(IdCoder::makeId(index, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
@@ -33,7 +33,7 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
 }
 
 Cluster::Cluster(Cluster&& c)
-    : m_uniqueId(c.id()),
+    : m_id(c.id()),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
@@ -78,7 +78,7 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  if (IdCoder::itemType(m_uniqueId) != IdCoder::itemType(rhs.id())) {
+  if (IdCoder::itemType(m_id) != IdCoder::itemType(rhs.id())) {
     throw "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
@@ -112,7 +112,7 @@ Cluster::Cluster( Cluster && c) :
 m_size(c.m_size),
 m_angularSize(c.m_angularSize),
 m_pt(c.m_pt),
-m_uniqueId(c.m_uniqueId),
+m_id(c.m_id),
 m_energy(c.m_energy),
 m_subClusters(std::move(c.m_subClusters))
 
@@ -127,7 +127,7 @@ std::cout<< "Move Cluster" <<std::endl;
  m_p3=c.m_p3;
  m_size=c.m_size;
  m_pt=c.m_pt;
- m_uniqueId=c.m_uniqueId;
+ m_id=c.m_id;
  std::cout<< "move assign cluster" <<std::endl;
  return *this;
  };*/
@@ -137,19 +137,19 @@ m_energy=c.m_energy;
 m_p3=c.m_p3;
 m_size=c.m_size;
 m_pt=c.m_pt;
-m_uniqueId=c.m_uniqueId;
+m_id=c.m_id;
 std::cout<< "copy cluster=" <<std::endl;
 return *this;
 };
 
 Cluster::Cluster(const Cluster&) {
-  PDebug::write("copy cluster {}" , IdCoder::pretty(m_uniqueId));
+  PDebug::write("copy cluster {}" , IdCoder::pretty(m_id));
 std::cout<< "copy cluster" ;
 } ;*/
 
 /*Cluster::~Cluster() {
-  PDebug::write("delete cluster {}" , IdCoder::pretty(m_uniqueId));
-  std::cout<< " delete cluster " <<  IdCoder::pretty(m_uniqueId) ;
+  PDebug::write("delete cluster {}" , IdCoder::pretty(m_id));
+  std::cout<< " delete cluster " <<  IdCoder::pretty(m_id) ;
 } ;*/
 
 }  // end namespace papas
