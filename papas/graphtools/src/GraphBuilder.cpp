@@ -36,7 +36,6 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
 
 void GraphBuilder::sortIds(Ids& ids) {
   ids.sort(std::greater<uint64_t>()); //sort in descending order
-
 }
 
 }  // end namespace papas

@@ -43,7 +43,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
   }
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
-   GraphBuilder grBuilder(uniqueids, std::move(edges));
+  GraphBuilder grBuilder(uniqueids, std::move(edges));
   for (const auto& ids : grBuilder.subGraphs()) {
     const auto& id = *ids.begin();
     double totalenergy = 0.;

@@ -14,7 +14,7 @@ PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& 
                                  Nodes& history)
     : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-  const auto& blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
+  auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
 
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
