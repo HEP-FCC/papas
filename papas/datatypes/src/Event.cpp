@@ -69,7 +69,7 @@ const Blocks& Event::blocks(const Identifier::SubType subtype) const {
 }
 bool Event::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
   // Check if this collection is present
-  bool found =false;
+  bool found = false;
   switch (type) {
   case Identifier::kEcalCluster:
     found = (m_ecalClustersCollection.find(subtype) != m_ecalClustersCollection.end());
@@ -98,7 +98,7 @@ bool Event::hasCollection(IdType id) const {
 
 bool Event::hasObject(IdType id) const {
   // check if this object id is present
-  bool found =false;
+  bool found = false;
   auto type = Identifier::itemType(id);
   if (hasCollection(id)) {
     switch (type) {

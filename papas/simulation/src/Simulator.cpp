@@ -28,7 +28,7 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_particles(simParticles),
       m_history(history),
       m_propHelix(detector.field()->getMagnitude()) {
-  for (auto p : particles) {
+  for (const auto& p: particles) {
     simulateParticle(p);
   }
 }
