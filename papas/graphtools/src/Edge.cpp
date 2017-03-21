@@ -16,11 +16,9 @@ Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
   IdType uid1 = Identifier::uniqueId(id1);
   IdType uid2 = Identifier::uniqueId(id2);
   
-  if (id1 > id2)  // ensure that the order of the ids does not matter
-    key = (((uint64_t)uid1) << 32 ) | ((uint64_t)uid2);
-  else
-    key = (((uint64_t)uid2) << 32 ) | ((uint64_t)uid1);
-  
+  if (id1 < id2) // ensure that the order of the ids does not matter
+    std::swap(uid1, uid2);
+  key = (((uint64_t)uid1) << 32 ) | ((uint64_t)uid2);
   return key;
 }
   
