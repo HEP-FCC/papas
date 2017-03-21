@@ -24,11 +24,8 @@ void BlockBuilder::makeBlocks(char blockSubtype) {
   /* uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
    Each subGraph will be used to make a new PFBlock
    */
-  for (auto& elementIds : m_subGraphs) {
-    if (elementIds.size() > 1) {
-      sortIds(elementIds);
-    }
-    auto block = PFBlock(elementIds, m_edges, m_blocks.size(), blockSubtype);  // make the block
+  for (const auto& elementIds : m_subGraphs) {
+    PFBlock block(elementIds, m_edges, m_blocks.size(), blockSubtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
     IdType id = block.id();

@@ -21,7 +21,7 @@ Usage example:
 @code
  auto& simplifiedblocks = createBlocks();
  auto& history = createHistory();
- auto blockBuilder = PFBlockSplitter(m_event, blockSubtype, simplifiedblocks, history);
+ PFBlockSplitter blockBuilder(m_event, blockSubtype, simplifiedblocks, history);
 
  //store a pointer to the ouputs into the event
  m_event.addCollection(simplifiedblocks);

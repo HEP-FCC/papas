@@ -222,7 +222,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
   std::queue<int> nodeDepth;  // keeps track of the node depths so we can limit how deep we go if we wish
 
   // Mark the current node as visited and enqueue it
-  for (auto const& node : nodes) {
+  for (auto& node : nodes) {
     if (m_visited.find(node) == m_visited.end()) {  // if node is not listed as already being visited
       node->accept(*this);                          // mark as visited and add to results
       nodeQueue.push(node);                         // put into the queue
@@ -242,7 +242,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
 
     if ((depth < 0 || curdepth < depth) &&  // NB depth=-1 means we are visiting everything
         ((visittype == pt::CHILDREN) | (visittype == pt::UNDIRECTED))) {  // use the children
-      for (auto node : nodeQueue.front()->children()) {
+      for (auto& node : nodeQueue.front()->children()) {
         if (m_visited.find(node) == m_visited.end()) {  // check node is not already being visited
           node->accept(*this);
           nodeQueue.push(node);
@@ -252,7 +252,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
     }
     if ((depth < 0 || curdepth < depth) &&                               // NB depth=-1 means we are visiting everything
         ((visittype == pt::PARENTS) | (visittype == pt::UNDIRECTED))) {  // use the parents
-      for (auto node : nodeQueue.front()->parents()) {
+      for (auto& node : nodeQueue.front()->parents()) {
 
         if (m_visited.find(node) == m_visited.end()) {  // check node is not already being visited
           node->accept(*this);
@@ -283,7 +283,7 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumV
     return;  // end of the recursion
   }
 
-  for (auto node : nodes) {
+  for (auto& node : nodes) {
 
     // Only process a node if not already visited
     if (BFSVisitor<N>::m_visited.find(node) == BFSVisitor<N>::m_visited.end()) {
@@ -294,11 +294,11 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumV
       // and store these into visitnextnodes
       // NB depth=-1 means we are visiting everything
       if (depth != 0 && (visittype == pt::CHILDREN | visittype == pt::UNDIRECTED))
-        for (const auto child : node->children()) {
+        for (const auto& child : node->children()) {
           if (!this->alreadyVisited(child)) visitnextnodes.insert(child);
         }
       if (depth != 0 && (visittype == pt::PARENTS | visittype == pt::UNDIRECTED))
-        for (const auto parent : node->parents()) {
+        for (const auto& parent : node->parents()) {
           if (!this->alreadyVisited(parent)) visitnextnodes.insert(parent);
         }
     }

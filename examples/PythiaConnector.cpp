@@ -78,9 +78,7 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
     if (ptc.core().status == 1) {  // only stable ones
       
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-
-        auto particle =
-            papas::Particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
+        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
         particles.push_back(std::move(particle));
         // papas::PDebug::write("Selected Papas{}", particle);
       }
@@ -213,7 +211,7 @@ papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCo
   for (const auto& c : fccClusters) {
     const auto position = c.core().position;
     const auto energy = c.core().energy;
-    auto cluster = papas::Cluster(energy, TVector3(position.x, position.y, position.z), size,  clusters.size(), itemtype, subtype);
+    papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size,  clusters.size(), itemtype, subtype);
     clusters.emplace(cluster.id(), std::move(cluster));
   }
   return clusters;

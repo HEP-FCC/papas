@@ -20,9 +20,7 @@ typedef std::list<const Nodes*> ListNodes;  ///< collection of Nodes
 
 inline PFNode& findOrMakeNode(IdType id, Nodes& history) {
   if (history.empty() || (history.find(id) == history.end()) ) {
-    
-      auto newnode = PFNode(id);
-      
+      PFNode newnode(id);
       history.emplace(id, newnode);
   }
   return history.at(id);
@@ -41,8 +39,8 @@ inline void makeHistoryLinks(const Ids& parentids, const Ids& childids, Nodes& h
 }
 
 inline void printHistory(const Nodes& history) {
-  for (auto node : history)
-    for (auto cnode : node.second.children())
+  for (const auto& node : history)
+    for (const auto& cnode : node.second.children())
       std::cout << Identifier::pretty(node.first) << ":" << Identifier::pretty(cnode->value()) << "   ";
 }
 

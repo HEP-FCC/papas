@@ -23,10 +23,8 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
                                  PFParticles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-  auto blockids = m_event.collectionIds<Blocks>(blocks);
-#if WITHSORT
-  blockids.sort(std::greater<IdType>());
-#endif
+  auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
+  
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
@@ -43,9 +41,6 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
   Ids ids = block.elementIds();
-#if WITHSORT
-  ids.sort(std::greater<IdType>());
-#endif
   for (auto id : ids) {
     m_locked[id] = false;
   }
@@ -98,9 +93,6 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
 void PFReconstructor::reconstructMuons(const PFBlock& block) {
   /// Reconstruct muons in block.
   Ids ids = block.elementIds();
-#if WITHSORT
-  ids.sort(std::greater<IdType>());
-#endif
   for (auto id : ids) {
     if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
 
@@ -113,9 +105,6 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
 void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   /*Reconstruct electrons in block.*/
   Ids ids = block.elementIds();
-#if WITHSORT
-  ids.sort(std::greater<IdType>());
-#endif
 
   /* the simulator does not simulate electron energy deposits in ecal.
   # therefore, one should not lock the ecal clusters linked to the
@@ -209,12 +198,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
  
   Ids ecalIds;
-  Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
-#if WITHSORT
-  trackIds.sort(std::greater<IdType>());
-#endif
+  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, WITHSORT));
   for (auto trackId : trackIds) {
-    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
+    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, WITHSORT)) {
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work
@@ -225,10 +211,6 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
       }
     }
   }
-#if WITHSORT
-  trackIds.sort(std::greater<IdType>());
-  ecalIds.sort(std::greater<IdType>());
-#endif
   // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_event.cluster(hcalId);
   double hcalEnergy = hcal.energy();
@@ -314,9 +296,9 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   else {
     momentum = sqrt(pow(energy, 2) - pow(mass, 2));
   }
-  TVector3 p3 = cluster.position().Unit() * momentum;
-  TLorentzVector p4 = TLorentzVector(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
-  auto particle = PFParticle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
+  TVector3 p3(cluster.position().Unit() * momentum);
+  TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
+  PFParticle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
   // TODO discuss with Colin
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure
@@ -344,7 +326,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  auto particle = PFParticle(pdgId, track.charge(), p4, track, m_particles.size(), 'r');
+  PFParticle particle(pdgId, track.charge(), p4, track, m_particles.size(), 'r');
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;

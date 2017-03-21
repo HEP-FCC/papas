@@ -19,8 +19,8 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
     std::list<double> allDistances;
     std::list<double> linkedDistances;
     bool isLinked = false;
-    for (const auto c1 : cluster1.subClusters()) {
-      for (const auto c2 : cluster2.subClusters()) {
+    for (const auto& c1 : cluster1.subClusters()) {
+      for (const auto& c2 : cluster2.subClusters()) {
         Distance d = clusterClusterDistance(*c1, *c2);  // recursive call
         allDistances.push_back(d.distance());
         if (d.isLinked()) {

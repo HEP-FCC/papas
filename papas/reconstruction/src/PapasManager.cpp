@@ -27,12 +27,12 @@ void PapasManager::simulate(const ListParticles& particles) {
   auto& smearedHcalClusters = createClusters();
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
-  auto history =createHistory();
+  auto& history =createHistory();
   m_event.setHistory(history);
   auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
-  auto simulator = Simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+  Simulator simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
                              smearedHcalClusters, tracks, smearedTracks, simParticles, history);
 
   // store the addresses of the filled collections to the Event
@@ -51,7 +51,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
-  auto ecalmerger = MergedClusterBuilder(m_event, typeAndSubtype, ruler, mergedClusters, history);
+  MergedClusterBuilder ecalmerger(m_event, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into event
   m_event.addCollection(mergedClusters);
   m_event.extendHistory(history);
@@ -62,8 +62,7 @@ void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std:
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();
-  auto blockBuilder =
-      PFBlockBuilder(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
+  PFBlockBuilder blockBuilder(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the event
   m_event.addCollection(blocks);
   m_event.extendHistory(history);
@@ -73,7 +72,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& simplifiedblocks = createBlocks();
   auto& history = createHistory();
-  auto blockBuilder = PFBlockSplitter(m_event, blockSubtype, simplifiedblocks, history);
+  PFBlockSplitter blockBuilder(m_event, blockSubtype, simplifiedblocks, history);
 
   // store a pointer to the outputs into the event
   m_event.addCollection(simplifiedblocks);
@@ -84,7 +83,7 @@ void PapasManager::reconstruct(char blockSubtype) {
   auto& history = createHistory();
   auto& recParticles = createParticles();
 
-  auto pfReconstructor = PFReconstructor(m_event, blockSubtype, m_detector, recParticles, history);
+  PFReconstructor pfReconstructor (m_event, blockSubtype, m_detector, recParticles, history);
   m_event.addCollection(recParticles);
   m_event.extendHistory(history);
 }

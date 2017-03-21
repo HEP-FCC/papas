@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   const char* fname = argv[1];
-  auto pythiaConnector = PythiaConnector(fname);
+  PythiaConnector pythiaConnector(fname);
 
   if (argc == 3) {
     const char* lname = argv[2];
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 200;
+  unsigned int nEvents = 10;
 
   auto start = std::chrono::steady_clock::now();
 
