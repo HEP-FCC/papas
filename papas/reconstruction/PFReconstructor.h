@@ -117,7 +117,7 @@ private:
   void reconstructMuons(const PFBlock& block);
   // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
   /** Add new particle into history
-   @param Ids Unique identifiers of parents of the new particle
+   @param Ids identifiers of parents of the new particle
    @param newparticle New particle that is to be added into history
    */
   void insertParticle(const Ids& parentIds, PFParticle& newparticle);
