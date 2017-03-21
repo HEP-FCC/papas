@@ -24,7 +24,7 @@ void BlockBuilder::makeBlocks(char blockSubtype) {
   /* uses the base class  GraphBuilder to work out which elements are connected (a subGraph)
    Each subGraph will be used to make a new PFBlock
    */
-  for (auto& elementIds : m_subGraphs) {
+  for (const auto& elementIds : m_subGraphs) {
     /*#if WITHSORT
     if (elementIds.size() > 1) {
       sortIds(elementIds);

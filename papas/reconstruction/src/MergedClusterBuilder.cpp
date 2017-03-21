@@ -47,7 +47,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
   for (const auto& ids : grBuilder.subGraphs()) {
     const auto& id = *ids.begin();
     double totalenergy = 0.;
-    for (const auto& c : ids) {
+    for (auto c : ids) {
       totalenergy += clusters.at(c).energy();
     }
     // create the merged Cluster
