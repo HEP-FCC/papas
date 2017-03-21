@@ -39,7 +39,7 @@ Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double field, dou
 std::array<double, 3> Helix::polarAtTime(double time) const {
   double z = vZ() * time + m_origin.Z();
   double phi = -m_omega * time + m_phi0;
-  return std::array<double, 3>{m_rho, z, phi};
+  return std::array<double, 3>{{m_rho, z, phi}};
 }
 
 double Helix::timeAtPhi(double phi) const {
