@@ -239,7 +239,7 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  PFParticle photon3 = PFParticle(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
+  PFParticle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
