@@ -45,7 +45,7 @@ public:
 
   double electronEnergyResolution(const PFParticle& ptc) const { return 0.1 / sqrt(ptc.e()); }
 
-  double muonAcceptance(const Track& track) const { return track.pt() > 5. && fabs(track.p3().Eta()) < 2.5; }
+  double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
 
   double muonPtResolution(const PFParticle& /*ptc*/) const { return 0.02; }
 

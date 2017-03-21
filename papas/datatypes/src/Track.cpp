@@ -12,7 +12,7 @@ Track::Track(const TVector3& p3, double charge,const Path::Ptr path, unsigned in
       m_path(path) {}
 
 std::string Track::info() const {
-  return string_format("%7.2f %7.2f %5.2f %5.2f", energy(), pt(), theta(), p3().Phi());
+  return string_format("%7.2f %7.2f %5.2f %5.2f", energy(), p3().Perp(), M_PI / 2. - p3().Theta(), p3().Phi());
 }
 
 std::ostream& operator<<(std::ostream& os, const Track& track) {
