@@ -9,6 +9,7 @@
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/utility/DeltaR.h"
+#include <array>
 
 namespace papas {
 extern double gconstc;
@@ -35,10 +36,10 @@ Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double field, dou
   m_phiMax = m_phiMin + 360.;
 }
 
-std::vector<double> Helix::polarAtTime(double time) const {
+std::array<double, 3> Helix::polarAtTime(double time) const {
   double z = vZ() * time + m_origin.Z();
   double phi = -m_omega * time + m_phi0;
-  return std::vector<double>{m_rho, z, phi};
+  return std::array<double, 3>{m_rho, z, phi};
 }
 
 double Helix::timeAtPhi(double phi) const {

@@ -29,7 +29,7 @@ public:
    @param time the time
    @return the polar coordinates of the particle along the path at time
    */
-  std::vector<double> polarAtTime(double time) const;
+  std::array<double, 3> polarAtTime(double time) const;
   /** Returns the polar coordinates on the path at a given time
    @param time the time
    @return the polar coordinates of the particle along the path at time
