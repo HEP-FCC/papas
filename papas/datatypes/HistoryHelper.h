@@ -36,14 +36,14 @@ public:
    *   @param[in] id identifier for which we want to find connected items
    *   @param[in] direction whether to search parents, children or both
    */
-  Ids linkedIds(IdType id, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
+  Ids linkedIds(Identifier id, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
    *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id identifier for which we want to find connected items
    *   @param[in] typeAndSubType The identifier type and subtype for which we are searching eg "pr"
    for a reconstructed particle, should be a string of length 2
    *   @param[in] direction whether to search parents, children or both
    */
-  Ids linkedIds(IdType id, const std::string& typeAndSubType,
+  Ids linkedIds(Identifier id, const std::string& typeAndSubType,
                 DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
    *   @brief  Filters a vector of ids to find a subset which have the required type and subtype

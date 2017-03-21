@@ -3,7 +3,7 @@
 
 namespace papas {
 
-Edge::Edge(IdType endId1, IdType endId2, bool isLinked, double distance)
+Edge::Edge(Identifier endId1, Identifier endId2, bool isLinked, double distance)
   : m_endIds({{endId1, endId2}}), //extra braces to shutup buggy xcode warning
   m_isLinked(isLinked),
       m_distance(distance),
@@ -11,10 +11,10 @@ Edge::Edge(IdType endId1, IdType endId2, bool isLinked, double distance)
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */
-Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
+Edge::EdgeKey Edge::makeKey(Identifier id1, Identifier id2) {
   EdgeKey key;
-  IdType uid1 = IdCoder::uniqueId(id1);
-  IdType uid2 = IdCoder::uniqueId(id2);
+  Identifier uid1 = IdCoder::uniqueId(id1);
+  Identifier uid2 = IdCoder::uniqueId(id2);
   
   if (id1 < id2) // ensure that the order of the ids does not matter
     std::swap(uid1, uid2);
@@ -22,7 +22,7 @@ Edge::EdgeKey Edge::makeKey(IdType id1, IdType id2) {
   return key;
 }
   
-IdType Edge::otherId(IdType id) const {
+Identifier Edge::otherId(Identifier id) const {
   if (m_endIds[0] == id)
     return m_endIds[1];
   else if (m_endIds[1] == id)

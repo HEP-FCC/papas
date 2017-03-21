@@ -19,7 +19,7 @@ public:
   // private:
   //;
   // Simulator m_simulator;
-  // bool operator()(IdType i, IdType j);//todo reinstate was used for sorting ids
+  // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids
 };
 }
 

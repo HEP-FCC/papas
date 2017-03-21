@@ -44,7 +44,7 @@ const Clusters& Event::clusters(IdCoder::ItemType type, const IdCoder::SubType s
     return *(m_hcalClustersCollection.at(subtype));
 };
 
-const Clusters& Event::clusters(IdType id) const {
+const Clusters& Event::clusters(Identifier id) const {
   // return the corresponding collection with the same type and subtype as this id
   return clusters(IdCoder::itemType(id), IdCoder::subtype(id));
 };
@@ -92,11 +92,11 @@ bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype
   return found;
 };
 
-bool Event::hasCollection(IdType id) const {
+bool Event::hasCollection(Identifier id) const {
   return hasCollection(IdCoder::itemType(id), IdCoder::subtype(id));
 };
 
-bool Event::hasObject(IdType id) const {
+bool Event::hasObject(Identifier id) const {
   // check if this object id is present
   auto found = false;
   auto type = IdCoder::itemType(id);

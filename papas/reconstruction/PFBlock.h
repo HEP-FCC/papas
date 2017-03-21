@@ -18,7 +18,7 @@ namespace papas {
 
  class attributes:
 
- IdType m_id : the block's identifier generated from IdCoder class
+ Identifier m_id : the block's identifier generated from IdCoder class
  Ids m_elementIds : list of identifiers of its elements
 
  Edges m_edges : Unordered map of all the edge combinations in the block
@@ -52,7 +52,7 @@ public:
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
  */
-  std::list<Edge::EdgeKey> linkedEdgeKeys(IdType id, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
+  std::list<Edge::EdgeKey> linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
@@ -60,26 +60,26 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the id
   */
-  Ids linkedIds(IdType id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
   int size() const { return m_elementIds.size(); } ///< length of the element_unqiueids
-  IdType id() const { return m_id; };  ///<Unique ID of the block
+  Identifier id() const { return m_id; };  ///<Unique ID of the block
   const Edges& edges() const { return m_edges; } ///<Unordered map of all the edges in a block
   std::string info() const; ///< printable one line summary of a Block
   std::string elementsString() const; ///< String listing all elements in a Block
   std::string edgeMatrixString() const; ///< String representation of matrix of edges in a block
-  const Edge& edge(IdType id1, IdType id2) const; ///<locate an edge corresponding to two ids
+  const Edge& edge(Identifier id1, Identifier id2) const; ///<locate an edge corresponding to two ids
 
 private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
 
-  IdType m_id;          ///<  identifier for this block
+  Identifier m_id;          ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
   Edges m_edges;              ///< all the edges for elements in this block
   static int tempBlockCount;  ///< sequential numbering of blocks, not essential but helpful for debugging

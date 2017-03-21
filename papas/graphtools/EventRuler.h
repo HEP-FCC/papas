@@ -36,10 +36,10 @@ public:
    *   @param[in]  id2 : element2 identifie generated from IdCoder class. Must exist in Event
    *   @return  Distance (ie isLinked : boolean T/F and distance value)
    */
-  Distance distance(IdType id1, IdType id2) const;
+  Distance distance(Identifier id1, Identifier id2) const;
 private:
-  Distance clusterClusterDistance(IdType id1, IdType id2) const;
-  Distance clusterTrackDistance(IdType id1, IdType id2) const;
+  Distance clusterClusterDistance(Identifier id1, Identifier id2) const;
+  Distance clusterTrackDistance(Identifier id1, Identifier id2) const;
   Ruler m_ruler; ///<finds distance once the underlying tracks/clusters have been found
   const Event& m_event; ///< papasevent holds the collections of tracks and clusters
 };

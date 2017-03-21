@@ -56,7 +56,7 @@ public:
   /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
    */
-  const Cluster& cluster(IdType clusterId) const;
+  const Cluster& cluster(Identifier clusterId) const;
   const Clusters& ecalClusters() const { return m_ecalClusters; }                ///<return Ecal clusters collection
   const Clusters& hcalClusters() const { return m_hcalClusters; }                ///<return Hcal clusters collection
   const Clusters& smearedEcalClusters() const { return m_smearedEcalClusters; }  ///<return smeared Ecal clusters coll.
@@ -145,14 +145,14 @@ private:
    @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
-  const Cluster& storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId);
+  const Cluster& storeSmearedEcalCluster(Cluster&& smearedCluster, Identifier parentId);
   /**
    Moves the smearedCluster into the smeared Hcals collection and updates the history
    @param[in] smearedCluster cluster to be stored
    @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
-  const Cluster& storeSmearedHcalCluster(Cluster&& smearedCluster, IdType parentId);
+  const Cluster& storeSmearedHcalCluster(Cluster&& smearedCluster, Identifier parentId);
   /**
    Makes a track based on particle properties and stored into tracks collection, updating history
    @param[in] ptc particle from which to construct track
@@ -192,7 +192,7 @@ private:
    @param[in] smearedtrack the smeared track which will be moved intot he smeared track store
    @param[in] parentid used to update history
    */
-  void storeSmearedTrack(Track&& smearedtrack, IdType parentid);
+  void storeSmearedTrack(Track&& smearedtrack, Identifier parentid);
   /**
    Propagates a particle to the specified cyclinder
    @param[in] cylinder the cylinder where  we want to know where the particle arrives
@@ -209,7 +209,7 @@ private:
    @param[in] newid the new object being added to history
    @param[in] parentif the id of the parent (if 0 there is no parent)
   */
-  void addNode(const IdType newid, const IdType parentid = 0);
+  void addNode(const Identifier newid, const Identifier parentid = 0);
   /**
    Returns the detector element associated with a particular layer
    @param[in] layer an enumeration describing which layer eg Layer::kEcal

@@ -25,7 +25,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   const auto& blocks = m_event.blocks(blockSubtype);
   auto blockids = m_event.collectionIds<Blocks>(blocks);
 #if WITHSORT
-  blockids.sort(std::greater<IdType>());
+  blockids.sort(std::greater<Identifier>());
 #endif
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
@@ -44,7 +44,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<IdType>());
+  ids.sort(std::greater<Identifier>());
 #endif
   for (auto id : ids) {
     m_locked[id] = false;
@@ -57,7 +57,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
     if (!m_locked[id]) uids.push_back(id);
   }
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
-    IdType id = *uids.begin();
+    Identifier id = *uids.begin();
     auto parentIds = Ids{block.id(), id};
     if (IdCoder::isEcal(id)) {
       reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
@@ -99,7 +99,7 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   /// Reconstruct muons in block.
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<IdType>());
+  ids.sort(std::greater<Identifier>());
 #endif
   for (auto id : ids) {
     if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 13)) {
@@ -114,7 +114,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   /*Reconstruct electrons in block.*/
   Ids ids = block.elementIds();
 #if WITHSORT
-  ids.sort(std::greater<IdType>());
+  ids.sort(std::greater<Identifier>());
 #endif
 
   /* the simulator does not simulate electron energy deposits in ecal.
@@ -138,12 +138,12 @@ void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newpartic
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   // if (newparticle) :
-  IdType newid = newparticle.id();
+  Identifier newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
   makeHistoryLinks(parentIds, {newid}, m_history);
 }
 
-bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const {
+bool PFReconstructor::isFromParticle(Identifier id, const std::string& typeAndSubtype, int pdgid) const {
   /*returns: True if object identifier comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
@@ -187,7 +187,7 @@ http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
   //return 1. + exp(-cluster.energy() / 100.);
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -211,7 +211,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   Ids ecalIds;
   Ids trackIds = block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack);
 #if WITHSORT
-  trackIds.sort(std::greater<IdType>());
+  trackIds.sort(std::greater<Identifier>());
 #endif
   for (auto trackId : trackIds) {
     for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
@@ -226,8 +226,8 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
     }
   }
 #if WITHSORT
-  trackIds.sort(std::greater<IdType>());
-  ecalIds.sort(std::greater<IdType>());
+  trackIds.sort(std::greater<Identifier>());
+  ecalIds.sort(std::greater<Identifier>());
 #endif
   // hcal should be the only remaining linked hcal cluster (closest one)
   const Cluster& hcal = m_event.cluster(hcalId);

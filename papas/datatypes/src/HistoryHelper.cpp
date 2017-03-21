@@ -7,7 +7,7 @@ namespace papas {
 
 HistoryHelper::HistoryHelper(const Event& event) : m_event(event) {}
 
-Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
+Ids HistoryHelper::linkedIds(Identifier id, DAG::enumVisitType direction) const {
   const auto history = m_event.history();
   auto& startnode = history->at(id);
   auto bfs = DAG::BFSRecurseVisitor<PFNode>();
@@ -19,7 +19,7 @@ Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
   return ids;
 }
 
-Ids HistoryHelper::linkedIds(IdType id, const std::string& typeAndSubtype, DAG::enumVisitType direction) const {
+Ids HistoryHelper::linkedIds(Identifier id, const std::string& typeAndSubtype, DAG::enumVisitType direction) const {
   auto ids = linkedIds(id, direction);
   auto fids = filteredIds(ids, typeAndSubtype);
   return fids;

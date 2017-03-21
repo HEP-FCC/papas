@@ -48,11 +48,11 @@ public:
   //void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle
   bool isHelix() const { return m_isHelix; } ///< Helix or straighline
   const Path::Ptr path() const { return m_path; } ///< Return pointer to path
-  IdType id() const { return m_id; }  ///< identifier for object
+  Identifier id() const { return m_id; }  ///< identifier for object
   bool isElectroMagnetic() const;  ///< Is it electroMagnetic
   const TVector3& vertex() const { return m_vertex; }
 private:
-  IdType m_id; ///< identifier
+  Identifier m_id; ///< identifier
   TVector3 m_vertex;  ///< start vertex (3d)
   Path::Ptr m_path; ///< pointer to path object
   bool m_isHelix; ///< Boolean to say if path is Helix or straightline

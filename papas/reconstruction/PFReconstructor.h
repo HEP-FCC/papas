@@ -89,7 +89,7 @@ private:
       @param block the block to which the hcal structure belongs
       @param hcalId the identifier of the Hcal cluster
   */
-  void reconstructHcal(const PFBlock& block, IdType hcalId);
+  void reconstructHcal(const PFBlock& block, Identifier hcalId);
   /** Reconstructs a charged hadron/electron/muon from an Hcal
    @param track the track which is to be reconstructed
    @param pdgId the type of particle to be reconstructed
@@ -129,7 +129,7 @@ private:
    @param pdgid particle type eg muon
    @return True if there is a direct /indirect link between object and particle of this typeAndSubtype and absolute pdgid
   */
-  bool isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const;
+  bool isFromParticle(Identifier id, const std::string& typeAndSubtype, int pdgid) const;
   /** detector energy resolution of for a neutral Hadron
    @param energy Energy of deposit (?)
    @param resolution ?
@@ -144,7 +144,7 @@ private:
   PFParticles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
   Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
-  std::unordered_map<IdType, bool> m_locked; ///< map of identifiers which have already been used in reconstruction
+  std::unordered_map<Identifier, bool> m_locked; ///< map of identifiers which have already been used in reconstruction
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */

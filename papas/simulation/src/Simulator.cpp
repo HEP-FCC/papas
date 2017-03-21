@@ -192,7 +192,7 @@ void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
     m_propHelix.propagateOne(ptc, cylinder);
 }
 
-const Cluster& Simulator::cluster(IdType clusterId) const {
+const Cluster& Simulator::cluster(Identifier clusterId) const {
   if (IdCoder::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);
   else if (IdCoder::isHcal(clusterId))
@@ -249,7 +249,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
     }
     auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
-    IdType id = cluster.id();
+    Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
     m_ecalClusters.emplace(id, std::move(cluster));
@@ -272,7 +272,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }
     auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
-    IdType id = cluster.id();
+    Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
     m_hcalClusters.emplace(id, std::move(cluster));
@@ -319,14 +319,14 @@ bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer
   }
 }
 
-const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId) {
+const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
   addNode(id, parentId);
   m_smearedEcalClusters.emplace(id, std::move(smearedCluster));
   return m_smearedEcalClusters[id];
 }
 
-const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, IdType parentId) {
+const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
   addNode(id, parentId);
   m_smearedHcalClusters.emplace(id, std::move(smearedCluster));
@@ -335,7 +335,7 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, IdTy
 
 const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
-  IdType id = track.id();
+  Identifier id = track.id();
   PDebug::write("Made {}", track);
   
   m_tracks.emplace(id, std::move(track));
@@ -343,8 +343,8 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   return m_tracks.at(id);
 }
 
-void Simulator::storeSmearedTrack(Track&& track, IdType parentid) {
-  IdType id = track.id();
+void Simulator::storeSmearedTrack(Track&& track, Identifier parentid) {
+  Identifier id = track.id();
   m_smearedTracks.emplace(id, std::move(track));
   addNode(id, parentid);
 }
@@ -386,7 +386,7 @@ bool Simulator::acceptMuonSmearedTrack(const Track& smearedTrack, bool accept) c
   }
 }
 
-void Simulator::addNode(IdType newid, const IdType parentid) {
+void Simulator::addNode(Identifier newid, const Identifier parentid) {
   // add the new node into the set of all nodes
   PFNode node{newid};
   m_history.emplace(newid, std::move(node));

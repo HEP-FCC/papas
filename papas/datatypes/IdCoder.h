@@ -35,7 +35,7 @@ namespace papas {
 
  Usage example:
  @code
- IdType uid=IdCoder::MakeId(kEcalCluster, 's', 4.35);
+ Identifier uid=IdCoder::MakeId(kEcalCluster, 's', 4.35);
  @endcode
  *
  *  @author  Alice Robson
@@ -55,14 +55,14 @@ public:
    @param[in]  value: a float representing energy or momentum etc
    @return identifier
    */
-  static IdType makeId(unsigned int index, ItemType type, char subtype = 'u', float value = 0.0);
+  static Identifier makeId(unsigned int index, ItemType type, char subtype = 'u', float value = 0.0);
 
   /** returns the item type of the identifier
    This is one of: None = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock
    @param[in] id: the identifier
    @return an enum IdCoder::ItemType
    */
-  static ItemType itemType(IdType id);  ///< Returns encoded ItemType eg kParticle etc;
+  static ItemType itemType(Identifier id);  ///< Returns encoded ItemType eg kParticle etc;
 
   /** returns the subtype of the identifier eg 'm'
    Some possible existing uses
@@ -77,58 +77,58 @@ public:
    @param[in] id: identifier
    @return single letter subtype
    */
-  static char subtype(IdType id);  /// return the one letter subtype
+  static char subtype(Identifier id);  /// return the one letter subtype
 
   /** returns the float value encoded in the identifier
    @param[in] id: identifier
    @return the encoded value
    */
-  static float value(IdType id);  /// return the float value
+  static float value(Identifier id);  /// return the float value
 
   /** Takes an identifier and returns the index component of it
    @param[in] id: identifier
    @return the  index
    */
-  static unsigned int index(IdType id);  ///< Returns encoded index
+  static unsigned int index(Identifier id);  ///< Returns encoded index
   
 
   /** Takes an identifier and returns a unique id component of it (excludes value information)
    @param[in] id: identifier
    @return the index   */
-  static unsigned int uniqueId(IdType id);  ///< Returns encoded unique id
+  static unsigned int uniqueId(Identifier id);  ///< Returns encoded unique id
 
-  static char typeLetter(IdType id);  ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
-  static std::string typeAndSubtype(IdType id);  ///< Two letter string of type and subtype eg "em"
-  static std::string pretty(IdType id);  ///< Pretty string Id name eg "es101" for a smeared ecal with index 101;
+  static char typeLetter(Identifier id);  ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
+  static std::string typeAndSubtype(Identifier id);  ///< Two letter string of type and subtype eg "em"
+  static std::string pretty(Identifier id);  ///< Pretty string Id name eg "es101" for a smeared ecal with index 101;
   /** boolean test of whether identifier is from an ecal cluster
   @param ident: identifier
    */
-  static bool isEcal(IdType id) { return (IdCoder::itemType(id) == kEcalCluster); }
+  static bool isEcal(Identifier id) { return (IdCoder::itemType(id) == kEcalCluster); }
 
   /** boolean test of whether identifier is from an hcal cluster
    @param ident: identifier
    */
-  static bool isHcal(IdType id) { return (IdCoder::itemType(id) == kHcalCluster); }
+  static bool isHcal(Identifier id) { return (IdCoder::itemType(id) == kHcalCluster); }
 
   /** boolean test of whether identifier is from a cluster
    @param ident: identifier
    */
-  static bool isCluster(IdType id) { return (IdCoder::isEcal(id) || IdCoder::isHcal(id)); }
+  static bool isCluster(Identifier id) { return (IdCoder::isEcal(id) || IdCoder::isHcal(id)); }
 
   /** boolean test of whether identifier is from an track
    @param ident: identifier
    */
-  static bool isTrack(IdType id) { return (IdCoder::itemType(id) == kTrack); }
+  static bool isTrack(Identifier id) { return (IdCoder::itemType(id) == kTrack); }
 
   /** boolean test of whether identifier is from a particle
    @param ident: identifier
    */
-  static bool isParticle(IdType id) { return (IdCoder::itemType(id) == kParticle); }
+  static bool isParticle(Identifier id) { return (IdCoder::itemType(id) == kParticle); }
 
   /** boolean test of whether identifier is from a block
    @param ident: identifier
    */
-  static bool isBlock(IdType id) { return (IdCoder::itemType(id) == kBlock); }
+  static bool isBlock(Identifier id) { return (IdCoder::itemType(id) == kBlock); }
 
   /** Uses detector layer to work out what itemType is appropriate
    @param layer: detector layer as an enumeration eg kEcal
@@ -141,7 +141,7 @@ public:
    @param id: identifier
    @return ItemType enumeration value papas::Layer eg kTracker
    */
-  static papas::Layer layer(IdType id);
+  static papas::Layer layer(Identifier id);
 
   // Used by Edge, must be better way to do this?
   static int bitshift() { return m_bitshift; }
@@ -151,8 +151,8 @@ private:
   static const unsigned int m_bitshift2 = 53;  ///< encoding parameter
   static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
   /// checks that the identifier can be correctly decoded
-  static bool checkValid(IdType id, ItemType type, char subt, float val, unsigned int uid);
-  static bool checkUIDValid(IdType id, unsigned int uniqueid);
+  static bool checkValid(Identifier id, ItemType type, char subt, float val, unsigned int uid);
+  static bool checkUIDValid(Identifier id, unsigned int uniqueid);
   static uint64_t floatToBits(float value);  /// convert float into binary
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };

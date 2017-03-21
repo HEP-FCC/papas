@@ -17,7 +17,7 @@ namespace papas {
 
 int PFBlock::tempBlockCount = 0;
   
-  bool blockIdComparer (IdType id1, IdType id2) {
+  bool blockIdComparer (Identifier id1, Identifier id2) {
     if (IdCoder::itemType(id1) ==IdCoder::itemType(id2))
       return id1>id2;
     else
@@ -44,17 +44,17 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char 
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return IdCoder::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -73,7 +73,7 @@ const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   return edge->second;
 }
 
-std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType id, Edge::EdgeType matchtype) const {
+std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    Arguments:
@@ -92,7 +92,7 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType id, Edge::EdgeType match
   return linkedEdgeKeys; //todo consider sorting
 }
 
-Ids PFBlock::linkedIds(IdType id, Edge::EdgeType edgetype) const {
+Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(id, edgetype)) {
@@ -172,7 +172,7 @@ std::string PFBlock::edgeMatrixString() const {
   }
   return out.str();
 }
-const Edge& PFBlock::edge(IdType id1, IdType id2) const {
+const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)

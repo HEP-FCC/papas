@@ -58,12 +58,12 @@ TEST_CASE("IdCoder") {
   auto uid = IdCoder::makeId(1, IdCoder::ItemType::kTrack, 's', 1.23456);
   auto id1 = IdCoder::makeId(2, IdCoder::ItemType::kTrack, 's', 12.782);
   REQUIRE(IdCoder::pretty(id1) == "ts2");
-  std::vector<IdType> idvec;
+  std::vector<Identifier> idvec;
   for (int i = -2; i < 2; i++) {
     uid = IdCoder::makeId(i + 6, IdCoder::ItemType::kTrack, 's', pow(2, i));
     idvec.push_back(uid);
   }
-  std::sort(idvec.begin(), idvec.end(), std::greater<IdType>());
+  std::sort(idvec.begin(), idvec.end(), std::greater<Identifier>());
   REQUIRE(IdCoder::pretty(idvec[0]) == "ts7");
   REQUIRE(IdCoder::value(idvec[0]) == 2.0);
   REQUIRE(IdCoder::pretty(idvec[3]) == "ts4");
@@ -369,9 +369,9 @@ void test_graphs() {  // Testing graphics
 
 TEST_CASE("Edges") {
   using namespace papas;
-  IdType id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
-  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
-  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
+  Identifier id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
+  Identifier id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  Identifier id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
 
   Edge edge = Edge(id1, id2, false, 0.0);
   Edge edge1 = Edge(id1, id3, true, 0.0);
@@ -385,13 +385,13 @@ TEST_CASE("Edges") {
 
 TEST_CASE("PFBlocks") {
   using namespace papas;
-  IdType id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
-  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
-  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
+  Identifier id1 = IdCoder::makeId(1, IdCoder::kEcalCluster, 't');
+  Identifier id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  Identifier id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
 
-  IdType id4 = IdCoder::makeId(4, IdCoder::kEcalCluster, 't');
-  IdType id5 = IdCoder::makeId(5, IdCoder::kHcalCluster, 't');
-  IdType id6 = IdCoder::makeId(6, IdCoder::kTrack, 't');
+  Identifier id4 = IdCoder::makeId(4, IdCoder::kEcalCluster, 't');
+  Identifier id5 = IdCoder::makeId(5, IdCoder::kHcalCluster, 't');
+  Identifier id6 = IdCoder::makeId(6, IdCoder::kTrack, 't');
 
   Ids ids{id1, id2, id3};
   Ids ids2{id4, id5, id6};
@@ -434,9 +434,9 @@ TEST_CASE("PFBlocks") {
 }
 
 TEST_CASE("BlockSplitter") {
-  IdType id1 = IdCoder::makeId(1, IdCoder::kHcalCluster, 't');
-  IdType id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
-  IdType id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
+  Identifier id1 = IdCoder::makeId(1, IdCoder::kHcalCluster, 't');
+  Identifier id2 = IdCoder::makeId(2, IdCoder::kHcalCluster, 't');
+  Identifier id3 = IdCoder::makeId(3, IdCoder::kTrack, 't');
   Ids ids{id1, id2, id3};
 
   Edge edge = Edge(id1, id2, false, 0.00023);
@@ -558,8 +558,8 @@ TEST_CASE("test_papasevent") {
   auto event = Event();
   auto ecals = Clusters();
   auto tracks = Tracks();
-  IdType lastid = 0;
-  IdType lastcluster = 0;
+  Identifier lastid = 0;
+  Identifier lastcluster = 0;
 
   for (int i = 0; i < 2; i++) {
     auto cluster = Cluster(10., TVector3(0, 0, 1), 2., i, IdCoder::kEcalCluster, 't');
@@ -591,8 +591,8 @@ TEST_CASE("test_history") {
   Nodes history;
   auto ecals = Clusters();
   auto particles = PFParticles();
-  IdType lastid = 0;
-  IdType lastcluster = 0;
+  Identifier lastid = 0;
+  Identifier lastcluster = 0;
 
   // make a dummy papasevent including some history
   for (int i = 0; i < 2; i++) {

@@ -45,7 +45,7 @@ public:
   const std::vector<Ids>& subGraphs() const { return m_subGraphs; };
 
 protected:
-  void sortIds(Ids& ids);        ///<sorted by IdType
+  void sortIds(Ids& ids);        ///<sorted by Identifier
   Edges m_edges;                 ///< must contain all edges corresponding to all pairs of ids for ids in m_elementIda
   std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
 private:

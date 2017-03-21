@@ -16,7 +16,7 @@
 namespace papas {
 // max index value is 2** m_bitshift
 
-IdType IdCoder::makeId(unsigned int index, ItemType type, char subt, float val) {
+Identifier IdCoder::makeId(unsigned int index, ItemType type, char subt, float val) {
 
   if (type == kNone) {
     throw "Id must have a valid type";
@@ -28,38 +28,38 @@ IdType IdCoder::makeId(unsigned int index, ItemType type, char subt, float val) 
   // NB uint64_t is needed to make sure the shift is carried out over 64 bits, otherwise
   // if the m_bitshift is 32 or more the shift is undefined and can return 0
 
-  IdType typeShift = (uint64_t)type << m_bitshift1;
-  IdType valueShift = (uint64_t)IdCoder::floatToBits(val) << m_bitshift;
-  IdType subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << m_bitshift2;
-  IdType uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | index;
+  Identifier typeShift = (uint64_t)type << m_bitshift1;
+  Identifier valueShift = (uint64_t)IdCoder::floatToBits(val) << m_bitshift;
+  Identifier subtypeShift = (uint64_t) static_cast<int>(tolower(subt)) << m_bitshift2;
+  Identifier uid = (uint64_t)subtypeShift | (uint64_t)valueShift | (uint64_t)typeShift | index;
 
   if (!checkValid(uid, type, subt, val, index)) throw "Error occured constructing identifier";
   return uid;
 }
 
-IdCoder::ItemType IdCoder::itemType(IdType id) {
+IdCoder::ItemType IdCoder::itemType(Identifier id) {
   return static_cast<ItemType>((id >> m_bitshift1) & (uint64_t)(pow(2, 3) - 1));
 }
 
-char IdCoder::subtype(IdType id) {
+char IdCoder::subtype(Identifier id) {
   return static_cast<char>((id >> m_bitshift2) & (uint64_t)(pow(2, m_bitshift1 - m_bitshift2) - 1));
 }
 
-float IdCoder::value(IdType id) {
+float IdCoder::value(Identifier id) {
   // shift to extract the required bits
   int bitvalue = id >> m_bitshift & (uint64_t)(pow(2, m_bitshift2 - m_bitshift) - 1);
   // convert bits back to float
   return bitsToFloat(bitvalue);
 }
 
-unsigned int IdCoder::index(IdType id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
+unsigned int IdCoder::index(Identifier id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
   
-unsigned int IdCoder::uniqueId(IdType id)  {
+unsigned int IdCoder::uniqueId(Identifier id)  {
     //For some purposes we want a smaller uniqueid without the value information
     //here we consruct a 32 bit uniqueid out of the index and the type and subtype
     unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
-    IdType typeShift = (uint32_t)IdCoder::itemType(id) << bitshift;
-    IdType subtypeShift = (uint32_t) static_cast<int>(tolower(IdCoder::subtype(id))) << m_bitshift;
+    Identifier typeShift = (uint32_t)IdCoder::itemType(id) << bitshift;
+    Identifier subtypeShift = (uint32_t) static_cast<int>(tolower(IdCoder::subtype(id))) << m_bitshift;
     //binary printout std::cout <<"Index" << std::bitset<32>(IdCoder::index(id)) <<std::endl;
     uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)IdCoder::index(id);
     if (!checkUIDValid(id, uniqueid))
@@ -68,7 +68,7 @@ unsigned int IdCoder::uniqueId(IdType id)  {
 }
   
 
-char IdCoder::typeLetter(IdType id) {
+char IdCoder::typeLetter(Identifier id) {
   // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
   std::string typelist = ".ehtpb....";
   
@@ -87,18 +87,18 @@ IdCoder::ItemType IdCoder::itemType(char s) {
   return (ItemType)found;
 }
 
-std::string IdCoder::typeAndSubtype(IdType id) {
+std::string IdCoder::typeAndSubtype(Identifier id) {
   // produce the two letter type and subtype string such as 'em'
   std::string typeSubType = std::string(1, typeLetter(id)) + std::string(1, subtype(id));
   return typeSubType;
 }
 
-std::string IdCoder::pretty(IdType id) {
+std::string IdCoder::pretty(Identifier id) {
   // pretty version of the identifier
   return IdCoder::typeAndSubtype(id) + std::to_string(IdCoder::index(id));
 }
 
-papas::Layer IdCoder::layer(IdType id) {
+papas::Layer IdCoder::layer(Identifier id) {
   if (IdCoder::isEcal(id))
     return papas::Layer::kEcal;
   else if (IdCoder::isHcal(id))
@@ -120,7 +120,7 @@ IdCoder::ItemType IdCoder::itemType(papas::Layer layer) {
     return ItemType::kNone;
 }
 
-bool IdCoder::checkValid(IdType uid, ItemType type, char subt, float val, unsigned int indx) {
+bool IdCoder::checkValid(Identifier uid, ItemType type, char subt, float val, unsigned int indx) {
   // verify that it all works, the id should match the items from which it was constructed
   if (index(uid) != indx) return false;
   if (val != 0) {
@@ -129,7 +129,7 @@ bool IdCoder::checkValid(IdType uid, ItemType type, char subt, float val, unsign
   return true;
 }
   
-  bool IdCoder::checkUIDValid(IdType id, unsigned int uniqueid) {
+  bool IdCoder::checkUIDValid(Identifier id, unsigned int uniqueid) {
     unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
     // verify that it all works, the uniqueid should match the items from which it was constructed
     ItemType it = static_cast<ItemType>((uniqueid >> bitshift) & (uint32_t)(pow(2, 3) - 1));

@@ -14,11 +14,11 @@
 #include <map>
 namespace papas {
 
-typedef DAG::Node<IdType> PFNode;
-typedef std::map<IdType, PFNode> Nodes;
+typedef DAG::Node<Identifier> PFNode;
+typedef std::map<Identifier, PFNode> Nodes;
 typedef std::list<const Nodes*> ListNodes;  ///< collection of Nodes
 
-inline PFNode& findOrMakeNode(IdType id, Nodes& history) {
+inline PFNode& findOrMakeNode(Identifier id, Nodes& history) {
   if (history.empty() || (history.find(id) == history.end()) ) {
     
       auto newnode = PFNode(id);
@@ -28,7 +28,7 @@ inline PFNode& findOrMakeNode(IdType id, Nodes& history) {
   return history.at(id);
 }
 
-inline void makeHistoryLink(IdType parentid, IdType childid, Nodes& history) {
+inline void makeHistoryLink(Identifier parentid, Identifier childid, Nodes& history) {
   findOrMakeNode(parentid, history).addChild(findOrMakeNode(childid, history));
 }
 

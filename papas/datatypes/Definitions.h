@@ -12,7 +12,7 @@
 #include <inttypes.h>
 
 namespace papas {
-typedef uint64_t IdType;
+typedef uint64_t Identifier;
 
 /// describe position of a Cluster within the Detector
 enum Position { kVertex, kEcalIn, kEcalOut, kEcalDecay, kHcalIn, kHcalOut };

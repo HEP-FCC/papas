@@ -27,7 +27,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     ids.push_back(cluster.first);
   }
 #if WITHSORT
-  ids.sort(std::greater<IdType>()); //sort in descending order
+  ids.sort(std::greater<Identifier>()); //sort in descending order
 #endif
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
@@ -46,7 +46,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
    auto grBuilder = GraphBuilder(ids, std::move(edges));
   for (auto subgraph : grBuilder.subGraphs()) {
 #if WITHSORT
-    subgraph.sort(std::greater<IdType>()); //sort in descending order
+    subgraph.sort(std::greater<Identifier>()); //sort in descending order
 #endif
     auto id = *subgraph.begin();
     double totalenergy = 0.;
