@@ -25,11 +25,6 @@ void BlockBuilder::makeBlocks(char blockSubtype) {
    Each subGraph will be used to make a new PFBlock
    */
   for (const auto& elementIds : m_subGraphs) {
-    /*#if WITHSORT
-    if (elementIds.size() > 1) {
-      sortIds(elementIds);
-    }
-    #endif*/
     PFBlock block(elementIds, m_edges, m_blocks.size(), blockSubtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move

@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
   CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
   unsigned int eventNo = 0;
-  unsigned int nEvents = 200;
+  unsigned int nEvents = 10;
 
   auto start = std::chrono::steady_clock::now();
 
