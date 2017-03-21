@@ -63,7 +63,7 @@ unsigned int IdCoder::uniqueId(IdType id)  {
     //binary printout std::cout <<"Index" << std::bitset<32>(IdCoder::index(id)) <<std::endl;
     uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)IdCoder::index(id);
     if (!checkUIDValid(id, uniqueid))
-      throw "unique id part of IdCoder not valid";
+      throw "unique id part of identifier not valid";
     return uniqueid;
 }
   
@@ -76,7 +76,7 @@ char IdCoder::typeLetter(IdType id) {
   if (index < 6)
     return typelist[(unsigned int)IdCoder::itemType(id)];
   else
-    throw "Error in IdCoder typeLetter";
+    throw "Error in identifier typeLetter";
 }
 
 IdCoder::ItemType IdCoder::itemType(char s) {

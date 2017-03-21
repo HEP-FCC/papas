@@ -20,7 +20,7 @@ public:
    @param[in]  energy Cluster energy
    @param[in]  position  location of Cluster
    @param[in]  size_m size of cluster (units?)
-   @param[in]  id IdCoder type of cluster eg kEcalCluster or kHcalCluster
+   @param[in]  id identifier type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype single char describing type of cluster eg s = smeared, t= true, m = merged
     */
   Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType id,
@@ -28,7 +28,7 @@ public:
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
-   @param[in]  type eg IdCoder::kHcalCluster the IdCoder type
+   @param[in]  type eg IdCoder::kHcalCluster the identifier type
    @param[in]  subtype subtype of cluster eg 'm' for merged, 's' for smeared. Defaults to 'u' for unset.
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.
                 When creating a merged cluster it should ideally be set to the total eneergy of the cluster
@@ -44,7 +44,7 @@ public:
   double energy() const { return m_energy; }                 ///< Energy
   double eta() const { return m_p3.Eta(); }                  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
   double theta() const { return M_PI / 2. - m_p3.Theta(); }  ///< Angle w/r to transverse plane
-  IdType id() const { return m_id; }                   ///< Unique identifier
+  IdType id() const { return m_id; }                   ///< identifier
   const TVector3& position() const { return m_p3; }          ///< position (x, y, z)
   void setEnergy(double energy);                             ///< Set cluster energy
   void setSize(double value);                                ///< Set cluster size
@@ -55,7 +55,7 @@ public:
     return s_maxEnergy;
   };  ///< static that returns max cluster energy (intended for display purposes)
 protected:
-  IdType m_id;                        ///< Unique IdCoder for Cluster
+  IdType m_id;                        ///< identifier for Cluster
   double m_size;                            ///< Cluster size (radius?)
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
   double m_pt;                              ///< Transverse momentum (magnitude of p3 in transverse plane)

@@ -33,12 +33,12 @@ public:
   HistoryHelper(const Event& event);
   /**
    *   @brief Finds all ids which have a history link with the input id
-   *   @param[in] id IdCoder for which we want to find connected items
+   *   @param[in] id identifier for which we want to find connected items
    *   @param[in] direction whether to search parents, children or both
    */
   Ids linkedIds(IdType id, DAG::enumVisitType direction = DAG::enumVisitType::UNDIRECTED) const;
   /**
-   *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id IdCoder for which we want to find connected items
+   *   @brief Finds all ids which have a history link with the input id and have specified typeAndSubtype    *   @param[in] id identifier for which we want to find connected items
    *   @param[in] typeAndSubType The identifier type and subtype for which we are searching eg "pr"
    for a reconstructed particle, should be a string of length 2
    *   @param[in] direction whether to search parents, children or both

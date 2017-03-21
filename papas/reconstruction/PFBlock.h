@@ -38,7 +38,7 @@ public:
    @param[inout] edges is an unordered map of edges, it must contain at least all needed edges. It is not a
    problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are
    extracted will be removed from the Edges object and will become owned by the PFBlock
-   @param[in] subtype The subtype for the IdCoder of the block eg 's' for split block
+   @param[in] subtype The subtype for the identifier of the block eg 's' for split block
    */
   PFBlock(const Ids& elementIds, Edges& edges, unsigned int index,
           char subtype = 'u');  // relevant parts of edges will be removed and become owned by PFBlock

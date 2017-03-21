@@ -124,7 +124,7 @@ private:
   /**  Checks if object identifier comes, directly or indirectly,
    from a particle of type typeAndSubtype, with this absolute pdgid.
    
-   @param id Unique IdCoder of object
+   @param id identifier of object
    @param typeAndSubtype type and subtype of particle eg 'ps' for simulated particle
    @param pdgid particle type eg muon
    @return True if there is a direct /indirect link between object and particle of this typeAndSubtype and absolute pdgid

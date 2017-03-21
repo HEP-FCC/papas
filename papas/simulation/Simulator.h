@@ -70,7 +70,7 @@ public:
    Smears a Cluster
    @param[in] cluster the cluster that is to be smeared
    @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
-   the cluster belongs IdCoder for parent (used for history)
+   the cluster belongs
    @return the smeared Cluster (moved)
    */
   Cluster smearCluster(const Cluster& cluster,
@@ -133,7 +133,7 @@ private:
   /**
    Makes a new Ecal Cluster, stored it in the Ecals collection and updates the history
    @param[in] ptc The parent particle
-   @param[in] parentId IdCoder for parent (used for history)
+   @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
   Cluster makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
@@ -142,14 +142,14 @@ private:
   /**
    Moves the smearedCluster into the smeared Ecals collection and updates the history
    @param[in] smearedCluster cluster to be stored
-   @param[in] parentId IdCoder for parent (used for history)
+   @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
   const Cluster& storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId);
   /**
    Moves the smearedCluster into the smeared Hcals collection and updates the history
    @param[in] smearedCluster cluster to be stored
-   @param[in] parentId IdCoder for parent (used for history)
+   @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
   const Cluster& storeSmearedHcalCluster(Cluster&& smearedCluster, IdType parentId);
