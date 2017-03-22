@@ -117,14 +117,14 @@ private:
   void reconstructMuons(const PFBlock& block);
   // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
   /** Add new particle into history
-   @param Ids identifiers of parents of the new particle
+   @param Ids Identifiers of parents of the new particle
    @param newparticle New particle that is to be added into history
    */
   void insertParticle(const Ids& parentIds, PFParticle& newparticle);
   /**  Checks if object identifier comes, directly or indirectly,
    from a particle of type typeAndSubtype, with this absolute pdgid.
    
-   @param id identifier of object
+   @param id Identifier of object
    @param typeAndSubtype type and subtype of particle eg 'ps' for simulated particle
    @param pdgid particle type eg muon
    @return True if there is a direct /indirect link between object and particle of this typeAndSubtype and absolute pdgid

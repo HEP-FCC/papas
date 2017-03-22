@@ -34,7 +34,7 @@ class PFBlock {
 
 public:
   /** Constructor
-   @param[in] element_ids vector of identifiers of the elements to go in this block [id1,id2,...]
+   @param[in] element_ids vector of Identifiers of the elements to go in this block [id1,id2,...]
    @param[inout] edges is an unordered map of edges, it must contain at least all needed edges. It is not a
    problem if it contains additional edges as only the ones needed will be extracted. Note that edges that are
    extracted will be removed from the Edges object and will become owned by the PFBlock
@@ -48,7 +48,7 @@ public:
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
-  @param[in] id : is the identifier of item of interest
+  @param[in] id : is the Identifier of item of interest
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
  */
@@ -56,7 +56,7 @@ public:
 
   /**
   Returns list of all linked ids of a given edge type that are connected to a given id
-   @param[in] id : is the identifier of item of interest
+   @param[in] id : is the Identifier of item of interest
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the id
   */

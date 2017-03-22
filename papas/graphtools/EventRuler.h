@@ -33,7 +33,7 @@ public:
    *   @brief  distance between id1 and id2
    *
    *   @param[in]  id1 : element identifier generated from IdCoder class. Must exist in Event
-   *   @param[in]  id2 : element2 identifie generated from IdCoder class. Must exist in Event
+   *   @param[in]  id2 : element2 identifier generated from IdCoder class. Must exist in Event
    *   @return  Distance (ie isLinked : boolean T/F and distance value)
    */
   Distance distance(Identifier id1, Identifier id2) const;
