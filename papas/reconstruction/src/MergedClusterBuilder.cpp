@@ -50,7 +50,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
 #endif
     auto id = *subgraph.begin();
     double totalenergy = 0.;
-    for (const auto& c : ids) {
+    for (const auto& c : subgraph) {
       totalenergy += clusters.at(c).energy();
     }
     // create the merged Cluster
@@ -63,7 +63,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     }
     // merge the original clusters into the new merged cluster
     // also add in the links between the block elements and the block into the history_nodes
-    if (ids.size() > 1) {
+    if (subgraph.size() > 1) {
       for (auto elemid : subgraph) {
         if (elemid != id) {  // we have already handled the first element
           mergedCluster += clusters.at(elemid);
