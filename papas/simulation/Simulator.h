@@ -193,6 +193,8 @@ private:
    @param[in] parentid used to update history
    */
   void storeSmearedTrack(Track&& smearedtrack, Identifier parentid);
+  
+  std::shared_ptr<Propagator> propagator(double charge);
   /**
    Propagates a particle to the specified cyclinder
    @param[in] cylinder the cylinder where  we want to know where the particle arrives

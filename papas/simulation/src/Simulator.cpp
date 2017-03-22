@@ -60,7 +60,7 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -86,7 +86,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
   // find where it meets the inner Ecal cyclinder
 
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -113,7 +113,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // now find where it reaches into HCAL
-  propagate(hcal_sp->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc,hcal_sp->volumeCylinder().inner(),m_detector.field()->getMagnitude());
   auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared)) {
@@ -121,12 +121,6 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
 }
 
-void Simulator::propagateAllLayers(PFParticle& ptc) {
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
-  propagate(m_detector.ecal()->volumeCylinder().outer(), ptc);
-  propagate(m_detector.hcal()->volumeCylinder().inner(), ptc);
-  propagate(m_detector.hcal()->volumeCylinder().outer(), ptc);
-}
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
@@ -136,7 +130,7 @@ void Simulator::simulateNeutrino(PFParticle& ptc) {
 void Simulator::smearElectron(PFParticle& ptc) {
   PDebug::write("Smearing Electron");
   auto track = makeAndStoreTrack(ptc);
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
 }
 
 void Simulator::simulateElectron(PFParticle& ptc) {
@@ -155,7 +149,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   if (acceptElectronSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
 }
 
 void Simulator::smearMuon(PFParticle& ptc) {
@@ -183,14 +177,31 @@ void Simulator::simulateMuon(PFParticle& ptc) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
 }
+  
+  std::shared_ptr<Propagator> Simulator::propagator(double charge) {
+    if (charge<0.5)
+      return std::make_shared<StraightLinePropagator>(m_propStraight);
+    else
+      return std::make_shared<HelixPropagator>(m_propHelix);
+  }
 
-void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
+
+/*void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
   bool isNeutral = fabs(ptc.charge()) < 0.5;
   if (isNeutral)
     m_propStraight.propagateOne(ptc, cylinder);
   else
-    m_propHelix.propagateOne(ptc, cylinder,m_detector.field()->getMagnitude());
-}
+    m_propHelix.propagateOne(ptc, cylinder, m_detector.field()->getMagnitude());
+}*/
+
+  
+  void Simulator::propagateAllLayers(PFParticle& ptc) {
+    auto prop =propagator(ptc.charge());
+    prop->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+    prop->propagateOne(ptc,m_detector.ecal()->volumeCylinder().outer(), m_detector.field()->getMagnitude());
+    prop->propagateOne(ptc,m_detector.hcal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+    prop->propagateOne(ptc,m_detector.hcal()->volumeCylinder().outer(), m_detector.field()->getMagnitude());
+  }
 
 const Cluster& Simulator::cluster(Identifier clusterId) const {
   if (IdCoder::isEcal(clusterId))
