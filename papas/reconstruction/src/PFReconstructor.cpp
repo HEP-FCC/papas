@@ -299,6 +299,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
   PFParticle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
   // TODO discuss with Colin
+  // Should this use propagator instead
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());

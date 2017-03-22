@@ -42,7 +42,6 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
       break;
   default:
     throw std::range_error("TODO: Detector Element Layer not found");
-    // TODO add track and field
   }
 }
   
