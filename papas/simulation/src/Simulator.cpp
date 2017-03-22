@@ -26,8 +26,11 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_tracks(tracks),
       m_smearedTracks(smearedTracks),
       m_particles(simParticles),
-      m_history(history),
-      m_propHelix() {
+      m_history(history)
+  
+  {
+    m_propHelix  = std::make_shared<HelixPropagator>();
+    m_propStraight  = std::make_shared<StraightLinePropagator>();
   for (const auto& p: particles) {
     simulateParticle(p);
   }
@@ -179,10 +182,10 @@ void Simulator::simulateMuon(PFParticle& ptc) {
 }
   
   std::shared_ptr<Propagator> Simulator::propagator(double charge) {
-    if (charge<0.5)
-      return std::make_shared<StraightLinePropagator>(m_propStraight);
+    if (fabs(charge)<0.5)
+      return m_propStraight;
     else
-      return std::make_shared<HelixPropagator>(m_propHelix);
+      return m_propHelix;
   }
 
 
