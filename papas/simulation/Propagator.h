@@ -22,7 +22,7 @@ public:
    */
   virtual void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field = 0) const = 0;
 
-  void propagate(const PFParticle& ptc, std::list<std::shared_ptr< const SurfaceCylinder>> cylinders, double field = 0 );
+  void propagate(const PFParticle& ptc, const Detector& detector);
 };
 
 }  // end namespace papas

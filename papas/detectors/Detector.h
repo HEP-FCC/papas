@@ -48,7 +48,8 @@ public:
   double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
 
   double muonPtResolution(const PFParticle& /*ptc*/) const { return 0.02; }
-
+  
+  const std::list<std::shared_ptr<const DetectorElement>>  elements() const { return m_elements;} 
 protected:
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
@@ -58,7 +59,7 @@ protected:
   std::shared_ptr<const Field> m_field;
 
 private:
-  std::list<SurfaceCylinder> m_cylinders;
+  std::list<std::shared_ptr<const DetectorElement>> m_elements;
 };
 }  // end namespace papas
 #endif
