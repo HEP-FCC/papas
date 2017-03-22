@@ -12,10 +12,13 @@ namespace papas {
 HelixPropagator::HelixPropagator()  {}
 
 
-void HelixPropagator::propagateOne(const Particle& ptc, const SurfaceCylinder& cyl, double field) const {
+void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field) const {
+  if (ptc.path() == nullptr) {
+    auto helix = std::make_shared<Helix>(Helix( ptc.p4(), ptc.startVertex(),ptc.charge(), field));
+    ptc.setPath(helix);
+  }
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
-  helix->setField(field);
-
+  
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();
   double udir_z = helix->unitDirection().Z();
 

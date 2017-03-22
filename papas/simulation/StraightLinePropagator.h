@@ -20,7 +20,7 @@ public:
    cyl cylinder to which the particle is to be propagated.
   */
 
-  void propagateOne(const Particle& ptc, const SurfaceCylinder& cyl, double field = 0) const override;
+  void propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field = 0) const override;
 private:
 };
 

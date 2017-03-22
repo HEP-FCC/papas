@@ -76,6 +76,9 @@ void Simulator::simulateHadron(Particle& ptc) {
   auto field_sp = m_detector.field();
   double fracEcal = 0.;  // TODO ask Colin
 
+  propagator(ptc.charge())
+  ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  
   // make a track if it is charged
   if (ptc.charge() != 0) {
     auto track = makeAndStoreTrack(ptc);
@@ -87,8 +90,6 @@ void Simulator::simulateHadron(Particle& ptc) {
   }
   // find where it meets the inner Ecal cyclinder
 
-  propagator(ptc.charge())
-      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -137,13 +138,14 @@ void Simulator::simulateElectron(Particle& ptc) {
 
    This method does not simulate an electron energy deposit in the ECAL.*/
   PDebug::write("Simulating Electron");
+  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
   auto track = makeAndStoreTrack(ptc);
   auto eres = m_detector.electronEnergyResolution(ptc);
   auto smeared = smearTrack(track, eres);  // smear it
   if (acceptElectronSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
-  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
+  
 }
 
 void Simulator::simulateMuon(Particle& ptc) {

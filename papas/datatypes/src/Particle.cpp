@@ -31,10 +31,11 @@ Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned
       m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
       {
       
-  if (charge!=0)
+  /*if (charge!=0)
       m_path = std::make_shared<Helix>(tlv, m_startVertex, m_charge);
   else
       m_path = std::make_shared<Path>(tlv, m_startVertex);
+      }*/
       }
 
 /*Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index,

@@ -8,6 +8,10 @@
 #include "papas/graphtools/DefinitionsNodes.h"
 
 namespace papas {
+  
+  class StraightLinePropagator;
+  class HelixPropagator;
+  class Propagator;
 class PFReconstructor {
   /** Handles reconstruction of particles from a Event
    * The PFevent contains the merged clusters and tracks and the history nodes and should already contain
@@ -139,12 +143,15 @@ private:
    @param cluster
    */
   double nsigmaHcal(const Cluster& cluster) const;
+  std::shared_ptr<Propagator> propagator(double charge);
   const Event& m_event; ///< Contains history information and collections of clusters/blocks/tracks
   const Detector& m_detector; ///< Detector
   Particles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
   Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
   std::unordered_map<Identifier, bool> m_locked; ///< map of identifiers which have already been used in reconstruction
+  std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles
+  std::shared_ptr<HelixPropagator> m_propHelix;            ///<used to determine the path of charged particles
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */
