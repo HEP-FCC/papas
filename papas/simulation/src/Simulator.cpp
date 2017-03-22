@@ -77,7 +77,7 @@ void Simulator::simulateHadron(Particle& ptc) {
   double fracEcal = 0.;  // TODO ask Colin
 
   propagator(ptc.charge())
-  ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  ->propagateOne(ptc, ecal_sp->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   
   // make a track if it is charged
   if (ptc.charge() != 0) {
