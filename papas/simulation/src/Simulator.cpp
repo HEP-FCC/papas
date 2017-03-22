@@ -27,7 +27,7 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_smearedTracks(smearedTracks),
       m_particles(simParticles),
       m_history(history),
-      m_propHelix(detector.field()->getMagnitude()) {
+      m_propHelix() {
   for (const auto& p: particles) {
     simulateParticle(p);
   }
@@ -189,7 +189,7 @@ void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
   if (isNeutral)
     m_propStraight.propagateOne(ptc, cylinder);
   else
-    m_propHelix.propagateOne(ptc, cylinder);
+    m_propHelix.propagateOne(ptc, cylinder,m_detector.field()->getMagnitude());
 }
 
 const Cluster& Simulator::cluster(Identifier clusterId) const {
