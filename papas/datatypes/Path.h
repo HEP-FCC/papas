@@ -22,7 +22,6 @@ namespace papas {
 class Path {
 public:
   typedef std::map<papas::Position, TVector3> Points; ///< Map of path points indexed by position
-  typedef std::shared_ptr<Path> Ptr;  ///< shared pointer to allow for straightline or helix
 /*Constructor
  @param p4 4-momentum
  @param origin position of start of path

@@ -23,12 +23,12 @@ public:
    @param[in] index used to create track identifier, normally the index of the collection to which the track will belong
    @param[in] the subtype of the track used in creating the identifer
    */
-  Track(const TVector3& p3, double charge, const Path::Ptr path, unsigned int index, char subtype = 'u');
+  Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, unsigned int index, char subtype = 'u');
   double energy() const { return m_p3.Mag(); } ///<energy
   double charge() const { return m_charge; }
   Identifier id() const { return m_id; } ///<identifier
   const TVector3& p3() const { return m_p3; } /// momentum
-  const Path::Ptr path() const { return m_path; }
+  const std::shared_ptr<Path> path() const { return m_path; }
   void setEnergy(double energy);
   void setSize(double value);
   std::string info() const; ///< string representation of track
@@ -36,7 +36,7 @@ protected:
   Identifier m_id; ///< Identifier of track
   TVector3 m_p3;  ///< momentum in 3D space (px, py, pz)
   double m_charge; ///< Charge of associated particle
-  const Path::Ptr m_path;  ///< pointer to path (not owned by track)
+  const std::shared_ptr<Path> m_path;  ///< pointer to path (not owned by track)
 private:
 };
 

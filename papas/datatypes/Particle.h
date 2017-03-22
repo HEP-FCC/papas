@@ -55,8 +55,8 @@ public:
   /** check id this position exists in particle path
    @param[in] layer position to search for the path location
    */
-  void setPath(Path::Ptr path) { m_path = path;}
-  const Path::Ptr path() const { return m_path; } ///< Return pointer to path
+  void setPath(std::shared_ptr<Path> path) { m_path = path;}
+  const std::shared_ptr<Path> path() const { return m_path; } ///< Return pointer to path
   Identifier id() const { return m_id; }  ///< unique Identifier for object
   bool isElectroMagnetic() const;  ///< Is it electroMagnetic
 private:
@@ -67,7 +67,7 @@ private:
   TVector3 m_startVertex;  ///<start vertex (3d point)
   TVector3 m_endVertex;    ///<end vertex (3d point)
   Identifier m_id; ///< unique Identifier
-  Path::Ptr m_path; ///< pointer to path object
+  std::shared_ptr<Path> m_path; ///< pointer to path object
 };
 
 std::ostream& operator<<(std::ostream& os, const Particle& particle);

@@ -5,7 +5,7 @@
 
 namespace papas {
 
-Track::Track(const TVector3& p3, double charge,const Path::Ptr path, unsigned int index, char subtype)
+Track::Track(const TVector3& p3, double charge,const std::shared_ptr<Path> path, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::ItemType::kTrack, subtype, p3.Mag())),
       m_p3(p3),
       m_charge(charge),
