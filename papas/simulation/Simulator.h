@@ -95,9 +95,7 @@ private:
   void simulatePhoton(PFParticle& ptc);    ///< Simulates cluster from a Photon
   void simulateHadron(PFParticle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(PFParticle& ptc);  ///< Simulates a neutrino
-  void smearElectron(PFParticle& ptc);     ///< Does not smear so far as I can see
   void simulateElectron(PFParticle& ptc);  ///< Simulates an electron (no smearing)
-  void smearMuon(PFParticle& ptc);  ///< Does not smear so far as I can see
   void simulateMuon(PFParticle& ptc); ///< Simulates a muon(no smearing)
   /**
    Makes a new PFParticle
@@ -193,19 +191,10 @@ private:
    @param[in] parentid used to update history
    */
   void storeSmearedTrack(Track&& smearedtrack, Identifier parentid);
-  
+  /** Return shared ptr to the appropriate propagator (straightline or helix)
+   @param[in] charge charge of particle
+   */
   std::shared_ptr<Propagator> propagator(double charge);
-  /**
-   Propagates a particle to the specified cyclinder
-   @param[in] cylinder the cylinder where  we want to know where the particle arrives
-   @param[in] ptc the particle to be propagated
-   */
-  void propagate(const SurfaceCylinder& cylinder, PFParticle& ptc);
-  /**
-   Propagates a particle to the ECAL and Hcal cyclinders
-   @param[in] ptc the particle to be propagated
-   */
-  void propagateAllLayers(PFParticle& ptc);
   /**
    Update the History
    @param[in] newid the new object being added to history

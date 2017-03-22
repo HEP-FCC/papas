@@ -124,16 +124,9 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
 }
 
-
 void Simulator::simulateNeutrino(PFParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
   propagator(ptc.charge())->propagate(ptc, m_detector);
-}
-
-void Simulator::smearElectron(PFParticle& ptc) {
-  PDebug::write("Smearing Electron");
-  auto track = makeAndStoreTrack(ptc);
-  propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
 }
 
 void Simulator::simulateElectron(PFParticle& ptc) {
@@ -155,12 +148,6 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
 }
 
-void Simulator::smearMuon(PFParticle& ptc) {
-  PDebug::write("Smearing Muon");
-  auto track = makeAndStoreTrack(ptc);
-  propagateAllLayers(ptc);
-}
-
 void Simulator::simulateMuon(PFParticle& ptc) {
   /*Simulate a muon corresponding to gen particle ptc
 
@@ -172,7 +159,7 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   This method does not simulate energy deposits in the calorimeters
   */
   PDebug::write("Simulating Muon");
-  propagateAllLayers(ptc);
+  propagator(ptc.charge())->propagate(ptc, m_detector);
   auto ptres = m_detector.muonPtResolution(ptc);
   auto track = makeAndStoreTrack(ptc);
   auto smeared = smearTrack(track, ptres);
@@ -180,32 +167,14 @@ void Simulator::simulateMuon(PFParticle& ptc) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
 }
-  
-  std::shared_ptr<Propagator> Simulator::propagator(double charge) {
-    if (fabs(charge)<0.5)
-      return m_propStraight;
-    else
-      return m_propHelix;
-  }
 
-
-/*void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
-  bool isNeutral = fabs(ptc.charge()) < 0.5;
-  if (isNeutral)
-    m_propStraight.propagateOne(ptc, cylinder);
+std::shared_ptr<Propagator> Simulator::propagator(double charge) {
+  if (fabs(charge) < 0.5)
+    return m_propStraight;
   else
-    m_propHelix.propagateOne(ptc, cylinder, m_detector.field()->getMagnitude());
-}*/
-
+    return m_propHelix;
+}
   
-  void Simulator::propagateAllLayers(PFParticle& ptc) {
-    auto prop =propagator(ptc.charge());
-    prop->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
-    prop->propagateOne(ptc,m_detector.ecal()->volumeCylinder().outer(), m_detector.field()->getMagnitude());
-    prop->propagateOne(ptc,m_detector.hcal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
-    prop->propagateOne(ptc,m_detector.hcal()->volumeCylinder().outer(), m_detector.field()->getMagnitude());
-  }
-
 const Cluster& Simulator::cluster(Identifier clusterId) const {
   if (IdCoder::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);

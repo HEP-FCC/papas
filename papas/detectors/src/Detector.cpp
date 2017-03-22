@@ -11,10 +11,6 @@
 namespace papas {
 
 Detector::Detector() {
-  for (auto layer : std::list<papas::Layer>{{papas::Layer::kTracker, papas::Layer::kEcal, papas::Layer::kHcal}}) {
-    std::shared_ptr<const DetectorElement> el =element(layer);
-    m_elements.push_back(el);
-  }
 }
 
 std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const {
@@ -50,7 +46,10 @@ std::shared_ptr<const DetectorElement> Detector::element(Layer layer) const {
   }
 }
   
-  
-  
-
+void Detector::setElements() {
+  for (auto layer : std::list<papas::Layer>{{papas::Layer::kTracker, papas::Layer::kEcal, papas::Layer::kHcal}}) {
+    std::shared_ptr<const DetectorElement> el = element(layer);
+    m_elements.push_back(el);
+  }
+}
 }  // end namespace papas
