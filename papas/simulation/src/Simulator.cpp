@@ -124,7 +124,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
 
 void Simulator::simulateNeutrino(PFParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
-  propagateAllLayers(ptc);
+  propagator(ptc.charge())->propagate(ptc, m_detector);
 }
 
 void Simulator::smearElectron(PFParticle& ptc) {
