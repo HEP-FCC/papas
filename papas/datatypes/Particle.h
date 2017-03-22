@@ -55,17 +55,9 @@ public:
   /** check id this position exists in particle path
    @param[in] layer position to search for the path location
    */
-  
-  bool hasNamedPoint(papas::Position layer) const {return m_path->hasNamedPoint(layer);}
-  /** returns position of particle path at given layer
-   @param[in] layer position to search for the path location
-   */
-  const TVector3& pathPosition(papas::Position layer) const {return m_path->namedPoint(layer);}
-  //void setPath(Path::Ptr path) { m_path = path; }  ///< Set ponter to path of particle
-  bool isHelix() const { return m_isHelix; } ///< Helix or straighline
   void setPath(Path::Ptr path) { m_path = path;}
   const Path::Ptr path() const { return m_path; } ///< Return pointer to path
-  Identifier id() const { return m_uniqueId; }  ///< unique Identifier for object
+  Identifier id() const { return m_id; }  ///< unique Identifier for object
   bool isElectroMagnetic() const;  ///< Is it electroMagnetic
 private:
   TLorentzVector m_tlv;    ///<4-momentum, px, py, pz, E
@@ -74,10 +66,8 @@ private:
   double m_status;         ///< status code, e.g. from generator. 1:stable
   TVector3 m_startVertex;  ///<start vertex (3d point)
   TVector3 m_endVertex;    ///<end vertex (3d point)
-  Identifier m_uniqueId; ///< unique Identifier
-  TVector3 m_vertex;  ///< start vertex (3d)
+  Identifier m_id; ///< unique Identifier
   Path::Ptr m_path; ///< pointer to path object
-  bool m_isHelix; ///< Boolean to say if path is Helix or straightline
 };
 
 std::ostream& operator<<(std::ostream& os, const Particle& particle);

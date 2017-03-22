@@ -28,7 +28,7 @@ Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned
       m_status(status),
       m_startVertex(startVertex),
       m_endVertex(endVertex),
-      m_uniqueId(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
+      m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
       {
       
   if (charge!=0)

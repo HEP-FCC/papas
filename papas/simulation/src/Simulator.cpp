@@ -86,8 +86,10 @@ void Simulator::simulateHadron(Particle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-  propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
-  if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
+
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
       /// ecal path length can be infinite in case the ecal
@@ -111,9 +113,8 @@ void Simulator::simulateHadron(Particle& ptc) {
         }
       }
     }
-  }
-  // now find where it reaches into HCAL
-  propagator(ptc.charge())->propagateOne(ptc,hcal_sp->volumeCylinder().inner(),m_detector.field()->getMagnitude());
+  }  // now find where it reaches into HCAL
+  propagator(ptc.charge())->propagateOne(ptc, hcal_sp->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared)) {
@@ -223,8 +224,8 @@ Particle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, d
 
 Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
-  if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
-    TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
+  if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
+    TVector3 pos = ptc.path()->namedPoint(papas::Position::kEcalIn);
 
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
@@ -247,8 +248,8 @@ Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction,
 
 Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
-  if (ptc.hasNamedPoint(papas::Position::kHcalIn)) {
-    TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
+  if (ptc.path()->hasNamedPoint(papas::Position::kHcalIn)) {
+    TVector3 pos = ptc.path()->namedPoint(papas::Position::kHcalIn);
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }
