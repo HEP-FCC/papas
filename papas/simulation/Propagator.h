@@ -6,7 +6,7 @@
 class SurfaceCylinder;
 
 namespace papas {
-class PFParticle;
+class Particle;
 
 class Propagator {
 /** Virtual class to be used to determine where a particle path crosses a detector cylinder
@@ -20,9 +20,9 @@ public:
    ptc particle that is to be propagated
    cyl cylinder to which the particle is to be propagated.
    */
-  virtual void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field = 0) const = 0;
+  virtual void propagateOne(const Particle& ptc, const SurfaceCylinder& cyl, double field = 0) const = 0;
+  void propagate(const Particle& ptc, const Detector& detector);
 
-  void propagate(const PFParticle& ptc, const Detector& detector);
 };
 
 }  // end namespace papas

@@ -7,7 +7,7 @@
 #include "TLorentzVector.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -20,7 +20,7 @@
 namespace papas {
 
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
-                                 PFParticles& particles, Nodes& history)
+                                 Particles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
   auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
@@ -117,7 +117,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   }
 }
 
-void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newparticle) {
+void PFReconstructor::insertParticle(const Ids& parentIds, Particle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
    It will have as its parents the block and all the elements of the block.
@@ -297,7 +297,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   }
   TVector3 p3(cluster.position().Unit() * momentum);
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
-  PFParticle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
+  Particle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex);
   // TODO discuss with Colin
   // Should this use propagator instead
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
@@ -326,7 +326,8 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  PFParticle particle(pdgId, track.charge(), p4, track, m_particles.size(), 'r');
+  Particle particle(pdgId, track.charge(), p4, m_particles.size(), 'r', track.path()->namedPoint(papas::Position::kVertex));
+  
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;

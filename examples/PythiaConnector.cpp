@@ -74,11 +74,12 @@ papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(c
     // otherwise ids do not align
 
     //TODO make single if
-    //TODO make PFParticle directly and rename pFPArticle in code
+    //TODO make Particle directly and rename pFPArticle in code
     if (ptc.core().status == 1) {  // only stable ones
       
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
+        
+        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 'g', startVertex, endVertex, ptc.core().status);
         particles.push_back(std::move(particle));
         // papas::PDebug::write("Selected Papas{}", particle);
       }
@@ -145,7 +146,7 @@ void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   // gSystem->ProcessEvents();
 }
 
-void PythiaConnector::writeParticlesROOT(const char* fname, const papas::PFParticles& particles) {
+void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
 
   podio::ROOTWriter writer(fname, &m_store);
 

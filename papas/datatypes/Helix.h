@@ -24,7 +24,8 @@ public:
    @param magnetic field
    @param charge of associated particle
    */
-  Helix(const TLorentzVector& p4, const TVector3& origin, double field, double charge);
+  Helix(const TLorentzVector& p4, const TVector3& origin, double charge, double field = 0);
+  void setField(double field); ///< sets helix parameters for the field
   /** Returns the polar coordinates on the path at a given time
    @param time the time
    @return the polar coordinates of the particle along the path at time
@@ -55,6 +56,7 @@ public:
   const TVector3& centerXY() const { return m_centerXY; }
   double maxTime() const;
 private:
+  double m_charge;
   double m_rho;  ///< Radius of Helix
   double m_omega;
   double m_phi0;

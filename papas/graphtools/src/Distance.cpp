@@ -31,6 +31,8 @@ Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1),
   if (IdCoder::isHcal(cluster.id())) {
     cyl_layer = papas::Position::kHcalIn;
   }
+  if(track.path()==nullptr)
+    std::cout <<IdCoder::pretty(track.id());
   if (track.path()->hasNamedPoint(cyl_layer)) {  // check exists
     TVector3 pos = track.path()->namedPoint(cyl_layer);
     m_distance = (cluster.position() - pos).Mag();

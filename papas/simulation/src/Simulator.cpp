@@ -1,7 +1,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -15,7 +15,7 @@ namespace papas {
 
 Simulator::Simulator(const Event& papasevent, const ListParticles& particles, const Detector& detector,
                      Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, PFParticles& simParticles,
+                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, Particles& simParticles,
                      Nodes& history)
     : m_event(papasevent),
       m_detector(detector),
@@ -42,10 +42,8 @@ void Simulator::simulateParticle(const Particle& ptc) {
     // to avoid numerical problems in propagation
     return;
   }
-  PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  //if (IdCoder::pretty(storedParticle.id()) == "ps3")
-  //   std::cout << IdCoder::pretty(storedParticle.id()) << std::endl;
 
+  Particle& storedParticle = makeAndStoreParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
   } else if (abs(pdgid) == 11) {
@@ -59,7 +57,7 @@ void Simulator::simulateParticle(const Particle& ptc) {
   }
 }
 
-void Simulator::simulatePhoton(PFParticle& ptc) {
+void Simulator::simulatePhoton(Particle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
@@ -71,7 +69,7 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   }
 }
 
-void Simulator::simulateHadron(PFParticle& ptc) {
+void Simulator::simulateHadron(Particle& ptc) {
   PDebug::write("Simulating Hadron");
   auto ecal_sp = m_detector.ecal();
   auto hcal_sp = m_detector.hcal();
@@ -88,7 +86,6 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-
   propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
@@ -124,12 +121,12 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
 }
 
-void Simulator::simulateNeutrino(PFParticle& ptc) {
+void Simulator::simulateNeutrino(Particle& ptc) {
   PDebug::write("Simulating Neutrino \n");
   propagator(ptc.charge())->propagate(ptc, m_detector);
 }
 
-void Simulator::simulateElectron(PFParticle& ptc) {
+void Simulator::simulateElectron(Particle& ptc) {
   /*Simulate an electron corresponding to gen particle ptc.
 
    Uses the methods detector.electronEnergyResolution
@@ -148,7 +145,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
 }
 
-void Simulator::simulateMuon(PFParticle& ptc) {
+void Simulator::simulateMuon(Particle& ptc) {
   /*Simulate a muon corresponding to gen particle ptc
 
   Uses the methods detector.muon_energy_resolution
@@ -183,10 +180,11 @@ const Cluster& Simulator::cluster(Identifier clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
+  //TODO particlesissue
+Particle& Simulator::makeAndStoreParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                               const TVector3& vertex) {
   double field = m_detector.field()->getMagnitude();
-  PFParticle simParticle(pdgid, charge, tlv, m_particles.size(), 's', vertex, field);
+  Particle simParticle = Particle(pdgid, charge, tlv, m_particles.size(), 's', vertex);
   auto id = simParticle.id();
   PDebug::write("Made {}", simParticle);
   m_particles.emplace(id, std::move(simParticle));
@@ -194,7 +192,7 @@ PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, const TL
   return m_particles[id];
 }
 
-PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, double theta, double phi, double energy,
+Particle& Simulator::makeAndStoreParticle(int pdgid, double charge, double theta, double phi, double energy,
                                               const TVector3& vertex) {
   double mass = ParticlePData::particleMass(pdgid);
   double momentum = sqrt(pow(energy, 2) - pow(mass, 2));
@@ -203,10 +201,10 @@ PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, double t
   double cosphi = cos(phi);
   double sinphi = sin(phi);
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  return makeAndStorePFParticle(pdgid, charge, p4, vertex);
+  return makeAndStoreParticle(pdgid, charge, p4, vertex);
 }
 
-PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
+Particle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
                                       double ptmax, const TVector3& vertex) {
   double theta = rootrandom::Random::uniform(thetamin, thetamax);
   double phi = rootrandom::Random::uniform(-M_PI, M_PI);
@@ -220,10 +218,10 @@ PFParticle& Simulator::addGunParticle(int pdgid, double charge, double thetamin,
   energy = sqrt(pow(momentum, 2) + pow(mass, 2));
 
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  return makeAndStorePFParticle(pdgid, charge, p4, vertex);
+  return makeAndStoreParticle(pdgid, charge, p4, vertex);
 }
 
-Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
+Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     TVector3 pos = ptc.pathPosition(papas::Position::kEcalIn);
@@ -240,14 +238,14 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
   } else {
     Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
               "to EcalIn cylinder \n",
-              ptc, ptc.vertex().Perp(), ptc.vertex().Z());
+              ptc, ptc.startVertex().Perp(), ptc.startVertex().Z());
     std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
                           "now, problem will be solved :-)";
     throw message;
   }
 }
 
-Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype) {
+Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.hasNamedPoint(papas::Position::kHcalIn)) {
     TVector3 pos = ptc.pathPosition(papas::Position::kHcalIn);
@@ -263,7 +261,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
   } else {
     Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
               "to HcalIn cylinder \n",
-              ptc, ptc.vertex().Perp(), ptc.vertex().Z());
+              ptc, ptc.startVertex().Perp(), ptc.startVertex().Z());
     std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
                           "now, problem will be solved :-)";
     throw message;
@@ -316,12 +314,11 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Iden
   return m_smearedHcalClusters[id];
 }
 
-const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
 
+const Track& Simulator::makeAndStoreTrack(const Particle& ptc) {
   Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   Identifier id = track.id();
   PDebug::write("Made {}", track);
-  
   m_tracks.emplace(id, std::move(track));
   addNode(id, ptc.id());
   return m_tracks.at(id);

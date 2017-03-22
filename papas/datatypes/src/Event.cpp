@@ -1,5 +1,5 @@
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
@@ -29,8 +29,8 @@ void Event::addCollection(const Clusters& clusters) {
 
 void Event::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
 
-void Event::addCollection(const PFParticles& particles) {
-  addCollectionInternal<PFParticle>(particles, m_particlesCollection);
+void Event::addCollection(const Particles& particles) {
+  addCollectionInternal<Particle>(particles, m_particlesCollection);
 };
 
 void Event::addCollection(const Blocks& blocks) { addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
@@ -59,8 +59,8 @@ const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
   return *m_tracksCollection.at(subtype);
 }
 
-const PFParticles& Event::particles(const IdCoder::SubType subtype) const {
-  if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyPFParticles;
+  const Particles& Event::particles(const IdCoder::SubType subtype) const {
+  if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyParticles;
   return *m_particlesCollection.at(subtype);
 }
 const Blocks& Event::blocks(const IdCoder::SubType subtype) const {

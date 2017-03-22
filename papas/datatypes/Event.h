@@ -68,11 +68,11 @@ public:
    */
   void addCollection(const Blocks& blocks);
   /**
-   *   @brief  adds a pointer to a  PFParticles collection (unordered map) into the Event
-   *   @param[in]  blocks unordered map of PFParticles, all of which have the same identifier typeAndSubtype
+   *   @brief  adds a pointer to a  Particles collection (unordered map) into the Event
+   *   @param[in]  blocks unordered map of Particles, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
-  void addCollection(const PFParticles& particles);
+  void addCollection(const Particles& particles);
   /**
    *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
@@ -142,17 +142,17 @@ public:
    *   @brief  returns a Particles collection matching type and subtype
    *   @param[in]  subtype The subtype of the particle eg 'r' for reconstructed
    */
-  const PFParticles& particles(const IdCoder::SubType subtype) const;
+  const Particles& particles(const IdCoder::SubType subtype) const;
   /**
-   *   @brief  returns a PFParticles collection with typeAndSubtype that match the identifier
+   *   @brief  returns a Particles collection with typeAndSubtype that match the identifier
    *   @param[in]  id the identifier of an object
    */
-  const PFParticles& particles(Identifier id) const { return particles(IdCoder::subtype(id)); };
+  const Particles& particles(Identifier id) const { return particles(IdCoder::subtype(id)); };
   /**
-   *   @brief  returns a PFParticle with the required id
+   *   @brief  returns a Particle with the required id
    *   @param[in]  id the identifier of an object
    */
-  const PFParticle& particle(Identifier id) const { return particles(id).at(id); };
+  const Particle& particle(Identifier id) const { return particles(id).at(id); };
   /**
    *   @brief  returns a Blocks collection matching type and subtype
    *   @param[in]  subtype The subtype of the block eg 'r' for reconstructed
@@ -205,14 +205,14 @@ private:
   CollectionClusters m_hcalClustersCollection;
   /// Unordered map of pointers to unordered map of (concrete) Tracks
   CollectionTracks m_tracksCollection;
-  /// Unordered map of pointers to unordered map of (concrete) PFParticles
-  CollectionPFParticles m_particlesCollection;
+  /// Unordered map of pointers to unordered map of (concrete) Particles
+  CollectionParticles m_particlesCollection;
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
   std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
   Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
   Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
-  PFParticles m_emptyPFParticles;  ///<Used to return an empty collection when no collection is found
+  Particles m_emptyParticles;  ///<Used to return an empty collection when no collection is found
   Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is found
   unsigned int m_eventNo; ///<event number
 };

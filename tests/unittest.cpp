@@ -32,8 +32,8 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -85,7 +85,7 @@ TEST_CASE("IdCoder") {
 TEST_CASE("Helix") {  /// Helix path test
   TLorentzVector p4;
   p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-  Helix helix(p4, TVector3(0, 0, 0), 3.8, 1);
+  Helix helix(p4, TVector3(0, 0, 0), 1, 3.8);
   double length = helix.pathLength(1.0e-9);
   TVector3 junk = helix.pointAtTime(1e-9);
 
@@ -100,12 +100,12 @@ TEST_CASE("Helixpath") {  /// Helix path test
   SurfaceCylinder cyl1(papas::Position::kEcalIn, 1., 2.);
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
-  PFParticle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, field);
+  Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, field);
   HelixPropagator helixprop(3.8);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
   auto tvec = particle.pathPosition(cyl1.layer());
-  auto particle2 = PFParticle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, field);
+  auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, field);
   helixprop.propagateOne(particle2, cyl1);
   auto tvec2 = particle2.pathPosition(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
@@ -212,7 +212,7 @@ TEST_CASE("StraightLine") {
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  PFParticle photon(22, 0, tlv, 1);
+  Particle photon(22, 0, tlv, 1);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -227,7 +227,7 @@ TEST_CASE("StraightLine") {
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
 
-  PFParticle photon2(22, 0, tlv, 1);
+  Particle photon2(22, 0, tlv, 1);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -239,21 +239,21 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  PFParticle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
+  Particle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector (1, 0, -1, 2.);
-  PFParticle photon4 (22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
+  Particle photon4 (22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
-  PFParticle photon5 = PFParticle(22, 0, tlv, 5, 's',
+  Particle photon5 = Particle(22, 0, tlv, 5, 's',
                                   {
                                       0., 0.5, 0,
                                   },
@@ -588,9 +588,8 @@ TEST_CASE("test_papasevent") {
 TEST_CASE("test_history") {
   Event event;
   Nodes history;
-
   Clusters ecals;
-  PFParticles particles;
+  Particles particles;
   Identifier lastid = 0;
   Identifier lastcluster = 0;
   // make a dummy papasevent including some history
@@ -600,7 +599,7 @@ TEST_CASE("test_history") {
     lastcluster = cluster.id();
     PFNode cnode(lastcluster);
     history.emplace(lastcluster, std::move(cnode));
-    PFParticle particle(22, -1, TLorentzVector(1, 1, 1, 1), 1, 'r', TVector3(0., 0., 0.), 0.7);
+    Particle particle(22, -1, TLorentzVector(1, 1, 1, 1), 1, 'r', TVector3(0., 0., 0.), 0.7);
     particles.emplace(particle.id(), std::move(particle));
     lastid = particle.id();
     PFNode pnode(lastid);
