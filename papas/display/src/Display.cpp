@@ -14,7 +14,7 @@ Display::Display(std::list<ViewPane::Projection> views) {
     views = {ViewPane::Projection::xy, ViewPane::Projection::yz, ViewPane::Projection::xz};
   }
   /// Creates viewpanes
-  for (auto view : views) {
+  for (auto& view : views) {
     if ((view == ViewPane::Projection::xy) | (view == ViewPane::Projection::yz) | (view == ViewPane::Projection::xz)) {
       m_views[ViewPane::ProjectionStrings[view]] =
           std::unique_ptr<ViewPane>{new ViewPane(view, 100, -4, 4, 100, -4, 4)};
@@ -27,7 +27,7 @@ Display::Display(std::list<ViewPane::Projection> views) {
 };
 
 void Display::addToRegister(std::shared_ptr<Drawable> obj, int layer, bool clearable) {
-  for (auto const& view : m_views) {
+  for (auto& view : m_views) {
     view.second->addToRegister(obj, layer, clearable);
   }
 };

@@ -69,7 +69,7 @@ const Blocks& Event::blocks(const IdCoder::SubType subtype) const {
 }
 bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   // Check if this collection is present
-  auto found = false;
+  bool found = false;
   switch (type) {
   case IdCoder::kEcalCluster:
     found = (m_ecalClustersCollection.find(subtype) != m_ecalClustersCollection.end());
@@ -125,7 +125,7 @@ bool Event::hasObject(Identifier id) const {
 void Event::extendHistory(const Nodes& history) {
   // A separate history is created at each stage.
   // the following adds this history into the papasevent history
-    for (const auto node : history) {
+    for (const auto& node : history) {
       for (const auto& c : node.second.children()) {
         makeHistoryLink(node.first, c->value(), *m_history);
       }

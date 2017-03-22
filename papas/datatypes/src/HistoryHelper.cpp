@@ -8,12 +8,12 @@ namespace papas {
 HistoryHelper::HistoryHelper(const Event& event) : m_event(event) {}
 
 Ids HistoryHelper::linkedIds(Identifier id, DAG::enumVisitType direction) const {
-  const auto history = m_event.history();
-  auto& startnode = history->at(id);
-  auto bfs = DAG::BFSRecurseVisitor<PFNode>();
-  auto nodes = bfs.traverseNodes(startnode, direction);
+  const auto& history = m_event.history();
+  const auto& startnode = history->at(id);
+  DAG::BFSRecurseVisitor<PFNode> bfs;
+  const auto& nodes = bfs.traverseNodes(startnode, direction);
   Ids ids;
-  for (auto node : nodes) {
+  for (const auto& node : nodes) {
     ids.push_back(node->value());
   }
   return ids;

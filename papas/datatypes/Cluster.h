@@ -28,6 +28,7 @@ public:
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
+   @param[in]  index of the collection into which the cluster is to be stored 
    @param[in]  type eg IdCoder::kHcalCluster the identifier type
    @param[in]  subtype subtype of cluster eg 'm' for merged, 's' for smeared. Defaults to 'u' for unset.
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.

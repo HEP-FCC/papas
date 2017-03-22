@@ -28,7 +28,7 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_particles(simParticles),
       m_history(history),
       m_propHelix(detector.field()->getMagnitude()) {
-  for (auto p : particles) {
+  for (const auto& p: particles) {
     simulateParticle(p);
   }
 }
@@ -203,7 +203,7 @@ const Cluster& Simulator::cluster(Identifier clusterId) const {
 PFParticle& Simulator::makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                               const TVector3& vertex) {
   double field = m_detector.field()->getMagnitude();
-  auto simParticle = PFParticle(pdgid, charge, tlv, m_particles.size(), 's', vertex, field);
+  PFParticle simParticle(pdgid, charge, tlv, m_particles.size(), 's', vertex, field);
   auto id = simParticle.id();
   PDebug::write("Made {}", simParticle);
   m_particles.emplace(id, std::move(simParticle));
@@ -248,7 +248,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
     }
-    auto cluster = Cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
+    Cluster cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
     Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
@@ -271,7 +271,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }
-    auto cluster = Cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
+    Cluster cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
     Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
@@ -303,7 +303,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   else
     counter = m_smearedHcalClusters.size();
   // energy = fmax(0., energy);  // energy always positive
-  auto cluster = Cluster(energy, parent.position(), parent.size(), counter, IdCoder::type(parent.id()), 's');
+  Cluster cluster(energy, parent.position(), parent.size(), counter, IdCoder::type(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }
@@ -334,7 +334,8 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Iden
 }
 
 const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
-  auto track = Track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
+
+  Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   Identifier id = track.id();
   PDebug::write("Made {}", track);
   
@@ -351,7 +352,7 @@ void Simulator::storeSmearedTrack(Track&& track, Identifier parentid) {
 
 Track Simulator::smearTrack(const Track& track, double resolution) const {
   double scale_factor = rootrandom::Random::gauss(1, resolution);
-  auto smeared = Track(track.p3() * scale_factor, track.charge(), track.path(), m_smearedTracks.size(), 's');
+  Track smeared(track.p3() * scale_factor, track.charge(), track.path(), m_smearedTracks.size(), 's');
   PDebug::write("Made Smeared{}", smeared);
   return smeared;
 }

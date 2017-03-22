@@ -43,7 +43,7 @@ public:
   PFBlock(const Ids& elementIds, Edges& edges, unsigned int index,
           char subtype = 'u');  // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
-  const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
+  const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
   const Edge& findEdge(Edge::EdgeKey key) const; ///< return Edge corresponding to Edge key
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
@@ -60,7 +60,8 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the id
   */
-  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
+
+  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown, bool sort = false) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block

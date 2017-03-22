@@ -173,7 +173,7 @@ public:
    *   @param[in]  collection the collection
    */
   template <class T>
-  Ids collectionIds(const T& collection) const;
+  Ids collectionIds(const T& collection, bool sort = false) const;
   /**
    *   @brief  takes all the history collection and merged them into one single history
    */
@@ -237,11 +237,13 @@ void Event::addCollectionInternal(
 }
 
 template <class T>
-Ids Event::collectionIds(const T& collection) const {
+Ids Event::collectionIds(const T& collection, bool sort) const {
   Ids ids;
   for (const auto& item : collection) {
     ids.push_back(item.first);
   }
+  if (sort)
+    ids.sort(std::greater<Identifier>());
   return ids;
 }
 }

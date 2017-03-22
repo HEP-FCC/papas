@@ -17,7 +17,7 @@ namespace papas {
  
  @code
  Usage example:
- auto hhelper = HistoryHelper(event);
+ HistoryHelper hhelper(event);
  //find what is connected to (say) a reconstructed particle
  auto ids =hhelper.linkedIds(id);
  //filter the connected ids selecting only the ecals of subtype 'm'

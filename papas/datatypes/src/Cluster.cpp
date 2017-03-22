@@ -49,7 +49,7 @@ Cluster::Cluster(Cluster&& c)
   if (c.subClusters().size() == 1 && c.id() == (*c.subClusters().begin())->id())
     m_subClusters.push_back(this);  // non merged cluster point to itself
   else
-    for (auto s : c.subClusters())  // merged clusters
+    for (const auto& s : c.subClusters())  // merged clusters
       m_subClusters.push_back(s);
 }
 
@@ -100,7 +100,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   os << "Cluster: " << std::setw(6) << std::left << IdCoder::pretty(cluster.id()) << ":" << cluster.id() << ": "
      << cluster.info();
   os << " sub(";
-  for (auto c : cluster.subClusters()) {
+  for (const auto& c : cluster.subClusters()) {
     os << IdCoder::pretty(c->id()) << ", ";
   }
   os << ")";

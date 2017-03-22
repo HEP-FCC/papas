@@ -59,10 +59,10 @@ class PFReconstructor {
    Ids ids = m_pfEvent.mergedElementIds();
    
    // create the blocks of linked ids
-   auto bBuilder = PFBlockBuilder(m_pfEvent, ids);
+   PFBlockBuilder bBuilder(m_pfEvent, ids);
    
    // do the reconstruction of the blocks
-   auto pfReconstructor = PFReconstructor(m_pfEvent);
+   PFReconstructor pfReconstructor(m_pfEvent);
    pfReconstructor.reconstruct(bBuilder.blocks());
    m_pfEvent.setReconstructedParticles(std::move(pfReconstructor.particles()));
    @endcode

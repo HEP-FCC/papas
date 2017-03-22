@@ -43,21 +43,18 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
   }
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
-   auto grBuilder = GraphBuilder(ids, std::move(edges));
-  for (auto subgraph : grBuilder.subGraphs()) {
-#if WITHSORT
-    subgraph.sort(std::greater<Identifier>()); //sort in descending order
-#endif
-    auto id = *subgraph.begin();
+  GraphBuilder grBuilder(ids, std::move(edges));
+  for (const auto& subgraph : grBuilder.subGraphs()) {
+    const auto& id = *subgraph.begin();
     double totalenergy = 0.;
-    for (const auto& c : subgraph) {
+    for (auto c : subgraph) {
       totalenergy += clusters.at(c).energy();
     }
     // create the merged Cluster
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
     //for several reasons so this is probably more straightforward
-    auto mergedCluster =
-        Cluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm', totalenergy);  // create a new cluster based on old one
+
+   Cluster mergedCluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm', totalenergy);  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }

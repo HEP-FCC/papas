@@ -20,7 +20,7 @@ namespace papas {
 
  Usage example:
 @code
- auto builder  = GraphBuilder(ids, edges);
+ GraphBuilder builder(ids, edges);
  for (b in builder.blocks()) {
  ...
  }

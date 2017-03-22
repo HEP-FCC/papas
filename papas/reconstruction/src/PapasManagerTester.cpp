@@ -30,7 +30,7 @@ Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
   auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
-  const auto simulator = Simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+  Simulator simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
                                    smearedHcalClusters, tracks, smearedTracks, simParticles, history);
   return simulator;
 }
