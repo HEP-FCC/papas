@@ -231,8 +231,8 @@ private:
   PFParticles& m_particles;         ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
 
-  StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
-  HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
+  std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles
+  std::shared_ptr<HelixPropagator> m_propHelix;            ///<used to determine the path of charged particles
 };
 
 }  // end namespace papas
