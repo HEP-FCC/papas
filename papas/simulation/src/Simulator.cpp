@@ -9,6 +9,7 @@
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 #include "papas/utility/Log.h"
+#include "papas/datatypes/Helix.h"
 class Detector;
 
 namespace papas {
@@ -96,6 +97,7 @@ void Simulator::simulateHadron(Particle& ptc) {
       /// ecal path length can be infinite in case the ecal
       /// has lambda_I = 0 (fully transparent to hadrons)
       auto path = ptc.path();
+      path = std::static_pointer_cast<Helix>(ptc.path());
       double timeEcalInner = path->timeAtZ(path->namedPoint(papas::Position::kEcalIn).Z());
       double deltaT = path->deltaT(pathLength);
       double timeDecay = timeEcalInner + deltaT;
