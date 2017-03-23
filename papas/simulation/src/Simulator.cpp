@@ -14,9 +14,9 @@ class Detector;
 
 namespace papas {
 
-Simulator::Simulator(const Event& papasevent, const ListParticles& particles, const Detector& detector,
+Simulator::Simulator(const Event& papasevent, const Detector& detector,
                      Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, Particles& simParticles,
+                     Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedTracks, Particles& particles,
                      Nodes& history)
     : m_event(papasevent),
       m_detector(detector),
@@ -26,35 +26,41 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_smearedHcalClusters(smearedHcalClusters),
       m_tracks(tracks),
       m_smearedTracks(smearedTracks),
-      m_particles(simParticles),
+      m_particles(particles),
       m_history(history)
   
   {
     m_propHelix  = std::make_shared<HelixPropagator>();
     m_propStraight  = std::make_shared<StraightLinePropagator>();
-  for (const auto& p: particles) {
-    simulateParticle(p);
+    Ids ids;
+    for (auto& p : particles)
+      ids.push_back(p.first);
+#if WITHSORT
+    ids.sort(std::greater<Identifier>());
+#endif
+    for (auto& id :ids) {
+    simulateParticle(particles[id]);
   }
 }
 
-void Simulator::simulateParticle(const Particle& ptc) {
+void Simulator::simulateParticle(Particle& ptc) {
   int pdgid = ptc.pdgId();
   if (ptc.charge() && ptc.pt() < 0.2 && abs(pdgid) >= 100) {
     // to avoid numerical problems in propagation
     return;
   }
-
-  Particle& storedParticle = makeAndStoreParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
+  PDebug::write("Simulating {}", ptc);
+  //Particle& storedParticle = makeAndStoreParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
   if (pdgid == 22) {
-    simulatePhoton(storedParticle);
+    simulatePhoton(ptc);
   } else if (abs(pdgid) == 11) {
-    simulateElectron(storedParticle);
+    simulateElectron(ptc);
   } else if (abs(pdgid) == 13) {
-    simulateMuon(storedParticle);
+    simulateMuon(ptc);
   } else if ((abs(pdgid) == 12) | (abs(pdgid) == 14) | (abs(pdgid) == 16)) {
-    simulateNeutrino(storedParticle);
+    simulateNeutrino(ptc);
   } else if (abs(pdgid) >= 100) {
-    simulateHadron(storedParticle);
+    simulateHadron(ptc);
   }
 }
 
@@ -190,7 +196,7 @@ Particle& Simulator::makeAndStoreParticle(int pdgid, double charge, const TLoren
   double field = m_detector.field()->getMagnitude();
   Particle simParticle = Particle(pdgid, charge, tlv, m_particles.size(), 's', vertex);
   auto id = simParticle.id();
-  PDebug::write("Made {}", simParticle);
+  
   m_particles.emplace(id, std::move(simParticle));
   addNode(id, 0);  // add node to history graph
   return m_particles[id];

@@ -154,7 +154,7 @@ TEST_CASE("ClusterSmear") {
   std::vector<double> energies;
 
   // run the simulator which will fill the above objects
-  ListParticles particles;
+  Particles particles;
   auto simulator = tester.setSimulator(particles);
 
   for (int i = 0; i < 10000; i++) {

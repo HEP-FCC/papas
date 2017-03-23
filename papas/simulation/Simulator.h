@@ -33,7 +33,7 @@ public:
   // Simulator(const Detector&);
   /** Constructor
    @param[in] event papas Event structure (TODO double check its needed)
-   @param[in] particles list of gen particles which are to be simulated
+   @param[in] subtype for particles which are to be simulated
    @param[in] detector Detector
    @param[in] ecalClusters structure into which new Ecals are stored
    @param[in] hcalClusters structure into which new Hcals are stored
@@ -41,18 +41,17 @@ public:
    @param[in] smearedHcalClusters structure into which new smeared Hcals are stored
    @param[in] tracks structure into which new tracks are stored
    @param[in] smearedtracks structure into which new  smearedtracks are stored
-   @param[in] simParticles structure into which new Simulation particles are stored
    @param[in] history structure into which new history can be added, may be empty at start
   */
-  Simulator(const Event& event, const ListParticles& particles, const Detector& detector,
+  Simulator(const Event& event, const Detector& detector,
             Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, Particles& simParticles,
+            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, Particles& particles,
             Nodes& history);
   /** Simulate using a gen particle to produce a Simulated particle, plus tracks, smearedtracks and clusters/
    smearedclusters
    @param[in] ptc the gen particle to be simulated
   */
-  void simulateParticle(const Particle& ptc);
+  void simulateParticle(Particle& ptc);
   /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
    */
@@ -64,7 +63,7 @@ public:
   const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
   const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
   Nodes& history() { return m_history; }                        /// return a reference to history nodes collection
-  const Particles& particles() const { return m_particles; }  ///< Return particles collection
+                                                                //const Particles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
   /**
    Smears a Cluster

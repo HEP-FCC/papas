@@ -8,7 +8,7 @@ namespace papas {
 
 PapasManagerTester::PapasManagerTester(Detector& detector) : PapasManager(detector) {}
 
-Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
+Simulator PapasManagerTester::setSimulator(Particles& particles) {
 
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
@@ -27,11 +27,10 @@ Simulator PapasManagerTester::setSimulator(const ListParticles& particles) {
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
   auto& history = createHistory();
-  auto& simParticles = createParticles();
 
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
-                                   smearedHcalClusters, tracks, smearedTracks, simParticles, history);
+  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+                                   smearedHcalClusters, tracks, smearedTracks, particles, history);
   return simulator;
 }
 

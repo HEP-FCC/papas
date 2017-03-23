@@ -7,14 +7,48 @@
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
+#include "datamodel/MCParticleCollection.h"
+#include "datamodel/EventInfoCollection.h"
+#include "datamodel/GenVertexConst.h"
+#include "datamodel/MCParticleCollection.h"
+#include "datamodel/ParticleCollection.h"
+#include "utilities/ParticleUtils.h"
+// podio specific includes
+#include "podio/EventStore.h"
+#include "podio/ROOTReader.h"
+#include "podio/ROOTWriter.h"
+
+#include "datamodel/EventInfoCollection.h"
+#include "datamodel/ParticleCollection.h"
+#include "utilities/ParticleUtils.h"
+
+#include "papas/datatypes/Particle.h"
+#include "papas/simulation/Simulator.h"
+#include "papas/utility/PDebug.h"
+
+#include "papas/display/PFApp.h"
+#include "papas/utility/Log.h"
+
+#include <exception>
+#include <string>
+#include <sys/stat.h>
+
+// ROOT
+#include "TBranch.h"
+#include "TFile.h"
+#include "TLorentzVector.h"
+#include "TROOT.h"
+#include "TTree.h"
+
 
 namespace papas {
 
 PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_event() {
   
 }
+  
 
-void PapasManager::simulate(const ListParticles& particles) {
+void PapasManager::simulate(Particles& particles) {
 
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
@@ -29,11 +63,11 @@ void PapasManager::simulate(const ListParticles& particles) {
   auto& smearedTracks = createTracks();
   auto& history =createHistory();
   m_event.setHistory(history);
-  auto& simParticles = createParticles();
+  
 
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
-                             smearedHcalClusters, tracks, smearedTracks, simParticles, history);
+  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+                             smearedHcalClusters, tracks, smearedTracks, particles, history);
 
   // store the addresses of the filled collections to the Event
   m_event.addCollection(ecalClusters);
@@ -42,7 +76,7 @@ void PapasManager::simulate(const ListParticles& particles) {
   m_event.addCollection(smearedHcalClusters);
   m_event.addCollection(tracks);
   m_event.addCollection(smearedTracks);
-  m_event.addCollection(simParticles);
+  m_event.addCollection(particles);
   m_event.extendHistory(history);
   }
 

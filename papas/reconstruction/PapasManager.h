@@ -6,6 +6,10 @@
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <list>
 
+
+namespace fcc {
+class MCParticleCollection;
+}
 namespace papas {
 /**
  *  @brief The PapasManager class is a high level class to own the clusters, particles etc created in an event and
@@ -35,6 +39,8 @@ namespace papas {
  *  @author  Alice Robson
  *  @date    2016-12-06
  */
+  //forward declarations
+
 
 class PapasManager {
 public:
@@ -42,6 +48,7 @@ public:
    * @param[in] detector : the detector to be used in the simulation and reconstruction
    */
   PapasManager(const Detector& detector);
+  void addParticles(const Particles& particles);
   /**
    *   @brief  Runs Papas simulation on a collection of generated particles producing papas simulated particles
    *          and their clusters and tracks and also history information of the connections between objects
@@ -58,7 +65,7 @@ public:
    *       particles-simulated "ps"
    *       history
    */
-  void simulate(const ListParticles& particles);
+  void simulate(Particles& particles);
   /**
    *   @brief  Merges a set of clusters according to detector sensitivities.
    *   @param[in]  typeAndSubtype: identifies which clusters to merge, eg "hs" for hcals-smeared clusters

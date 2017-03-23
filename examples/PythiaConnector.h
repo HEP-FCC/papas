@@ -49,7 +49,7 @@ public:
   void displayEvent(const papas::PapasManager& papasManager);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
   // void processEvent(unsigned int eventNo, PapasManager& papasManager);
-  papas::ListParticles makePapasParticlesFromGeneratedParticles(
+  papas::Particles makePapasParticlesFromGeneratedParticles(
       const fcc::MCParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size,
                                          papas::IdCoder::ItemType itemtype, char subtype) const;
