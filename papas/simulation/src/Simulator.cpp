@@ -97,7 +97,6 @@ void Simulator::simulateHadron(Particle& ptc) {
       /// ecal path length can be infinite in case the ecal
       /// has lambda_I = 0 (fully transparent to hadrons)
       auto path = std::static_pointer_cast<Helix>(ptc.path());
-//ath = std::static_pointer_cast<Helix>(ptc.path());
       double timeEcalInner = path->timeAtZ(path->namedPoint(papas::Position::kEcalIn).Z());
       double deltaT = path->deltaT(pathLength);
       double timeDecay = timeEcalInner + deltaT;

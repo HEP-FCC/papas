@@ -30,8 +30,6 @@ public:
   Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
   /** Constructor */
   Path();
-  
-  void setField(double field) { m_field=field;} ///< set the field
   /** Add a new point to path
    * @param layer for the new point which is used to index unordered map of points
    * @param vec new point to be added

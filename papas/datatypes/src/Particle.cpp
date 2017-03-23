@@ -1,10 +1,5 @@
-
 #include "papas/datatypes/Particle.h"
 
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @brief  Particle from which more complex particles are derived
  */
@@ -14,7 +9,6 @@
 #include "papas/datatypes/Helix.h"
 #include "spdlog/details/format.h"
 #include <iostream>
-//#include <sstream>  //AJRTODO temp
 
 namespace papas {
 
@@ -30,23 +24,7 @@ Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned
       m_endVertex(endVertex),
       m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
       {
-      
-  /*if (charge!=0)
-      m_path = std::make_shared<Helix>(tlv, m_startVertex, m_charge);
-  else
-      m_path = std::make_shared<Path>(tlv, m_startVertex);
-      }*/
       }
-
-/*Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, const Track& track, unsigned int index,
-                       char subtype)
-    :  // for when particle is created via reconstruct track - it calls the above constructor
-      Particle(pdgid, charge, tlv, index, subtype, track.path()->namedPoint(papas::Position::kVertex),
-                 track.path()->field()) {
-  for (const auto& p : track.path()->points()) {  // not sure if this is a good idea but it helps with plotting??
-    if (p.first != papas::Position::kVertex) m_path->addPoint(p.first, p.second);
-  }
-}*/
 
 bool Particle::isElectroMagnetic() const {
   unsigned int kind = abs(pdgId());
