@@ -51,7 +51,10 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
   TLorentzVector tlv;
   papas::Particles particles;
   int countp = 0;
-  for (const auto& ptc : *ptcs) {
+  
+  //Would like to create particles in order of decreasing energy somehow
+  
+  for (const auto& ptc : (*ptcs)) {
     countp += 1;
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
