@@ -16,8 +16,9 @@ public:
   /**
    Propagate uncharged particle along a strightline to the selected cylinder and
    store the point where the particle crossed the cylinder
-   ptc particle that is to be propagated
-   cyl cylinder to which the particle is to be propagated.
+   @param[in] ptc particle that is to be propagated
+   @param[in] cyl cylinder to which the particle is to be propagated.
+   @param[in] field magnitude of magnetic field (not used for uncharged particles)
   */
   void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field = 0) const override;
 private:

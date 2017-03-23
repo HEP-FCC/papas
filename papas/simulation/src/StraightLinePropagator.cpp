@@ -1,29 +1,26 @@
 
 
 //#include <iostream>
-#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Path.h"
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-  void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field) const {
-    auto layer = cyl.layer();
-    auto cylinderz = cyl.z();
-    double cylinderradius = cyl.radius();
-    //if (ptc.path() == nullptr)
-    //ptc.setPath();
+void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field) const {
+  auto layer = cyl.layer();
+  auto cylinderz = cyl.z();
+  double cylinderradius = cyl.radius();
   Path::Ptr line = ptc.path();
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();
-  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius)
-      return; //  particle created outside the cylinder
-  double zbar = line->unitDirection().Z();  // Z of unit vex
+  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius) return;  //  particle created outside the cylinder
+  double zbar = line->unitDirection().Z();                                     // Z of unit vex
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
     double length = (destz - origin.Z()) / cos(theta);  // TODO check Length >0
@@ -55,6 +52,5 @@ StraightLinePropagator::StraightLinePropagator() {}
     line->addPoint(layer, destination);
   }
 }
-
 
 }  // end namespace papas

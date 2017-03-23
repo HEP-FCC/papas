@@ -298,8 +298,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   TVector3 p3(cluster.position().Unit() * momentum);
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
   PFParticle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
-  // TODO discuss with Colin
-  // Should this use propagator instead
+  // This will be addressed in the following pull request
   particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
   if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
@@ -310,8 +309,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // path where the point is actually that
   // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
-  // particle.setPath(path);
-  // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
   // TODO make more flexible and able to detect what type of cluster
   PDebug::write("Made {} from Merged{}", particle, cluster);

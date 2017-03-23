@@ -101,12 +101,12 @@ TEST_CASE("Helixpath") {  /// Helix path test
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
   PFParticle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, field);
-  HelixPropagator helixprop(3.8);
+  HelixPropagator helixprop;
   //(particle.p4(), {0,0,0}, 3.8, -1);
-  helixprop.propagateOne(particle, cyl1);
+  helixprop.propagateOne(particle, cyl1, field);
   auto tvec = particle.pathPosition(cyl1.layer());
   auto particle2 = PFParticle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, field);
-  helixprop.propagateOne(particle2, cyl1);
+  helixprop.propagateOne(particle2, cyl1, field);
   auto tvec2 = particle2.pathPosition(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
   REQUIRE(tvec2.Z() == Approx(0.50701872));

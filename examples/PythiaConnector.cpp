@@ -141,7 +141,6 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
 void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   papas::PFApp myApp{};  // I think this should turn into a PapasManager member
   myApp.display(papasManager.event(), papasManager.detector());
-  std::cout << "pass";
   // gSystem->ProcessEvents();
 }
 

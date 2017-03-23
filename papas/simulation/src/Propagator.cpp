@@ -1,4 +1,7 @@
 #include "papas/simulation/Propagator.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/VolumeCylinder.h"
+#include "papas/datatypes/PFParticle.h"
 
 
 namespace papas {

@@ -50,17 +50,18 @@ public:
   double muonPtResolution(const PFParticle& /*ptc*/) const { return 0.02; }
   
   const std::list<std::shared_ptr<const DetectorElement>>  elements() const { return m_elements;}
-  void setElements();
+  
 protected:
+  ///sets up a list of all detector elements m_elements (needed for propagation)
+  void setElements();
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
   std::shared_ptr<const class Calorimeter> m_ecal;
   std::shared_ptr<const class Calorimeter> m_hcal;
   std::shared_ptr<const Tracker> m_tracker;
   std::shared_ptr<const Field> m_field;
-
 private:
-  std::list<std::shared_ptr<const DetectorElement>> m_elements;
+  std::list<std::shared_ptr<const DetectorElement>> m_elements; //list of the detector elements in the detector (ordered)
 };
 }  // end namespace papas
 #endif
