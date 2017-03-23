@@ -17,16 +17,13 @@ extern double gconstc;
 Helix::Helix() {}
 
 Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, double field)
-    : Path(p4, origin, field), m_charge(charge), m_vOverOmega(p4.Vect()) {}
-
-void Helix::setField(double field) {
-  if (field != m_field) {
-    m_field = field;
-    if (m_charge * m_field == 0) throw "invalid parameters for Helix: charge or field are zero";
+    : Path(p4, origin, field), m_charge(charge), m_vOverOmega(p4.Vect()) {
+      
+    if (m_charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
     m_vOverOmega = m_p4.Vect();
-    m_vOverOmega *= 1. / (m_charge * m_field) * 1e9 / gconstc;
-    m_omega = m_charge * m_field * gconstc * gconstc / (m_p4.M() * m_p4.Gamma() * 1e9);
-    m_rho = m_p4.Perp() / (fabs(m_charge) * m_field) * 1e9 / gconstc;
+    m_vOverOmega *= 1. / (m_charge * field) * 1e9 / gconstc;
+    m_omega = m_charge * field * gconstc * gconstc / (m_p4.M() * m_p4.Gamma() * 1e9);
+    m_rho = m_p4.Perp() / (fabs(m_charge) * field) * 1e9 / gconstc;
     TVector3 momperp_xy = TVector3(-m_p4.Y(), m_p4.X(), 0.).Unit();
     TVector3 origin_xy = TVector3(m_origin.X(), m_origin.Y(), 0.);
 
@@ -40,7 +37,7 @@ void Helix::setField(double field) {
     m_phi0 = center_to_origin.Phi();
     m_phiMin = m_phi0 * 180 / M_PI;
     m_phiMax = m_phiMin + 360.;
-  }
+  
 }
 
 std::array<double, 3> Helix::polarAtTime(double time) const {
