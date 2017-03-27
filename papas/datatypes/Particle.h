@@ -28,11 +28,10 @@ public:
    @param[in] tlv 4-momentum, px, py, pz, E
    @param[in] index index to the collection to which thie particle will belown
    @param[in] subtype Identifier subtype to be used when creating Identifier eg 'r' for reconstructed
-   @param[in] status Status (1 = stable)
    @param[in] startvertex start vertex (3d point)
-   @param[in] endvertex end vertex (3d point)
+   @param[in] status Status (1 = stable)
    */
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,  const TVector3& startvertex = TVector3(0., 0., 0.), const TVector3& endvertex = TVector3(0., 0., 0.) ,double status = 1);
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,  const TVector3& startvertex = TVector3(0., 0., 0.), double status = 1);
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
   double e() const { return m_tlv.E(); }               ///<Energy

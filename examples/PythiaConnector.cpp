@@ -73,20 +73,14 @@ for (const auto& ptc : sortedPtcs) {
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     int pdgid = ptc.core().pdgId;
     TVector3 startVertex = TVector3(0, 0, 0);
-    TVector3 endVertex = TVector3(0, 0, 0);
     if (ptc.startVertex().isAvailable()) {
       startVertex = TVector3(ptc.startVertex().x() * 1e-3, ptc.startVertex().y() * 1e-3, ptc.startVertex().z() * 1e-3);
     }
-    if (ptc.endVertex().isAvailable()) {
-      // convert pythia : mm -> papas : m
-      endVertex = TVector3(ptc.endVertex().x() * 1e-3, ptc.endVertex().y() * 1e-3, ptc.endVertex().z() * 1e-3);
-    }
-
     if (ptc.core().status == 1) {  // only stable ones
       
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
         
-        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex, endVertex, ptc.core().status);
+        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex, ptc.core().status);
         particles.emplace(particle.id(),particle);
         papas::PDebug::write("Made {}", particle);
       }
@@ -94,27 +88,6 @@ for (const auto& ptc : sortedPtcs) {
   }
 
 }
-
-
-
-/*
-void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
-  // make a papas particle collection from the next event
-  // then run simulate and reconstruct
-  m_reader.goToEvent(eventNo);
-
-  const fcc::ParticleCollection* ptcs(nullptr);
-  if (m_store.get("GenParticle", ptcs)) {
-    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
-    papasManager.storeParticles(std::move(papasparticles));
-    papasManager.simulateEvent();
-    papasManager.mergeClusters();
-    papasManager.reconstructEvent();
-    m_store.clear();
-  }
-
-  m_reader.endOfEvent();
-}*/
 
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event

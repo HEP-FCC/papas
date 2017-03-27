@@ -15,13 +15,12 @@ namespace papas {
 // Particle::Particle() : m_pdgId(0), m_charge(0), m_status(0) {}
 
 Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
-                    const TVector3& startVertex,const TVector3& endVertex, double status)
+                    const TVector3& startVertex, double status)
     : m_tlv(tlv),
       m_pdgId(pdgid),
       m_charge(charge),
       m_status(status),
       m_startVertex(startVertex),
-      m_endVertex(endVertex),
       m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
       {
       }
