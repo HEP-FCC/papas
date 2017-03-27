@@ -8,7 +8,6 @@
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
-//#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
@@ -29,7 +28,6 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, const TVector
   // Extract vectors of x, y and z values
   int i = 0;
   for (auto p : points) {
-
     X.push_back(p.X());
     Y.push_back(p.Y());
     Z.push_back(p.Z());
@@ -138,6 +136,8 @@ void GTrajectory::Draw(const std::string& projection /*,
 };
 
 GTrajectories::GTrajectories(const Particle& particle) {
+  if (particle.path()== nullptr)
+    return;
   if (particle.charge() != 0) {
     if (abs(particle.pdgId()) > 100) {
       addHelix(particle.path(), particle.p4().Vect(), 1, 1);
@@ -146,7 +146,6 @@ GTrajectories::GTrajectories(const Particle& particle) {
       addHelix(particle.path(), particle.p4().Vect(), 3, 7);
       addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 5, 3);
     }
-
   } else {
     if (particle.pdgId() == 22)
       addStraight(particle.path(), particle.p4().Vect(), 2, 2, 1);

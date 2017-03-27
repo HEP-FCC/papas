@@ -55,6 +55,7 @@ void PapasManager::simulate(Particles& particles) {
   // and stored in a list of collections.
   // The collection can then be passed to the Simulator and concrete objects
   // stored in the collection
+  // Note: Normally The empty particles passed in here should have been created by the PapasManager
   auto& ecalClusters = createClusters();
   auto& hcalClusters = createClusters();
   auto& smearedEcalClusters = createClusters();
@@ -76,6 +77,8 @@ void PapasManager::simulate(Particles& particles) {
   m_event.addCollection(smearedHcalClusters);
   m_event.addCollection(tracks);
   m_event.addCollection(smearedTracks);
+  //NB can only add the particle collection once the particles are completed (eg paths added in)
+  // this is because they are stored here as const objects 
   m_event.addCollection(particles);
   m_event.extendHistory(history);
   }

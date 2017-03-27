@@ -48,10 +48,11 @@ public:
    * @param[in] detector : the detector to be used in the simulation and reconstruction
    */
   PapasManager(const Detector& detector);
-  void addParticles(const Particles& particles);
   /**
-   *   @brief  Runs Papas simulation on a collection of generated particles producing papas simulated particles
-   *          and their clusters and tracks and also history information of the connections between objects
+   *   @brief  Runs Papas simulation on a collection of papas simulated particles creating
+   *          their clusters and tracks and paths and also history information of the connections
+   *           between objects. Note that normally the particles arhument will pass a particles
+   *           collection already owned by PapasManager iusing createParticles.
    *   @param[in]  particles: unordered map of generated Particles to be simulated.
    *
    *   This method will create the following objects and add them to Event and to
@@ -89,13 +90,13 @@ public:
   const Detector& detector() const { return m_detector; }        ///< Access the detector
   void setEventNo(unsigned int eventNo) { m_event.setEventNo(eventNo); }///< Set the event No
   void clear(); ///<clears all owned objects and the Event
+  Particles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
 
 protected:
   Clusters& createClusters();      // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();          // Create an empty concrete collection of tracks ready for filling by an algorithm
   Blocks& createBlocks();          // Create an empty concrete collection of blocks ready for filling by an algorithm
-  Particles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
-  Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
+    Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
   
   std::list<Clusters> m_ownedClusters;      //<Holds all the clusters collections created during an event

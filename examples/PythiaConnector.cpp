@@ -46,15 +46,28 @@ PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore(
   m_store.setReader(&m_reader);
 }
 
-papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs) {
+void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs, papas::Particles& particles) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
-  papas::Particles particles;
   int countp = 0;
   
-  //Would like to create particles in order of decreasing energy somehow
-  
-  for (const auto& ptc : (*ptcs)) {
+  //Sort particles in order of decreasing energy(rather crudely)
+  //I think there should be a better way of doing this, but this should do for now
+  std::list<const fcc::MCParticle> sortedPtcs;
+  for (auto p : *ptcs)
+    sortedPtcs.push_back(p);
+  sortedPtcs.sort(
+         [] (const fcc::MCParticle&  a, const fcc::MCParticle& b) { auto p4= a.p4();
+              TLorentzVector tlv;
+              tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+              double e1 =tlv.E();
+              TLorentzVector tlv2;
+              p4= b.p4();
+              tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+              double e2 =tlv2.E();
+           return e1 > e2;});
+              
+for (const auto& ptc : sortedPtcs) {
     countp += 1;
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
@@ -75,12 +88,11 @@ papas::Particles PythiaConnector::makePapasParticlesFromGeneratedParticles(const
         
         papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex, endVertex, ptc.core().status);
         particles.emplace(particle.id(),particle);
-        papas::PDebug::write("Made Papas{}", particle);
+        papas::PDebug::write("Made {}", particle);
       }
     }
   }
 
-  return particles;
 }
 
 
@@ -113,8 +125,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   const fcc::MCParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
     try {
-    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
-    papasManager.simulate(papasparticles);
+    papas::Particles& genParticles = papasManager.createParticles();
+    makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
+    papasManager.simulate(genParticles);
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");
     papasManager.buildBlocks("em", "hm", 's');
