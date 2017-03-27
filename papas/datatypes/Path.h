@@ -73,7 +73,6 @@ protected:
   TVector3 m_origin; ///< start vertex (3d)
   Points m_points; ///< Map of path points indexed by position
   double m_field;  ///< Magnetic field which is set to 0 for a straightline
-  private:
 };
 
 /// Alternative name for Path class

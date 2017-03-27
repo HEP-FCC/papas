@@ -20,7 +20,6 @@ Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, do
     : Path(p4, origin, field), m_charge(charge), m_vOverOmega(p4.Vect()) {
       
     if (m_charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
-    m_vOverOmega = m_p4.Vect();
     m_vOverOmega *= 1. / (m_charge * field) * 1e9 / gconstc;
     m_omega = m_charge * field * gconstc * gconstc / (m_p4.M() * m_p4.Gamma() * 1e9);
     m_rho = m_p4.Perp() / (fabs(m_charge) * field) * 1e9 / gconstc;
@@ -37,7 +36,6 @@ Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, do
     m_phi0 = center_to_origin.Phi();
     m_phiMin = m_phi0 * 180 / M_PI;
     m_phiMax = m_phiMin + 360.;
-  
 }
 
 std::array<double, 3> Helix::polarAtTime(double time) const {

@@ -7,38 +7,8 @@
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
-#include "datamodel/MCParticleCollection.h"
-#include "datamodel/EventInfoCollection.h"
-#include "datamodel/GenVertexConst.h"
-#include "datamodel/MCParticleCollection.h"
-#include "datamodel/ParticleCollection.h"
-#include "utilities/ParticleUtils.h"
-// podio specific includes
-#include "podio/EventStore.h"
-#include "podio/ROOTReader.h"
-#include "podio/ROOTWriter.h"
-
-#include "datamodel/EventInfoCollection.h"
-#include "datamodel/ParticleCollection.h"
-#include "utilities/ParticleUtils.h"
-
 #include "papas/datatypes/Particle.h"
-#include "papas/simulation/Simulator.h"
-#include "papas/utility/PDebug.h"
 
-#include "papas/display/PFApp.h"
-#include "papas/utility/Log.h"
-
-#include <exception>
-#include <string>
-#include <sys/stat.h>
-
-// ROOT
-#include "TBranch.h"
-#include "TFile.h"
-#include "TLorentzVector.h"
-#include "TROOT.h"
-#include "TTree.h"
 
 
 namespace papas {
