@@ -222,7 +222,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
   std::queue<int> nodeDepth;  // keeps track of the node depths so we can limit how deep we go if we wish
 
   // Mark the current node as visited and enqueue it
-  for (auto& node : nodes) {
+  for (const auto& node : nodes) {
     if (m_visited.find(node) == m_visited.end()) {  // if node is not listed as already being visited
       node->accept(*this);                          // mark as visited and add to results
       nodeQueue.push(node);                         // put into the queue
