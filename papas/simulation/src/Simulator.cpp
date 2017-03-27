@@ -96,7 +96,6 @@ void Simulator::simulateHadron(Particle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-
   if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -109,10 +108,8 @@ void Simulator::simulateHadron(Particle& ptc) {
       TVector3 pointDecay = path->pointAtTime(timeDecay);
       path->addPoint(papas::Position::kEcalDecay, pointDecay);
       if (ecal_sp->volumeCylinder().contains(pointDecay)) {
-        // fracEcal = randomgen::RandUniform(0., 0.7).next();
         fracEcal = rootrandom::Random::uniform(0., 0.7);
         auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
-        // const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
         // For now, using the hcal resolution and acceptance for hadronic cluster
         // in the Ecal. That's not a bug!
         auto smeared = smearCluster(cluster, papas::Layer::kHcal);

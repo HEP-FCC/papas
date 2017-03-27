@@ -101,8 +101,7 @@ TEST_CASE("Helixpath") {  /// Helix path test
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2., 1.);
   double field = 3.8;
   Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, field);
-  HelixPropagator helixprop(3.8);
-  //(particle.p4(), {0,0,0}, 3.8, -1);
+  HelixPropagator helixprop;
   helixprop.propagateOne(particle, cyl1);
   auto tvec = particle.path()->namedPoint(cyl1.layer());
   auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, field);

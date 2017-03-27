@@ -309,8 +309,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // path where the point is actually that
   // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
-  // particle.setPath(path);
-  // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
   // TODO make more flexible and able to detect what type of cluster
   PDebug::write("Made {} from Merged{}", particle, cluster);
