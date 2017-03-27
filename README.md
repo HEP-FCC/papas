@@ -41,7 +41,7 @@ You need to install:
 Before installing and everytime you want to use this software on lxplus, set up your environment:
 
 ```bash
-source /afs/cern.ch/exp/fcc/sw/0.7/init_fcc_stack.sh
+source /afs/cern.ch/exp/fcc/sw/0.8pre/setup.sh
 source init.sh
 ```
 
