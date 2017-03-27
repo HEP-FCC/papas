@@ -28,7 +28,12 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   m_propHelix  = std::make_shared<HelixPropagator>();
   m_propStraight  = std::make_shared<StraightLinePropagator>();
   const auto& blocks = m_event.blocks(blockSubtype);
-  auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
+      bool withsort = false;
+#if WITHSORT
+  withsort =  true;
+#endif
+  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
+
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
@@ -202,9 +207,13 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
  
   Ids ecalIds;
-  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, WITHSORT));
+  bool withsort=false;
+#if WITHSORT
+  withsort = true;
+#endif
+  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, withsort));
   for (auto trackId : trackIds) {
-    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, WITHSORT)) {
+    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, withsort)) {
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work

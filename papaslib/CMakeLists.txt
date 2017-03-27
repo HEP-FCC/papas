@@ -84,28 +84,23 @@ include_directories(
 ${CMAKE_SOURCE_DIR}
 )
 
-REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
+# remove ### to get back root dicts
+###REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
-
-add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
-add_dependencies(papasDict papas-dictgen )
-target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
+###add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
+###add_dependencies(papasDict papas-dictgen )
+###target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
 add_library(papas SHARED ${sources} )
 target_link_libraries(  papas ${ROOT_LIBRARIES} )
 target_compile_definitions(papas PRIVATE WITHSORT=1)
 install(TARGETS papas DESTINATION lib)
-install(TARGETS papasDict DESTINATION lib)
-
-
+###install(TARGETS papasDict DESTINATION lib)
 
 # Install the dictionary
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
-
-
-
+###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
+###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
 
 #install(DIRECTORY sources DESTINATION include)
 
