@@ -210,7 +210,7 @@ Particle& Simulator::makeAndStoreParticle(int pdgid, double charge, double theta
   TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
   return makeAndStoreParticle(pdgid, charge, p4, vertex);
 }
-
+//TODO move this out to a separate example 
 Particle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
                                       double ptmax, const TVector3& vertex) {
   double theta = rootrandom::Random::uniform(thetamin, thetamax);
