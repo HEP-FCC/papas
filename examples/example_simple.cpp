@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
     for (const auto& p : papasManager.event().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
-    std::cout << "Reconstructed Particles" << std::endl<<  papasManager.event().particles('r').size() << std::endl;;
+    std::cout << "Reconstructed Particles: " << std::endl<<  papasManager.event().particles('r').size() << std::endl;;
     for (const auto& p : papasManager.event().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }

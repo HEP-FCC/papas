@@ -49,7 +49,6 @@ public:
   double charge() const { return m_charge; }                 ///< particle charge
   bool status() const { return m_status; }                   ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
-  const TVector3& endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
   std::string info() const; ///< text descriptor of the particle
   /** check id this position exists in particle path
    @param[in] layer position to search for the path location
@@ -64,7 +63,6 @@ private:
   double m_charge;         ///<particle charge
   double m_status;         ///< status code, e.g. from generator. 1:stable
   TVector3 m_startVertex;  ///<start vertex (3d point)
-  TVector3 m_endVertex;    ///<end vertex (3d point)
   Identifier m_id; ///< unique Identifier
   std::shared_ptr<Path> m_path; ///< pointer to path object
 };
