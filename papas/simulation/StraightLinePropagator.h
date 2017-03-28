@@ -12,7 +12,7 @@ class StraightLinePropagator  : public Propagator {
 public:
   /** Constructor
   */
-  StraightLinePropagator();
+  StraightLinePropagator(std::shared_ptr<const Field> field);
   /**
    Propagate uncharged particle along a strightline to the selected cylinder and
    store the point where the particle crossed the cylinder
@@ -20,7 +20,7 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field (not used for uncharged particles)
   */
-  void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field = 0) const override;
+  void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const override;
 private:
 };
 

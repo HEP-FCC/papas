@@ -9,9 +9,9 @@
 
 namespace papas {
 
-StraightLinePropagator::StraightLinePropagator() {}
+  StraightLinePropagator::StraightLinePropagator(std::shared_ptr<const Field> field): Propagator(field) {}
 
-void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field) const {
+void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
   auto layer = cyl.layer();
   double cylinderz = cyl.z();
   double cylinderradius = cyl.radius();

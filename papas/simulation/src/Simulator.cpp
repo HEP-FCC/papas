@@ -27,8 +27,8 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_smearedTracks(smearedTracks),
       m_particles(simParticles),
       m_history(history) {
-  m_propHelix = std::make_shared<HelixPropagator>();
-  m_propStraight = std::make_shared<StraightLinePropagator>();
+  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
+  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
   for (const auto& p : particles) {
     simulateParticle(p);
   }
@@ -62,7 +62,7 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
   propagator(ptc.charge())
-      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -88,7 +88,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
   // find where it meets the inner Ecal cyclinder
   propagator(ptc.charge())
-      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -113,7 +113,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // now find where it reaches into HCAL
-  propagator(ptc.charge())->propagateOne(ptc, hcal_sp->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  propagator(ptc.charge())->propagateOne(ptc, hcal_sp->volumeCylinder().inner());
   auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared)) {
@@ -143,7 +143,7 @@ void Simulator::simulateElectron(PFParticle& ptc) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
   propagator(ptc.charge())
-      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
 }
 
 void Simulator::simulateMuon(PFParticle& ptc) {

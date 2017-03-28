@@ -9,9 +9,9 @@
 
 namespace papas {
 
-HelixPropagator::HelixPropagator()  {}
+  HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
 
-void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field) const {
+void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
 
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();
