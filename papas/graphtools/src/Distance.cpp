@@ -7,7 +7,7 @@
 //
 
 #include "papas/graphtools/Distance.h"
-//#include "papas/datatypes/Identifier.h"
+//#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -28,7 +28,7 @@ Distance::Distance(bool islinked, double dist) : m_distance(dist), m_isLinked(is
 
 Distance::Distance(const Cluster& cluster, const Track& track) : m_distance(-1), m_isLinked(false) {
   papas::Position cyl_layer = papas::Position::kEcalIn;
-  if (Identifier::isHcal(cluster.id())) {
+  if (IdCoder::isHcal(cluster.id())) {
     cyl_layer = papas::Position::kHcalIn;
   }
   if (track.path()->hasNamedPoint(cyl_layer)) {  // check exists

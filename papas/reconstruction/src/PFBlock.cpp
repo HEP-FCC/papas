@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/utility/PDebug.h"
 #include "spdlog/details/format.h"
@@ -17,14 +17,14 @@ namespace papas {
 
 int PFBlock::tempBlockCount = 0;
   
-  bool blockIdComparer (IdType id1, IdType id2) {
-    if (Identifier::itemType(id1) ==Identifier::itemType(id2))
+  bool blockIdComparer (Identifier id1, Identifier id2) {
+    if (IdCoder::type(id1) ==IdCoder::type(id2))
       return id1>id2;
     else
-      return Identifier::itemType(id1) < Identifier::itemType(id2);}
+      return IdCoder::type(id1) < IdCoder::type(id2);}
   
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
-    : m_uniqueId(Identifier::makeId(index, Identifier::kBlock, subtype, element_ids.size())),
+    : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),
      m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(blockIdComparer);
@@ -44,17 +44,17 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char 
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isEcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isEcal(elem); });
 }
 
 int PFBlock::countHcal() const {
   // Counts how many hcal cluster ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isHcal(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isHcal(elem); });
 }
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](IdType elem) { return Identifier::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -73,17 +73,17 @@ const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
   return edge->second;
 }
 
-std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType matchtype) const {
+std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
   /**
    Returns list of keys of all edges of a given edge type that are connected to a given id.
    Arguments:
-   uniqueid : is the id of item of interest
+   id : is the identifier of item of interest
    edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    */
   std::list<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
-    // if this is an edge that includes uniqueid
-    if (edge.second.isLinked() && edge.second.otherId(uniqueid) > 0) {
+    // if this is an edge that includes the id
+    if (edge.second.isLinked() && edge.second.otherId(id) > 0) {
       // include in list if either no matchtype is specified or if the edge is of the same matchtype
       if ((matchtype == Edge::EdgeType::kUnknown) || matchtype == edge.second.edgeType())
         linkedEdgeKeys.push_back(edge.first);
@@ -92,16 +92,17 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(IdType uniqueid, Edge::EdgeType
   return linkedEdgeKeys; //todo consider sorting
 }
 
-Ids PFBlock::linkedIds(IdType uniqueid, Edge::EdgeType edgetype, bool sort) const {
+
+Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   Ids linkedIds;
-  for (auto key : linkedEdgeKeys(uniqueid, edgetype)) {
+  for (auto key : linkedEdgeKeys(id, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
-    linkedIds.push_back(found->second.otherId(uniqueid));
+    linkedIds.push_back(found->second.otherId(id));
   }
   if (sort)
-    linkedIds.sort(std::greater<IdType>());
+    linkedIds.sort(std::greater<Identifier>());
   return linkedIds;
 }
 
@@ -118,7 +119,7 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", Identifier::typeLetter(id), count, Identifier::pretty(id), Identifier::value(id), id);
+    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", IdCoder::typeLetter(id), count, IdCoder::pretty(id), IdCoder::value(id), id);
     count = count + 1;
   }
   return out.str();
@@ -145,7 +146,7 @@ std::string PFBlock::edgeMatrixString() const {
     out.write("    distances:\n        ");
     for (auto e1 : m_elementIds) {
       // will produce short id of form E2 H3, T4 etc in tidy format
-      shortid = Identifier::typeLetter(e1) + std::to_string(count);
+      shortid = IdCoder::typeLetter(e1) + std::to_string(count);
       out.write("{:>8}", shortid);
       count += 1;
     }
@@ -154,7 +155,7 @@ std::string PFBlock::edgeMatrixString() const {
     int countrow = 0;
     for (auto e1 : m_elementIds) {  // each iteration produces the next row of the matrix
       // make short name for the row element eg E3, H5 etc
-      shortid = Identifier::typeLetter(e1) + std::to_string(countrow);
+      shortid = IdCoder::typeLetter(e1) + std::to_string(countrow);
       out.write("\n{:>8}", shortid);
       countrow += 1;
       for (auto e2 : m_elementIds) {  // these will be the columns
@@ -174,7 +175,7 @@ std::string PFBlock::edgeMatrixString() const {
   }
   return out.str();
 }
-const Edge& PFBlock::edge(IdType id1, IdType id2) const {
+const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)
@@ -185,7 +186,7 @@ const Edge& PFBlock::edge(IdType id1, IdType id2) const {
 }
   std::string PFBlock::info() const { //One liner summary of PFBlock
   fmt::MemoryWriter out;
-  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), Identifier::pretty(m_uniqueId), countEcal(),
+  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

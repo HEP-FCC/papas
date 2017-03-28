@@ -1,6 +1,6 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
@@ -40,8 +40,8 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  //if (Identifier::pretty(storedParticle.id()) == "ps3")
-  //   std::cout << Identifier::pretty(storedParticle.id()) << std::endl;
+  //if (IdCoder::pretty(storedParticle.id()) == "ps3")
+  //   std::cout << IdCoder::pretty(storedParticle.id()) << std::endl;
 
   if (pdgid == 22) {
     simulatePhoton(storedParticle);
@@ -192,10 +192,10 @@ void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
     m_propHelix.propagateOne(ptc, cylinder);
 }
 
-const Cluster& Simulator::cluster(IdType clusterId) const {
-  if (Identifier::isEcal(clusterId))
+const Cluster& Simulator::cluster(Identifier clusterId) const {
+  if (IdCoder::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);
-  else if (Identifier::isHcal(clusterId))
+  else if (IdCoder::isHcal(clusterId))
     return m_hcalClusters.at(clusterId);
   throw std::out_of_range("Cluster not found");
 }
@@ -248,8 +248,8 @@ Cluster Simulator::makeAndStoreEcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
     }
-    Cluster cluster(energy, pos, csize, m_ecalClusters.size(), Identifier::kEcalCluster, subtype);
-    IdType id = cluster.id();
+    Cluster cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
+    Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
     m_ecalClusters.emplace(id, std::move(cluster));
@@ -271,8 +271,8 @@ Cluster Simulator::makeAndStoreHcalCluster(const PFParticle& ptc, double fractio
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }
-    Cluster cluster(energy, pos, csize, m_hcalClusters.size(), Identifier::kHcalCluster, subtype);
-    IdType id = cluster.id();
+    Cluster cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
+    Identifier id = cluster.id();
     addNode(id, ptc.id());
     PDebug::write("Made {}", cluster);
     m_hcalClusters.emplace(id, std::move(cluster));
@@ -292,25 +292,25 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   // NB It is not always the same layer as the new smeared cluster
   // The smeared cluster will have the same layer as the parent cluster
   if (detectorLayer == papas::Layer::kNone)
-    detectorLayer = Identifier::layer(parent.id());  // default to same layer as cluster
+    detectorLayer = IdCoder::layer(parent.id());  // default to same layer as cluster
   std::shared_ptr<const Calorimeter> sp_calorimeter = m_detector.calorimeter(detectorLayer);
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
   unsigned int counter;
-  if (Identifier::layer(parent.id()) == Layer::kEcal)
+  if (IdCoder::layer(parent.id()) == Layer::kEcal)
     counter = m_smearedEcalClusters.size();
   else
     counter = m_smearedHcalClusters.size();
   // energy = fmax(0., energy);  // energy always positive
-  Cluster cluster(energy, parent.position(), parent.size(), counter, Identifier::itemType(parent.id()), 's');
+  Cluster cluster(energy, parent.position(), parent.size(), counter, IdCoder::type(parent.id()), 's');
   PDebug::write("Made Smeared{}", cluster);
   return cluster;
 }
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer, bool accept) const {
   // Determine if this smeared cluster will be detected
-  if (acceptLayer == papas::Layer::kNone) acceptLayer = Identifier::layer(smearedCluster.id());
+  if (acceptLayer == papas::Layer::kNone) acceptLayer = IdCoder::layer(smearedCluster.id());
   if (m_detector.calorimeter(acceptLayer)->acceptance(smearedCluster) || accept) {
     return true;
   } else {
@@ -319,14 +319,14 @@ bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer
   }
 }
 
-const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, IdType parentId) {
+const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
   addNode(id, parentId);
   m_smearedEcalClusters.emplace(id, std::move(smearedCluster));
   return m_smearedEcalClusters[id];
 }
 
-const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, IdType parentId) {
+const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
   addNode(id, parentId);
   m_smearedHcalClusters.emplace(id, std::move(smearedCluster));
@@ -334,8 +334,9 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, IdTy
 }
 
 const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
+
   Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
-  IdType id = track.id();
+  Identifier id = track.id();
   PDebug::write("Made {}", track);
   
   m_tracks.emplace(id, std::move(track));
@@ -343,8 +344,8 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   return m_tracks.at(id);
 }
 
-void Simulator::storeSmearedTrack(Track&& track, IdType parentid) {
-  IdType id = track.id();
+void Simulator::storeSmearedTrack(Track&& track, Identifier parentid) {
+  Identifier id = track.id();
   m_smearedTracks.emplace(id, std::move(track));
   addNode(id, parentid);
 }
@@ -386,7 +387,7 @@ bool Simulator::acceptMuonSmearedTrack(const Track& smearedTrack, bool accept) c
   }
 }
 
-void Simulator::addNode(IdType newid, const IdType parentid) {
+void Simulator::addNode(Identifier newid, const Identifier parentid) {
   // add the new node into the set of all nodes
   PFNode node{newid};
   m_history.emplace(newid, std::move(node));

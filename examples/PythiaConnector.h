@@ -32,7 +32,7 @@
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/reconstruction/PapasManager.h"
 
@@ -52,7 +52,7 @@ public:
   papas::ListParticles makePapasParticlesFromGeneratedParticles(
       const fcc::MCParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size,
-                                         papas::Identifier::ItemType itemtype, char subtype) const;
+                                         papas::IdCoder::ItemType itemtype, char subtype) const;
 
   void AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters);
 

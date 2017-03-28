@@ -31,7 +31,7 @@ private:
   const Event& m_event;  ///< contains the collections of tracks, clusters and history
   Blocks& m_blocks;                ///< the externally owned collection that new blocks will be added to by blockbuilder
   Nodes& m_history;                ///< history will be updated to record block creation
-  Ids m_uniqueIds;                 ///< list of element ids from which to construct the blocks
+  Ids m_ids;                 ///< list of element ids from which to construct the blocks
 };
 
 }  // end namespace papas

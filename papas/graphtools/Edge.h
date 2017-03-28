@@ -1,7 +1,7 @@
 #ifndef RECONSTRUCTION_EDGE_H
 #define RECONSTRUCTION_EDGE_H
 
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "array"
 #include <iostream>
 
@@ -39,17 +39,17 @@ public:
    *   @param[in]  isLinked whethert the two ends are linked boolean T/F
    *   @param[in]  distance distance between two elements
    */
-  Edge(IdType idEnd1, IdType idEnd2, bool isLinked, double distance);
-  std::array< IdType, 2 > endIds() const { return m_endIds; } ///< array of ids of ends
+  Edge(Identifier idEnd1, Identifier idEnd2, bool isLinked, double distance);
+  std::array< Identifier, 2 > endIds() const { return m_endIds; } ///< array of ids of ends
   bool isLinked() const { return m_isLinked; }  ///<is the edge a link
   void setLinked(bool link) { m_isLinked = link; };  ///< set the link status (to true or false)
   double distance() const { return m_distance; }  ///<distance between the two elements
   Edge::EdgeKey key() const { return m_key; }  ///<unique key for this edge that can be found from the end ids
   EdgeType edgeType() const ; ///<finds the EdgeType eg kEcalTrack
-  IdType otherId(IdType id) const;  /// return the id of the other end, or -1 if id is not part of this edge
+  Identifier otherId(Identifier id) const;  /// return the id of the other end, or -1 if id is not part of this edge
   friend std::ostream& operator<<(std::ostream& os, const Edge& egde);
   /**
-    *   @brief  Static function that creates a unique key given two IdTypes
+    *   @brief  Static function that creates a unique key given two Identifiers
     *
     *   @description
     *     the key can be used to find an edge (within an unordered_map of edges) from its two end ids
@@ -58,9 +58,9 @@ public:
     *   @param  id1 element uniqueid enerated from Id class for one end
     *   @param  id2 element2 uniqueid generated from Id class for other end
     */
-  static EdgeKey makeKey(IdType id1, IdType id2);  ///<static function to create a unique key, key is indep of the ordering of id1 and id2
+  static EdgeKey makeKey(Identifier id1, Identifier id2);  ///<static function to create a unique key, key is indep of the ordering of id1 and id2
 private:
-  std::array< IdType, 2 > m_endIds;         ///< long identifiers for the two ends
+  std::array< Identifier, 2 > m_endIds;         ///< long identifiers for the two ends
   bool m_isLinked;      ///< boolean to day if there is a link between the two edges
   double m_distance;    ///< distance between two ends
   EdgeKey m_key;        ///<unique key for this edge that allows lookup in an unordered_map of edges

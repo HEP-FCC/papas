@@ -1,19 +1,23 @@
-TODO C++ Papas Code. Aug  2016
+TODO C++ Papas Code. mar 2017
+
+Testing/ Unit TESTS
+Set up more tests for C++
+Include longer test
+PapasManagerTester?
+is_inside?
 
 
-FCCSW Guidelines & Code Formatting
-Clear out debugging stuff and commented out sections 
-Ask Joshka: See if there are new tools for automated checking
-ASk Joschka: How best to integrate DOxygen outputs
+CMAKE
+Libraries comment out those not needed for Gaudi (eg python libraries)
 
-Commenting
-Still more to do but it has improved.
+PATH:
+Revisit structure and how it links to Particle and to Track
 
 ROOT: 
 ask Pere re Makefiles
 	Ongoing problem with ROOT and Xcode not working using FCCSW cmakelists
 	Figure out how to get DYLD_LIBRARY_PATH properly sorted for Mac - need advise.
-Tried and lost: ask Père. Look into TWidget. Work out how to stop the display/run without  ctrl-C./Make example close down properly at end (understand what to do with graphics window better)
+
 
 
 Package Structure & Top-level-structure
@@ -22,47 +26,28 @@ Change Makefile and Headers to match the finalised package structure eg “papas
 Still needs work on where everything should “live”  & ownership. This needs to take into account Python calls and future use in Gaudi. Its not quite right as yet.
 PfEvent, PapasManager, Simulator and Reconstructor all own some key parts and some jiggling is needed, esp for  where C++ is to be used as a library.
 
-C++ library for Python:
-Add suitable additional functions & remove redundant ones
 
 Examples
 Get Gun example to run separately
-Add pythia generate file into example instructions
 
 Timings/Profiling:
-Timings on linux
-Time pythia on Mac
-Profiling and memory leaks
-Discuss sortng with Colin - matching with Python which required sorting has slowed code down 
+Make Automatic
 
-History: make a  class to provide user friendly front end
 
+DISPLAY code: needs some restructuring
+Leave until plan for display is more concrete. Logical place to use display is Python
 Display: display reconstucted particles somehow
-        STARTED: Revisit the display code and have more concrete objects and less shared_ptrs
-	investigate oddities that have observed and understand what is happening (occurs Python and C++)
-Check the other viewpanes
+Revisit the display code and have more concrete objects and less shared_ptrs
 make map of views use enum not string
 
-Logging etc
-STARTED: Add in error handling
-Implement logging messages. Logging structure is available but not used except for PDebug which handles the physics debug output).
+Logging:
+Very rudimentary. Could use spdlog (as for pdebug)
+How to make suitable to link to Gaudi logging
+Check/modifiy to make suitable for parallel processing
 
-Unit testing
-Still more to do, but quite a bit now in place
-
-Physics
-Check with Colin about smeared electrons and muons and their duplicate particles in python
-Take a look at some of the particle reconstructions to understand differences relative to raw particles.
 
 Others
 Attend to TODOs and comments in the existing code
-*** Add in new Id:type for simulated particle
-**** Header file for constants
-Consider making helper classes for outputs??
-SOME TESTING DONE: Revisit edges, distance, blocks and recheck ownership
 
-
-New queries:
-Investigate reduction  in speed following unordered_maps and sorting - make optional?
 
 In progress: Constructors syntax remove {}

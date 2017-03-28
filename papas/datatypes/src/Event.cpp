@@ -21,7 +21,7 @@ namespace papas {
 void Event::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
   if (clusters.size() == 0) return;
-  if (Identifier::isEcal(clusters.begin()->first))
+  if (IdCoder::isEcal(clusters.begin()->first))
     addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
   else
     addCollectionInternal<Cluster>(clusters, m_hcalClustersCollection);
@@ -35,55 +35,55 @@ void Event::addCollection(const PFParticles& particles) {
 
 void Event::addCollection(const Blocks& blocks) { addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
 
-const Clusters& Event::clusters(Identifier::ItemType type, const Identifier::SubType subtype) const {
+const Clusters& Event::clusters(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   // return the corresponding collection
   if (!hasCollection(type, subtype)) return m_emptyClusters;
-  if (type == Identifier::ItemType::kEcalCluster)
+  if (type == IdCoder::ItemType::kEcalCluster)
     return *(m_ecalClustersCollection.at(subtype));
   else
     return *(m_hcalClustersCollection.at(subtype));
 };
 
-const Clusters& Event::clusters(IdType id) const {
+const Clusters& Event::clusters(Identifier id) const {
   // return the corresponding collection with the same type and subtype as this id
-  return clusters(Identifier::itemType(id), Identifier::subtype(id));
+  return clusters(IdCoder::type(id), IdCoder::subtype(id));
 };
 
 const Clusters& Event::clusters(const std::string& typeAndSubtype) const {
   // return the corresponding collection with this type and subtype
-  return clusters(Identifier::itemType(typeAndSubtype[0]), typeAndSubtype[1]);
+  return clusters(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 
-const Tracks& Event::tracks(const Identifier::SubType subtype) const {
-  if (!hasCollection(Identifier::ItemType::kTrack, subtype)) return m_emptyTracks;
+const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
+  if (!hasCollection(IdCoder::ItemType::kTrack, subtype)) return m_emptyTracks;
   return *m_tracksCollection.at(subtype);
 }
 
-const PFParticles& Event::particles(const Identifier::SubType subtype) const {
-  if (!hasCollection(Identifier::ItemType::kParticle, subtype)) return m_emptyPFParticles;
+const PFParticles& Event::particles(const IdCoder::SubType subtype) const {
+  if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyPFParticles;
   return *m_particlesCollection.at(subtype);
 }
-const Blocks& Event::blocks(const Identifier::SubType subtype) const {
-  if (!hasCollection(Identifier::ItemType::kBlock, subtype)) return m_emptyBlocks;
+const Blocks& Event::blocks(const IdCoder::SubType subtype) const {
+  if (!hasCollection(IdCoder::ItemType::kBlock, subtype)) return m_emptyBlocks;
   return *m_blocksCollection.at(subtype);
 }
-bool Event::hasCollection(Identifier::ItemType type, const Identifier::SubType subtype) const {
+bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   // Check if this collection is present
   bool found = false;
   switch (type) {
-  case Identifier::kEcalCluster:
+  case IdCoder::kEcalCluster:
     found = (m_ecalClustersCollection.find(subtype) != m_ecalClustersCollection.end());
     break;
-  case Identifier::kHcalCluster:
+  case IdCoder::kHcalCluster:
     found = (m_hcalClustersCollection.find(subtype) != m_hcalClustersCollection.end());
     break;
-  case Identifier::kTrack:
+  case IdCoder::kTrack:
     found = (m_tracksCollection.find(subtype) != m_tracksCollection.end());
     break;
-  case Identifier::kBlock:
+  case IdCoder::kBlock:
     found = (m_blocksCollection.find(subtype) != m_blocksCollection.end());
     break;
-  case Identifier::kParticle:
+  case IdCoder::kParticle:
     found = (m_particlesCollection.find(subtype) != m_particlesCollection.end());
     break;
   default:
@@ -92,27 +92,27 @@ bool Event::hasCollection(Identifier::ItemType type, const Identifier::SubType s
   return found;
 };
 
-bool Event::hasCollection(IdType id) const {
-  return hasCollection(Identifier::itemType(id), Identifier::subtype(id));
+bool Event::hasCollection(Identifier id) const {
+  return hasCollection(IdCoder::type(id), IdCoder::subtype(id));
 };
 
-bool Event::hasObject(IdType id) const {
+bool Event::hasObject(Identifier id) const {
   // check if this object id is present
-  bool found = false;
-  auto type = Identifier::itemType(id);
+  auto found = false;
+  auto type = IdCoder::type(id);
   if (hasCollection(id)) {
     switch (type) {
-    case Identifier::kEcalCluster:
-    case Identifier::kHcalCluster:
+    case IdCoder::kEcalCluster:
+    case IdCoder::kHcalCluster:
       found = (clusters(id).find(id) != clusters(id).end());
       break;
-    case Identifier::kTrack:
+    case IdCoder::kTrack:
       found = (tracks(id).find(id) != tracks(id).end());
       break;
-    case Identifier::kBlock:
+    case IdCoder::kBlock:
       found = (blocks(id).find(id) != blocks(id).end());
       break;
-    case Identifier::kParticle:
+    case IdCoder::kParticle:
       found = (particles(id).find(id) != particles(id).end());
       break;
     default:

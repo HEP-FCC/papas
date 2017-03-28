@@ -5,13 +5,13 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
 PFBlockBuilder::PFBlockBuilder(const Event& event, const std::string& ecalTypeAndSubtype,
                                const std::string& hcalTypeAndSubtype, char trackSubtype, Blocks& blocks, Nodes& history)
-    : m_event(event), m_blocks(blocks), m_history(history), m_uniqueIds() {
+    : m_event(event), m_blocks(blocks), m_history(history), m_ids() {
 
   const auto& ecals = m_event.clusters(ecalTypeAndSubtype);
   const auto& hcals = m_event.clusters(hcalTypeAndSubtype);

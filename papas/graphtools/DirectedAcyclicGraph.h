@@ -49,7 +49,7 @@
  *  For example if the nodes were either tracks or clusters then
  *  we need:- stl::unordered_map<id,cluster>
  *  stl::unordered_map<id,track>
- *  And the user must generate a unique id for each cluster and track
+ *  And the user must generate an identifier for each cluster and track
  *  The identifier class provides an example of the encoding and decoding of node information
  *
  *  (ii) Polymorphic classes
@@ -222,7 +222,7 @@ void BFSVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumVisitTyp
   std::queue<int> nodeDepth;  // keeps track of the node depths so we can limit how deep we go if we wish
 
   // Mark the current node as visited and enqueue it
-  for (auto& node : nodes) {
+  for (const auto& node : nodes) {
     if (m_visited.find(node) == m_visited.end()) {  // if node is not listed as already being visited
       node->accept(*this);                          // mark as visited and add to results
       nodeQueue.push(node);                         // put into the queue
@@ -293,11 +293,11 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumV
       // Now add in all the children/parent/undirected links for the next depth
       // and store these into visitnextnodes
       // NB depth=-1 means we are visiting everything
-      if (depth != 0 && (visittype == pt::CHILDREN | visittype == pt::UNDIRECTED))
+      if (depth != 0 && ((visittype == pt::CHILDREN) | (visittype == pt::UNDIRECTED)))
         for (const auto& child : node->children()) {
           if (!this->alreadyVisited(child)) visitnextnodes.insert(child);
         }
-      if (depth != 0 && (visittype == pt::PARENTS | visittype == pt::UNDIRECTED))
+      if (depth != 0 && ((visittype == pt::PARENTS) | (visittype == pt::UNDIRECTED)))
         for (const auto& parent : node->parents()) {
           if (!this->alreadyVisited(parent)) visitnextnodes.insert(parent);
         }

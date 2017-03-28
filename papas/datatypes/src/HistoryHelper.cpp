@@ -7,7 +7,7 @@ namespace papas {
 
 HistoryHelper::HistoryHelper(const Event& event) : m_event(event) {}
 
-Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
+Ids HistoryHelper::linkedIds(Identifier id, DAG::enumVisitType direction) const {
   const auto& history = m_event.history();
   const auto& startnode = history->at(id);
   DAG::BFSRecurseVisitor<PFNode> bfs;
@@ -19,16 +19,16 @@ Ids HistoryHelper::linkedIds(IdType id, DAG::enumVisitType direction) const {
   return ids;
 }
 
-Ids HistoryHelper::linkedIds(IdType id, const std::string& typeAndSubtype, DAG::enumVisitType direction) const {
+Ids HistoryHelper::linkedIds(Identifier id, const std::string& typeAndSubtype, DAG::enumVisitType direction) const {
   auto ids = linkedIds(id, direction);
   auto fids = filteredIds(ids, typeAndSubtype);
   return fids;
 }
 
-Ids HistoryHelper::filteredIds(Ids ids, const Identifier::ItemType type, const Identifier::SubType subtype) const {
+Ids HistoryHelper::filteredIds(Ids ids, const IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   Ids matchedIds;
   for (auto id : ids) {
-    if (Identifier::itemType(id) == type && Identifier::subtype(id) == subtype) {
+    if (IdCoder::type(id) == type && IdCoder::subtype(id) == subtype) {
       matchedIds.push_back(id);
     }
   }
@@ -38,7 +38,7 @@ Ids HistoryHelper::filteredIds(Ids ids, const Identifier::ItemType type, const I
 Ids HistoryHelper::filteredIds(Ids ids, const std::string& typeAndSubtype) const {
   Ids matchedIds;
   for (auto id : ids) {
-    if (Identifier::typeAndSubtype(id) == typeAndSubtype) {
+    if (IdCoder::typeAndSubtype(id) == typeAndSubtype) {
       matchedIds.push_back(id);
     }
   }

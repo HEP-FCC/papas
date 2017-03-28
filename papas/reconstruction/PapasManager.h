@@ -98,7 +98,7 @@ protected:
   std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
   Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
 
-  // bool operator()(IdType i, IdType j);//todo reinstate was used for sorting ids
+  // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids
 };
 }
 

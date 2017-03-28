@@ -6,7 +6,7 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
@@ -14,7 +14,11 @@ PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& 
                                  Nodes& history)
     : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-  auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
+      bool withsort = false;
+#if WITHSORT
+      withsort =  true;
+#endif
+      auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
 
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
@@ -67,7 +71,7 @@ Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {
-      if (Identifier::isTrack(id)) {
+      if (IdCoder::isTrack(id)) {
         linkedIds = block.linkedIds(id, Edge::EdgeType::kHcalTrack);
         if (linkedIds.size() > 0) {
           firstHCAL = true;

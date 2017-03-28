@@ -7,39 +7,41 @@
 //
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Identifier.h"
-#include "papas/utility/PDebug.h"
+#include "papas/datatypes/IdCoder.h"
+#include "papas/utility/StringFormatter.h"
+#include <iomanip>
 
 namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, Identifier::ItemType idtype, char subtype)
-    : m_uniqueId(Identifier::makeId(index, idtype, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
+Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type, char subtype)
+    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
   m_subClusters.push_back(this);
 }
 
-Cluster::Cluster(const Cluster& c, unsigned int index, Identifier::ItemType type, char subtype, float val)
-    : m_uniqueId(Identifier::makeId(index, type, subtype, val)),
+Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, char subtype, float val)
+    : m_id(IdCoder::makeId(index, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
+      m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
-  m_p3 = c.m_p3;
+  ;
   m_subClusters.push_back(&c);
 }
 
 Cluster::Cluster(Cluster&& c)
-    : m_uniqueId(c.id()),
+    : m_id(c.id()),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
+      m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
-  m_p3 = c.m_p3;
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
   // This is a disadvantage of using Cluster class to deal with both
@@ -78,7 +80,7 @@ void Cluster::setEnergy(double energy) {
 }
 
 Cluster& Cluster::operator+=(const Cluster& rhs) {
-  if (Identifier::itemType(m_uniqueId) != Identifier::itemType(rhs.id())) {
+  if (IdCoder::type(m_id) != IdCoder::type(rhs.id())) {
     throw "can only add a cluster from the same layer";
   }
   m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
@@ -97,11 +99,11 @@ Cluster& Cluster::operator+=(const Cluster& rhs) {
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }
 
 std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
-  os << "Cluster: " << std::setw(6) << std::left << Identifier::pretty(cluster.id()) << ":" << cluster.id() << ": "
+  os << "Cluster: " << std::setw(6) << std::left << IdCoder::pretty(cluster.id()) << ":" << cluster.id() << ": "
      << cluster.info();
   os << " sub(";
   for (const auto& c : cluster.subClusters()) {
-    os << Identifier::pretty(c->id()) << ", ";
+    os << IdCoder::pretty(c->id()) << ", ";
   }
   os << ")";
   return os;
@@ -112,7 +114,7 @@ Cluster::Cluster( Cluster && c) :
 m_size(c.m_size),
 m_angularSize(c.m_angularSize),
 m_pt(c.m_pt),
-m_uniqueId(c.m_uniqueId),
+m_id(c.m_id),
 m_energy(c.m_energy),
 m_subClusters(std::move(c.m_subClusters))
 
@@ -127,7 +129,7 @@ std::cout<< "Move Cluster" <<std::endl;
  m_p3=c.m_p3;
  m_size=c.m_size;
  m_pt=c.m_pt;
- m_uniqueId=c.m_uniqueId;
+ m_id=c.m_id;
  std::cout<< "move assign cluster" <<std::endl;
  return *this;
  };*/
@@ -137,19 +139,19 @@ m_energy=c.m_energy;
 m_p3=c.m_p3;
 m_size=c.m_size;
 m_pt=c.m_pt;
-m_uniqueId=c.m_uniqueId;
+m_id=c.m_id;
 std::cout<< "copy cluster=" <<std::endl;
 return *this;
 };
 
 Cluster::Cluster(const Cluster&) {
-  PDebug::write("copy cluster {}" , Identifier::pretty(m_uniqueId));
+  PDebug::write("copy cluster {}" , IdCoder::pretty(m_id));
 std::cout<< "copy cluster" ;
 } ;*/
 
 /*Cluster::~Cluster() {
-  PDebug::write("delete cluster {}" , Identifier::pretty(m_uniqueId));
-  std::cout<< " delete cluster " <<  Identifier::pretty(m_uniqueId) ;
+  PDebug::write("delete cluster {}" , IdCoder::pretty(m_id));
+  std::cout<< " delete cluster " <<  IdCoder::pretty(m_id) ;
 } ;*/
 
 }  // end namespace papas

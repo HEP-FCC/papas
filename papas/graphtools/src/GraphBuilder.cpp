@@ -18,7 +18,7 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
       m_localNodes[e.endIds()[0]].addChild(m_localNodes[e.endIds()[1]]);
       }
   }
-  DAG::FloodFill<IdType> FFill;
+  DAG::FloodFill<Identifier> FFill;
   // traverse does the work and returns a vector of connected node groups
   for (const auto& group : FFill.traverse(m_localNodes)) {
     // each of the nodevectors is about to become a separate block

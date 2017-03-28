@@ -9,7 +9,7 @@
 #define DefinitionsCollections_h
 
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/PFParticle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
@@ -26,18 +26,18 @@ class Edge;
 class PFParticle;
 class Particle;
 
-typedef std::unordered_map<IdType, PFParticle> PFParticles;  ///< collection of PFParticles
+typedef std::unordered_map<Identifier, PFParticle> PFParticles;  ///< collection of PFParticles
 typedef std::list<Particle> ListParticles;                   ///< collection of Particles
-typedef std::unordered_map<IdType, Particle> Particles;      ///< collection of Particles
+typedef std::unordered_map<Identifier, Particle> Particles;      ///< collection of Particles
 typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of Edges
-typedef std::list<IdType> Ids;                               ///< collection of Ids
-typedef std::unordered_map<IdType, Track> Tracks;            ///< collection of Tracks
-typedef std::unordered_map<IdType, PFBlock> Blocks;          ///< collection of Blocks
-typedef std::unordered_map<IdType, Cluster> Clusters;        ///< collection of Clusters
+typedef std::list<Identifier> Ids;                               ///< collection of Ids
+typedef std::unordered_map<Identifier, Track> Tracks;            ///< collection of Tracks
+typedef std::unordered_map<Identifier, PFBlock> Blocks;          ///< collection of Blocks
+typedef std::unordered_map<Identifier, Cluster> Clusters;        ///< collection of Clusters
 
-typedef std::unordered_map<Identifier::SubType, const PFParticles*> CollectionPFParticles;  ///< collection of PFParticles
-typedef std::unordered_map<Identifier::SubType, const Tracks*> CollectionTracks;          ///< collection of Tracks
-typedef std::unordered_map<Identifier::SubType, const Clusters*> CollectionClusters;      ///< collection of Clusters
-typedef std::unordered_map<Identifier::SubType, const Blocks*> CollectionBlocks;          ///< collection of Clusters
+typedef std::unordered_map<IdCoder::SubType, const PFParticles*> CollectionPFParticles;  ///< collection of PFParticles
+typedef std::unordered_map<IdCoder::SubType, const Tracks*> CollectionTracks;          ///< collection of Tracks
+typedef std::unordered_map<IdCoder::SubType, const Clusters*> CollectionClusters;      ///< collection of Clusters
+typedef std::unordered_map<IdCoder::SubType, const Blocks*> CollectionBlocks;          ///< collection of Clusters
 }
 #endif /* DefinitionsCollections_h */

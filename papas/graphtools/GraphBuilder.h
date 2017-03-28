@@ -15,7 +15,7 @@ namespace papas {
  * Each element will end up in one (and only one) block.
  * Blocks retain information of the elements and edges including the distances between elements.
  * The blocks can be used for future particle reconstruction.
- * The ids of all elements must be unique and are expected to come from the Id class.
+ * The ids of all elements must be unique and are expected to come from the IdCoder class.
 
 
  Usage example:
@@ -34,7 +34,7 @@ class GraphBuilder {
 public:
   /** Constructor
 
-   * @param[in] ids : vector of unique identifiers eg of tracks, clusters etc
+   * @param[in] ids : vector of identifiers eg of tracks, clusters etc
    * @param[in] edges : unordered_map of edges which contains all edges between the ids (and maybe more),
    *            an edge records the distance and links between two ids. The edges will be moved into the
    *            resulting blocks and become owned by them.
@@ -45,11 +45,11 @@ public:
   const std::vector<Ids>& subGraphs() const { return m_subGraphs; };
 
 protected:
-  void sortIds(Ids& ids);        ///<sorted by IdType
+  void sortIds(Ids& ids);        ///<sorted by Identifier
   Edges m_edges;                 ///< must contain all edges corresponding to all pairs of ids for ids in m_elementIda
   std::vector<Ids> m_subGraphs;  ///< vector of subgraphs made by graphbuilder
 private:
-  Ids m_elementIds;    ///<uniqueids to be grouped into subgraphs
+  Ids m_elementIds;    ///<identifiers to be grouped into subgraphs
   Nodes m_localNodes;  ///<local nodes used in building subgraphs
 };
 }  // end namespace papas

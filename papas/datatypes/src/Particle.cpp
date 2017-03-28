@@ -10,9 +10,10 @@
  */
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Identifier.h"
+#include "papas/datatypes/IdCoder.h"
 #include "spdlog/details/format.h"
 #include <iostream>
+#include <iomanip>
 //#include <sstream>  //AJRTODO temp
 
 namespace papas {

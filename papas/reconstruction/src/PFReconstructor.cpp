@@ -23,8 +23,12 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
                                  PFParticles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-  auto blockids = m_event.collectionIds<Blocks>(blocks, WITHSORT);
-  
+      bool withsort = false;
+#if WITHSORT
+  withsort =  true;
+#endif
+  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
+
   for (auto bid : blockids) {
     const PFBlock& block = blocks.at(bid);
     PDebug::write("Processing {}", block);
@@ -52,25 +56,25 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
     if (!m_locked[id]) uids.push_back(id);
   }
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
-    IdType id = *uids.begin();
+    Identifier id = *uids.begin();
     auto parentIds = Ids{block.id(), id};
-    if (Identifier::isEcal(id)) {
+    if (IdCoder::isEcal(id)) {
       reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
-    } else if (Identifier::isHcal(id)) {
+    } else if (IdCoder::isHcal(id)) {
       reconstructCluster(m_event.cluster(id), papas::Layer::kHcal, parentIds);
-    } else if (Identifier::isTrack(id)) {
+    } else if (IdCoder::isTrack(id)) {
       reconstructTrack(m_event.track(id), 211, parentIds);
     } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
               // TODO
     }
   } else {
     for (auto id : uids) {
-      if (Identifier::isHcal(id)) {
+      if (IdCoder::isHcal(id)) {
         reconstructHcal(block, id);
       }
     }
     for (auto id : ids) {
-      if (Identifier::isTrack(id) && !m_locked[id]) {
+      if (IdCoder::isTrack(id) && !m_locked[id]) {
         /* unused tracks, so not linked to HCAL
          # reconstructing charged hadrons*/
         auto parentIds = Ids{block.id(), id};
@@ -94,7 +98,7 @@ void PFReconstructor::reconstructMuons(const PFBlock& block) {
   /// Reconstruct muons in block.
   Ids ids = block.elementIds();
   for (auto id : ids) {
-    if (Identifier::isTrack(id) && isFromParticle(id, "ps", 13)) {
+    if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 13)) {
 
       auto parentIds = Ids{block.id(), id};
       reconstructTrack(m_event.track(id), 13, parentIds);
@@ -110,7 +114,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   # therefore, one should not lock the ecal clusters linked to the
   # electron track as these clusters are coming from other particles.*/
   for (auto id : ids) {
-    if (Identifier::isTrack(id) && isFromParticle(id, "ps", 11)) {
+    if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
       auto parentIds = Ids{block.id(), id};
       reconstructTrack(m_event.track(id), 11, parentIds);
@@ -127,13 +131,13 @@ void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newpartic
    #some parts of the block, there are frequently ambiguities and so for now the particle is
    #linked to everything in the block*/
   // if (newparticle) :
-  IdType newid = newparticle.id();
+  Identifier newid = newparticle.id();
   m_particles.emplace(newid, std::move(newparticle));
   makeHistoryLinks(parentIds, {newid}, m_history);
 }
 
-bool PFReconstructor::isFromParticle(IdType id, const std::string& typeAndSubtype, int pdgid) const {
-  /*returns: True if object unique_id comes, directly or indirectly,
+bool PFReconstructor::isFromParticle(Identifier id, const std::string& typeAndSubtype, int pdgid) const {
+  /*returns: True if object identifier comes, directly or indirectly,
 from a particle of type type_and_subtype, with this absolute pdgid.
 */
   auto historyHelper = HistoryHelper(m_event);
@@ -176,7 +180,7 @@ http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
   //return 1. + exp(-cluster.energy() / 100.);
 }
 
-void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
+void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
   /*
    block: element ids and edges
    hcalid: id of the hcal being processed her
@@ -198,9 +202,13 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, IdType hcalId) {
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
  
   Ids ecalIds;
-  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, WITHSORT));
+  bool withsort=false;
+#if WITHSORT
+  withsort = true;
+#endif
+  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, withsort));
   for (auto trackId : trackIds) {
-    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, WITHSORT)) {
+    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, withsort)) {
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work

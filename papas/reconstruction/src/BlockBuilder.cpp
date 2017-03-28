@@ -28,7 +28,7 @@ void BlockBuilder::makeBlocks(char blockSubtype) {
     PFBlock block(elementIds, m_edges, m_blocks.size(), blockSubtype);  // make the block
     PDebug::write("Made {}", block);
     // put the block in the unordered map of blocks using move
-    IdType id = block.id();
+    Identifier id = block.id();
     makeHistoryLinks(block.elementIds(), {id}, m_history);
     m_blocks.emplace(id, std::move(block));
   }
