@@ -8,7 +8,9 @@
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/utility/PDebug.h"
+#include "papas/utility/StringFormatter.h"
+//#include "papas/utility/PDebug.h"
+#include <iomanip>
 
 namespace papas {
 
@@ -38,8 +40,10 @@ Cluster::Cluster(Cluster&& c)
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
       m_energy(c.m_energy),
-      m_subClusters() {
-  m_p3 = c.m_p3;
+      m_subClusters(),
+      m_p3(c.m_p3)
+     {
+
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
   // This is a disadvantage of using Cluster class to deal with both

@@ -5,6 +5,7 @@
 #include "papas/display/Display.h"
 #include "papas/display/ViewPane.h"
 #include <iostream>  //temp
+#include <algorithm>
 
 namespace papas {
 
