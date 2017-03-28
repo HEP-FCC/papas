@@ -27,7 +27,7 @@ public:
    @param[in] ptc particle that is to be propagated
    @param[in] detector  Detector through which to propagate
    */
-  void propagate(const PFParticle& ptc, const Detector& detector);
+  void propagate(const PFParticle& ptc, const Detector& detector) const;
 };
 
 }  // end namespace papas

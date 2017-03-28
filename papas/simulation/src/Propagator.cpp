@@ -5,8 +5,8 @@
 
 
 namespace papas {
-  void Propagator::propagate(const PFParticle& ptc, const Detector& detector) {
+  void Propagator::propagate(const PFParticle& ptc, const Detector& detector) const {
     for (const auto el: detector.elements())
       propagateOne(ptc, el->volumeCylinder().inner(), detector.field()->getMagnitude());
 }
-}//end namespace papas
+}//end namespace papas 

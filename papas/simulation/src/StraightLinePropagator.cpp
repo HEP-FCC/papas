@@ -13,14 +13,14 @@ StraightLinePropagator::StraightLinePropagator() {}
 
 void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl, double field) const {
   auto layer = cyl.layer();
-  auto cylinderz = cyl.z();
+  double cylinderz = cyl.z();
   double cylinderradius = cyl.radius();
   Path::Ptr line = ptc.path();
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();
   if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius) return;  //  particle created outside the cylinder
-  double zbar = line->unitDirection().Z();                                     // Z of unit vex
+  double zbar = line->unitDirection().Z();    // Z of unit direction vector
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
     double length = (destz - origin.Z()) / cos(theta);  // TODO check Length >0

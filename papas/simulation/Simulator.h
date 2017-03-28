@@ -194,7 +194,7 @@ private:
   /** Return shared ptr to the appropriate propagator (straightline or helix)
    @param[in] charge charge of particle
    */
-  std::shared_ptr<Propagator> propagator(double charge);
+  std::shared_ptr<const Propagator> propagator(double charge) const;
   /**
    Update the History
    @param[in] newid the new object being added to history

@@ -6,9 +6,9 @@
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
 #include "papas/simulation/Simulator.h"
+#include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-#include "papas/utility/Log.h"
 class Detector;
 
 namespace papas {
@@ -26,12 +26,10 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_tracks(tracks),
       m_smearedTracks(smearedTracks),
       m_particles(simParticles),
-      m_history(history)
-  
-  {
-    m_propHelix  = std::make_shared<HelixPropagator>();
-    m_propStraight  = std::make_shared<StraightLinePropagator>();
-  for (const auto& p: particles) {
+      m_history(history) {
+  m_propHelix = std::make_shared<HelixPropagator>();
+  m_propStraight = std::make_shared<StraightLinePropagator>();
+  for (const auto& p : particles) {
     simulateParticle(p);
   }
 }
@@ -43,7 +41,7 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  //if (IdCoder::pretty(storedParticle.id()) == "ps3")
+  // if (IdCoder::pretty(storedParticle.id()) == "ps3")
   //   std::cout << IdCoder::pretty(storedParticle.id()) << std::endl;
 
   if (pdgid == 22) {
@@ -63,7 +61,8 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -88,7 +87,8 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-  propagator(ptc.charge())->propagateOne(ptc,m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -113,7 +113,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // now find where it reaches into HCAL
-  propagator(ptc.charge())->propagateOne(ptc,hcal_sp->volumeCylinder().inner(),m_detector.field()->getMagnitude());
+  propagator(ptc.charge())->propagateOne(ptc, hcal_sp->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared)) {
@@ -142,7 +142,8 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   if (acceptElectronSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
-  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(),m_detector.field()->getMagnitude());
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
 }
 
 void Simulator::simulateMuon(PFParticle& ptc) {
@@ -165,13 +166,13 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   }
 }
 
-std::shared_ptr<Propagator> Simulator::propagator(double charge) {
+std::shared_ptr<const Propagator> Simulator::propagator(double charge) const {
   if (fabs(charge) < 0.5)
     return m_propStraight;
   else
     return m_propHelix;
 }
-  
+
 const Cluster& Simulator::cluster(Identifier clusterId) const {
   if (IdCoder::isEcal(clusterId))
     return m_ecalClusters.at(clusterId);
@@ -318,7 +319,7 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   Identifier id = track.id();
   PDebug::write("Made {}", track);
-  
+
   m_tracks.emplace(id, std::move(track));
   addNode(id, ptc.id());
   return m_tracks.at(id);
