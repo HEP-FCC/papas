@@ -13,6 +13,7 @@
 #include "papas/datatypes/IdCoder.h"
 #include "spdlog/details/format.h"
 #include <iostream>
+#include <iomanip>
 //#include <sstream>  //AJRTODO temp
 
 namespace papas {

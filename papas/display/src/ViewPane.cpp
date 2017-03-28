@@ -3,6 +3,7 @@
 //
 //
 #include "papas/display/ViewPane.h"
+#include <algorithm>
 
 namespace papas {
 
