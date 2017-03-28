@@ -9,6 +9,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/utility/PDebug.h"
+#include <iomanip>
 
 namespace papas {
 
@@ -26,9 +27,10 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
+      m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
-  m_p3 = c.m_p3;
+  ;
   m_subClusters.push_back(&c);
 }
 
@@ -37,9 +39,10 @@ Cluster::Cluster(Cluster&& c)
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_pt(c.m_pt),
+      m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
-  m_p3 = c.m_p3;
+  
   // Moving a Cluster is a little tricky because must make sure that
   // the subclusters are pointing to something that has already been moved
   // This is a disadvantage of using Cluster class to deal with both
