@@ -40,6 +40,7 @@ CMS::CMS() : Detector() {
 
   // Field detector element
   m_field = std::shared_ptr<const Field>{new CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8)};
+  setupElements(); //sets up a list of all detector elements (m_elements) (needed for propagation)
 }
 
 }  // end namespace papas

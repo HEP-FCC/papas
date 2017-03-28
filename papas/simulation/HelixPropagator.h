@@ -2,37 +2,27 @@
 #ifndef helixpropagator_h
 #define helixpropagator_h
 #include "papas/detectors/Detector.h"
+#include "papas/simulation/Propagator.h"
 
 namespace papas {
 class PFParticle;
-class HelixPropagator {
+  
+class HelixPropagator : public Propagator {
 /** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
 */
 public:
   /** Constructor
-   field Magnetic field in Tesla(?) (assumed constant)
   */
-  HelixPropagator(double field);
+  HelixPropagator(std::shared_ptr<const Field> field);
   /**
    Propagate charged particle along Helix to the selected cylinder and store the point
    where the particle crosses the cylinder
-   ptc particle that is to be propagated
-   cyl cylinder to which the particle is to be propagated.
+   @param[in] ptc particle that is to be propagated
+   @param[in] cyl cylinder to which the particle is to be propagated.
+   @param[in] field magnitude of magnetic field
    */
-  virtual void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const;
+  virtual void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const override;
 
-private:
-  double m_field;///<Magnetic field in Tesla (?)
-  /**
-   Propagate charged particle along Helix to the selected cylinder and store the point
-   where the particle crosses the cylinder
-   ptc particle that is to be propagated
-   layer name of layer.This will be used to label the point in the path points
-   cylinderz the z value of the end of the cylinder
-   cylinderRadius Radius of the cylinder
-   */
-  void propagateOne(const PFParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius,
-                    const Field& field, bool debugInfo) const;
 };
 }  // end namespace papas
 #endif

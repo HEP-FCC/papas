@@ -6,9 +6,9 @@
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
 #include "papas/simulation/Simulator.h"
+#include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-#include "papas/utility/Log.h"
 class Detector;
 
 namespace papas {
@@ -26,9 +26,10 @@ Simulator::Simulator(const Event& papasevent, const ListParticles& particles, co
       m_tracks(tracks),
       m_smearedTracks(smearedTracks),
       m_particles(simParticles),
-      m_history(history),
-      m_propHelix(detector.field()->getMagnitude()) {
-  for (const auto& p: particles) {
+      m_history(history) {
+  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
+  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
+  for (const auto& p : particles) {
     simulateParticle(p);
   }
 }
@@ -40,7 +41,7 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   PFParticle& storedParticle = makeAndStorePFParticle(pdgid, ptc.charge(), ptc.p4(), ptc.startVertex());
-  //if (IdCoder::pretty(storedParticle.id()) == "ps3")
+  // if (IdCoder::pretty(storedParticle.id()) == "ps3")
   //   std::cout << IdCoder::pretty(storedParticle.id()) << std::endl;
 
   if (pdgid == 22) {
@@ -60,7 +61,8 @@ void Simulator::simulatePhoton(PFParticle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -85,8 +87,8 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // find where it meets the inner Ecal cyclinder
-
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   if (ptc.hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -99,10 +101,8 @@ void Simulator::simulateHadron(PFParticle& ptc) {
       TVector3 pointDecay = path->pointAtTime(timeDecay);
       path->addPoint(papas::Position::kEcalDecay, pointDecay);
       if (ecal_sp->volumeCylinder().contains(pointDecay)) {
-        // fracEcal = randomgen::RandUniform(0., 0.7).next();
         fracEcal = rootrandom::Random::uniform(0., 0.7);
         auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
-        // const auto& storedCluster = storeEcalCluster(std::move(cluster), ptc.id());
         // For now, using the hcal resolution and acceptance for hadronic cluster
         // in the Ecal. That's not a bug!
         auto smeared = smearCluster(cluster, papas::Layer::kHcal);
@@ -113,7 +113,7 @@ void Simulator::simulateHadron(PFParticle& ptc) {
     }
   }
   // now find where it reaches into HCAL
-  propagate(hcal_sp->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagateOne(ptc, hcal_sp->volumeCylinder().inner());
   auto hcalCluster = makeAndStoreHcalCluster(ptc, 1 - fracEcal, -1, 't');
   auto hcalSmeared = smearCluster(hcalCluster, papas::Layer::kHcal);
   if (acceptSmearedCluster(hcalSmeared)) {
@@ -121,22 +121,9 @@ void Simulator::simulateHadron(PFParticle& ptc) {
   }
 }
 
-void Simulator::propagateAllLayers(PFParticle& ptc) {
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
-  propagate(m_detector.ecal()->volumeCylinder().outer(), ptc);
-  propagate(m_detector.hcal()->volumeCylinder().inner(), ptc);
-  propagate(m_detector.hcal()->volumeCylinder().outer(), ptc);
-}
-
 void Simulator::simulateNeutrino(PFParticle& ptc) {
   PDebug::write("Simulating Neutrino \n");
-  propagateAllLayers(ptc);
-}
-
-void Simulator::smearElectron(PFParticle& ptc) {
-  PDebug::write("Smearing Electron");
-  auto track = makeAndStoreTrack(ptc);
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
+  propagator(ptc.charge())->propagate(ptc, m_detector);
 }
 
 void Simulator::simulateElectron(PFParticle& ptc) {
@@ -155,13 +142,8 @@ void Simulator::simulateElectron(PFParticle& ptc) {
   if (acceptElectronSmearedTrack(smeared)) {
     storeSmearedTrack(std::move(smeared), track.id());
   }
-  propagate(m_detector.ecal()->volumeCylinder().inner(), ptc);
-}
-
-void Simulator::smearMuon(PFParticle& ptc) {
-  PDebug::write("Smearing Muon");
-  auto track = makeAndStoreTrack(ptc);
-  propagateAllLayers(ptc);
+  propagator(ptc.charge())
+      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
 }
 
 void Simulator::simulateMuon(PFParticle& ptc) {
@@ -175,7 +157,7 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   This method does not simulate energy deposits in the calorimeters
   */
   PDebug::write("Simulating Muon");
-  propagateAllLayers(ptc);
+  propagator(ptc.charge())->propagate(ptc, m_detector);
   auto ptres = m_detector.muonPtResolution(ptc);
   auto track = makeAndStoreTrack(ptc);
   auto smeared = smearTrack(track, ptres);
@@ -184,12 +166,11 @@ void Simulator::simulateMuon(PFParticle& ptc) {
   }
 }
 
-void Simulator::propagate(const SurfaceCylinder& cylinder, PFParticle& ptc) {
-  bool isNeutral = fabs(ptc.charge()) < 0.5;
-  if (isNeutral)
-    m_propStraight.propagateOne(ptc, cylinder);
+std::shared_ptr<const Propagator> Simulator::propagator(double charge) const {
+  if (fabs(charge) < 0.5)
+    return m_propStraight;
   else
-    m_propHelix.propagateOne(ptc, cylinder);
+    return m_propHelix;
 }
 
 const Cluster& Simulator::cluster(Identifier clusterId) const {
@@ -338,7 +319,7 @@ const Track& Simulator::makeAndStoreTrack(const PFParticle& ptc) {
   Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   Identifier id = track.id();
   PDebug::write("Made {}", track);
-  
+
   m_tracks.emplace(id, std::move(track));
   addNode(id, ptc.id());
   return m_tracks.at(id);
