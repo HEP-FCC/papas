@@ -7,7 +7,7 @@
 #include "TLorentzVector.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -16,14 +16,19 @@
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/utility/PDebug.h"
+#include "papas/simulation/HelixPropagator.h"
+#include "papas/simulation/StraightLinePropagator.h"
+
 
 namespace papas {
 
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
-                                 PFParticles& particles, Nodes& history)
+                                 Particles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
+  m_propHelix  = std::make_shared<HelixPropagator>();
+  m_propStraight  = std::make_shared<StraightLinePropagator>();
   const auto& blocks = m_event.blocks(blockSubtype);
-      bool withsort = false;
+  bool withsort = false;
 #if WITHSORT
   withsort =  true;
 #endif
@@ -122,7 +127,7 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   }
 }
 
-void PFReconstructor::insertParticle(const Ids& parentIds, PFParticle& newparticle) {
+void PFReconstructor::insertParticle(const Ids& parentIds, Particle& newparticle) {
   /* The new particle will be inserted into the history_nodes (if present).
    A new node for the particle will be created if needed.
    It will have as its parents the block and all the elements of the block.
@@ -157,18 +162,6 @@ http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
   */
   auto resolution = m_detector.hcal()->energyResolution(energy, eta);
   return resolution;
-  /*
-  double energy = fmax(hcal.energy(), 1.);
-  double stoch = 1.02;
-  double kconst = 0.065;
-  if (fabs(hcal.position().Eta()) > 1.48) {
-    stoch = 1.2;
-    kconst = 0.028;
-  }
-  double resol = sqrt(pow(stoch, 2) / energy + pow(kconst, 2));
-  return resol;
-}*/
-
 }
 
 double PFReconstructor::nsigmaHcal(const Cluster& cluster) const {
@@ -177,7 +170,6 @@ double PFReconstructor::nsigmaHcal(const Cluster& cluster) const {
 http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
   */
   return 2;
-  //return 1. + exp(-cluster.energy() / 100.);
 }
 
 void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
@@ -306,9 +298,8 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   }
   TVector3 p3(cluster.position().Unit() * momentum);
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
-  PFParticle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex, 0);
-  // TODO discuss with Colin
-  particle.path()->addPoint(papas::Position::kEcalIn, cluster.position());
+  Particle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex);
+  propagator(particle.charge())->propagateOne(particle, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
   if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
   }
@@ -318,13 +309,10 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // path where the point is actually that
   // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
-  // particle.setPath(path);
-  // particle.clusters[layer] = cluster  # not sure about this either when hcal is used to make an ecal cluster?
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
   // TODO make more flexible and able to detect what type of cluster
   PDebug::write("Made {} from Merged{}", particle, cluster);
   insertParticle(parentIds, particle);
-  // return particle;
 }
 
 void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids& parentIds) {
@@ -334,11 +322,20 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  PFParticle particle(pdgId, track.charge(), p4, track, m_particles.size(), 'r');
+  Particle particle(pdgId, track.charge(), p4, m_particles.size(), 'r', track.path()->namedPoint(papas::Position::kVertex));
+  
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;
   PDebug::write("Made {} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);
 }
+  
+  std::shared_ptr<Propagator> PFReconstructor::propagator(double charge) {
+    if (fabs(charge) < 0.5)
+      return m_propStraight;
+    else
+      return m_propHelix;
+  }
+  
 }  // end namespace papas

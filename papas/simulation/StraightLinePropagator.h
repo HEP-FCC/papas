@@ -2,12 +2,12 @@
 #ifndef straightlinepropagator_h
 #define straightlinepropagator_h
 #include "papas/detectors/Detector.h"
+#include "papas/simulation/Propagator.h"
 
 namespace papas {
-class PFParticle;
+class Particle;
 
-
-class StraightLinePropagator {
+class StraightLinePropagator  : public Propagator {
 /// Calculates where an uncharged particle crosses a detector cyclinder
 public:
   /** Constructor
@@ -16,20 +16,13 @@ public:
   /**
    Propagate uncharged particle along a strightline to the selected cylinder and
    store the point where the particle crossed the cylinder
-   ptc particle that is to be propagated
-   cyl cylinder to which the particle is to be propagated.
+   @param[in] ptc particle that is to be propagated
+   @param[in] cyl cylinder to which the particle is to be propagated.
+   @param[in] field magnitude of magnetic field (not used for uncharged particles)
   */
-  void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const;
+
+  void propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field = 0) const override;
 private:
-  /**
-   Propagate uncharged particle along a strightline to the selected cylinder and
-   store the point where the particle crossed the cylinder
-   ptc particle that is to be propagated
-   layer name of layer.This will be used to label the point in the path points
-   cylinderz the z value of the end of the cylinder
-   cylinderRadius Radius of the cylinder
-   */
-  void propagateOne(const PFParticle& ptc, papas::Position layer, double cylinderz, double cylinderRadius) const;
 };
 
 }  // end namespace papas

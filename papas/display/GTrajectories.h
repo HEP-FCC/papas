@@ -19,7 +19,7 @@ namespace papas {
 class Cluster;
 class Track;
 class Particle;
-class PFParticle;
+class Particle;
 
 /// Used to display the tracks and clusters on output graphs
 class GTrajectories : public Drawable {
@@ -29,11 +29,11 @@ public:
   /// Initial implementation for a cluster (should accept list of particles eventually (or equiv))
   GTrajectories(const Cluster& cluster);
   GTrajectories(const Track& track);
-  GTrajectories(const PFParticle& particle);
+  GTrajectories(const Particle& particle);
   GTrajectories(const Particle& particle, int linestyle, int linecolor, int linewidth);
   void Draw(const std::string& projection) override;
-  void addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
-  void addHelix(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor);
+  void addStraight(const std::shared_ptr<Path> path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
+  void addHelix(const std::shared_ptr<Path> path, const TVector3& tvec, int linestyle, int linecolor);
   void addNamedPoints(const Path::Points& path, const TVector3& tvec, int linestyle, int linecolor, int linewidth);
   void addPoints(const std::vector<TVector3>& points, const TVector3& tvec, int linestyle, int linecolor,
                  int linewidth);

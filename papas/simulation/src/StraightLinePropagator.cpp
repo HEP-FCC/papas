@@ -1,27 +1,30 @@
 
 
 //#include <iostream>
-#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {
 
 StraightLinePropagator::StraightLinePropagator() {}
 
-void StraightLinePropagator::propagateOne(const PFParticle& ptc,
-                                          papas::Position layer,
-                                          double cylinderz,
-                                          double cylinderradius) const {
-  Path::Ptr line = ptc.path();
+void StraightLinePropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field) const {
+  auto layer = cyl.layer();
+  auto cylinderz = cyl.z();
+  double cylinderradius = cyl.radius();
+  std::shared_ptr<Path> line = ptc.path();
+  if (line == nullptr) {
+    line = std::make_shared<Path>(Path( ptc.p4(), ptc.startVertex(),ptc.charge()));
+    ptc.setPath(line);
+  }
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();
-  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius)
-      return; //  particle created outside the cylinder
-  double zbar = line->unitDirection().Z();  // Z of unit vex
+  if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius) return;  //  particle created outside the cylinder
+  double zbar = line->unitDirection().Z();                                     // Z of unit vex
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
     double length = (destz - origin.Z()) / cos(theta);  // TODO check Length >0
@@ -52,10 +55,6 @@ void StraightLinePropagator::propagateOne(const PFParticle& ptc,
 #endif
     line->addPoint(layer, destination);
   }
-}
-
-void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
-  propagateOne(ptc, cyl.layer(), cyl.z(), cyl.radius());
 }
 
 }  // end namespace papas

@@ -5,14 +5,13 @@
 
 #include "papas/display/GTrajectories.h"
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
-//#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
-void GTrajectories::addStraight(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor,
+void GTrajectories::addStraight(const std::shared_ptr<Path> path, const TVector3& tvec, int linestyle, int linecolor,
                                 int linewidth) {
   addNamedPoints(path->points(), tvec, linestyle, linecolor, linewidth);
 }
@@ -29,7 +28,6 @@ void GTrajectories::addPoints(const std::vector<TVector3>& points, const TVector
   // Extract vectors of x, y and z values
   int i = 0;
   for (auto p : points) {
-
     X.push_back(p.X());
     Y.push_back(p.Y());
     Z.push_back(p.Z());
@@ -101,7 +99,7 @@ void GTrajectories::addNamedPoints(const Path::Points& points, const TVector3& t
   m_gTrajectories.push_back(GTrajectory(X, Y, Z, tX, tY, 2, 0.7, linestyle, linecolor, linewidth));
 }
 
-void GTrajectories::addHelix(const Path::Ptr path, const TVector3& tvec, int linestyle, int linecolor) {
+void GTrajectories::addHelix(const std::shared_ptr<Path> path, const TVector3& tvec, int linestyle, int linecolor) {
 
   int npoints = 100;
   std::vector<double> X;
@@ -137,7 +135,9 @@ void GTrajectory::Draw(const std::string& projection /*,
   // raise ValueError('implement drawing for projection ' + projection )
 };
 
-GTrajectories::GTrajectories(const PFParticle& particle) {
+GTrajectories::GTrajectories(const Particle& particle) {
+  if (particle.path()== nullptr)
+    return;
   if (particle.charge() != 0) {
     if (abs(particle.pdgId()) > 100) {
       addHelix(particle.path(), particle.p4().Vect(), 1, 1);
@@ -146,7 +146,6 @@ GTrajectories::GTrajectories(const PFParticle& particle) {
       addHelix(particle.path(), particle.p4().Vect(), 3, 7);
       addNamedPoints(particle.path()->points(), particle.p4().Vect(), 1, 5, 3);
     }
-
   } else {
     if (particle.pdgId() == 22)
       addStraight(particle.path(), particle.p4().Vect(), 2, 2, 1);
