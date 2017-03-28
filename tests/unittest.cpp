@@ -103,10 +103,10 @@ TEST_CASE("Helixpath") {  /// Helix path test
   double field = 3.8;
   Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, field);
   HelixPropagator helixprop;
-  helixprop.propagateOne(particle, cyl1);
+  helixprop.propagateOne(particle, cyl1, field);
   auto tvec = particle.path()->namedPoint(cyl1.layer());
   auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, field);
-  helixprop.propagateOne(particle2, cyl1);
+  helixprop.propagateOne(particle2, cyl1, field);
   auto tvec2 = particle2.path()->namedPoint(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
   REQUIRE(tvec2.Z() == Approx(0.50701872));
@@ -212,7 +212,8 @@ TEST_CASE("StraightLine") {
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  Particle photon(22, 0, tlv, 1);
+  Particle photon(22, 0, tlv, 0, 't');
+  
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -227,7 +228,7 @@ TEST_CASE("StraightLine") {
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
 
-  Particle photon2(22, 0, tlv, 1);
+  Particle photon2(22, 0, tlv, 1, 't');
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -296,7 +297,7 @@ TEST_CASE("Distance") {
   path->addPoint(papas::Position::kEcalIn, c1.position());
   path->addPoint(papas::Position::kHcalIn, c2.position());
   double charge = 1.;
-  Track tr(p3, charge, path, 't');
+  papas::Track tr(p3, charge, path, 't');
   Distance dist1(c1, tr);
   REQUIRE(dist1.isLinked());
   Distance dist2 = Distance(c2, c1);
@@ -564,7 +565,7 @@ TEST_CASE("test_papasevent") {
     Cluster cluster(10., TVector3(0, 0, 1), 2., i, IdCoder::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
-    Track track(TVector3(0, 0, 0), i, std::make_shared<Path>(), 't');
+    papas::Track track(TVector3(0, 0, 0), i, std::make_shared<Path>(), 't');
     tracks.emplace(track.id(), std::move(track));
     lastid = track.id();
   }
