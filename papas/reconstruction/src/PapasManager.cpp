@@ -7,20 +7,25 @@
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
+#include "papas/datatypes/Particle.h"
+
+
 
 namespace papas {
 
 PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_event() {
   
 }
+  
 
-void PapasManager::simulate(const ListParticles& particles) {
+void PapasManager::simulate(Particles& particles) {
 
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
   // and stored in a list of collections.
   // The collection can then be passed to the Simulator and concrete objects
   // stored in the collection
+  // Note: Normally The empty particles passed in here should have been created by the PapasManager
   auto& ecalClusters = createClusters();
   auto& hcalClusters = createClusters();
   auto& smearedEcalClusters = createClusters();
@@ -29,11 +34,11 @@ void PapasManager::simulate(const ListParticles& particles) {
   auto& smearedTracks = createTracks();
   auto& history =createHistory();
   m_event.setHistory(history);
-  auto& simParticles = createParticles();
+  
 
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, particles, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
-                             smearedHcalClusters, tracks, smearedTracks, simParticles, history);
+  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+                             smearedHcalClusters, tracks, smearedTracks, particles, history);
 
   // store the addresses of the filled collections to the Event
   m_event.addCollection(ecalClusters);
@@ -42,7 +47,9 @@ void PapasManager::simulate(const ListParticles& particles) {
   m_event.addCollection(smearedHcalClusters);
   m_event.addCollection(tracks);
   m_event.addCollection(smearedTracks);
-  m_event.addCollection(simParticles);
+  //NB can only add the particle collection once the particles are completed (eg paths added in)
+  // this is because they are stored here as const objects 
+  m_event.addCollection(particles);
   m_event.extendHistory(history);
   }
 
@@ -115,8 +122,8 @@ Blocks& PapasManager::createBlocks() {
   return m_ownedBlocks.back();
 }
 
-PFParticles& PapasManager::createParticles() {
-  m_ownedParticles.emplace_back(PFParticles());
+Particles& PapasManager::createParticles() {
+  m_ownedParticles.emplace_back(Particles());
   return m_ownedParticles.back();
 }
 

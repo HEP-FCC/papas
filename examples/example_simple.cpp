@@ -54,11 +54,11 @@ int main(int argc, char* argv[]) {
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.event().particles('r'));
 
     // write inputs and outputs to screen
-    std::cout << "Generated Stable Particles" << std::endl;
+    std::cout << "Generated Stable Particles: " << papasManager.event().particles('s').size() << std::endl; 
     for (const auto& p : papasManager.event().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
-    std::cout << "Reconstructed Particles" << std::endl;
+    std::cout << "Reconstructed Particles: " << std::endl<<  papasManager.event().particles('r').size() << std::endl;;
     for (const auto& p : papasManager.event().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }

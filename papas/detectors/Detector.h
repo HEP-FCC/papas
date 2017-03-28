@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/detectors/Calorimeter.h"
 #include "papas/detectors/DetectorElement.h"
@@ -42,23 +42,21 @@ public:
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
   double electronAcceptance(const Track& track) const { return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5; }
-
-  double electronEnergyResolution(const PFParticle& ptc) const { return 0.1 / sqrt(ptc.e()); }
-
+  double electronEnergyResolution(const Particle& ptc) const { return 0.1 / sqrt(ptc.e()); }
   double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
-
-  double muonPtResolution(const PFParticle& /*ptc*/) const { return 0.02; }
-
+  double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
+  const std::list<std::shared_ptr<const DetectorElement>>  elements() const { return m_elements;}
+  void setElements(); ///sets up a list of all detector elements m_elements (needed for propagation)
 protected:
+  
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
   std::shared_ptr<const class Calorimeter> m_ecal;
   std::shared_ptr<const class Calorimeter> m_hcal;
   std::shared_ptr<const Tracker> m_tracker;
   std::shared_ptr<const Field> m_field;
-
 private:
-  std::list<SurfaceCylinder> m_cylinders;
+  std::list<std::shared_ptr<const DetectorElement>> m_elements; //list of the detector elements in the detector (ordered)
 };
 }  // end namespace papas
 #endif

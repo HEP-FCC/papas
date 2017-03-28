@@ -6,7 +6,7 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
@@ -33,7 +33,7 @@ public:
   // Simulator(const Detector&);
   /** Constructor
    @param[in] event papas Event structure (TODO double check its needed)
-   @param[in] particles list of gen particles which are to be simulated
+   @param[in] subtype for particles which are to be simulated
    @param[in] detector Detector
    @param[in] ecalClusters structure into which new Ecals are stored
    @param[in] hcalClusters structure into which new Hcals are stored
@@ -41,18 +41,17 @@ public:
    @param[in] smearedHcalClusters structure into which new smeared Hcals are stored
    @param[in] tracks structure into which new tracks are stored
    @param[in] smearedtracks structure into which new  smearedtracks are stored
-   @param[in] simParticles structure into which new Simulation particles are stored
    @param[in] history structure into which new history can be added, may be empty at start
   */
-  Simulator(const Event& event, const ListParticles& particles, const Detector& detector,
+  Simulator(const Event& event, const Detector& detector,
             Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, PFParticles& simParticles,
+            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, Particles& particles,
             Nodes& history);
   /** Simulate using a gen particle to produce a Simulated particle, plus tracks, smearedtracks and clusters/
    smearedclusters
    @param[in] ptc the gen particle to be simulated
   */
-  void simulateParticle(const Particle& ptc);
+  void simulateParticle(Particle& ptc);
   /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
    */
@@ -64,7 +63,7 @@ public:
   const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
   const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
   Nodes& history() { return m_history; }                        /// return a reference to history nodes collection
-  const PFParticles& particles() const { return m_particles; }  ///< Return particles collection
+                                                                //const Particles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
   /**
    Smears a Cluster
@@ -77,7 +76,7 @@ public:
                        papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
 
   /** TODO move to gun example
-   Makes a new PFParticle using random uniform distribution for theta, phi (-pi to +pi), energy
+   Makes a new Particle using random uniform distribution for theta, phi (-pi to +pi), energy
    @param[in] int pdgid: particle id (eg 22 for a photon)
    @param[in] double charge: charge of particle eg -1
    @param[in] double thetamin: minimum theta (uniform distribution between mintheta maxtheta)
@@ -85,40 +84,39 @@ public:
    @param[in] double ptmin: minimum pt (uniform distribution between minpt maxpt)
    @param[in] double ptmax: maximum pt
    @param[in] const TVector3& vertex: start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
   // move this somewhere else
-  PFParticle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
+  Particle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
                              const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
 private:
-  void simulatePhoton(PFParticle& ptc);    ///< Simulates cluster from a Photon
-  void simulateHadron(PFParticle& ptc);    ///< Simulates clusters and track from a Hadron
-  void simulateNeutrino(PFParticle& ptc);  ///< Simulates a neutrino
-  void smearElectron(PFParticle& ptc);     ///< Does not smear so far as I can see
-  void simulateElectron(PFParticle& ptc);  ///< Simulates an electron (no smearing)
-  void smearMuon(PFParticle& ptc);  ///< Does not smear so far as I can see
-  void simulateMuon(PFParticle& ptc); ///< Simulates a muon(no smearing)
+  void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon
+  void simulateHadron(Particle& ptc);    ///< Simulates clusters and track from a Hadron
+  void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
+  void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
+  void simulateMuon(Particle& ptc); ///< Simulates a muon(no smearing)
+
   /**
-   Makes a new PFParticle
+   Makes a new Particle
    @param[in] pdgid particle id (eg 22 for a photon)
    @param[in] tlv particle momentum
    @param[in] vertex start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
-  PFParticle& makeAndStorePFParticle(int pdgid, double charge, const TLorentzVector& tlv,
+  Particle& makeAndStoreParticle(int pdgid, double charge, const TLorentzVector& tlv,
                                      const TVector3& vertex = TVector3(0., 0., 0.));
   /**
-   Makes a new PFParticle
+   Makes a new Particle
    @param[in] pdgid particle id (eg 22 for a photon)
    @param[in] charge charge of particle eg -1
    @param[in] theta initial direction of particle
    @param[in] phi initial direction of particle
    @param[in] energy energy of particle
    @param[in] vertex start point of particle
-   @return PFParticle& the newly created particle
+   @return Particle& the newly created particle
    */
-  PFParticle& makeAndStorePFParticle(int pdgid, double charge, double theta, double phi, double energy,
+  Particle& makeAndStoreParticle(int pdgid, double charge, double theta, double phi, double energy,
                                      const TVector3& vertex = TVector3(0., 0., 0.));
   /**
    Determines if a smeared Cluster is detectable
@@ -136,8 +134,8 @@ private:
    @param[in] parentId identifier for parent (used for history)
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
-  Cluster makeAndStoreEcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
-  Cluster makeAndStoreHcalCluster(const PFParticle& ptc, double fraction, double csize, char subtype);
+  Cluster makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
+  Cluster makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
   
   /**
    Moves the smearedCluster into the smeared Ecals collection and updates the history
@@ -158,7 +156,7 @@ private:
    @param[in] ptc particle from which to construct track
    @return the new stored Track
    */
-  const Track& makeAndStoreTrack(const PFParticle& ptc);
+  const Track& makeAndStoreTrack(const Particle& ptc);
   /**
    Smears a track by randomisation of the energy of a track
    @param[in] track the unsmeared track
@@ -193,17 +191,10 @@ private:
    @param[in] parentid used to update history
    */
   void storeSmearedTrack(Track&& smearedtrack, Identifier parentid);
-  /**
-   Propagates a particle to the specified cyclinder
-   @param[in] cylinder the cylinder where  we want to know where the particle arrives
-   @param[in] ptc the particle to be propagated
+  /** Return shared ptr to the appropriate propagator (straightline or helix)
+   @param[in] charge charge of particle
    */
-  void propagate(const SurfaceCylinder& cylinder, PFParticle& ptc);
-  /**
-   Propagates a particle to the ECAL and Hcal cyclinders
-   @param[in] ptc the particle to be propagated
-   */
-  void propagateAllLayers(PFParticle& ptc);
+  std::shared_ptr<Propagator> propagator(double charge);
   /**
    Update the History
    @param[in] newid the new object being added to history
@@ -226,11 +217,11 @@ private:
   Clusters& m_smearedHcalClusters;  ///< smeared hcal clusters
   Tracks& m_tracks;                 ///< tracks
   Tracks& m_smearedTracks;          ///< smeared tracks
-  PFParticles& m_particles;         ///< all particles
+  Particles& m_particles;         ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
 
-  StraightLinePropagator m_propStraight;  ///<used to determine the path of uncharged particles
-  HelixPropagator m_propHelix;            ///<used to determine the path of charged particles
+  std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles
+  std::shared_ptr<HelixPropagator> m_propHelix;            ///<used to determine the path of charged particles
 };
 
 }  // end namespace papas

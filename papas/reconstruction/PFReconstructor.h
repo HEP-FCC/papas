@@ -8,6 +8,10 @@
 #include "papas/graphtools/DefinitionsNodes.h"
 
 namespace papas {
+  
+  class StraightLinePropagator;
+  class HelixPropagator;
+  class Propagator;
 class PFReconstructor {
   /** Handles reconstruction of particles from a Event
    * The PFevent contains the merged clusters and tracks and the history nodes and should already contain
@@ -75,11 +79,11 @@ public:
    particles a collection (owned elsewhere) into which the reconstructed particles will be added
    history a colelction of Nodes (owned elsewhere) into which history information will be added
   */
-  PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, PFParticles& particles,
+  PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
                   Nodes& history);
   
   
-  //const PFParticles& particles() const { return m_particles; }  //
+  //const Particles& particles() const { return m_particles; }  //
 private:
   /** Takes a block and reconstructs particles from if
       block the block to be reconstructed
@@ -115,15 +119,15 @@ private:
    @param block Block in which to check for and reconstruct muons
    */
   void reconstructMuons(const PFBlock& block);
-  // void insertParticle(const PFBlock& block, PFParticle&& particle);  ///< moves particle and adds into history
+  // void insertParticle(const PFBlock& block, Particle&& particle);  ///< moves particle and adds into history
   /** Add new particle into history
    @param Ids Identifiers of parents of the new particle
    @param newparticle New particle that is to be added into history
    */
-  void insertParticle(const Ids& parentIds, PFParticle& newparticle);
+
+  void insertParticle(const Ids& parentIds, Particle& newparticle);
   /**  Checks if object identifier comes, directly or indirectly,
    from a particle of type typeAndSubtype, with this absolute pdgid.
-   
    @param id Identifier of object
    @param typeAndSubtype type and subtype of particle eg 'ps' for simulated particle
    @param pdgid particle type eg muon
@@ -139,12 +143,15 @@ private:
    @param cluster
    */
   double nsigmaHcal(const Cluster& cluster) const;
+  std::shared_ptr<Propagator> propagator(double charge);
   const Event& m_event; ///< Contains history information and collections of clusters/blocks/tracks
   const Detector& m_detector; ///< Detector
-  PFParticles& m_particles;  ///< the reconstructed particles created by this class
+  Particles& m_particles;  ///< the reconstructed particles created by this class
   Nodes& m_history; ///< History collection of Nodes (owned elsewhere) to which new history info will be added
   Ids m_unused; ///< List of ids (of clusters, tracks) which were not used in the particle reconstructions
   std::unordered_map<Identifier, bool> m_locked; ///< map of identifiers which have already been used in reconstruction
+  std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles
+  std::shared_ptr<HelixPropagator> m_propHelix;            ///<used to determine the path of charged particles
 };
 }  // end namespace papas
 #endif /* PFReconstructor_h */
