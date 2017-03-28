@@ -293,11 +293,11 @@ void BFSRecurseVisitor<N>::traverse(const Nodeset<N>& nodes, typename DAG::enumV
       // Now add in all the children/parent/undirected links for the next depth
       // and store these into visitnextnodes
       // NB depth=-1 means we are visiting everything
-      if (depth != 0 && (visittype == pt::CHILDREN | visittype == pt::UNDIRECTED))
+      if (depth != 0 && ((visittype == pt::CHILDREN) | (visittype == pt::UNDIRECTED)))
         for (const auto& child : node->children()) {
           if (!this->alreadyVisited(child)) visitnextnodes.insert(child);
         }
-      if (depth != 0 && (visittype == pt::PARENTS | visittype == pt::UNDIRECTED))
+      if (depth != 0 && ((visittype == pt::PARENTS) | (visittype == pt::UNDIRECTED)))
         for (const auto& parent : node->parents()) {
           if (!this->alreadyVisited(parent)) visitnextnodes.insert(parent);
         }
