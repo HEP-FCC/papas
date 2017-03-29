@@ -96,28 +96,6 @@ private:
   void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
   void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
   void simulateMuon(Particle& ptc); ///< Simulates a muon(no smearing)
-
-  /**
-   Makes a new Particle
-   @param[in] pdgid particle id (eg 22 for a photon)
-   @param[in] tlv particle momentum
-   @param[in] vertex start point of particle
-   @return Particle& the newly created particle
-   */
-  Particle& makeAndStoreParticle(int pdgid, double charge, const TLorentzVector& tlv,
-                                     const TVector3& vertex = TVector3(0., 0., 0.));
-  /**
-   Makes a new Particle
-   @param[in] pdgid particle id (eg 22 for a photon)
-   @param[in] charge charge of particle eg -1
-   @param[in] theta initial direction of particle
-   @param[in] phi initial direction of particle
-   @param[in] energy energy of particle
-   @param[in] vertex start point of particle
-   @return Particle& the newly created particle
-   */
-  Particle& makeAndStoreParticle(int pdgid, double charge, double theta, double phi, double energy,
-                                     const TVector3& vertex = TVector3(0., 0., 0.));
   /**
    Determines if a smeared Cluster is detectable
    @param[in] smearedCluster for which we need to determine if it is accepted
@@ -194,7 +172,7 @@ private:
   /** Return shared ptr to the appropriate propagator (straightline or helix)
    @param[in] charge charge of particle
    */
-  std::shared_ptr<Propagator> propagator(double charge);
+  std::shared_ptr<const Propagator> propagator(double charge) const;
   /**
    Update the History
    @param[in] newid the new object being added to history

@@ -25,8 +25,8 @@ namespace papas {
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
                                  Particles& particles, Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
-  m_propHelix  = std::make_shared<HelixPropagator>();
-  m_propStraight  = std::make_shared<StraightLinePropagator>();
+  m_propHelix  = std::make_shared<HelixPropagator>(detector.field());
+  m_propStraight  = std::make_shared<StraightLinePropagator>(detector.field());
   const auto& blocks = m_event.blocks(blockSubtype);
   bool withsort = false;
 #if WITHSORT
@@ -299,7 +299,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   TVector3 p3(cluster.position().Unit() * momentum);
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
   Particle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex);
-  propagator(particle.charge())->propagateOne(particle, m_detector.ecal()->volumeCylinder().inner(), m_detector.field()->getMagnitude());
+  propagator(particle.charge())->propagateOne(particle, m_detector.ecal()->volumeCylinder().inner());
   if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
   }

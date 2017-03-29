@@ -9,12 +9,11 @@
 
 namespace papas {
 
-HelixPropagator::HelixPropagator()  {}
+  HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
 
-
-void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field) const {
+void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
   if (ptc.path() == nullptr) {
-    auto helix = std::make_shared<Helix>(Helix( ptc.p4(), ptc.startVertex(),ptc.charge(), field));
+    auto helix = std::make_shared<Helix>(Helix( ptc.p4(), ptc.startVertex(),ptc.charge(), m_field->getMagnitude()));
     ptc.setPath(helix);
   }
   auto helix = std::static_pointer_cast<Helix>(ptc.path());

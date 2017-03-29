@@ -9,9 +9,10 @@
 
 namespace papas {
   
-  class StraightLinePropagator;
-  class HelixPropagator;
-  class Propagator;
+class StraightLinePropagator;
+class HelixPropagator;
+class Propagator;
+  
 class PFReconstructor {
   /** Handles reconstruction of particles from a Event
    * The PFevent contains the merged clusters and tracks and the history nodes and should already contain

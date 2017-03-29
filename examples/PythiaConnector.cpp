@@ -52,14 +52,20 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
   TLorentzVector tlv;
   int countp = 0;
 
-  //Temporary until I get latest FCC code on my Mac
-#if  0
+// Temporary until I get latest FCC code on my Mac
+#if 0
   //lxplus 0.8
   // Sort particles in order of decreasing energy (rather crudely)
   std::list<const fcc::MCParticle*> sortedPtcs;
   for (const auto p : *ptcs)
     sortedPtcs.push_back(&p);
-  sortedPtcs.sort([](const fcc::MCParticle* a, const fcc::MCParticle* b) { return a->p4().mass > b->p4().mass; });
+  sortedPtcs.sort([](const fcc::MCParticle* a, const fcc::MCParticle* b) { (const fcc::MCParticle&  a, const fcc::MCParticle& b) { auto p4= a->p4();
+                  TLorentzVector tlv;
+                 tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+                  TLorentzVector tlv2;
+                  p4= b->p4();
+                  tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+               return tlv.E() > tlv2.E();}););
   
   for (const auto ptc : sortedPtcs) {
     countp += 1;
@@ -73,24 +79,27 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
     }
     if (ptc->core().status == 1) {  // only stable ones
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-        papas::Particle particle(pdgid, (double)ptc->core().charge, tlv, particles.size(), 's', startVertex,
-                                 ptc->core().status);
+        papas::Particle particle(pdgid, (double)ptc->core().charge, tlv, particles.size(), 's',
+                                 startVertex, ptc->core().status);
         particles.emplace(particle.id(), particle);
         papas::PDebug::write("Made {}", particle);
       }
     }
   }
 
-  
-#else  //mac 0.7
-        // Sort particles in order of decreasing energy
-        std::list<const fcc::MCParticle>
-            sortedPtcs;
+#else  // mac 0.7
+  // Sort particles in order of decreasing energy
+  std::list<const fcc::MCParticle> sortedPtcs;
   for (auto p : *ptcs)
     sortedPtcs.push_back(p);
   sortedPtcs.sort([](const fcc::MCParticle& a, const fcc::MCParticle& b) {
-    return a.p4().mass > b.p4().mass;  // Colin is this OK?
-  });
+    auto p4= a.p4();
+    TLorentzVector tlv;
+    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    TLorentzVector tlv2;
+    p4= b.p4();
+    tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    return tlv.E() > tlv2.E();});
 
   for (const auto& ptc : sortedPtcs) {
     countp += 1;
@@ -114,6 +123,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
   }
 #endif
 }
+                  
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event
   // then run simulate and reconstruct

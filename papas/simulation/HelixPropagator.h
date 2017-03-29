@@ -13,7 +13,7 @@ class HelixPropagator : public Propagator {
 public:
   /** Constructor
   */
-  HelixPropagator();
+  HelixPropagator(std::shared_ptr<const Field> field);
   /**
    Propagate charged particle along Helix to the selected cylinder and store the point
    where the particle crosses the cylinder
@@ -21,8 +21,7 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field
    */
-  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl, double field) const override;
-
+  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
 
 };
 }  // end namespace papas

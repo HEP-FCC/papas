@@ -46,9 +46,9 @@ public:
   double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
   double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
   const std::list<std::shared_ptr<const DetectorElement>>  elements() const { return m_elements;}
-  void setElements(); ///sets up a list of all detector elements m_elements (needed for propagation)
 protected:
-  
+  ///allows derived detectors to set up the m_elements list which will then point to each of the Detector elements in turn (used for propagation)
+  void setupElements();
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
   std::shared_ptr<const class Calorimeter> m_ecal;
