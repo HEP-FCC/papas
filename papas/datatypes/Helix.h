@@ -55,7 +55,6 @@ public:
   const TVector3& centerXY() const { return m_centerXY; }
   double maxTime() const;
 private:
-  double m_charge;
   double m_rho;  ///< Radius of Helix
   double m_omega;
   double m_phi0;

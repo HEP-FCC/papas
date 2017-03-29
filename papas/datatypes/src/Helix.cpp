@@ -17,25 +17,21 @@ extern double gconstc;
 Helix::Helix() {}
 
 Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, double field)
-    : Path(p4, origin, field), m_charge(charge), m_vOverOmega(p4.Vect()) {
-      
-    if (m_charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
-    m_vOverOmega *= 1. / (m_charge * field) * 1e9 / gconstc;
-    m_omega = m_charge * field * gconstc * gconstc / (m_p4.M() * m_p4.Gamma() * 1e9);
-    m_rho = m_p4.Perp() / (fabs(m_charge) * field) * 1e9 / gconstc;
-    TVector3 momperp_xy = TVector3(-m_p4.Y(), m_p4.X(), 0.).Unit();
-    TVector3 origin_xy = TVector3(m_origin.X(), m_origin.Y(), 0.);
-
-    m_centerXY = origin_xy - m_charge * momperp_xy * m_rho;
-    m_extremePointXY = TVector3(m_rho, 0., 0.);
-    if (m_centerXY.X() != 0 or m_centerXY.Y() != 0) m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
-
-    // calculate phi range with the origin at the center,
-    // for display purposes
-    TVector3 center_to_origin = origin_xy - m_centerXY;
-    m_phi0 = center_to_origin.Phi();
-    m_phiMin = m_phi0 * 180 / M_PI;
-    m_phiMax = m_phiMin + 360.;
+    : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
+  if (charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
+  m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
+  m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
+  TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();
+  TVector3 origin_xy = TVector3(origin.X(), origin.Y(), 0.);
+  m_centerXY = origin_xy - charge * momperp_xy * m_rho;
+  m_extremePointXY = TVector3(m_rho, 0., 0.);
+  if (m_centerXY.X() != 0 or m_centerXY.Y() != 0) m_extremePointXY = m_centerXY + m_centerXY.Unit() * m_rho;
+  // calculate phi range with the origin at the center,
+  // for display purposes
+  TVector3 center_to_origin = origin_xy - m_centerXY;
+  m_phi0 = center_to_origin.Phi();
+  m_phiMin = m_phi0 * 180 / M_PI;
+  m_phiMax = m_phiMin + 360.;
 }
 
 std::array<double, 3> Helix::polarAtTime(double time) const {
