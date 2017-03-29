@@ -19,7 +19,6 @@
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
 
-
 namespace papas {
 
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
@@ -330,12 +329,11 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   PDebug::write("Made {} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);
 }
-  
-  std::shared_ptr<Propagator> PFReconstructor::propagator(double charge) {
-    if (fabs(charge) < 0.5)
-      return m_propStraight;
-    else
-      return m_propHelix;
-  }
-  
+
+std::shared_ptr<const Propagator> PFReconstructor::propagator(double charge) const {
+  if (fabs(charge) < 0.5)
+    return m_propStraight;
+  else
+    return m_propHelix;
+}
 }  // end namespace papas

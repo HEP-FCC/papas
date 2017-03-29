@@ -12,7 +12,7 @@ namespace papas {
 class StraightLinePropagator;
 class HelixPropagator;
 class Propagator;
-  
+
 class PFReconstructor {
   /** Handles reconstruction of particles from a Event
    * The PFevent contains the merged clusters and tracks and the history nodes and should already contain
@@ -144,7 +144,7 @@ private:
    @param cluster
    */
   double nsigmaHcal(const Cluster& cluster) const;
-  std::shared_ptr<Propagator> propagator(double charge);
+  std::shared_ptr<const Propagator> propagator(double charge) const;
   const Event& m_event; ///< Contains history information and collections of clusters/blocks/tracks
   const Detector& m_detector; ///< Detector
   Particles& m_particles;  ///< the reconstructed particles created by this class

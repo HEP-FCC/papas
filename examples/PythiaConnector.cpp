@@ -53,19 +53,19 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
   int countp = 0;
 
 // Temporary until I get latest FCC code on my Mac
-#if 0
+#if 1
   //lxplus 0.8
-  // Sort particles in order of decreasing energy (rather crudely)
+  // Sort particles in order of decreasing energy
   std::list<const fcc::MCParticle*> sortedPtcs;
   for (const auto p : *ptcs)
     sortedPtcs.push_back(&p);
-  sortedPtcs.sort([](const fcc::MCParticle* a, const fcc::MCParticle* b) { (const fcc::MCParticle&  a, const fcc::MCParticle& b) { auto p4= a->p4();
-                  TLorentzVector tlv;
-                 tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-                  TLorentzVector tlv2;
-                  p4= b->p4();
-                  tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-               return tlv.E() > tlv2.E();}););
+  sortedPtcs.sort([](const fcc::MCParticle* a, const fcc::MCParticle* b) { auto p4= a->p4();
+    TLorentzVector tlv;
+    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    TLorentzVector tlv2;
+    p4= b->p4();
+    tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    return tlv.E() > tlv2.E();});
   
   for (const auto ptc : sortedPtcs) {
     countp += 1;
