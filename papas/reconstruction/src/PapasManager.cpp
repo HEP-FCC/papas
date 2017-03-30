@@ -2,8 +2,8 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/datatypes/Event.h"
 #include "papas/reconstruction/MergeClusters.h"
-#include "papas/reconstruction/PFBlockBuilder.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/simulation/Simulator.h"
@@ -63,7 +63,7 @@ void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std:
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();
-  PFBlockBuilder blockBuilder(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
+  papas::buildPFBlocks(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the event
   m_event.addCollection(blocks);
   m_event.extendHistory(history);
@@ -73,7 +73,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& simplifiedblocks = createBlocks();
   auto& history = createHistory();
-  PFBlockSplitter blockBuilder(m_event, blockSubtype, simplifiedblocks, history);
+  papas::simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
   // store a pointer to the outputs into the event
   m_event.addCollection(simplifiedblocks);
   m_event.extendHistory(history);

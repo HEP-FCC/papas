@@ -47,8 +47,8 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
-#include "papas/reconstruction/BlockBuilder.h"
-#include "papas/reconstruction/mergeClusters.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
+#include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/simulation/Simulator.h"
@@ -462,15 +462,16 @@ TEST_CASE("BlockSplitter") {
 
   Nodes emptyNodes;
   Blocks blocks;
-  BlockBuilder blockbuilder(ids, std::move(edges), historyNodes, blocks, 'r');
-  REQUIRE(blockbuilder.subGraphs().size() == 1);
+  
+  buildPFBlocks(ids, std::move(edges), 'r', blockshistoryNodes, historyNodes);
+  REQUIRE(blocks.size() == 1);
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
   Event event;
   event.addCollection(blocks);
   Blocks simplifiedBlocks;
-  PFBlockSplitter splitter(event, 'r', simplifiedBlocks, emptyNodes);
+  simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);
   REQUIRE(simplifiedBlocks.size() == 2);
   return;
 }

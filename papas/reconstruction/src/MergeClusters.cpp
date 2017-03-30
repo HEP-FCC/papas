@@ -7,8 +7,10 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
-#include "papas/graphtools/GraphBuilder.h"
+#include "papas/graphtools/buildSubGraphs.h"
 #include "papas/utility/PDebug.h"
+#include "papas/datatypes/Event.h"
+#include "papas/graphtools/EventRuler.h"
 
 #include <algorithm>
 
@@ -40,8 +42,8 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   }
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
-  GraphBuilder grBuilder(ids, std::move(edges));
-  for (const auto& subgraph : grBuilder.subGraphs()) {
+  auto subGraphs = buildSubGraphs(ids, edges);
+  for (const auto& subgraph : subGraphs) {
     const auto& id = *subgraph.begin();
     double totalenergy = 0.;
     for (auto c : subgraph) {
