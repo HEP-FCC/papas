@@ -5,6 +5,7 @@
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/reconstruction/PFBlock.h"
 #include <iostream>
+#include <string>
 
 namespace papas {
 class Event;

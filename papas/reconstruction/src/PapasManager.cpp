@@ -1,13 +1,14 @@
-#include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/reconstruction/MergedClusterBuilder.h"
+#include "papas/graphtools/EventRuler.h"
+#include "papas/datatypes/Event.h"
+#include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
+#include <string>
 
 namespace papas {
 
@@ -51,7 +52,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
-  MergedClusterBuilder ecalmerger(m_event, typeAndSubtype, ruler, mergedClusters, history);
+  papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into event
   m_event.addCollection(mergedClusters);
   m_event.extendHistory(history);
