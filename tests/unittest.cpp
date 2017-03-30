@@ -48,7 +48,7 @@
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
-#include "papas/reconstruction/MergedClusterBuilder.h"
+#include "papas/reconstruction/mergeClusters.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/simulation/Simulator.h"
@@ -487,7 +487,7 @@ TEST_CASE("Merge") {
   event.addCollection(eclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "et", ruler, mergedClusters, nodes);
+  mergeClusters(event, "et", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
   for (auto& mergedCluster: mergedClusters) {
@@ -514,7 +514,7 @@ TEST_CASE("merge_pair") {
   event.addCollection(hclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
   return;
@@ -534,7 +534,7 @@ TEST_CASE("merge_pair_away") {
   event.addCollection(hclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 2);
   return;
@@ -643,7 +643,7 @@ TEST_CASE("merge_inside") {
   Clusters mergedClusters;
   testevent.addCollection(hclusters);
   papas::EventRuler ruler(testevent);
-  MergedClusterBuilder builder(testevent, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(testevent, "ht", ruler, mergedClusters, nodes);
   REQUIRE(mergedClusters.size() == 1);
   /*for (auto c : mergedClusters) {
   //  REQUIRE(c.second.isInside(TVector3(1, 0.06, 0))); }
