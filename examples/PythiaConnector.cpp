@@ -52,56 +52,22 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
   TLorentzVector tlv;
   int countp = 0;
 
-// Temporary until I get latest FCC code on my Mac
-#if 1
-  //lxplus 0.8
   // Sort particles in order of decreasing energy
-  std::list<const fcc::MCParticle*> sortedPtcs;
-  for (const auto p : *ptcs)
-    sortedPtcs.push_back(&p);
-  sortedPtcs.sort([](const fcc::MCParticle* a, const fcc::MCParticle* b) { auto p4= a->p4();
-    TLorentzVector tlv;
-    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-    TLorentzVector tlv2;
-    p4= b->p4();
-    tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-    return tlv.E() > tlv2.E();});
-  
-  for (const auto ptc : sortedPtcs) {
-    countp += 1;
-    auto p4 = ptc->core().p4;
-    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-    int pdgid = ptc->core().pdgId;
-    TVector3 startVertex = TVector3(0, 0, 0);
-    if (ptc->startVertex().isAvailable()) {
-      startVertex =
-      TVector3(ptc->startVertex().x() * 1e-3, ptc->startVertex().y() * 1e-3, ptc->startVertex().z() * 1e-3);
-    }
-    if (ptc->core().status == 1) {  // only stable ones
-      if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-        papas::Particle particle(pdgid, (double)ptc->core().charge, tlv, particles.size(), 's',
-                                 startVertex, ptc->core().status);
-        particles.emplace(particle.id(), particle);
-        papas::PDebug::write("Made {}", particle);
-      }
-    }
+  std::list<fcc::ConstMCParticle> sortPtcs;
+  for (const auto& p : *ptcs) {
+    sortPtcs.push_back(p);
   }
-
-#else  // mac 0.7
-  // Sort particles in order of decreasing energy
-  std::list<const fcc::MCParticle> sortedPtcs;
-  for (auto p : *ptcs)
-    sortedPtcs.push_back(p);
-  sortedPtcs.sort([](const fcc::MCParticle& a, const fcc::MCParticle& b) {
-    auto p4= a.p4();
+  sortPtcs.sort([](const fcc::ConstMCParticle& a, const fcc::ConstMCParticle& b) {
+    auto p4 = a.p4();
     TLorentzVector tlv;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     TLorentzVector tlv2;
-    p4= b.p4();
+    p4 = b.p4();
     tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
-    return tlv.E() > tlv2.E();});
+    return tlv.E() > tlv2.E();
+  });
 
-  for (const auto& ptc : sortedPtcs) {
+  for (const auto& ptc : sortPtcs) {
     countp += 1;
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
@@ -113,7 +79,6 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
     if (ptc.core().status == 1) {  // only stable ones
 
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-
         papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex,
                                  ptc.core().status);
         particles.emplace(particle.id(), particle);
@@ -121,7 +86,6 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
       }
     }
   }
-#endif
 }
                   
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
