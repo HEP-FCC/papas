@@ -100,7 +100,7 @@ void Simulator::simulateHadron(Particle& ptc) {
     if (pathLength < std::numeric_limits<double>::max()) {
       /// ecal path length can be infinite in case the ecal
       /// has lambda_I = 0 (fully transparent to hadrons)
-      auto path = std::static_pointer_cast<Helix>(ptc.path());
+      const auto& path = (ptc.path());
       double timeEcalInner = path->timeAtZ(path->namedPoint(papas::Position::kEcalIn).Z());
       double deltaT = path->deltaT(pathLength);
       double timeDecay = timeEcalInner + deltaT;
@@ -208,7 +208,7 @@ return makeAndStoreParticle(pdgid, charge, p4, vertex);
 Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
-    TVector3 pos = ptc.path()->namedPoint(papas::Position::kEcalIn);
+    const TVector3& pos = ptc.path()->namedPoint(papas::Position::kEcalIn);
 
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kEcal)->clusterSize(ptc);
@@ -232,7 +232,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction,
 Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {
   double energy = ptc.p4().E() * fraction;
   if (ptc.path()->hasNamedPoint(papas::Position::kHcalIn)) {
-    TVector3 pos = ptc.path()->namedPoint(papas::Position::kHcalIn);
+    const TVector3& pos = ptc.path()->namedPoint(papas::Position::kHcalIn);
     if (csize == -1.) {  // ie value not provided
       csize = m_detector.calorimeter(papas::Layer::kHcal)->clusterSize(ptc);
     }

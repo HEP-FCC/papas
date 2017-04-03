@@ -108,10 +108,10 @@ TEST_CASE("Helixpath") {  /// Helix path test
   HelixPropagator helixprop(field);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
-  auto tvec = particle.path()->namedPoint(cyl1.layer());
+  const auto& tvec = particle.path()->namedPoint(cyl1.layer());
   auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, 3.8);
   helixprop.propagateOne(particle2, cyl1);
-  auto tvec2 = particle2.path()->namedPoint(cyl1.layer());
+  const auto& tvec2 = particle2.path()->namedPoint(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
   REQUIRE(tvec2.Z() == Approx(0.50701872));
 }

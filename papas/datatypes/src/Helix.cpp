@@ -17,8 +17,9 @@ extern double gconstc;
 Helix::Helix() {}
 
 Helix::Helix(const TLorentzVector& p4, const TVector3& origin, double charge, double field)
-    : Path(p4, origin, field), m_rho(p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc), m_vOverOmega(p4.Vect()) {
+    : Path(p4, origin, field), m_vOverOmega(p4.Vect()) {
   if (charge * field == 0) throw "invalid parameters for Helix: charge or field are zero";
+  m_rho = p4.Perp() / (fabs(charge) * field) * 1e9 / gconstc;
   m_vOverOmega *= 1. / (charge * field) * 1e9 / gconstc;
   m_omega = charge * field * gconstc * gconstc / (p4.M() * p4.Gamma() * 1e9);
   TVector3 momperp_xy = TVector3(-p4.Y(), p4.X(), 0.).Unit();

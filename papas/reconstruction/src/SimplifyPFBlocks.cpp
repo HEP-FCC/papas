@@ -13,7 +13,6 @@ void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedb
   withsort = true;
 #endif
   auto blockids = event.collectionIds<Blocks>(blocks, withsort);
-
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated

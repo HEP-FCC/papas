@@ -13,9 +13,7 @@
 #include "papas/detectors/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
-
 #include "papas/utility/Log.h"
-#include "papas/utility/TRandom.h"
 #include "papas/utility/TRandom.h"
 #include <TApplication.h>
 #include <TCanvas.h>
