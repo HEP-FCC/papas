@@ -16,16 +16,16 @@
 namespace papas {
 
 int PFBlock::tempBlockCount = 0;
-  
-  bool blockIdComparer (Identifier id1, Identifier id2) {
-    if (IdCoder::type(id1) ==IdCoder::type(id2))
-      return id1>id2;
-    else
-      return IdCoder::type(id1) < IdCoder::type(id2);}
-  
+
+bool blockIdComparer(Identifier id1, Identifier id2) {
+  if (IdCoder::type(id1) == IdCoder::type(id2))
+    return id1 > id2;
+  else
+    return IdCoder::type(id1) < IdCoder::type(id2);
+}
+
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
-    : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())),
-     m_elementIds(element_ids) {
+    : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
   m_elementIds.sort(blockIdComparer);
   // extract the relevant parts of the complete set of edges and store this within the block
@@ -54,7 +54,8 @@ int PFBlock::countHcal() const {
 
 int PFBlock::countTracks() const {
   // Counts how many track ids are in the block
-  return std::count_if(m_elementIds.begin(), m_elementIds.end(), [](Identifier elem) { return IdCoder::isTrack(elem); });
+  return std::count_if(m_elementIds.begin(), m_elementIds.end(),
+                       [](Identifier elem) { return IdCoder::isTrack(elem); });
 }
 
 std::string PFBlock::shortName() const {
@@ -89,9 +90,8 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType m
         linkedEdgeKeys.push_back(edge.first);
     }
   }
-  return linkedEdgeKeys; //todo consider sorting
+  return linkedEdgeKeys;  // todo consider sorting
 }
-
 
 Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
@@ -101,8 +101,7 @@ Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const 
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
     linkedIds.push_back(found->second.otherId(id));
   }
-  if (sort)
-    linkedIds.sort(std::greater<Identifier>());
+  if (sort) linkedIds.sort(std::greater<Identifier>());
   return linkedIds;
 }
 
@@ -119,7 +118,8 @@ std::string PFBlock::elementsString() const {
   fmt::MemoryWriter out;
   out.write("    elements:\n");
   for (auto id : m_elementIds) {
-    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", IdCoder::typeLetter(id), count, IdCoder::pretty(id), IdCoder::value(id), id);
+    out.write("{:>7}{} = {:9} value={:5.1f} ({})\n", IdCoder::typeLetter(id), count, IdCoder::pretty(id),
+              IdCoder::value(id), id);
     count = count + 1;
   }
   return out.str();
@@ -184,7 +184,7 @@ const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
   if (found == m_edges.end()) throw std::range_error("Required edge not found");
   return found->second;
 }
-  std::string PFBlock::info() const { //One liner summary of PFBlock
+std::string PFBlock::info() const {  // One liner summary of PFBlock
   fmt::MemoryWriter out;
   out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),
             countHcal(), countTracks());

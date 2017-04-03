@@ -1,6 +1,6 @@
+#include "papas/datatypes/Event.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Event.h"
 #include "papas/datatypes/Track.h"
 #include "papas/reconstruction/PFBlock.h"
 #include <stdio.h>
@@ -9,14 +9,13 @@ namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
 
-  Event::Event(std::shared_ptr<Nodes> hist)
+Event::Event(std::shared_ptr<Nodes> hist)
     : m_ecalClustersCollection(),
       m_hcalClustersCollection(),
       m_tracksCollection(),
       m_particlesCollection(),
       m_blocksCollection(),
-      m_history(hist)
-  {};
+      m_history(hist){};
 
 void Event::addCollection(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
@@ -59,7 +58,7 @@ const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
   return *m_tracksCollection.at(subtype);
 }
 
-  const Particles& Event::particles(const IdCoder::SubType subtype) const {
+const Particles& Event::particles(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyParticles;
   return *m_particlesCollection.at(subtype);
 }
@@ -92,9 +91,7 @@ bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype
   return found;
 };
 
-bool Event::hasCollection(Identifier id) const {
-  return hasCollection(IdCoder::type(id), IdCoder::subtype(id));
-};
+bool Event::hasCollection(Identifier id) const { return hasCollection(IdCoder::type(id), IdCoder::subtype(id)); };
 
 bool Event::hasObject(Identifier id) const {
   // check if this object id is present
@@ -125,11 +122,11 @@ bool Event::hasObject(Identifier id) const {
 void Event::extendHistory(const Nodes& history) {
   // A separate history is created at each stage.
   // the following adds this history into the papasevent history
-    for (const auto& node : history) {
-      for (const auto& c : node.second.children()) {
-        makeHistoryLink(node.first, c->value(), *m_history);
-      }
+  for (const auto& node : history) {
+    for (const auto& c : node.second.children()) {
+      makeHistoryLink(node.first, c->value(), *m_history);
     }
+  }
 }
 
 void Event::clear() {
@@ -138,6 +135,6 @@ void Event::clear() {
   m_tracksCollection.clear();
   m_particlesCollection.clear();
   m_blocksCollection.clear();
-  m_history= 0;
+  m_history = 0;
 }
 }

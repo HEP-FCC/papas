@@ -7,7 +7,6 @@
 #include <list>
 #include <string>
 
-
 namespace fcc {
 class MCParticleCollection;
 }
@@ -40,8 +39,7 @@ namespace papas {
  *  @author  Alice Robson
  *  @date    2016-12-06
  */
-  //forward declarations
-
+// forward declarations
 
 class PapasManager {
 public:
@@ -82,29 +80,29 @@ public:
                    const std::string& hcalTypeAndSubtype = "hm",
                    char trackSubtype = 's');
   void simplifyBlocks(char blockSubtype);
-  //void mergeHistories();
+  // void mergeHistories();
   void reconstruct(char blockSubtype);
   /**
    *   @brief  return Event object
    *   @return  Event     */
-  const Event& event() const { return m_event; }  //< Access the event
-  const Detector& detector() const { return m_detector; }        ///< Access the detector
-  void setEventNo(unsigned int eventNo) { m_event.setEventNo(eventNo); }///< Set the event No
-  void clear(); ///<clears all owned objects and the Event
+  const Event& event() const { return m_event; }                          //< Access the event
+  const Detector& detector() const { return m_detector; }                 ///< Access the detector
+  void setEventNo(unsigned int eventNo) { m_event.setEventNo(eventNo); }  ///< Set the event No
+  void clear();                                                           ///<clears all owned objects and the Event
   Particles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
 
 protected:
-  Clusters& createClusters();      // Create an empty concrete collection of clusters ready for filling by an algorithm
-  Tracks& createTracks();          // Create an empty concrete collection of tracks ready for filling by an algorithm
-  Blocks& createBlocks();          // Create an empty concrete collection of blocks ready for filling by an algorithm
-    Nodes& createHistory();  // Create an empty concrete collection of history nodes ready for filling by an algorithm
+  Clusters& createClusters();  // Create an empty concrete collection of clusters ready for filling by an algorithm
+  Tracks& createTracks();      // Create an empty concrete collection of tracks ready for filling by an algorithm
+  Blocks& createBlocks();      // Create an empty concrete collection of blocks ready for filling by an algorithm
+  Nodes& createHistory();      // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
-  
-  std::list<Clusters> m_ownedClusters;      //<Holds all the clusters collections created during an event
-  std::list<Tracks> m_ownedTracks;          //<Holds all the tracks collections created during an event
-  std::list<Blocks> m_ownedBlocks;          //<Holds all the blocks collections created during an event
+
+  std::list<Clusters> m_ownedClusters;    //<Holds all the clusters collections created during an event
+  std::list<Tracks> m_ownedTracks;        //<Holds all the tracks collections created during an event
+  std::list<Blocks> m_ownedBlocks;        //<Holds all the blocks collections created during an event
   std::list<Particles> m_ownedParticles;  //<Holds all the particles collections created during an event
-  std::list<Nodes> m_ownedHistory;          //<Holds all the histories created during an event
+  std::list<Nodes> m_ownedHistory;        //<Holds all the histories created during an event
   Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
 
   // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids

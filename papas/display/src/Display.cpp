@@ -4,8 +4,8 @@
 //
 #include "papas/display/Display.h"
 #include "papas/display/ViewPane.h"
-#include <iostream>  //temp
 #include <algorithm>
+#include <iostream>  //temp
 
 namespace papas {
 
@@ -19,8 +19,7 @@ Display::Display(std::list<ViewPane::Projection> views) {
     if ((view == ViewPane::Projection::xy) | (view == ViewPane::Projection::yz) | (view == ViewPane::Projection::xz)) {
       m_views[ViewPane::ProjectionStrings[view]] =
           std::unique_ptr<ViewPane>{new ViewPane(view, 100, -4, 4, 100, -4, 4)};
-    } else if (view == ViewPane::Projection::ECAL_thetaphi ||
-               view == ViewPane::Projection::HCAL_thetaphi) {
+    } else if (view == ViewPane::Projection::ECAL_thetaphi || view == ViewPane::Projection::HCAL_thetaphi) {
       m_views[ViewPane::ProjectionStrings[view]] =
           std::unique_ptr<ViewPane>{new ViewPane(view, 100, -M_PI / 2., M_PI / 2., 100, -M_PI, M_PI, 500, 1000)};
     }

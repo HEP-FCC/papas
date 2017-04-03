@@ -13,7 +13,7 @@
 #include <utility>
 
 namespace papas {
-  /// @brief Class which provides pdgid, masss and charge data for particles
+/// @brief Class which provides pdgid, masss and charge data for particles
 class ParticlePData {
 public:
   static const double m_e;   // = 0.000511;
@@ -22,7 +22,7 @@ public:
   static const double m_K0;  //= 0.498;
   static const double m_n;   //= 1.;
   static const double m_p;   //= 1.;
- 
+
   /** @brief returns the corresponding Mass of particle with specified pdgid
    @param[in] pdgid particle type
   */

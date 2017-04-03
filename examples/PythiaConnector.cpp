@@ -87,7 +87,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
     }
   }
 }
-                  
+
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
@@ -97,16 +97,15 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   const fcc::MCParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
     try {
-    papas::Particles& genParticles = papasManager.createParticles();
-    makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
-    papasManager.simulate(genParticles);
-    papasManager.mergeClusters("es");
-    papasManager.mergeClusters("hs");
-    papasManager.buildBlocks("em", "hm", 's');
-    papasManager.simplifyBlocks('r');
-    papasManager.reconstruct('s');
-    }
-    catch (std::string message){
+      papas::Particles& genParticles = papasManager.createParticles();
+      makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
+      papasManager.simulate(genParticles);
+      papasManager.mergeClusters("es");
+      papasManager.mergeClusters("hs");
+      papasManager.buildBlocks("em", "hm", 's');
+      papasManager.simplifyBlocks('r');
+      papasManager.reconstruct('s');
+    } catch (std::string message) {
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
     m_store.clear();
@@ -188,7 +187,8 @@ papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCo
   for (const auto& c : fccClusters) {
     const auto position = c.core().position;
     const auto energy = c.core().energy;
-    papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size,  clusters.size(), itemtype, subtype);
+    papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size, clusters.size(), itemtype,
+                           subtype);
     clusters.emplace(cluster.id(), std::move(cluster));
   }
   return clusters;

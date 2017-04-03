@@ -6,8 +6,8 @@
 #include <string>
 
 namespace papas {
-  class Event;
-  
+class Event;
+
 /**
 Takes collections of tracks and clusters from an event and calculates the
 distances and links (edges) between the elements. These are then used to construct subgraphs of

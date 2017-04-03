@@ -39,7 +39,7 @@ Distance Ruler::clusterClusterDistance(const Cluster& cluster1, const Cluster& c
 }
 
 Distance Ruler::clusterTrackDistance(const Cluster& cluster, const Track& track) const {
-  if (cluster.subClusters().size() > 1) { //its a merged cluster
+  if (cluster.subClusters().size() > 1) {  // its a merged cluster
     // distance is the minimum distance between the track and each of the subclusters
     std::list<double> distances;
     std::list<double> linkedDistances;
@@ -57,9 +57,9 @@ Distance Ruler::clusterTrackDistance(const Cluster& cluster, const Track& track)
       mindist = *std::min_element(std::begin(linkedDistances), std::end(linkedDistances));
     else
       mindist = *std::min_element(std::begin(distances), std::end(distances));
-    return Distance{isLinked, mindist}; //move
-  } else //its a non merged cluster
-    return Distance{cluster, track};  //move
+    return Distance{isLinked, mindist};  // move
+  } else                                 // its a non merged cluster
+    return Distance{cluster, track};     // move
 }
 
 }  // end namespace papas

@@ -6,10 +6,10 @@
 
 namespace papas {
 class Particle;
-  
+
 class HelixPropagator : public Propagator {
-/** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
-*/
+  /** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
+  */
 public:
   /** Constructor
   */
@@ -22,7 +22,6 @@ public:
    @param[in] field magnitude of magnetic field
    */
   virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
-
 };
 }  // end namespace papas
 #endif

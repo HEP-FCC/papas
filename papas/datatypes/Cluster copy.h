@@ -28,14 +28,14 @@ public:
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
-   @param[in]  index of the collection into which the cluster is to be stored 
+   @param[in]  index of the collection into which the cluster is to be stored
    @param[in]  type eg IdCoder::kHcalCluster the identifier type
    @param[in]  subtype subtype of cluster eg 'm' for merged, 's' for smeared. Defaults to 'u' for unset.
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.
                 When creating a merged cluster it should ideally be set to the total eneergy of the cluster
       */
   Cluster(const Cluster& cluster, unsigned int index, IdCoder::ItemType type, char subtype = 'u', float val = 0.0);
-  
+
   /** Constructor: makes new mreged cluster
    @param[in]  overlappingClusters list of clusters to be merged, must have same type and subtype and must be simple
                unmerged clusters.
@@ -47,13 +47,15 @@ public:
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map
   Cluster& operator+=(const Cluster& rhs);    ///< merges a cluster into an existing cluster
-  double angularSize() const;         ///< The angle that the cluster boundary makes (not valid for merged clusters)
-  double size() const;                ///< The radius of the cluster
-  double pt() const { return m_energy * m_p3.Unit().Perp(); }  ///< Transverse momentum (magnitude of p3 in transverse plane)
-  double energy() const { return m_energy; }                 ///< Energy
-  double eta() const { return m_p3.Eta(); }                  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
+  double angularSize() const;  ///< The angle that the cluster boundary makes (not valid for merged clusters)
+  double size() const;         ///< The radius of the cluster
+  double pt() const {
+    return m_energy * m_p3.Unit().Perp();
+  }                                           ///< Transverse momentum (magnitude of p3 in transverse plane)
+  double energy() const { return m_energy; }  ///< Energy
+  double eta() const { return m_p3.Eta(); }   ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
   double theta() const { return M_PI / 2. - m_p3.Theta(); }  ///< Angle w/r to transverse plane
-  Identifier id() const { return m_id; }                   ///< identifier
+  Identifier id() const { return m_id; }                     ///< identifier
   const TVector3& position() const { return m_p3; }          ///< position (x, y, z)
   void setEnergy(double energy);                             ///< Set cluster energy
   void setSize(double value);                                ///< Set cluster size
@@ -61,9 +63,10 @@ public:
   std::string info() const;  ///< returns a text descriptor of the cluster
 
   /// static that returns max cluster energy (intended for display purposes)
-  static double maxEnergy() {return s_maxEnergy;};
+  static double maxEnergy() { return s_maxEnergy; };
+
 protected:
-  Identifier m_id;                        ///< identifier for Cluster
+  Identifier m_id;                          ///< identifier for Cluster
   double m_size;                            ///< Cluster size (radius?)
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
   TVector3 m_p3;                            ///< position (x, y, z)

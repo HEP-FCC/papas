@@ -1,8 +1,8 @@
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
-#include "papas/reconstruction/SimplifyPFBlocks.h"
 
 namespace papas {
 

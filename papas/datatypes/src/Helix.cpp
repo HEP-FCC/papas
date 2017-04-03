@@ -6,8 +6,8 @@
 //
 //
 
-#include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Helix.h"
+#include "papas/datatypes/Definitions.h"
 #include "papas/utility/DeltaR.h"
 #include <array>
 
@@ -95,7 +95,5 @@ double Helix::maxTime() const {
     return timeAtZ(minz);
 }
 
-double Helix::pathLength(double deltat) const {
-  return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat;
-}
+double Helix::pathLength(double deltat) const { return sqrt(m_omega * m_omega * m_rho * m_rho + vZ() * vZ()) * deltat; }
 }  // end namespace papas

@@ -7,8 +7,8 @@
 namespace papas {
 class Particle;
 
-class StraightLinePropagator  : public Propagator {
-/// Calculates where an uncharged particle crosses a detector cyclinder
+class StraightLinePropagator : public Propagator {
+  /// Calculates where an uncharged particle crosses a detector cyclinder
 public:
   /** Constructor
   */
@@ -21,6 +21,7 @@ public:
    @param[in] field magnitude of magnetic field (not used for uncharged particles)
   */
   void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
+
 private:
 };
 

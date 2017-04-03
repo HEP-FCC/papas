@@ -38,10 +38,10 @@ public:
    @param[in] subtype The subtype for the identifier of the block eg 's' for split block
    */
   PFBlock(const Ids& elementIds, Edges& edges, unsigned int index,
-          char subtype = 'u');  // relevant parts of edges will be removed and become owned by PFBlock
+          char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
-  const Edge& findEdge(Edge::EdgeKey key) const; ///< return Edge corresponding to Edge key
+  const Edge& findEdge(Edge::EdgeKey key) const;                           ///< return Edge corresponding to Edge key
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
@@ -64,20 +64,20 @@ public:
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
-  int size() const { return m_elementIds.size(); } ///< length of the element_unqiueids
-  Identifier id() const { return m_id; };  ///<Unique ID of the block
-  const Edges& edges() const { return m_edges; } ///<Unordered map of all the edges in a block
-  std::string info() const; ///< printable one line summary of a Block
-  std::string elementsString() const; ///< String listing all elements in a Block
-  std::string edgeMatrixString() const; ///< String representation of matrix of edges in a block
-  const Edge& edge(Identifier id1, Identifier id2) const; ///<locate an edge corresponding to two ids
+  int size() const { return m_elementIds.size(); }         ///< length of the element_unqiueids
+  Identifier id() const { return m_id; };                  ///<Unique ID of the block
+  const Edges& edges() const { return m_edges; }           ///<Unordered map of all the edges in a block
+  std::string info() const;                                ///< printable one line summary of a Block
+  std::string elementsString() const;                      ///< String listing all elements in a Block
+  std::string edgeMatrixString() const;                    ///< String representation of matrix of edges in a block
+  const Edge& edge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
 
 private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
 
-  Identifier m_id;          ///<  identifier for this block
+  Identifier m_id;            ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
   Edges m_edges;              ///< all the edges for elements in this block
   static int tempBlockCount;  ///< sequential numbering of blocks, not essential but helpful for debugging

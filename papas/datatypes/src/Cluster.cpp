@@ -15,7 +15,8 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type, char subtype)
+Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type,
+                 char subtype)
     : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_p3(position), m_subClusters() {
   setSize(size_m);
   setEnergy(energy);
@@ -45,12 +46,12 @@ Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int ind
       firstId = cluster->id();
       m_p3 = cluster->position() * cluster->energy();
       m_energy = cluster->energy();
-      m_size = cluster->size(); //needed for the case where overlappingClusters has just one cluster
+      m_size = cluster->size();  // needed for the case where overlappingClusters has just one cluster
       m_angularSize = cluster->angularSize();
     } else {
       if (IdCoder::typeAndSubtype(firstId) != IdCoder::typeAndSubtype(cluster->id()))
         throw "Merged Clusters must be made of clusters of same type and subtype";
-      m_p3 += cluster->position() * cluster->energy(); //energy weighted position
+      m_p3 += cluster->position() * cluster->energy();  // energy weighted position
       m_energy += cluster->energy();
     }
   }
@@ -59,7 +60,7 @@ Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int ind
   m_p3 *= denom;
   m_id = IdCoder::makeId(index, IdCoder::type(firstId), subtype, m_energy);
 }
-  
+
 Cluster::Cluster(Cluster&& c)
     : m_id(c.id()),
       m_size(c.m_size),

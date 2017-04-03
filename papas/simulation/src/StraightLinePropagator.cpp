@@ -1,10 +1,10 @@
 
 
 //#include <iostream>
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
-#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {

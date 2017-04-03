@@ -61,7 +61,7 @@ private:
   static std::vector<spdlog::sink_ptr> m_sinks;
   static spdlog::level::level_enum slevel;  ///< either err or info
   static std::string s_fname;
-  static bool s_On; ///< Boolean which says whether PDebug is active
+  static bool s_On;  ///< Boolean which says whether PDebug is active
 };
 }
 

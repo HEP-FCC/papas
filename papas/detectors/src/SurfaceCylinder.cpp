@@ -2,8 +2,8 @@
 //  Created by Alice Robson on 09/11/15.
 //
 //
-#include "TVector3.h"
 #include "papas/detectors/SurfaceCylinder.h"
+#include "TVector3.h"
 #include "papas/utility/PDebug.h"
 #include <cmath>
 

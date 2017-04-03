@@ -52,7 +52,7 @@ void ViewPane::draw() {
   std::sort(m_registered.begin(), m_registered.end(),
             [](const std::pair<std::shared_ptr<Drawable>, int>& left,
                const std::pair<std::shared_ptr<Drawable>, int>& right) { return left.second < right.second; });
-  
+
   // Now draw all registered items
   for (auto const& reg : m_registered) {
     reg.first->Draw(ProjectionStrings[m_projection]);

@@ -18,8 +18,7 @@ double Material::pathLength(bool isEm) const {
     freepath = m_lambdaI;
   if (freepath == 0.) {
     return std::numeric_limits<double>::max();
-  }
-  else {
+  } else {
     double pl = rootrandom::Random::expovariate(1. / freepath);
     return pl;
   }

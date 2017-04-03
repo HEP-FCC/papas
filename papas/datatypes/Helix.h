@@ -11,11 +11,11 @@
 #include "papas/datatypes/Path.h"
 
 namespace papas {
-  //TODO more documentation needed. Ask Colin for help.
+// TODO more documentation needed. Ask Colin for help.
 class Helix : public Path {
-/// Decribes helix path of charged particles
+  /// Decribes helix path of charged particles
 public:
-  ///Default Constructor
+  /// Default Constructor
   Helix();
   ~Helix() = default;
   /**Constructor
@@ -54,6 +54,7 @@ public:
   const TVector3& extremePointXY() const { return m_extremePointXY; }
   const TVector3& centerXY() const { return m_centerXY; }
   double maxTime() const;
+
 private:
   double m_rho;  ///< Radius of Helix
   double m_omega;

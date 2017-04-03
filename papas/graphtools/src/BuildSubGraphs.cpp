@@ -6,9 +6,9 @@
 
 namespace papas {
 
-  std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
+std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
   std::vector<const Ids> subGraphs;
-   Nodes localNodes;
+  Nodes localNodes;
   // create local nodes ready to use to make the blocks
   for (auto id : ids) {
     localNodes.emplace(id, PFNode(id));
@@ -18,7 +18,7 @@ namespace papas {
     const Edge& e = edge.second;
     if (e.isLinked()) {  // note this is an undirected link - OK for undirected searches
       localNodes[e.endIds()[0]].addChild(localNodes[e.endIds()[1]]);
-      }
+    }
   }
   DAG::FloodFill<Identifier> FFill;
   // traverse does the work and returns a vector of connected node groups
@@ -29,13 +29,12 @@ namespace papas {
     for (const auto& node : group) {
       subgraph.push_back(node->value());
     }
-    #if WITHSORT
-    subgraph.sort(std::greater<uint64_t>());//sort in descending order
-    #endif
+#if WITHSORT
+    subgraph.sort(std::greater<uint64_t>());  // sort in descending order
+#endif
     subGraphs.push_back(subgraph);
   }
   return subGraphs;
 }
 
-  
 }  // end namespace papas

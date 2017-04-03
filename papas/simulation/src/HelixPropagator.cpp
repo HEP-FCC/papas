@@ -9,15 +9,15 @@
 
 namespace papas {
 
-  HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
+HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field) : Propagator(field) {}
 
 void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
   if (ptc.path() == nullptr) {
-    auto helix = std::make_shared<Helix>(Helix( ptc.p4(), ptc.startVertex(),ptc.charge(), m_field->getMagnitude()));
+    auto helix = std::make_shared<Helix>(Helix(ptc.p4(), ptc.startVertex(), ptc.charge(), m_field->getMagnitude()));
     ptc.setPath(helix);
   }
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
-  
+
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();
   double udir_z = helix->unitDirection().Z();
 
@@ -36,7 +36,7 @@ void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) co
         helix->addPoint(cyl.layer(), destination);
       } else
         is_looper = true;
-          }
+    }
 
     catch (std::string s) {
       return;
@@ -48,7 +48,6 @@ void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) co
     TVector3 destination = helix->pointAtZ(destz);
     helix->addPoint(cyl.layer(), destination);
   }
-
 }
 
 }  // end namespace papas

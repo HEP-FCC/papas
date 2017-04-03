@@ -29,6 +29,7 @@ public:
     */
 
   void propagate(Particle& ptc, const Detector& detector) const;
+
 protected:
   std::shared_ptr<const Field> m_field;
 };

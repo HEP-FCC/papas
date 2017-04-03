@@ -6,8 +6,8 @@
 #define SURFACECYLINDER_H
 
 #include "papas/datatypes/Definitions.h"
-#include <string>
 #include <ostream>
+#include <string>
 
 namespace papas {
 /**
@@ -25,13 +25,13 @@ public:
   double radius() const { return m_radius; }         ///<cylinder radius
   papas::Position layer() const { return m_layer; }  ///<cylinder layer
   std::string info() const;
-  
+
 private:
-  papas::Position m_layer; ///<cylinder layer
-  double m_radius; ///<cylinder radius
-  double m_z; ///<z value
+  papas::Position m_layer;  ///<cylinder layer
+  double m_radius;          ///<cylinder radius
+  double m_z;               ///<z value
 };
-  std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder);  
+std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder);
 
 }  // end namespace papas
 #endif

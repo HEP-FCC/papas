@@ -5,8 +5,8 @@
 #include "PythiaConnector.h"
 #include "papas/detectors/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/utility/PDebug.h"
 #include "papas/utility/Log.h"
+#include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 // STL
 #include <TApplication.h>
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
   if (argc == 3) {
     const char* lname = argv[2];
-     PDebug::File(lname);  // physics debug output
+    PDebug::File(lname);  // physics debug output
   }
   Log::init();
   Log::info("Logging Papas ");
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   auto start = std::chrono::steady_clock::now();
 
   for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
-        PDebug::write("Event: {}", i);
+    PDebug::write("Event: {}", i);
     if (i % 10 == 0) {
       std::cout << "reading event " << i << std::endl;
     }

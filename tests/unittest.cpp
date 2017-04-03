@@ -1,7 +1,7 @@
 // STL
 #include <iostream>
-#include <vector>
 #include <memory>
+#include <vector>
 
 // catch
 #define CATCH_CONFIG_MAIN
@@ -49,8 +49,8 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"
-#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/reconstruction/PapasManagerTester.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/TRandom.h"
 
@@ -218,7 +218,7 @@ TEST_CASE("StraightLine") {
 
   TLorentzVector tlv{1, 0, 1, 2.};
   Particle photon(22, 0, tlv, 0, 't');
-  
+
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -251,8 +251,8 @@ TEST_CASE("StraightLine") {
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
-  tlv = TLorentzVector (1, 0, -1, 2.);
-  Particle photon4 (22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
+  tlv = TLorentzVector(1, 0, -1, 2.);
+  Particle photon4(22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
@@ -260,10 +260,10 @@ TEST_CASE("StraightLine") {
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
   Particle photon5 = Particle(22, 0, tlv, 5, 's',
-                                  {
-                                      0., 0.5, 0,
-                                  },
-                                  0.);
+                              {
+                                  0., 0.5, 0,
+                              },
+                              0.);
   propStraight.propagateOne(photon5, cyl1);
   points = photon5.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(1.));
@@ -316,7 +316,7 @@ TEST_CASE("Distance2") {
   Distance dist1(c1, c2);
   REQUIRE(dist1.isLinked());
   REQUIRE(dist1.distance() == 0);
-  TVector3 pos3 (c1.position());
+  TVector3 pos3(c1.position());
   pos3.RotateZ(0.059);
   Cluster c3(30, pos3, 5., 3, IdCoder::ItemType::kHcalCluster, 't');
   Distance dist2(c1, c3);
@@ -329,7 +329,7 @@ TEST_CASE("Distance2") {
 
 // TODO
 void test_graphs() {  // Testing graphics
-  Display  display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
+  Display display({papas::ViewPane::Projection::xy, papas::ViewPane::Projection::yz});
   // Display display =
   // Display({papas::ViewPane::Projection::xy,papas::ViewPane::Projection::yz,papas::ViewPane::Projection::ECAL_thetaphi
   // ,papas::ViewPane::Projection::HCAL_thetaphi });
@@ -462,7 +462,7 @@ TEST_CASE("BlockSplitter") {
 
   Nodes emptyNodes;
   Blocks blocks;
-  
+
   buildPFBlocks(ids, std::move(edges), 'r', blocks, historyNodes);
   REQUIRE(blocks.size() == 1);
 
@@ -491,7 +491,7 @@ TEST_CASE("Merge") {
   mergeClusters(event, "et", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
-  for (auto& mergedCluster: mergedClusters) {
+  for (auto& mergedCluster : mergedClusters) {
     REQUIRE_THROWS(mergedCluster.second.size());         // not valid for merged cluster
     REQUIRE_THROWS(mergedCluster.second.angularSize());  // not valid for merged cluster
     REQUIRE(mergedCluster.second.energy() == 30.);

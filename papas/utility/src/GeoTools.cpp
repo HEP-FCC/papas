@@ -19,8 +19,7 @@ std::vector<std::pair<double, double>> circleIntersection(double x1, double y1, 
   double b = -2 * A * B;
   double c = pow(A, 2) - pow(r2, 2);
   double delta = pow(b, 2) - 4 * a * c;
-  if (delta<0.)
-    throw std::string("no solution");
+  if (delta < 0.) throw std::string("no solution");
   double yp = (-b + sqrt(delta)) / (2 * a);
   double ym = (-b - sqrt(delta)) / (2 * a);
   double xp = sqrt(pow(r2, 2) - pow(yp, 2));
