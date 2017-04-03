@@ -13,7 +13,7 @@ namespace papas {
 
 double gconstc = 299792458.0;  // TODO constants.c)
 
-Path::Path() {} //
+Path::Path() {}  //
 
 Path::Path(const TLorentzVector& p4, const TVector3& origin, double field)
     : m_p4(p4),

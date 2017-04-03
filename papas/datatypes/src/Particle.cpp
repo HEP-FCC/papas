@@ -5,26 +5,24 @@
  */
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Helix.h"
+#include "papas/datatypes/IdCoder.h"
 #include "spdlog/details/format.h"
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 namespace papas {
 
 // Particle::Particle() : m_pdgId(0), m_charge(0), m_status(0) {}
 
 Particle::Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
-                    const TVector3& startVertex, double status)
+                   const TVector3& startVertex, double status)
     : m_tlv(tlv),
       m_pdgId(pdgid),
       m_charge(charge),
       m_status(status),
       m_startVertex(startVertex),
-      m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E()))
-      {
-      }
+      m_id(IdCoder::makeId(index, IdCoder::kParticle, subtype, tlv.E())) {}
 
 bool Particle::isElectroMagnetic() const {
   unsigned int kind = abs(pdgId());

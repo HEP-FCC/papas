@@ -1,11 +1,11 @@
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 

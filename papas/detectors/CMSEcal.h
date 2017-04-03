@@ -34,7 +34,6 @@ public:
   CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
           std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp);
 
-
   /** Minimum size that will be seen by a detector
    @param[in]  ptc  particle that is to be detected
    @return minimum size of cluster that can be seen (TODO units)
@@ -48,7 +47,7 @@ public:
   bool acceptance(const Cluster& cluster) const override;
 
   /** energy Resolution of ECAL
-   @param[in] energy 
+   @param[in] energy
    @param[in] eta angle of arrival
    @return minimum energy resolution of the detector
    */

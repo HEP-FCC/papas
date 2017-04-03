@@ -1,7 +1,6 @@
 //
 //  Used only for Unit testing
 
-
 #include "papas/reconstruction/PapasManagerTester.h"
 
 namespace papas {
@@ -29,8 +28,8 @@ Simulator PapasManagerTester::setSimulator(Particles& particles) {
   auto& history = createHistory();
 
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
-                                   smearedHcalClusters, tracks, smearedTracks, particles, history);
+  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters, smearedHcalClusters, tracks,
+                      smearedTracks, particles, history);
   return simulator;
 }
 

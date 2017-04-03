@@ -17,7 +17,8 @@ class Track;
 class Tracker : public DetectorElement {
 public:
   using DetectorElement::DetectorElement;
-  /**  @brief virtual function that user must define to calculate the limit of momentum that can be distinguished by tracker
+  /**  @brief virtual function that user must define to calculate the limit of momentum that can be distinguished by
+   * tracker
    * @param[in] track Track for which the limit of momentum is to be determined
    */
   virtual double ptResolution(const Track& track) const = 0;

@@ -4,8 +4,8 @@
 namespace papas {
 
 Edge::Edge(Identifier endId1, Identifier endId2, bool isLinked, double distance)
-  : m_endIds({{endId1, endId2}}), //extra braces to shutup buggy xcode warning
-  m_isLinked(isLinked),
+    : m_endIds({{endId1, endId2}}),  // extra braces to shutup buggy xcode warning
+      m_isLinked(isLinked),
       m_distance(distance),
       m_key(Edge::makeKey(endId1, endId2)) {}
 
@@ -15,13 +15,13 @@ Edge::EdgeKey Edge::makeKey(Identifier id1, Identifier id2) {
   EdgeKey key;
   Identifier uid1 = IdCoder::uniqueId(id1);
   Identifier uid2 = IdCoder::uniqueId(id2);
-  
-  if (id1 < id2) // ensure that the order of the ids does not matter
+
+  if (id1 < id2)  // ensure that the order of the ids does not matter
     std::swap(uid1, uid2);
-  key = (((uint64_t)uid1) << 32 ) | ((uint64_t)uid2);
+  key = (((uint64_t)uid1) << 32) | ((uint64_t)uid2);
   return key;
 }
-  
+
 Identifier Edge::otherId(Identifier id) const {
   if (m_endIds[0] == id)
     return m_endIds[1];
@@ -30,8 +30,8 @@ Identifier Edge::otherId(Identifier id) const {
   return 0;
 }
 
-  //perhaps this should live somewhere else as it makes Edge class less general
-Edge::EdgeType Edge::edgeType() const{
+// perhaps this should live somewhere else as it makes Edge class less general
+Edge::EdgeType Edge::edgeType() const {
   // Produces an EdgeType enumeration such as kEcalTrack
   // NB for one track and one ecal the type will always be kEcalTrack (and never be a kTrackEcal)
 

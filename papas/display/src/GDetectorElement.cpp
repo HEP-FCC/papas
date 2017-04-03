@@ -11,7 +11,6 @@ std::map<std::string, int> goldCOLORMap{{"Ecal", kRed - 10}, {"Hcal", kBlue - 10
 
 std::map<papas::Layer, int> gCOLORMap{{papas::Layer::kEcal, kRed - 10}, {papas::Layer::kHcal, kBlue - 10}};
 
-
 void GDetectorElement::Draw(const std::string& projection) {
   if (projection == "xy") {
     for (auto& circle : m_circles)

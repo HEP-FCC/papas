@@ -25,7 +25,7 @@ class Event;
 /// It contains a reference to the papas event, which allows location of the underlying
 /// element (cluster, track) from the id.
 
-  class EventRuler {
+class EventRuler {
 
 public:
   EventRuler(const Event& event);
@@ -37,11 +37,12 @@ public:
    *   @return  Distance (ie isLinked : boolean T/F and distance value)
    */
   Distance distance(Identifier id1, Identifier id2) const;
+
 private:
   Distance clusterClusterDistance(Identifier id1, Identifier id2) const;
   Distance clusterTrackDistance(Identifier id1, Identifier id2) const;
-  Ruler m_ruler; ///<finds distance once the underlying tracks/clusters have been found
-  const Event& m_event; ///< papasevent holds the collections of tracks and clusters
+  Ruler m_ruler;         ///<finds distance once the underlying tracks/clusters have been found
+  const Event& m_event;  ///< papasevent holds the collections of tracks and clusters
 };
 }  // end namespace papas
 

@@ -53,9 +53,8 @@ void GBlob::Draw(const std::string& projection, const std::string& opt) const {
   // find the approprite projection and plot it
   if (m_contours.find(projection) != m_contours.end()) {
     m_contours.at(projection)->Draw(useopt.c_str());  // "at" instead of  []; otherwise fails because of const ness
-  }
-  else
-     throw "require implementation of drawing method for this projection";
+  } else
+    throw "require implementation of drawing method for this projection";
   if (m_inners.find(projection) != m_inners.end()) {
     m_inners.at(projection)->Draw(useopt.c_str());
   }

@@ -2,23 +2,22 @@
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& simplifiedblocks,
-                                 Nodes& history)
+PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history)
     : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
   const auto& blocks = m_event.blocks(blockSubtype);
-      bool withsort = false;
+  bool withsort = false;
 #if WITHSORT
-      withsort =  true;
+  withsort = true;
 #endif
-      auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
+  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
 
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
@@ -59,7 +58,7 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
       modifiedEdges.emplace(e.key(), std::move(e));
     }
     // Blockbuilder will add the blocks it creates into m_simplifiedBlocks
-   BlockBuilder bbuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
+    BlockBuilder bbuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
   }
 }
 
@@ -87,7 +86,7 @@ Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
           for (auto elem : linkedIds) {
             auto key = Edge::makeKey(id, elem);
             if (block.findEdge(key).distance() > minDist) {  // (could be more than one at zero distance)
-              toUnlink[key] = block.findEdge(key);          // should toUnlink be list of keys rather than edges
+              toUnlink[key] = block.findEdge(key);           // should toUnlink be list of keys rather than edges
             }
           }
         }

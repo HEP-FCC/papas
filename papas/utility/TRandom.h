@@ -38,7 +38,7 @@ public:
   static double uniform(double a, double b) { return s_random.Uniform(a, b); }
 
 private:
-  static TRandom s_random; ///< Root random number producer.
+  static TRandom s_random;  ///< Root random number producer.
 };
 }
 

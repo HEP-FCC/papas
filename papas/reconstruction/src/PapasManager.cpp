@@ -1,3 +1,4 @@
+#include "papas/reconstruction/PapasManager.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Particle.h"
@@ -5,7 +6,6 @@
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/reconstruction/PFReconstructor.h"
-#include "papas/reconstruction/PapasManager.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
 

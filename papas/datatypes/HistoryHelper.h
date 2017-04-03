@@ -2,8 +2,8 @@
 #define HistoryHelper_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
 namespace papas {
@@ -14,7 +14,7 @@ namespace papas {
  *  what simulation particles(s) gave rise to this reconstructed particle, or what was
  *  reconstructed from this simulation particle.
  *
- 
+
  @code
  Usage example:
  HistoryHelper hhelper(event);

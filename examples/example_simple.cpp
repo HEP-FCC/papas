@@ -13,35 +13,32 @@
 #include "papas/detectors/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
-
+#include "papas/utility/Log.h"
+#include "papas/utility/TRandom.h"
 #include <TApplication.h>
 #include <TCanvas.h>
 #include <iostream>
-#include "papas/utility/TRandom.h"
-#include "papas/utility/Log.h"
-#include "papas/utility/TRandom.h"
 
 #include <chrono>
 
-
 int main(int argc, char* argv[]) {
-  
+
   rootrandom::Random::seed(0xdeadbeef);
-  
+
   if (argc < 2) {
     std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   PythiaConnector pythiaConnector(fname);
-  
+
   if (argc == 3) {
     const char* lname = argv[2];
     papas::PDebug::File(lname);  // physics debug output
   }
   papas::Log::init();
   papas::Log::info("Logging Papas ");
-  
+
   // Create CMS detector and PapasManager
   papas::CMS CMSDetector;
   papas::PapasManager papasManager{CMSDetector};
@@ -54,11 +51,12 @@ int main(int argc, char* argv[]) {
     pythiaConnector.writeParticlesROOT("simpleeg.root", papasManager.event().particles('r'));
 
     // write inputs and outputs to screen
-    std::cout << "Generated Stable Particles: " << papasManager.event().particles('s').size() << std::endl; 
+    std::cout << "Generated Stable Particles: " << papasManager.event().particles('s').size() << std::endl;
     for (const auto& p : papasManager.event().particles('s')) {
       std::cout << "  " << p.second << std::endl;
     }
-    std::cout << "Reconstructed Particles: " << std::endl<<  papasManager.event().particles('r').size() << std::endl;;
+    std::cout << "Reconstructed Particles: " << std::endl << papasManager.event().particles('r').size() << std::endl;
+    ;
     for (const auto& p : papasManager.event().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
@@ -77,5 +75,3 @@ int main(int argc, char* argv[]) {
     std::cerr << c << ". Quitting." << std::endl;
   }
 }
-    
-

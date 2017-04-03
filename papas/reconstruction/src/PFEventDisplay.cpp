@@ -34,5 +34,4 @@ void PFEventDisplay::drawEvent(const Event& event) {
   draw();
 }
 
-
 }  // end namespace papas

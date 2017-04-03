@@ -28,7 +28,7 @@ public:
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
    @param[in]  cluster the cluster that is to be "copied"
-   @param[in]  index of the collection into which the cluster is to be stored 
+   @param[in]  index of the collection into which the cluster is to be stored
    @param[in]  type eg IdCoder::kHcalCluster the identifier type
    @param[in]  subtype subtype of cluster eg 'm' for merged, 's' for smeared. Defaults to 'u' for unset.
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.
@@ -45,7 +45,7 @@ public:
   double energy() const { return m_energy; }                 ///< Energy
   double eta() const { return m_p3.Eta(); }                  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
   double theta() const { return M_PI / 2. - m_p3.Theta(); }  ///< Angle w/r to transverse plane
-  Identifier id() const { return m_id; }                   ///< identifier
+  Identifier id() const { return m_id; }                     ///< identifier
   const TVector3& position() const { return m_p3; }          ///< position (x, y, z)
   void setEnergy(double energy);                             ///< Set cluster energy
   void setSize(double value);                                ///< Set cluster size
@@ -56,7 +56,7 @@ public:
     return s_maxEnergy;
   };  ///< static that returns max cluster energy (intended for display purposes)
 protected:
-  Identifier m_id;                        ///< identifier for Cluster
+  Identifier m_id;                          ///< identifier for Cluster
   double m_size;                            ///< Cluster size (radius?)
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
   double m_pt;                              ///< Transverse momentum (magnitude of p3 in transverse plane)

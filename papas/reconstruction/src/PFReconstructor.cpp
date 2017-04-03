@@ -15,21 +15,21 @@
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/reconstruction/PFBlockBuilder.h"
 #include "papas/reconstruction/PFBlockSplitter.h"
-#include "papas/utility/PDebug.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
+#include "papas/utility/PDebug.h"
 
 namespace papas {
 
-PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector,
-                                 Particles& particles, Nodes& history)
+PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
+                                 Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
-  m_propHelix  = std::make_shared<HelixPropagator>(detector.field());
-  m_propStraight  = std::make_shared<StraightLinePropagator>(detector.field());
+  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
+  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
   const auto& blocks = m_event.blocks(blockSubtype);
   bool withsort = false;
 #if WITHSORT
-  withsort =  true;
+  withsort = true;
 #endif
   auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
 
@@ -44,7 +44,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
       PDebug::write("{},", u);
     // TODO warning message
   }
-  }
+}
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
@@ -191,9 +191,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
 
   // hcal used to make ecal_in has a couple of possible issues
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
- 
+
   Ids ecalIds;
-  bool withsort=false;
+  bool withsort = false;
 #if WITHSORT
   withsort = true;
 #endif
@@ -321,8 +321,9 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();
   p4.SetVectM(track.p3(), ParticlePData::particleMass(pdgId));
-  Particle particle(pdgId, track.charge(), p4, m_particles.size(), 'r', track.path()->namedPoint(papas::Position::kVertex));
-  
+  Particle particle(pdgId, track.charge(), p4, m_particles.size(), 'r',
+                    track.path()->namedPoint(papas::Position::kVertex));
+
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
   // particle.set_path(track.path)
   m_locked[track.id()] = true;
