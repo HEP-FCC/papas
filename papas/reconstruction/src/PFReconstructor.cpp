@@ -57,7 +57,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // keeping only the elements that have not been used so far
   Ids uids;
   for (auto id : ids) {
-    if (!m_locked[id]) uids.push_back(id);
+    if (!m_locked[id]) uids.insert(id);
   }
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     Identifier id = *uids.begin();
@@ -93,7 +93,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
   for (auto& id : ids) {
     if (!m_locked[id]) {
-      m_unused.push_back(id);
+      m_unused.insert(id);
     }
   }
 }
@@ -205,7 +205,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
        # this might help with history work
        # ask colin.*/
       if (!m_locked[ecalId]) {
-        ecalIds.push_back(ecalId);
+        ecalIds.insert(ecalId);
         m_locked[ecalId] = true;
       }
     }
@@ -221,9 +221,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
       const Track& track = m_event.track(id);
       auto parentIds = Ids{block.id(), id};
       auto ecalLinks = block.linkedIds(id, Edge::kEcalTrack);
-      parentIds.insert(parentIds.end(), ecalLinks.begin(), ecalLinks.end());
+      parentIds.insert(ecalLinks.begin(), ecalLinks.end());
       auto hcalLinks = block.linkedIds(id, Edge::kHcalTrack);
-      parentIds.insert(parentIds.end(), hcalLinks.begin(), hcalLinks.end());
+      parentIds.insert(hcalLinks.begin(), hcalLinks.end());
       reconstructTrack(track, 211, parentIds);
       trackEnergy += track.energy();
     }
@@ -241,7 +241,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
                                    # Make a photon from the ecal energy
                                    # We make only one photon using only the combined ecal energies*/
         auto parentIds = ecalIds;
-        parentIds.push_back(block.id());
+        parentIds.insert(block.id());
         reconstructCluster(hcal, papas::Layer::kEcal, parentIds, excess);
       }
 
@@ -254,7 +254,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
           // again history is confusingbecause hcal is used to provide direction
           // be better to make several smaller photons one per ecal?
           auto parentIds = ecalIds;
-          parentIds.push_back(block.id());
+          parentIds.insert(block.id());
           reconstructCluster(hcal, papas::Layer::kEcal, parentIds, ecalEnergy);
         }
       }

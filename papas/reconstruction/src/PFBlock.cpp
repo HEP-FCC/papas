@@ -27,7 +27,7 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-  m_elementIds.sort(blockIdComparer);
+      //m_elementIds.sort(blockIdComparer);
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {
@@ -99,9 +99,9 @@ Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const 
   for (auto key : linkedEdgeKeys(id, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
-    linkedIds.push_back(found->second.otherId(id));
+    linkedIds.insert(found->second.otherId(id));
   }
-  if (sort) linkedIds.sort(std::greater<Identifier>());
+  //if (sort) linkedIds.sort(std::greater<Identifier>());
   return linkedIds;
 }
 

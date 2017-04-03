@@ -102,7 +102,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
       papasManager.simulate(genParticles);
       papasManager.mergeClusters("es");
       papasManager.mergeClusters("hs");
-      papasManager.buildBlocks("em", "hm", 's');
+      papasManager.buildBlocks('m', 'm', 's');
       papasManager.simplifyBlocks('r');
       papasManager.reconstruct('s');
     } catch (std::string message) {

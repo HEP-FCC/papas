@@ -52,7 +52,7 @@ Edges findEdgesToUnlink(const PFBlock& block) {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {
-    std::list<Edge::EdgeKey> linkedIds;
+    Ids linkedIds;//std::set<Edge::EdgeKey> linkedIds; //unordered?
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {

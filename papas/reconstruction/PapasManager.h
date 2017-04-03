@@ -76,8 +76,8 @@ public:
    *       history
    */
   void mergeClusters(const std::string& typeAndSubtype);
-  void buildBlocks(const std::string& ecalTypeAndSubtype = "em",
-                   const std::string& hcalTypeAndSubtype = "hm",
+  void buildBlocks(char ecalSubtype = 'm',
+                   char hcalSubtype = 'm',
                    char trackSubtype = 's');
   void simplifyBlocks(char blockSubtype);
   // void mergeHistories();

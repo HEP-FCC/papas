@@ -581,7 +581,7 @@ TEST_CASE("test_papasevent") {
   REQUIRE_THROWS(event.addCollection(ecals));
 
   // check we can get back collections OK
-  REQUIRE(event.clusters("et").size() == 2);
+  REQUIRE(event.clusters(IdCoder::type('e'), 't').size() == 2);
   REQUIRE(event.hasCollection(499) == false);
   REQUIRE(event.hasCollection(IdCoder::kEcalCluster, 't') == true);
   REQUIRE(event.hasCollection(lastid) == true);

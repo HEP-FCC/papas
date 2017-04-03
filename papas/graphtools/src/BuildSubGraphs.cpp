@@ -27,11 +27,11 @@ std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
     // we need the vector of ids and the map of edges in order to make the block
     Ids subgraph;
     for (const auto& node : group) {
-      subgraph.push_back(node->value());
+      subgraph.insert(node->value());
     }
-#if WITHSORT
+/*#if WITHSORT
     subgraph.sort(std::greater<uint64_t>());  // sort in descending order
-#endif
+#endif*/
     subGraphs.push_back(subgraph);
   }
   return subGraphs;

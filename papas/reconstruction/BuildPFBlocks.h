@@ -13,13 +13,13 @@ Takes collections of tracks and clusters from an event and calculates the
 distances and links (edges) between the elements. These are then used to construct subgraphs of
 connected objects. Blocks of connected items, PFBlocks,are created from the subgraphs.
 * @param[in] event Contains ecals, hcals, tracks
-* @param[in] ecalTypeAndSubtype which ecals collection to use eg 'em' for merged ecals
-* @param[in] hcalTypeAndSubtype which hcals collection to use
+* @param[in] ecalSubtype which ecals collection to use eg 'm' for merged ecals
+* @param[in] hcalSubtype which hcals collection to use
 * @param[in] trackSubtype which tracks collection to use, eg 's' for smeared
 * @param[inout] blocks external collection into which new blocks will be added
 * @param[inout] history external collection of Nodes to which parent child relations can be added
 */
-void buildPFBlocks(const Event& event, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,
+void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::SubType hcalSubtype,
                    char trackSubtype, Blocks& blocks, Nodes& history);
 
 /**

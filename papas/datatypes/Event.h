@@ -166,6 +166,7 @@ public:
    *   @param[in]  id the identifier of an object
    */
   const PFBlock& block(Identifier id) const { return blocks(id).at(id); };
+  
   /**
    *   @brief  returns a list of all the Ids inside a collection
    *   @param[in]  collection the collection
@@ -238,11 +239,47 @@ template <class T>
 Ids Event::collectionIds(const T& collection, bool sort) const {
   Ids ids;
   for (const auto& item : collection) {
-    ids.push_back(item.first);
+    ids.insert(item.first);
   }
-  if (sort) ids.sort(std::greater<Identifier>());
+  //if (sort) ids.sort(std::greater<Identifier>());
   return ids;
 }
+  
+  /*template <class T>
+  const std::unordered_map<Identifier, T>& Event::getCollection(IdCoder::ItemType type, IdCoder::SubType subtype) const
+  {
+    if (!hasCollection(type, subtype)) {
+      switch (type) {
+        case IdCoder::ItemType::kNone:
+          throw "unrecognised type";
+        case IdCoder::ItemType::kEcalCluster:
+        case IdCoder::ItemType::kHcalCluster:
+          return m_emptyClusters;
+        case IdCoder::ItemType::kTrack:
+          return m_emptyTracks;
+        case IdCoder::ItemType::kParticle:
+          return m_emptyParticles;
+        case IdCoder::ItemType::kBlock:
+          return  m_emptyBlocks;
+      }
+    }
+    switch (type) {
+      case IdCoder::ItemType::kNone:
+        throw "unrecognised type";
+      case IdCoder::ItemType::kEcalCluster:
+        return *m_ecalClustersCollection.at(subtype);
+      case IdCoder::ItemType::kHcalCluster:
+        return *m_hcalClustersCollection.at(subtype);
+      case IdCoder::ItemType::kTrack:
+        return *m_tracksCollection.at(subtype);
+      case IdCoder::ItemType::kParticle:
+        return *m_particlesCollection.at(subtype);
+      case IdCoder::ItemType::kBlock:
+        return *m_blocksCollection.at(subtype);
+    }
+  }*/
+  
+
 }
 
 #endif /* Event_h */

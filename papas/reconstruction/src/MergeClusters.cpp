@@ -22,11 +22,11 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   // make list of all the ids in this collection
   Ids ids;
   for (auto const& cluster : clusters) {
-    ids.push_back(cluster.first);
+    ids.insert(cluster.first);
   }
-#if WITHSORT
+/*#if WITHSORT
   ids.sort(std::greater<Identifier>());  // sort in descending order
-#endif
+#endif*/
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
   Edges edges;

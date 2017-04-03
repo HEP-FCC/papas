@@ -34,10 +34,10 @@ Simulator::Simulator(const Event& papasevent, const Detector& detector, Clusters
   // make sure we can process the particles in order if needed (highest energy first)
   Ids ids;
   for (auto& p : particles)
-    ids.push_back(p.first);
-#if WITHSORT
+    ids.insert(p.first);
+/*#if WITHSORT
   ids.sort(std::greater<Identifier>());
-#endif
+#endif*/
   for (auto& id : ids) {
     simulateParticle(particles[id]);
   }

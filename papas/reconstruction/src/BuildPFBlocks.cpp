@@ -13,17 +13,17 @@
 
 namespace papas {
 
-void buildPFBlocks(const Event& event, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,
+void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::SubType hcalSubtype,
                    char trackSubtype, Blocks& blocks, Nodes& history) {
 
-  const auto& ecals = event.clusters(ecalTypeAndSubtype);
-  const auto& hcals = event.clusters(hcalTypeAndSubtype);
-  const auto& tracks = event.tracks(trackSubtype);
+  const auto& ecals = event.clusters(IdCoder::ItemType::kEcalCluster, ecalSubtype);
+  const auto& hcals = event.clusters(IdCoder::ItemType::kHcalCluster, hcalSubtype);
+  const auto& tracks = event.tracks( trackSubtype);
   auto ids = event.collectionIds<Clusters>(ecals);
   for (auto id : event.collectionIds<Clusters>(hcals))
-    ids.push_back(id);
+    ids.insert(id);
   for (auto id : event.collectionIds<Tracks>(tracks))
-    ids.push_back(id);
+    ids.insert(id);
 
   Edges edges;
   EventRuler ruler(event);
