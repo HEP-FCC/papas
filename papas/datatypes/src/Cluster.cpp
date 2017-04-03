@@ -26,7 +26,6 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
     : m_id(IdCoder::makeId(index, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
-      m_pt(c.m_pt),
       m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
@@ -34,11 +33,37 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
   m_subClusters.push_back(&c);
 }
 
+Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
+    : m_subClusters(overlappingClusters) {
+  Identifier firstId = -1;
+  char type;
+  for (const auto* cluster : overlappingClusters) {
+    if (cluster->subClusters().size() > 1) {
+      throw "can only merge clusters which are not already merged";
+    }
+    if (firstId == -1) {
+      firstId = cluster->id();
+      m_p3 = cluster->position() * cluster->energy();
+      m_energy = cluster->energy();
+      m_size = cluster->size(); //needed for the case where overlappingClusters has just one cluster
+      m_angularSize = cluster->angularSize();
+    } else {
+      if (IdCoder::typeAndSubtype(firstId) != IdCoder::typeAndSubtype(cluster->id()))
+        throw "Merged Clusters must be made of clusters of same type and subtype";
+      m_p3 += cluster->position() * cluster->energy(); //energy weighted position
+      m_energy += cluster->energy();
+    }
+  }
+  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // used for graphics
+  double denom = 1. / m_energy;
+  m_p3 *= denom;
+  m_id = IdCoder::makeId(index, IdCoder::type(firstId), subtype, m_energy);
+}
+  
 Cluster::Cluster(Cluster&& c)
     : m_id(c.id()),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
-      m_pt(c.m_pt),
       m_p3(c.m_p3),
       m_energy(c.m_energy),
       m_subClusters() {
@@ -76,24 +101,6 @@ double Cluster::size() const {
 void Cluster::setEnergy(double energy) {
   m_energy = energy;
   if (energy > s_maxEnergy) s_maxEnergy = energy;
-  m_pt = energy * m_p3.Unit().Perp();
-}
-
-Cluster& Cluster::operator+=(const Cluster& rhs) {
-  if (IdCoder::type(m_id) != IdCoder::type(rhs.id())) {
-    throw "can only add a cluster from the same layer";
-  }
-  m_p3 = m_p3 * m_energy + rhs.position() * rhs.energy();
-  m_energy = m_energy + rhs.energy();
-  if (m_energy > s_maxEnergy) s_maxEnergy = m_energy;  // used for graphics
-  double denom = 1. / m_energy;
-  m_p3 *= denom;
-  if (rhs.subClusters().size() > 1) {
-    throw "can only add in a cluster which is not already merged";
-  }
-  m_pt = m_energy * m_p3.Unit().Perp();
-  m_subClusters.push_back(&rhs);
-  return *this;
 }
 
 std::string Cluster::info() const { return string_format("%7.2f %5.2f %5.2f", energy(), theta(), position().Phi()); }

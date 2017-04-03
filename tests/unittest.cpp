@@ -463,7 +463,7 @@ TEST_CASE("BlockSplitter") {
   Nodes emptyNodes;
   Blocks blocks;
   
-  buildPFBlocks(ids, std::move(edges), 'r', bl, historyNodes);
+  buildPFBlocks(ids, std::move(edges), 'r', blocks, historyNodes);
   REQUIRE(blocks.size() == 1);
 
   Edges to_unlink;

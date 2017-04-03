@@ -2,21 +2,21 @@
 
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
+#include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
+#include "papas/graphtools/BuildSubGraphs.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
-#include "papas/graphtools/BuildSubGraphs.h"
-#include "papas/utility/PDebug.h"
-#include "papas/datatypes/Event.h"
 #include "papas/graphtools/EventRuler.h"
+#include "papas/utility/PDebug.h"
 
 #include <algorithm>
 
 namespace papas {
 
 void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
-                    Nodes& history) {
+                   Nodes& history) {
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
   // make list of all the ids in this collection
@@ -42,30 +42,14 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
   auto subGraphs = buildSubGraphs(ids, edges);
+  std::list<const Clusters*> overlappingClusters;
   for (const auto& subgraph : subGraphs) {
-    const auto& id = *subgraph.begin();
-    double totalenergy = 0.;
-    for (auto c : subgraph) {
-      totalenergy += clusters.at(c).energy();
+    std::list<const Cluster*> overlappingClusters;
+    for (const auto& c : subgraph) {
+      overlappingClusters.push_back(&clusters.at(c));
     }
     // create the merged Cluster
-    // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
-    // for several reasons so this is probably more straightforward
-
-    Cluster mergedCluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm',
-                          totalenergy);  // create a new cluster based on old one
-    if (id == mergedCluster.id()) {
-      throw "MergedCluster has same id as existing cluster";
-    }
-    // merge the original clusters into the new merged cluster
-    // also add in the links between the block elements and the block into the history_nodes
-    if (subgraph.size() > 1) {
-      for (auto elemid : subgraph) {
-        if (elemid != id) {  // we have already handled the first element
-          mergedCluster += clusters.at(elemid);
-        }
-      }
-    }
+    Cluster mergedCluster(overlappingClusters, merged.size(), 'm');
     makeHistoryLinks(subgraph, {mergedCluster.id()}, history);
     PDebug::write("Made Merged{}", mergedCluster);
     merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster

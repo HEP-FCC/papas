@@ -36,8 +36,8 @@ public:
       */
   Cluster(const Cluster& cluster, unsigned int index, IdCoder::ItemType type, char subtype = 'u', float val = 0.0);
   
-  /** Constructor: makes new merged cluster
-   @param[in]  overlappingClusters list of clusters to be merged, they must have same type and subtype and must be simple
+  /** Constructor: makes new mreged cluster
+   @param[in]  overlappingClusters list of clusters to be merged, must have same type and subtype and must be simple
                unmerged clusters.
    @param[in]  index of the collection into which the cluster is to be stored
    @param[in]  subtype subtype of cluster to be created eg 'm' for merged,
