@@ -13,8 +13,8 @@
 
 namespace papas {
 
-MergedClusterBuilder::MergedClusterBuilder(
-    const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged, Nodes& history)
+MergedClusterBuilder::MergedClusterBuilder(const Event& event, const std::string& typeAndSubtype,
+                                           const EventRuler& ruler, Clusters& merged, Nodes& history)
     : m_merged(merged), m_history(history) {
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
@@ -51,8 +51,8 @@ MergedClusterBuilder::MergedClusterBuilder(
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
     // for several reasons so this is probably more straightforward
 
-    Cluster mergedCluster(
-        clusters.at(id), merged.size(), IdCoder::type(id), 'm', totalenergy);  // create a new cluster based on old one
+    Cluster mergedCluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm',
+                          totalenergy);  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }
