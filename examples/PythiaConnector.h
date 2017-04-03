@@ -51,8 +51,8 @@ public:
   // void processEvent(unsigned int eventNo, PapasManager& papasManager);
   void makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs,
                                                 papas::Particles& particles);  ///< takes pythia particles and creates
-                                                                               ///Papas type particles adding them into
-                                                                               ///an empty Particles collection
+                                                                               /// Papas type particles adding them into
+  /// an empty Particles collection
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size,
                                          papas::IdCoder::ItemType itemtype, char subtype) const;
 
