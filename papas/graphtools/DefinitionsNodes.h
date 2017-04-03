@@ -19,9 +19,9 @@ typedef std::map<Identifier, PFNode> Nodes;
 typedef std::list<const Nodes*> ListNodes;  ///< collection of Nodes
 
 inline PFNode& findOrMakeNode(Identifier id, Nodes& history) {
-  if (history.empty() || (history.find(id) == history.end()) ) {
-      PFNode newnode(id);
-      history.emplace(id, newnode);
+  if (history.empty() || (history.find(id) == history.end())) {
+    PFNode newnode(id);
+    history.emplace(id, newnode);
   }
   return history.at(id);
 }

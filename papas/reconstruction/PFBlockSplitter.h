@@ -40,14 +40,15 @@ public:
   /** Does the main work to simplify a block and add to the simplifiedBlocks collection
    * @param[in] edges contains collections of tracks, clusters and history
    * @param[in] block Block which is to be simplified
- 
+
   */
   void simplifyBlock(const Edges& edges, const PFBlock& block);
+
 private:
-  Edges findEdgesToUnlink(const PFBlock& block) const; ///< returns list of edges in block that can be unlinked
-  const Event& m_event;  ///< contains the collections of tracks, clusters and history
-  Blocks& m_simplifiedBlocks;      ///< the blocks produced by the blocksplitter are added into this collection
-  Nodes& m_history;                ///< history will be updated to store block creation
+  Edges findEdgesToUnlink(const PFBlock& block) const;  ///< returns list of edges in block that can be unlinked
+  const Event& m_event;                                 ///< contains the collections of tracks, clusters and history
+  Blocks& m_simplifiedBlocks;  ///< the blocks produced by the blocksplitter are added into this collection
+  Nodes& m_history;            ///< history will be updated to store block creation
 };
 }  // end namespace papas
 #endif /* PFBlockSplitter_h */

@@ -1,15 +1,15 @@
+#include "papas/simulation/Simulator.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
+#include "papas/datatypes/Helix.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
-#include "papas/simulation/Simulator.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-#include "papas/datatypes/Helix.h"
 class Detector;
 
 namespace papas {
@@ -31,7 +31,7 @@ Simulator::Simulator(const Event& papasevent, const Detector& detector, Clusters
 {
   m_propHelix = std::make_shared<HelixPropagator>(detector.field());
   m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
-  //make sure we can process the particles in order if needed (highest energy first)
+  // make sure we can process the particles in order if needed (highest energy first)
   Ids ids;
   for (auto& p : particles)
     ids.push_back(p.first);
@@ -68,8 +68,7 @@ void Simulator::simulatePhoton(Particle& ptc) {
   PDebug::write("Simulating Photon");
   // find where the photon meets the Ecal inner cylinder
   // make and smear the cluster
-  propagator(ptc.charge())
-      ->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
+  propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
@@ -84,9 +83,8 @@ void Simulator::simulateHadron(Particle& ptc) {
   auto field_sp = m_detector.field();
   double fracEcal = 0.;  // TODO ask Colin
 
-  propagator(ptc.charge())
-  ->propagateOne(ptc, ecal_sp->volumeCylinder().inner());
-  
+  propagator(ptc.charge())->propagateOne(ptc, ecal_sp->volumeCylinder().inner());
+
   // make a track if it is charged
   if (ptc.charge() != 0) {
     auto track = makeAndStoreTrack(ptc);
@@ -188,23 +186,23 @@ const Cluster& Simulator::cluster(Identifier clusterId) const {
   throw std::out_of_range("Cluster not found");
 }
 
-  /**
-//TODO move this out to a separate example 
+/**
+//TODO move this out to a separate example
 Particle& Simulator::addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin,
-                                      double ptmax, const TVector3& vertex) {
-  double theta = rootrandom::Random::uniform(thetamin, thetamax);
-  double phi = rootrandom::Random::uniform(-M_PI, M_PI);
-  double energy = rootrandom::Random::uniform(ptmin, ptmax);
-  double mass = ParticlePData::particleMass(pdgid);
-  double costheta = cos(M_PI / 2 - theta);
-  double sintheta = sin(M_PI / 2 - theta);
-  double cosphi = cos(phi);
-  double sinphi = sin(phi);
-  double momentum = energy / sintheta;
-  energy = sqrt(pow(momentum, 2) + pow(mass, 2));
+                                    double ptmax, const TVector3& vertex) {
+double theta = rootrandom::Random::uniform(thetamin, thetamax);
+double phi = rootrandom::Random::uniform(-M_PI, M_PI);
+double energy = rootrandom::Random::uniform(ptmin, ptmax);
+double mass = ParticlePData::particleMass(pdgid);
+double costheta = cos(M_PI / 2 - theta);
+double sintheta = sin(M_PI / 2 - theta);
+double cosphi = cos(phi);
+double sinphi = sin(phi);
+double momentum = energy / sintheta;
+energy = sqrt(pow(momentum, 2) + pow(mass, 2));
 
-  TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
-  return makeAndStoreParticle(pdgid, charge, p4, vertex);
+TLorentzVector p4(momentum * sintheta * cosphi, momentum * sintheta * sinphi, momentum * costheta, energy);
+return makeAndStoreParticle(pdgid, charge, p4, vertex);
 }*/
 
 Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype) {

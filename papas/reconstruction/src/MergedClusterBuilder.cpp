@@ -5,19 +5,16 @@
 #include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
-#include "papas/graphtools/GraphBuilder.h"
 #include "papas/graphtools/EventRuler.h"
+#include "papas/graphtools/GraphBuilder.h"
 #include "papas/utility/PDebug.h"
 
 #include <algorithm>
 
 namespace papas {
 
-MergedClusterBuilder::MergedClusterBuilder(const Event& event,
-                                           const std::string& typeAndSubtype,
-                                           const EventRuler& ruler,
-                                           Clusters& merged,
-                                           Nodes& history)
+MergedClusterBuilder::MergedClusterBuilder(const Event& event, const std::string& typeAndSubtype,
+                                           const EventRuler& ruler, Clusters& merged, Nodes& history)
     : m_merged(merged), m_history(history) {
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
@@ -27,7 +24,7 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     ids.push_back(cluster.first);
   }
 #if WITHSORT
-  ids.sort(std::greater<Identifier>()); //sort in descending order
+  ids.sort(std::greater<Identifier>());  // sort in descending order
 #endif
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
@@ -52,9 +49,10 @@ MergedClusterBuilder::MergedClusterBuilder(const Event& event,
     }
     // create the merged Cluster
     // Note we could try to do this in one shot as in the latest Python version... but its a little complicated
-    //for several reasons so this is probably more straightforward
+    // for several reasons so this is probably more straightforward
 
-   Cluster mergedCluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm', totalenergy);  // create a new cluster based on old one
+    Cluster mergedCluster(clusters.at(id), merged.size(), IdCoder::type(id), 'm',
+                          totalenergy);  // create a new cluster based on old one
     if (id == mergedCluster.id()) {
       throw "MergedCluster has same id as existing cluster";
     }

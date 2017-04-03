@@ -15,7 +15,8 @@ namespace papas {
 
 class Track;
 class Cluster;
-/// @brief Determines the distance between two items, eg clusters or clusters and tracks, and records whether or not they are linked.
+/// @brief Determines the distance between two items, eg clusters or clusters and tracks, and records whether or not
+/// they are linked.
 class Distance {
 public:
   /** Constructor
@@ -38,12 +39,12 @@ public:
    * @param[in] cluster2 Second Cluster
    */
   Distance(const Cluster& cluster1, const Cluster& cluster2);
-  bool isLinked() const { return m_isLinked; }; ///< true if the items are linked
+  bool isLinked() const { return m_isLinked; };    ///< true if the items are linked
   double distance() const { return m_distance; };  ///< distance between items
 
 private:
-  double m_distance; ///< distance between items
-  bool m_isLinked; ///< true if the items are linked
+  double m_distance;  ///< distance between items
+  bool m_isLinked;    ///< true if the items are linked
 };
 }  // end namespace papas
 #endif /* distance_h */

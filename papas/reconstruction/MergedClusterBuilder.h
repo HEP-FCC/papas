@@ -27,8 +27,9 @@ public:
    * @param[in] merged an empty unordered_map into which the merged Clusters will be place
    * @param[inout] history an unordered_map into which new history will be added
    */
-  MergedClusterBuilder(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler,
-                       Clusters& merged, Nodes& history);
+  MergedClusterBuilder(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
+                       Nodes& history);
+
 private:
   Clusters& m_merged;  ///< external collection to which the merged Clusters will be added
   Nodes& m_history;    /// external collection to which new history info will be added

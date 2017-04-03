@@ -77,9 +77,7 @@ public:
    *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
    */
-  void setHistory(Nodes& history) {
-    m_history = std::make_shared<Nodes>(history);
-  }
+  void setHistory(Nodes& history) { m_history = std::make_shared<Nodes>(history); }
   /**
    *   @brief adds new history into existing papasevent history
    *
@@ -177,19 +175,19 @@ public:
   /**
    *   @brief  takes all the history collection and merged them into one single history
    */
-  //void mergeHistories();
+  // void mergeHistories();
   /**
    *   @brief  returns the merged history
    */
   std::shared_ptr<const Nodes> history() const { return m_history; }
-  
+
   /**
-   *   @brief  resets everything, deletes all the clusters, tracks etc etc 
+   *   @brief  resets everything, deletes all the clusters, tracks etc etc
    */
   void clear();
-  void setEventNo(unsigned int eventNo) { m_eventNo = eventNo;}
-  unsigned int eventNo() const{return  m_eventNo;}
-  
+  void setEventNo(unsigned int eventNo) { m_eventNo = eventNo; }
+  unsigned int eventNo() const { return m_eventNo; }
+
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
@@ -210,11 +208,11 @@ private:
   /// Unordered map of pointers to Blocks
   CollectionBlocks m_blocksCollection;
   std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
-  Clusters m_emptyClusters;        ///<Used to return an empty collection when no collection is found
-  Tracks m_emptyTracks;            ///<Used to return an empty collection when no collection is found
-  Particles m_emptyParticles;  ///<Used to return an empty collection when no collection is found
-  Blocks m_emptyBlocks;            ///<Used to return an empty collection when no collection is found
-  unsigned int m_eventNo; ///<event number
+  Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
+  Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is found
+  Particles m_emptyParticles;        ///<Used to return an empty collection when no collection is found
+  Blocks m_emptyBlocks;              ///<Used to return an empty collection when no collection is found
+  unsigned int m_eventNo;            ///<event number
 };
 
 template <class T>
@@ -242,8 +240,7 @@ Ids Event::collectionIds(const T& collection, bool sort) const {
   for (const auto& item : collection) {
     ids.push_back(item.first);
   }
-  if (sort)
-    ids.sort(std::greater<Identifier>());
+  if (sort) ids.sort(std::greater<Identifier>());
   return ids;
 }
 }

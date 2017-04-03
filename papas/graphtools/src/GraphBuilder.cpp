@@ -16,7 +16,7 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
     const Edge& e = edge.second;
     if (e.isLinked()) {  // note this is an undirected link - OK for undirected searches
       m_localNodes[e.endIds()[0]].addChild(m_localNodes[e.endIds()[1]]);
-      }
+    }
   }
   DAG::FloodFill<Identifier> FFill;
   // traverse does the work and returns a vector of connected node groups
@@ -27,15 +27,15 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
     for (const auto& node : group) {
       subgraph.push_back(node->value());
     }
-    #if WITHSORT
-    sortIds(subgraph); //sort in descending order
-    #endif
+#if WITHSORT
+    sortIds(subgraph);  // sort in descending order
+#endif
     m_subGraphs.push_back(subgraph);
   }
 }
 
 void GraphBuilder::sortIds(Ids& ids) {
-  ids.sort(std::greater<uint64_t>()); //sort in descending order
+  ids.sort(std::greater<uint64_t>());  // sort in descending order
 }
 
 }  // end namespace papas

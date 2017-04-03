@@ -6,13 +6,13 @@
 #include "papas/datatypes/Path.h"
 
 namespace papas {
- /** @brief Determines the trajectory in space and time of a particle (charged or neutral).
-  
+/** @brief Determines the trajectory in space and time of a particle (charged or neutral).
+
 attributes:
-  - p3 : momentum in 3D space (px, py, pz)
-  - charge : particle charge
-  - path : contains the trajectory parameters and points
-  
+ - p3 : momentum in 3D space (px, py, pz)
+ - charge : particle charge
+ - path : contains the trajectory parameters and points
+
 */
 class Track {
 public:
@@ -24,18 +24,18 @@ public:
    @param[in] the subtype of the track used in creating the identifer
    */
   Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, unsigned int index, char subtype = 'u');
-  double energy() const { return m_p3.Mag(); } ///<energy
+  double energy() const { return m_p3.Mag(); }  ///<energy
   double charge() const { return m_charge; }
-  Identifier id() const { return m_id; } ///<identifier
-  const TVector3& p3() const { return m_p3; } /// momentum
+  Identifier id() const { return m_id; }       ///<identifier
+  const TVector3& p3() const { return m_p3; }  /// momentum
   const std::shared_ptr<Path> path() const { return m_path; }
   void setEnergy(double energy);
   void setSize(double value);
-  std::string info() const; ///< string representation of track
+  std::string info() const;  ///< string representation of track
 protected:
-  Identifier m_id; ///< Identifier of track
-  TVector3 m_p3;  ///< momentum in 3D space (px, py, pz)
-  double m_charge; ///< Charge of associated particle
+  Identifier m_id;                     ///< Identifier of track
+  TVector3 m_p3;                       ///< momentum in 3D space (px, py, pz)
+  double m_charge;                     ///< Charge of associated particle
   const std::shared_ptr<Path> m_path;  ///< pointer to path (not owned by track)
 private:
 };

@@ -1,10 +1,10 @@
 #include "papas/datatypes/IdCoder.h"
 #include "papas/utility/StringFormatter.h"
 #include <assert.h>
+#include <bitset>
 #include <cmath>
 #include <inttypes.h>
 #include <iostream>
-#include <bitset>
 
 //
 // Encode information into an identifier
@@ -53,25 +53,23 @@ float IdCoder::value(Identifier id) {
 }
 
 unsigned int IdCoder::index(Identifier id) { return id & (uint64_t)(pow(2, m_bitshift) - 1); }
-  
-unsigned int IdCoder::uniqueId(Identifier id)  {
-    //For some purposes we want a smaller uniqueid without the value information
-    //here we consruct a 32 bit uniqueid out of the index and the type and subtype
-    unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
-    Identifier typeShift = (uint32_t)type(id) << bitshift;
-    Identifier subtypeShift = (uint32_t) static_cast<int>(tolower(subtype(id))) << m_bitshift;
-    //binary printout std::cout <<"Index" << std::bitset<32>(IdCoder::index(id)) <<std::endl;
-    uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)index(id);
-    if (!checkUIDValid(id, uniqueid))
-      throw "unique id part of identifier not valid";
-    return uniqueid;
+
+unsigned int IdCoder::uniqueId(Identifier id) {
+  // For some purposes we want a smaller uniqueid without the value information
+  // here we consruct a 32 bit uniqueid out of the index and the type and subtype
+  unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
+  Identifier typeShift = (uint32_t)type(id) << bitshift;
+  Identifier subtypeShift = (uint32_t) static_cast<int>(tolower(subtype(id))) << m_bitshift;
+  // binary printout std::cout <<"Index" << std::bitset<32>(IdCoder::index(id)) <<std::endl;
+  uint32_t uniqueid = (uint32_t)subtypeShift | (uint32_t)typeShift | (uint32_t)index(id);
+  if (!checkUIDValid(id, uniqueid)) throw "unique id part of identifier not valid";
+  return uniqueid;
 }
-  
 
 char IdCoder::typeLetter(Identifier id) {
   // converts from the identifier type enumeration such as kEcalCluster into a single letter decriptor eg 'e'
   std::string typelist = ".ehtpb....";
-  
+
   auto index = (unsigned int)type(id);
   if (index < 6)
     return typelist[(unsigned int)type(id)];
@@ -128,19 +126,16 @@ bool IdCoder::checkValid(Identifier uid, ItemType itype, char subt, float val, u
   }
   return true;
 }
-  
-  bool IdCoder::checkUIDValid(Identifier id, unsigned int uniqueid) {
-    unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
-    // verify that it all works, the uniqueid should match the items from which it was constructed
-    ItemType it = static_cast<ItemType>((uniqueid >> bitshift) & (uint32_t)(pow(2, 3) - 1));
-    char st = static_cast<char>((uniqueid >> m_bitshift) & (uint64_t)(pow(2,bitshift - m_bitshift) - 1));
-    unsigned idx = ((uniqueid) & (uint32_t)(pow(2, m_bitshift) - 1));
-    if (it != type(id) || st != subtype(id) || idx != index(id))
-      return false;
-    return true;
-  }
-  
 
+bool IdCoder::checkUIDValid(Identifier id, unsigned int uniqueid) {
+  unsigned int bitshift = m_bitshift + m_bitshift1 - m_bitshift2;
+  // verify that it all works, the uniqueid should match the items from which it was constructed
+  ItemType it = static_cast<ItemType>((uniqueid >> bitshift) & (uint32_t)(pow(2, 3) - 1));
+  char st = static_cast<char>((uniqueid >> m_bitshift) & (uint64_t)(pow(2, bitshift - m_bitshift) - 1));
+  unsigned idx = ((uniqueid) & (uint32_t)(pow(2, m_bitshift) - 1));
+  if (it != type(id) || st != subtype(id) || idx != index(id)) return false;
+  return true;
+}
 
 uint64_t IdCoder::floatToBits(float value) {
   // CHAR_BIT not known on lxplus assert(CHAR_BIT * sizeof(float) == 32);  // TODO think of somewhere better to put this

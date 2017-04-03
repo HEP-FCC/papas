@@ -6,8 +6,8 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/simulation/HelixPropagator.h"
@@ -39,10 +39,9 @@ public:
    @param[in] (papas) particles to which simulation information will be added
    @param[in] history structure into which new history can be added, may be empty at start
   */
-  Simulator(const Event& event, const Detector& detector,
-            Clusters& ecalClusters, Clusters& hcalClusters, Clusters& smearedEcalClusters,
-            Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks, Particles& particles,
-            Nodes& history);
+  Simulator(const Event& event, const Detector& detector, Clusters& ecalClusters, Clusters& hcalClusters,
+            Clusters& smearedEcalClusters, Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks,
+            Particles& particles, Nodes& history);
   /** Simulate a particle, to produce tracks, smearedtracks, clusters, smearedclusters and path info
    @param[in] ptc the particle to be simulated
   */
@@ -57,16 +56,16 @@ public:
   const Clusters& smearedHcalClusters() const { return m_smearedHcalClusters; }  ///<return smeared Hcal clusters coll.
   const Tracks& tracks() const { return m_tracks; }                              ///<return tracks collection
   const Tracks& smearedTracks() const { return m_smearedTracks; }                ///<return smeared tracks collection
-  Nodes& history() { return m_history; }                        /// return a reference to history nodes collection
-                                                                //const Particles& particles() const { return m_particles; }  ///< Return particles collection
+  Nodes& history() { return m_history; }  /// return a reference to history nodes collection
+  // const Particles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
-  /**
-   Smears a Cluster
-   @param[in] cluster the cluster that is to be smeared
-   @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
-   the cluster belongs
-   @return the smeared Cluster (moved)
-   */
+                 /**
+                  Smears a Cluster
+                  @param[in] cluster the cluster that is to be smeared
+                  @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
+                  the cluster belongs
+                  @return the smeared Cluster (moved)
+                  */
   Cluster smearCluster(const Cluster& cluster,
                        papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
 
@@ -83,21 +82,21 @@ public:
    */
   // move this somewhere else
   Particle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                             const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
+                           const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
 
 private:
   void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon
   void simulateHadron(Particle& ptc);    ///< Simulates clusters and track from a Hadron
   void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
   void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
-  void simulateMuon(Particle& ptc); ///< Simulates a muon(no smearing)
-  /**
-   Determines if a smeared Cluster is detectable
-   @param[in] smearedCluster for which we need to determine if it is accepted
-   @param[in] acceptLayer detector layer used for acceptance NB not always the same layer as the cluster
-   @param[in] accept if true then the cluster will be accepted
-   @return boolean true/false
-   */
+  void simulateMuon(Particle& ptc);      ///< Simulates a muon(no smearing)
+                                         /**
+                                          Determines if a smeared Cluster is detectable
+                                          @param[in] smearedCluster for which we need to determine if it is accepted
+                                          @param[in] acceptLayer detector layer used for acceptance NB not always the same layer as the cluster
+                                          @param[in] accept if true then the cluster will be accepted
+                                          @return boolean true/false
+                                          */
   bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer = papas::Layer::kNone,
                             bool accept = false) const;
 
@@ -109,7 +108,7 @@ private:
    */
   Cluster makeAndStoreEcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
   Cluster makeAndStoreHcalCluster(const Particle& ptc, double fraction, double csize, char subtype);
-  
+
   /**
    Moves the smearedCluster into the smeared Ecals collection and updates the history
    @param[in] smearedCluster cluster to be stored
@@ -182,7 +181,7 @@ private:
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
   // void testing();
-  const Event& m_event;   ///< Event (for consistent Algorithm arguments)?
+  const Event& m_event;             ///< Event (for consistent Algorithm arguments)?
   const Detector& m_detector;       ///< the Detector
   Clusters& m_ecalClusters;         ///< ecal clusters (prior to smearing)
   Clusters& m_hcalClusters;         ///< hcal clusters (prior to smearing)
@@ -190,7 +189,7 @@ private:
   Clusters& m_smearedHcalClusters;  ///< smeared hcal clusters
   Tracks& m_tracks;                 ///< tracks
   Tracks& m_smearedTracks;          ///< smeared tracks
-  Particles& m_particles;         ///< all particles
+  Particles& m_particles;           ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
 
   std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles

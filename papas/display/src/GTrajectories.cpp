@@ -136,8 +136,7 @@ void GTrajectory::Draw(const std::string& projection /*,
 };
 
 GTrajectories::GTrajectories(const Particle& particle) {
-  if (particle.path()== nullptr)
-    return;
+  if (particle.path() == nullptr) return;
   if (particle.charge() != 0) {
     if (abs(particle.pdgId()) > 100) {
       addHelix(particle.path(), particle.p4().Vect(), 1, 1);

@@ -45,9 +45,11 @@ public:
   double electronEnergyResolution(const Particle& ptc) const { return 0.1 / sqrt(ptc.e()); }
   double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
   double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
-  const std::list<std::shared_ptr<const DetectorElement>>  elements() const { return m_elements;}
+  const std::list<std::shared_ptr<const DetectorElement>> elements() const { return m_elements; }
+
 protected:
-  ///allows derived detectors to set up the m_elements list which will then point to each of the Detector elements in turn (used for propagation)
+  /// allows derived detectors to set up the m_elements list which will then point to each of the Detector elements in
+  /// turn (used for propagation)
   void setupElements();
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
@@ -55,8 +57,10 @@ protected:
   std::shared_ptr<const class Calorimeter> m_hcal;
   std::shared_ptr<const Tracker> m_tracker;
   std::shared_ptr<const Field> m_field;
+
 private:
-  std::list<std::shared_ptr<const DetectorElement>> m_elements; //list of the detector elements in the detector (ordered)
+  std::list<std::shared_ptr<const DetectorElement>>
+      m_elements;  // list of the detector elements in the detector (ordered)
 };
 }  // end namespace papas
 #endif

@@ -37,8 +37,8 @@ public:
 
 private:
   void makeBlocks(char blockSubtype);  // does the main work
-  Nodes& m_history;               ///< externally owned and will be updated by BlockBuilder
-  Blocks& m_blocks;               ///< externally owned and will be updated by BlockBuilder
+  Nodes& m_history;                    ///< externally owned and will be updated by BlockBuilder
+  Blocks& m_blocks;                    ///< externally owned and will be updated by BlockBuilder
 };
 
 }  // end namespace papas

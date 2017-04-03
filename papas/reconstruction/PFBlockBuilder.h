@@ -24,14 +24,15 @@ public:
    * @param[inout] blocks structure into which new blocks will be added
    * @param[inout] history structure to which history information will be added
    */
-  PFBlockBuilder(const Event& m_event, const std::string& ecalTypeAndSubtype,
-                 const std::string& hcalTypeAndSubtype, char trackSubtype, Blocks& blocks, Nodes& history);
+  PFBlockBuilder(const Event& m_event, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,
+                 char trackSubtype, Blocks& blocks, Nodes& history);
+
 private:
-  void makeBlocks();               ///< does the main work of creating the blocks
+  void makeBlocks();     ///< does the main work of creating the blocks
   const Event& m_event;  ///< contains the collections of tracks, clusters and history
-  Blocks& m_blocks;                ///< the externally owned collection that new blocks will be added to by blockbuilder
-  Nodes& m_history;                ///< history will be updated to record block creation
-  Ids m_ids;                 ///< list of element ids from which to construct the blocks
+  Blocks& m_blocks;      ///< the externally owned collection that new blocks will be added to by blockbuilder
+  Nodes& m_history;      ///< history will be updated to record block creation
+  Ids m_ids;             ///< list of element ids from which to construct the blocks
 };
 
 }  // end namespace papas

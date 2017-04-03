@@ -90,7 +90,6 @@ public:
    @return the  index
    */
   static unsigned int index(Identifier id);  ///< Returns encoded index
-  
 
   /** Takes an identifier and returns a unique id component of it (excludes value information)
    @param[in] id: identifier

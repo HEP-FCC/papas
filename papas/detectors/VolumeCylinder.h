@@ -35,8 +35,8 @@ public:
   papas::Position innerLayer() const { return m_inner.layer(); }  ///< enum describing layer of inner cyclinder
 
 private:
-  SurfaceCylinder m_outer; ///< outer cyclinder of volume
-  SurfaceCylinder m_inner; ///< inner cyclinder of volume
+  SurfaceCylinder m_outer;  ///< outer cyclinder of volume
+  SurfaceCylinder m_inner;  ///< inner cyclinder of volume
 };
 }  // end namespace papas
 #endif
