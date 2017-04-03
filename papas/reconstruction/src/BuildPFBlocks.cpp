@@ -41,7 +41,7 @@ void buildPFBlocks(const Event& event, const std::string& ecalTypeAndSubtype, co
 }
 
 void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, Nodes& history) {
-  std::vector<const Ids> subGraphs = buildSubGraphs(ids, edges);
+  std::list<Ids> subGraphs = buildSubGraphs(ids, edges);
   for (const auto& elementIds : subGraphs) {
     PFBlock block(elementIds, edges, blocks.size(), subtype);  // make the block
     PDebug::write("Made {}", block);

@@ -15,8 +15,7 @@
 
 namespace papas {
 
-void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
-                   Nodes& history) {
+void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged, Nodes& history) {
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
   // make list of all the ids in this collection

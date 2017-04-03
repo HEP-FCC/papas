@@ -6,8 +6,8 @@
 
 namespace papas {
 
-std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
-  std::vector<const Ids> subGraphs;
+std::list<Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
+  std::list<Ids> subGraphs;
   Nodes localNodes;
   // create local nodes ready to use to make the blocks
   for (auto id : ids) {
