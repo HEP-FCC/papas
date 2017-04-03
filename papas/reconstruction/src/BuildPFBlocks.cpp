@@ -1,30 +1,17 @@
-
+#include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/BuildSubGraphs.h"
-#include "papas/graphtools/DirectedAcyclicGraph.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/FloodFill.h"
-#include "papas/reconstruction/BuildPFBlocks.h"
+
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
-
-void buildPFBlocks(const Ids& ids, Edges&& edges,char subtype, Blocks& blocks, Nodes& history ) {
-  std::vector<Ids> subGraphs = buildSubGraphs(ids, edges);
-  for (const auto& elementIds : subGraphs) {
-    PFBlock block(elementIds, edges, blocks.size(), subtype);  // make the block
-    PDebug::write("Made {}", block);
-    // put the block in the unordered map of blocks using move
-    Identifier id = block.id();
-    makeHistoryLinks(block.elementIds(), {id}, history);
-    blocks.emplace(id, std::move(block));
-  }
-}
 
 void buildPFBlocks(const Event& event, const std::string& ecalTypeAndSubtype, const std::string& hcalTypeAndSubtype,
                    char trackSubtype, Blocks& blocks, Nodes& history) {
@@ -51,6 +38,18 @@ void buildPFBlocks(const Event& event, const std::string& ecalTypeAndSubtype, co
     }
   }
   buildPFBlocks(ids, std::move(edges), 'r', blocks, history);
+}
+
+void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, Nodes& history) {
+  std::vector<const Ids> subGraphs = buildSubGraphs(ids, edges);
+  for (const auto& elementIds : subGraphs) {
+    PFBlock block(elementIds, edges, blocks.size(), subtype);  // make the block
+    PDebug::write("Made {}", block);
+    // put the block in the unordered map of blocks using move
+    Identifier id = block.id();
+    makeHistoryLinks(block.elementIds(), {id}, history);
+    blocks.emplace(id, std::move(block));
+  }
 }
 
 }  // end namespace papas

@@ -7,16 +7,16 @@
 namespace papas {
 
 /**
- * buildSubGraphs is a function takes a list of identifiers and an unordered map of associated edges which have
- *  distance and link (ie true/false) info that describe a graph.
+ * buildSubGraphs is a function taking a list of identifiers and an unordered map of associated edges containing
+ * distance and link (ie true/false) info that describe a graph.
  * The graph can be thought of as having the ids as the nodes and the edges as the connecting lines.
  * buildSubGraphs uses the distances/links between elements to construct a set of connected subgraphs.
  * Each id will end up in one (and only one) subgraph
  
  Usage example:
 @code
- std:vector<Ids> subGraphs = buildSubGraphs(ids, edges);
- for (auto& s : subGraphs) {
+ std:vector<const Ids> subGraphs = buildSubGraphs(ids, edges);
+ for (const auto& s : subGraphs) {
  ...
  }
  @endcode
@@ -31,7 +31,7 @@ namespace papas {
    *            an edge records the distance and links between two ids. The edges will be moved into the
    *            resulting blocks and become owned by them.
    */
-  std::vector<Ids> buildSubGraphs(const Ids& ids, const Edges& edges);
+  std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges);
 
   }  // end namespace papas
 #endif /* BuildSubGraphs_h */

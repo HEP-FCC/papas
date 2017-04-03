@@ -4,14 +4,16 @@
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <string>
+
 namespace papas {
   class Event;
   class EventRuler;
 
-    /**mergeClusters Function
-     /// Function to take a collection of clusters and write to a collection of merged clusters.
+    /**
+     /// Function to take a collection of clusters and make new merged clusters that are added 
+     /// to a collection of merged clusters.
      /// It first creates a collection of edges describing the distances between every possible pair of clusters.
-     /// The cluster ids and corresponding edges are then used to create distinct subgraphs
+     /// The cluster ids and corresponding edges are then used to create distinct subgraphs.
      /// Each subgraph is a set of overlapping clusters and becomes a new merged cluster.
      /// Subgraphs with only one cluster will also create a new merged cluster (a copy of the original cluster)
      /// The mergedcluster is created by making a new cluster and adding in each of the overlapping clusters

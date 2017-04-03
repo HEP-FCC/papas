@@ -49,7 +49,7 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/TRandom.h"
@@ -463,7 +463,7 @@ TEST_CASE("BlockSplitter") {
   Nodes emptyNodes;
   Blocks blocks;
   
-  buildPFBlocks(ids, std::move(edges), 'r', blockshistoryNodes, historyNodes);
+  buildPFBlocks(ids, std::move(edges), 'r', bl, historyNodes);
   REQUIRE(blocks.size() == 1);
 
   Edges to_unlink;
