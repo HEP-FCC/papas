@@ -2,18 +2,22 @@
 
 //#include <iostream>
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {
 
-  HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
+HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
 
-void HelixPropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
+void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
+  if (ptc.path() == nullptr) {
+    auto helix = std::make_shared<Helix>(Helix( ptc.p4(), ptc.startVertex(),ptc.charge(), m_field->getMagnitude()));
+    ptc.setPath(helix);
+  }
   auto helix = std::static_pointer_cast<Helix>(ptc.path());
-
+  
   bool is_looper = helix->extremePointXY().Mag() < cyl.radius();
   double udir_z = helix->unitDirection().Z();
 

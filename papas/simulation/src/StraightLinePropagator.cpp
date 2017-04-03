@@ -2,25 +2,29 @@
 
 //#include <iostream>
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/GeoTools.h"
 
 namespace papas {
 
-  StraightLinePropagator::StraightLinePropagator(std::shared_ptr<const Field> field): Propagator(field) {}
+StraightLinePropagator::StraightLinePropagator(std::shared_ptr<const Field> field) : Propagator(field) {}
 
-void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
   auto layer = cyl.layer();
   double cylinderz = cyl.z();
   double cylinderradius = cyl.radius();
-  Path::Ptr line = ptc.path();
+  std::shared_ptr<Path> line = ptc.path();
+  if (line == nullptr) {
+    line = std::make_shared<Path>(Path(ptc.p4(), ptc.startVertex(), ptc.charge()));
+    ptc.setPath(line);
+  }
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();
   if (fabs(origin.Z()) > cylinderz || origin.Perp() > cylinderradius) return;  //  particle created outside the cylinder
-  double zbar = line->unitDirection().Z();    // Z of unit direction vector
+  double zbar = line->unitDirection().Z();                                     // Z of unit direction vector
   if (zbar != 0) {
     double destz = (zbar > 0) ? cylinderz : -cylinderz;
     double length = (destz - origin.Z()) / cos(theta);  // TODO check Length >0
@@ -45,10 +49,6 @@ void StraightLinePropagator::propagateOne(const PFParticle& ptc, const SurfaceCy
       // TODO deal with Z == 0
       // TODO deal with overlapping cylinders
     }
-#if 0
-         std::cout << " X " << destination.X() << " Y" << destination.Y() << " Z " <<
-          destination.Z() << std::endl;
-#endif
     line->addPoint(layer, destination);
   }
 }

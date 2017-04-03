@@ -5,7 +5,7 @@
 #include "papas/simulation/Propagator.h"
 
 namespace papas {
-class PFParticle;
+class Particle;
   
 class HelixPropagator : public Propagator {
 /** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
@@ -21,7 +21,7 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field
    */
-  virtual void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const override;
+  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
 
 };
 }  // end namespace papas

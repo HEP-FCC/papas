@@ -42,15 +42,14 @@ class PapasManager;
 class PythiaConnector {
 public:
   PythiaConnector(const char* fname);
-  void writeParticlesROOT(const char* fname, const papas::PFParticles& particles);
+  void writeParticlesROOT(const char* fname, const papas::Particles& particles);
   void writeClustersROOT(const char* fname, const papas::Clusters& clusters);
 
   // todo find new home;
   void displayEvent(const papas::PapasManager& papasManager);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
   // void processEvent(unsigned int eventNo, PapasManager& papasManager);
-  papas::ListParticles makePapasParticlesFromGeneratedParticles(
-      const fcc::MCParticleCollection* ptcs);  ///< converts pythia particles into Papas type particles
+  void makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs, papas::Particles& particles);  ///< takes pythia particles and creates Papas type particles adding them into an empty Particles collection
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size,
                                          papas::IdCoder::ItemType itemtype, char subtype) const;
 

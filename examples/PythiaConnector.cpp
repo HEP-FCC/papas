@@ -46,72 +46,48 @@ PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore(
   m_store.setReader(&m_reader);
 }
 
-papas::ListParticles PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs) {
+void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs,
+                                                               papas::Particles& particles) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
-  papas::ListParticles particles;
   int countp = 0;
-  for (const auto& ptc : *ptcs) {
+
+  // Sort particles in order of decreasing energy
+  std::list<fcc::ConstMCParticle> sortPtcs;
+  for (const auto& p : *ptcs) {
+    sortPtcs.push_back(p);
+  }
+  sortPtcs.sort([](const fcc::ConstMCParticle& a, const fcc::ConstMCParticle& b) {
+    auto p4 = a.p4();
+    TLorentzVector tlv;
+    tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    TLorentzVector tlv2;
+    p4 = b.p4();
+    tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
+    return tlv.E() > tlv2.E();
+  });
+
+  for (const auto& ptc : sortPtcs) {
     countp += 1;
     auto p4 = ptc.core().p4;
     tlv.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     int pdgid = ptc.core().pdgId;
     TVector3 startVertex = TVector3(0, 0, 0);
-    TVector3 endVertex = TVector3(0, 0, 0);
     if (ptc.startVertex().isAvailable()) {
       startVertex = TVector3(ptc.startVertex().x() * 1e-3, ptc.startVertex().y() * 1e-3, ptc.startVertex().z() * 1e-3);
     }
-    if (ptc.endVertex().isAvailable()) {
-      // convert pythia : mm -> papas : m
-      endVertex = TVector3(ptc.endVertex().x() * 1e-3, ptc.endVertex().y() * 1e-3, ptc.endVertex().z() * 1e-3);
-    }
-
-    // startVertex = TVector3(ptc.startVertex().x(), ptc.startVertex().y(), ptc.startVertex().z());
-    // TVector3 endVertex = ptc.core().endVertex();
-
-    // make every single one into a particle
-    // so as to match python approach (for now)
-    // otherwise ids do not align
-
-    //TODO make single if
-    //TODO make PFParticle directly and rename pFPArticle in code
     if (ptc.core().status == 1) {  // only stable ones
-      
+
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
-        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, ptc.core().status, startVertex, endVertex);
-        particles.push_back(std::move(particle));
-        // papas::PDebug::write("Selected Papas{}", particle);
+        papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex,
+                                 ptc.core().status);
+        particles.emplace(particle.id(), particle);
+        papas::PDebug::write("Made {}", particle);
       }
     }
   }
-#if WITHSORT
-  particles.sort([](const papas::Particle& lhs, const papas::Particle& rhs) { return lhs.e() > rhs.e(); });
-#endif
-
-  //for (auto p : particles)
-  //std::cout << p.info() << std::endl;
-  return std::move(particles);
 }
-
-/*
-void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
-  // make a papas particle collection from the next event
-  // then run simulate and reconstruct
-  m_reader.goToEvent(eventNo);
-
-  const fcc::ParticleCollection* ptcs(nullptr);
-  if (m_store.get("GenParticle", ptcs)) {
-    papas::Particles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
-    papasManager.storeParticles(std::move(papasparticles));
-    papasManager.simulateEvent();
-    papasManager.mergeClusters();
-    papasManager.reconstructEvent();
-    m_store.clear();
-  }
-
-  m_reader.endOfEvent();
-}*/
-
+                  
 void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& papasManager) {
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
@@ -121,8 +97,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   const fcc::MCParticleCollection* ptcs(nullptr);
   if (m_store.get("GenParticle", ptcs)) {
     try {
-    papas::ListParticles papasparticles = makePapasParticlesFromGeneratedParticles(ptcs);
-    papasManager.simulate(papasparticles);
+    papas::Particles& genParticles = papasManager.createParticles();
+    makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
+    papasManager.simulate(genParticles);
     papasManager.mergeClusters("es");
     papasManager.mergeClusters("hs");
     papasManager.buildBlocks("em", "hm", 's');
@@ -144,7 +121,7 @@ void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   // gSystem->ProcessEvents();
 }
 
-void PythiaConnector::writeParticlesROOT(const char* fname, const papas::PFParticles& particles) {
+void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
 
   podio::ROOTWriter writer(fname, &m_store);
 

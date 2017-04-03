@@ -34,7 +34,7 @@
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/PFParticle.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"
@@ -89,7 +89,7 @@ TEST_CASE("IdCoder") {
 TEST_CASE("Helix") {  /// Helix path test
   TLorentzVector p4;
   p4.SetPtEtaPhiM(1, 0, 0, 5.11e-4);
-  Helix helix(p4, TVector3(0, 0, 0), 3.8, 1);
+  Helix helix(p4, TVector3(0, 0, 0), 1, 3.8);
   double length = helix.pathLength(1.0e-9);
   TVector3 junk = helix.pointAtTime(1e-9);
 
@@ -104,14 +104,14 @@ TEST_CASE("Helixpath") {  /// Helix path test
   SurfaceCylinder cyl1(papas::Position::kEcalIn, 1., 2.);
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2., 1.);
   std::shared_ptr<const Field> field = std::make_shared<Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8));
-  PFParticle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, 3.8);
+  Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, 3.8);
   HelixPropagator helixprop(field);
   //(particle.p4(), {0,0,0}, 3.8, -1);
   helixprop.propagateOne(particle, cyl1);
-  auto tvec = particle.pathPosition(cyl1.layer());
-  auto particle2 = PFParticle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, 3.8);
+  const auto& tvec = particle.path()->namedPoint(cyl1.layer());
+  auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, 3.8);
   helixprop.propagateOne(particle2, cyl1);
-  auto tvec2 = particle2.pathPosition(cyl1.layer());
+  const auto& tvec2 = particle2.path()->namedPoint(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
   REQUIRE(tvec2.Z() == Approx(0.50701872));
 }
@@ -158,7 +158,7 @@ TEST_CASE("ClusterSmear") {
   std::vector<double> energies;
 
   // run the simulator which will fill the above objects
-  ListParticles particles;
+  Particles particles;
   auto simulator = tester.setSimulator(particles);
 
   for (int i = 0; i < 10000; i++) {
@@ -217,7 +217,8 @@ TEST_CASE("StraightLine") {
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2, 1);
 
   TLorentzVector tlv{1, 0, 1, 2.};
-  PFParticle photon(22, 0, tlv, 1);
+  Particle photon(22, 0, tlv, 0, 't');
+  
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -232,7 +233,7 @@ TEST_CASE("StraightLine") {
   // testing extrapolation to -z
   tlv = TLorentzVector(1, 0, -1, 2.);
 
-  PFParticle photon2(22, 0, tlv, 1);
+  Particle photon2(22, 0, tlv, 1, 't');
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -244,21 +245,21 @@ TEST_CASE("StraightLine") {
 
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
-  PFParticle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
+  Particle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector (1, 0, -1, 2.);
-  PFParticle photon4 (22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
+  Particle photon4 (22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
 
   // extrapolating from a non-zero radius
   tlv = TLorentzVector(0, 0.5, 1, 2.);
-  PFParticle photon5 = PFParticle(22, 0, tlv, 5, 's',
+  Particle photon5 = Particle(22, 0, tlv, 5, 's',
                                   {
                                       0., 0.5, 0,
                                   },
@@ -301,7 +302,7 @@ TEST_CASE("Distance") {
   path->addPoint(papas::Position::kEcalIn, c1.position());
   path->addPoint(papas::Position::kHcalIn, c2.position());
   double charge = 1.;
-  Track tr(p3, charge, path, 't');
+  papas::Track tr(p3, charge, path, 't');
   Distance dist1(c1, tr);
   REQUIRE(dist1.isLinked());
   Distance dist2 = Distance(c2, c1);
@@ -569,7 +570,7 @@ TEST_CASE("test_papasevent") {
     Cluster cluster(10., TVector3(0, 0, 1), 2., i, IdCoder::kEcalCluster, 't');
     ecals.emplace(cluster.id(), std::move(cluster));
     lastcluster = cluster.id();
-    Track track(TVector3(0, 0, 0), i, std::make_shared<Path>(), 't');
+    papas::Track track(TVector3(0, 0, 0), i, std::make_shared<Path>(), 't');
     tracks.emplace(track.id(), std::move(track));
     lastid = track.id();
   }
@@ -593,9 +594,8 @@ TEST_CASE("test_papasevent") {
 TEST_CASE("test_history") {
   Event event;
   Nodes history;
-
   Clusters ecals;
-  PFParticles particles;
+  Particles particles;
   Identifier lastid = 0;
   Identifier lastcluster = 0;
   // make a dummy papasevent including some history
@@ -605,7 +605,7 @@ TEST_CASE("test_history") {
     lastcluster = cluster.id();
     PFNode cnode(lastcluster);
     history.emplace(lastcluster, std::move(cnode));
-    PFParticle particle(22, -1, TLorentzVector(1, 1, 1, 1), 1, 'r', TVector3(0., 0., 0.), 0.7);
+    Particle particle(22, -1, TLorentzVector(1, 1, 1, 1), 1, 'r', TVector3(0., 0., 0.), 0.7);
     particles.emplace(particle.id(), std::move(particle));
     lastid = particle.id();
     PFNode pnode(lastid);

@@ -8,8 +8,9 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "papas/datatypes/Definitions.h"
-
+#include "papas/datatypes/Path.h"
 #include "papas/utility/PDebug.h"
+class Track;
 
 namespace papas {
 /// Main Particle class
@@ -19,23 +20,18 @@ namespace papas {
 
 class Particle {
 public:
-  Particle(); ///<Constructor
+  /// Constructor
+  Particle() = default;
   /** Constructor
-   @param[in] pdgid : particle type
-   @param[in] charge : charge
-   @param[in] tlv : 4-momentum, px, py, pz, E
-   @param[in] status : status code, e.g. from generator. 1:stable
-   @param[in] startVector : start vertex (3d point)
-   @param[in] endVertex : end vertex (3d point)
+   @param[in] pdgid particle type
+   @param[in] charge charge
+   @param[in] tlv 4-momentum, px, py, pz, E
+   @param[in] index index to the collection to which thie particle will belown
+   @param[in] subtype Identifier subtype to be used when creating Identifier eg 'r' for reconstructed
+   @param[in] startvertex start vertex (3d point)
+   @param[in] status Status (1 = stable)
    */
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, double status = 1,
-           const TVector3& startVector = TVector3(0, 0, 0),
-           const TVector3& endVertex = TVector3(0, 0, 0));
-  /** Constructor
-   @param[in] pdgid : particle type
-   @param[in] charge : charge
-   */
-  Particle(int pdgid, double charge);
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,  const TVector3& startvertex = TVector3(0., 0., 0.), double status = 1);
   const TLorentzVector& p4() const { return m_tlv; }   ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }  ///< 3-momentum px, py, pz,
   double e() const { return m_tlv.E(); }               ///<Energy
@@ -53,15 +49,22 @@ public:
   double charge() const { return m_charge; }                 ///< particle charge
   bool status() const { return m_status; }                   ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
-  const TVector3& endVertex() const { return m_endVertex; }      ///<end vertex (3d point)
-  std::string info() const;                                      ///< text descriptor of the particle
+  std::string info() const; ///< text descriptor of the particle
+  /** check id this position exists in particle path
+   @param[in] layer position to search for the path location
+   */
+  void setPath(std::shared_ptr<Path> path) { m_path = path;}
+  const std::shared_ptr<Path> path() const { return m_path; } ///< Return pointer to path
+  Identifier id() const { return m_id; }  ///< unique Identifier for object
+  bool isElectroMagnetic() const;  ///< Is it electroMagnetic
 private:
   TLorentzVector m_tlv;    ///<4-momentum, px, py, pz, E
   int m_pdgId;             ///<particle type
   double m_charge;         ///<particle charge
   double m_status;         ///< status code, e.g. from generator. 1:stable
   TVector3 m_startVertex;  ///<start vertex (3d point)
-  TVector3 m_endVertex;    ///<end vertex (3d point)
+  Identifier m_id; ///< unique Identifier
+  std::shared_ptr<Path> m_path; ///< pointer to path object
 };
 
 std::ostream& operator<<(std::ostream& os, const Particle& particle);

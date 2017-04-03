@@ -5,7 +5,7 @@
 #include "papas/simulation/Propagator.h"
 
 namespace papas {
-class PFParticle;
+class Particle;
 
 class StraightLinePropagator  : public Propagator {
 /// Calculates where an uncharged particle crosses a detector cyclinder
@@ -20,7 +20,7 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field (not used for uncharged particles)
   */
-  void propagateOne(const PFParticle& ptc, const SurfaceCylinder& cyl) const override;
+  void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
 private:
 };
 
