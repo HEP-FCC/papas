@@ -9,7 +9,7 @@
 
 namespace papas {
 
-  HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
+HelixPropagator::HelixPropagator(std::shared_ptr<const Field> field): Propagator(field) {}
 
 void HelixPropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
   if (ptc.path() == nullptr) {

@@ -16,6 +16,7 @@ public:
   /** Constructor
    */
   Propagator(std::shared_ptr<const Field> field) : m_field(field){};
+  
   /**
    Propagate particle to the selected cylinder and store the point where the particle crossed the cylinder
    @param[in] ptc particle that is to be propagated
@@ -23,11 +24,11 @@ public:
    @param[in] field magnitude of magnetic field (used only for charged particles, defaults to zero if not set)
    */
   virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const = 0;
+  
   /**  Propagate particle all cylinders of the detector
     @param[in] ptc particle that is to be propagated
     @param[in] detector  Detector through which to propagate
     */
-
   void propagate(Particle& ptc, const Detector& detector) const;
 protected:
   std::shared_ptr<const Field> m_field;
