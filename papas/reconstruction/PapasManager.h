@@ -5,7 +5,7 @@
 #include "papas/detectors/Detector.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include <list>
-#include <string>
+//#include <string>
 
 namespace fcc {
 class MCParticleCollection;

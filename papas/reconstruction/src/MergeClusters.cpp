@@ -41,7 +41,19 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
   auto subGraphs = buildSubGraphs(ids, edges);
-  std::list<const Clusters*> overlappingClusters;
+  
+  for (const auto& subgraph : subGraphs) {
+    std::list<std::shared_ptr<const Cluster>> overlappingClusters;
+    for (const auto& c : subgraph) {
+      overlappingClusters.push_back(std::shared_ptr<const papas::Cluster>(&clusters.at(c)));
+    }
+    // create the merged Cluster
+    Cluster mergedCluster(overlappingClusters, merged.size(), 'm');
+    makeHistoryLinks(subgraph, {mergedCluster.id()}, history);
+    PDebug::write("Made Merged{}", mergedCluster);
+    merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
+  }
+  /*std::list<const Clusters*> overlappingClusters;
   for (const auto& subgraph : subGraphs) {
     std::list<const Cluster*> overlappingClusters;
     for (const auto& c : subgraph) {
@@ -52,6 +64,6 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
     makeHistoryLinks(subgraph, {mergedCluster.id()}, history);
     PDebug::write("Made Merged{}", mergedCluster);
     merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
-  }
+  }*/
 }
 }  // end namespace papas

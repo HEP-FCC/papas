@@ -1,4 +1,3 @@
-#include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
@@ -7,6 +6,7 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/FloodFill.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
 
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/utility/PDebug.h"
