@@ -101,4 +101,4 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   return os;
 }
 
-}  // end namespace papas  
+}  // end namespace papas

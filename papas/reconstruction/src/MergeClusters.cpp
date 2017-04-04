@@ -15,7 +15,8 @@
 
 namespace papas {
 
-void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged, Nodes& history) {
+void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
+                   Nodes& history) {
   // extract the clusters collection from the event
   const auto& clusters = event.clusters(typeAndSubtype);
   // make list of all the ids in this collection
@@ -41,7 +42,7 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   // create a graph using the ids and the edges this will produces subgroups of ids each of which will form
   // a new merged cluster.
   auto subGraphs = buildSubGraphs(ids, edges);
-  
+
   for (const auto& subgraph : subGraphs) {
     std::list<const Cluster*> overlappingClusters;
     for (const auto& c : subgraph) {
@@ -53,5 +54,5 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
     PDebug::write("Made Merged{}", mergedCluster);
     merged.emplace(mergedCluster.id(), std::move(mergedCluster));  // create a new cluster based on existing cluster
   }
- }
+}
 }  // end namespace papas
