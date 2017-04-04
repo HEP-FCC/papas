@@ -43,7 +43,7 @@ public:
    @param[in]  index of the collection into which the cluster is to be stored
    @param[in]  subtype subtype of cluster to be created eg 'm' for merged,
    */
-  Cluster(std::list<std::shared_ptr<const Cluster>> overlappingClusters, unsigned int index, char subtype = 'm');
+  Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype = 'm');
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map
@@ -60,7 +60,7 @@ public:
   const TVector3& position() const { return m_position; }          ///< position (x, y, z)
   void setEnergy(double energy);                             ///< Set cluster energy
   void setSize(double value);                                ///< Set cluster size
-  const std::list<std::shared_ptr<const Cluster>>& subClusters() const { return m_subClusters; };
+  const std::list<const Cluster*>& subClusters() const { return m_subClusters; };
   std::string info() const;  ///< returns a text descriptor of the cluster
 
   /// static that returns max cluster energy (intended for display purposes)
@@ -72,7 +72,7 @@ protected:
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
   TVector3 m_position;                            ///< position (x, y, z)
   double m_energy;                          ///< Energy
-  std::list<std::shared_ptr<const Cluster>> m_subClusters;  ///< list of subClusters
+  std::list<const Cluster*> m_subClusters;  ///< list of subClusters
   static double s_maxEnergy;                ///< Maximum energy over all clusters
 };
 

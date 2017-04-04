@@ -18,7 +18,7 @@ double Cluster::s_maxEnergy = 0;
 Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type,
                  char subtype)
   : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position),
-  m_subClusters({std::shared_ptr<const Cluster>(this)}) {
+  m_subClusters({this}) {
   setSize(size_m);
   setEnergy(energy);
 }
@@ -29,10 +29,10 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
       m_angularSize(c.m_angularSize),
       m_position(c.m_position),
       m_energy(c.m_energy),
-      m_subClusters({std::shared_ptr<const Cluster>(&c)})  {
+  m_subClusters({&c})  {
 }
 
-  Cluster::Cluster(std::list<std::shared_ptr<const Cluster>> overlappingClusters, unsigned int index, char subtype)
+  Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
     : m_subClusters(overlappingClusters) {
   Identifier firstId = 0;
   char type;
