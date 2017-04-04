@@ -52,14 +52,14 @@ public:
   double size() const;         ///< The radius of the cluster
   double pt() const {
     return m_energy * m_position.Perp();
-  }                                           ///< Transverse momentum (magnitude of p3 in transverse plane)
-  double energy() const { return m_energy; }  ///< Energy
-  double eta() const { return m_position.Eta(); }   ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
+  }                                                ///< Transverse momentum (magnitude of p3 in transverse plane)
+  double energy() const { return m_energy; }       ///< Energy
+  double eta() const { return m_position.Eta(); }  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
   double theta() const { return M_PI / 2. - m_position.Theta(); }  ///< Angle w/r to transverse plane
-  Identifier id() const { return m_id; }                     ///< identifier
+  Identifier id() const { return m_id; }                           ///< identifier
   const TVector3& position() const { return m_position; }          ///< position (x, y, z)
-  void setEnergy(double energy);                             ///< Set cluster energy
-  void setSize(double value);                                ///< Set cluster size
+  void setEnergy(double energy);                                   ///< Set cluster energy
+  void setSize(double value);                                      ///< Set cluster size
   const std::list<const Cluster*>& subClusters() const { return m_subClusters; };
   std::string info() const;  ///< returns a text descriptor of the cluster
 
@@ -70,7 +70,7 @@ protected:
   Identifier m_id;                          ///< identifier for Cluster
   double m_size;                            ///< Cluster size (radius?)
   double m_angularSize;                     ///< Cluster angular size (only valid for non-merged clusters)
-  TVector3 m_position;                            ///< position (x, y, z)
+  TVector3 m_position;                      ///< position (x, y, z)
   double m_energy;                          ///< Energy
   std::list<const Cluster*> m_subClusters;  ///< list of subClusters
   static double s_maxEnergy;                ///< Maximum energy over all clusters

@@ -7,7 +7,6 @@
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/FloodFill.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
-
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/utility/PDebug.h"
 

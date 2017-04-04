@@ -17,8 +17,7 @@ double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type,
                  char subtype)
-  : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position),
-  m_subClusters({this}) {
+    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position), m_subClusters({this}) {
   setSize(size_m);
   setEnergy(energy);
 }
@@ -29,20 +28,19 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
       m_angularSize(c.m_angularSize),
       m_position(c.m_position),
       m_energy(c.m_energy),
-  m_subClusters({&c})  {
-}
+      m_subClusters({&c}) {}
 
-  Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
+Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
     : m_subClusters(overlappingClusters) {
   Identifier firstId = 0;
   char type;
-  for (const auto cluster : overlappingClusters) {
+  for (const auto* cluster : overlappingClusters) {
     if (cluster->subClusters().size() > 1) {
       throw "can only merge clusters which are not already merged";
     }
     if (firstId == 0) {
       firstId = cluster->id();
-      m_position = cluster->position() * cluster->energy(); //will be scaled by total energy at end
+      m_position = cluster->position() * cluster->energy();  // will be scaled by total energy at end
       m_energy = cluster->energy();
       m_size = cluster->size();  // needed for the case where overlappingClusters has just one cluster
       m_angularSize = cluster->angularSize();
@@ -65,19 +63,7 @@ Cluster::Cluster(Cluster&& c)
       m_angularSize(c.m_angularSize),
       m_position(c.m_position),
       m_energy(c.m_energy),
-      m_subClusters(c.m_subClusters) {
-  // Moving a Cluster is a little tricky because must make sure that
-  // the subclusters are pointing to something that has already been moved
-  // This is a disadvantage of using Cluster class to deal with both
-  // "cluster" and "mergedcluster" and it may infact be better to have the
-  // subclusters empty for a non-merged cluster
-  // For a non merged cluster the subcluster points to itself.
-  /*if (c.subClusters().size() == 1 && c.id() == (*c.subClusters().begin())->id())
-    m_subClusters.push_back(&c);  // non merged cluster point to itself
-  else
-    for (const auto& s : c.subClusters())  // merged clusters
-      m_subClusters.push_back(s);*/
-}
+      m_subClusters(c.m_subClusters) {}
 
 void Cluster::setSize(double value) {
   m_size = value;
@@ -115,4 +101,4 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   return os;
 }
 
-}  // end namespace papas
+}  // end namespace papas  
