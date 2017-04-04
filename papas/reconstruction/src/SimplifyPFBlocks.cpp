@@ -1,52 +1,38 @@
-
-#include "papas/reconstruction/PFBlock.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/graphtools/Distance.h"
-#include "papas/graphtools/EventRuler.h"
-#include "papas/reconstruction/BlockBuilder.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
 
 namespace papas {
 
-PFBlockSplitter::PFBlockSplitter(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history)
-    : m_event(event), m_simplifiedBlocks(simplifiedblocks), m_history(history) {
-  const auto& blocks = m_event.blocks(blockSubtype);
+void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history) {
+  const auto& blocks = event.blocks(blockSubtype);
   bool withsort = false;
 #if WITHSORT
   withsort = true;
 #endif
-  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
-
+  auto blockids = event.collectionIds<Blocks>(blocks, withsort);
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
     PDebug::write("Splitting {}", blocks.at(bid));
     auto unlink = findEdgesToUnlink(blocks.at(bid));
-    simplifyBlock(unlink, blocks.at(bid));
+    simplifyPFBlock(unlink, blocks.at(bid), simplifiedblocks, history);
   }
 }
 
-void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block) {
-  /* Block: a block which contains a list of element ids and set of edges that connect them
-        The goal is to remove, if needed, some links from the block so that each track links to
-   at most one hcal within a block. In some cases this may separate a block into smaller
-   blocks (splitblocks). The BlockSplitter is used to add the new smaller blocks into m_simplifiedBlocks. If a block is
-   unchanged its content will be copied into a new Block with a new Block Id and stored in m_simplifiedBlocks.
-   If history_nodes are provided then the history will be updated. Split blocks will
-   have the tracks and cluster elements as parents, and also the original block as a parent
-   */
+void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simplifiedBlocks, Nodes& history) {
   if (toUnlink.size() == 0) {
     // no change to this block
     // make a copy of the block and put it in the simplified blocks
     Edges newedges = block.edges();  // copy edges
-    PFBlock newblock(block.elementIds(), newedges, m_simplifiedBlocks.size(), 's');
+    PFBlock newblock(block.elementIds(), newedges, simplifiedBlocks.size(), 's');
     PDebug::write("Made {}", newblock);
-    m_simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
+    simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
     // update history
-    makeHistoryLinks(block.elementIds(), {newblock.id()}, m_history);
+    makeHistoryLinks(block.elementIds(), {newblock.id()}, history);
 
   } else {
     Edges modifiedEdges;
@@ -57,12 +43,12 @@ void PFBlockSplitter::simplifyBlock(const Edges& toUnlink, const PFBlock& block)
       }
       modifiedEdges.emplace(e.key(), std::move(e));
     }
-    // Blockbuilder will add the blocks it creates into m_simplifiedBlocks
-    BlockBuilder bbuilder(block.elementIds(), std::move(modifiedEdges), m_history, m_simplifiedBlocks, 's');
+    // create new blocks and add into simplifiedBlocks
+    buildPFBlocks(block.elementIds(), std::move(modifiedEdges), 's', simplifiedBlocks, history);
   }
 }
 
-Edges PFBlockSplitter::findEdgesToUnlink(const PFBlock& block) const {
+Edges findEdgesToUnlink(const PFBlock& block) {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {

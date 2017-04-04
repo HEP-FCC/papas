@@ -47,10 +47,10 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
-#include "papas/reconstruction/BlockBuilder.h"
-#include "papas/reconstruction/MergedClusterBuilder.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
+#include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PapasManagerTester.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/TRandom.h"
 
@@ -462,15 +462,15 @@ TEST_CASE("BlockSplitter") {
 
   Nodes emptyNodes;
   Blocks blocks;
-  BlockBuilder blockbuilder(ids, std::move(edges), historyNodes, blocks, 'r');
-  REQUIRE(blockbuilder.subGraphs().size() == 1);
+  buildPFBlocks(ids, std::move(edges), 'r', blocks, historyNodes);
+  REQUIRE(blocks.size() == 1);
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
   Event event;
   event.addCollection(blocks);
   Blocks simplifiedBlocks;
-  PFBlockSplitter splitter(event, 'r', simplifiedBlocks, emptyNodes);
+  simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);
   REQUIRE(simplifiedBlocks.size() == 2);
   return;
 }
@@ -487,7 +487,7 @@ TEST_CASE("Merge") {
   event.addCollection(eclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "et", ruler, mergedClusters, nodes);
+  mergeClusters(event, "et", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
   for (auto& mergedCluster : mergedClusters) {
@@ -514,7 +514,7 @@ TEST_CASE("merge_pair") {
   event.addCollection(hclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 1);
   return;
@@ -534,7 +534,7 @@ TEST_CASE("merge_pair_away") {
   event.addCollection(hclusters);
 
   papas::EventRuler ruler(event);
-  MergedClusterBuilder builder(event, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(event, "ht", ruler, mergedClusters, nodes);
 
   REQUIRE(mergedClusters.size() == 2);
   return;
@@ -643,7 +643,7 @@ TEST_CASE("merge_inside") {
   Clusters mergedClusters;
   testevent.addCollection(hclusters);
   papas::EventRuler ruler(testevent);
-  MergedClusterBuilder builder(testevent, "ht", ruler, mergedClusters, nodes);
+  mergeClusters(testevent, "ht", ruler, mergedClusters, nodes);
   REQUIRE(mergedClusters.size() == 1);
   /*for (auto c : mergedClusters) {
   //  REQUIRE(c.second.isInside(TVector3(1, 0.06, 0))); }

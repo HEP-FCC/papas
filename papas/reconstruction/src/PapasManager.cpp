@@ -1,13 +1,14 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/reconstruction/MergedClusterBuilder.h"
-#include "papas/reconstruction/PFBlockBuilder.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
+#include "papas/graphtools/EventRuler.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
+#include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PFReconstructor.h"
+#include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/simulation/Simulator.h"
 #include "papas/utility/PDebug.h"
+#include <string>
 
 namespace papas {
 
@@ -51,7 +52,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
   auto& history = createHistory();
-  MergedClusterBuilder ecalmerger(m_event, typeAndSubtype, ruler, mergedClusters, history);
+  papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into event
   m_event.addCollection(mergedClusters);
   m_event.extendHistory(history);
@@ -62,7 +63,7 @@ void PapasManager::buildBlocks(const std::string& ecalTypeAndSubtype, const std:
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();
-  PFBlockBuilder blockBuilder(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
+  buildPFBlocks(m_event, ecalTypeAndSubtype, hcalTypeAndSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the event
   m_event.addCollection(blocks);
   m_event.extendHistory(history);
@@ -72,7 +73,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& simplifiedblocks = createBlocks();
   auto& history = createHistory();
-  PFBlockSplitter blockBuilder(m_event, blockSubtype, simplifiedblocks, history);
+  simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
   // store a pointer to the outputs into the event
   m_event.addCollection(simplifiedblocks);
   m_event.extendHistory(history);

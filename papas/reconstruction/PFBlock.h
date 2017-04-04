@@ -8,9 +8,6 @@
 #include <iostream>
 #include <string>
 
-#include <iostream>
-#include <string>
-
 namespace papas {
 
 /** A Particle Flow Block (PFBlock) stores a set of element ids that are connected to each other

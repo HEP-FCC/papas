@@ -1,4 +1,4 @@
-#include "papas/graphtools/GraphBuilder.h"
+#include "papas/graphtools/BuildSubGraphs.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/FloodFill.h"
@@ -6,21 +6,23 @@
 
 namespace papas {
 
-GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_elementIds(ids) {
+std::list<Ids> buildSubGraphs(const Ids& ids, const Edges& edges) {
+  std::list<Ids> subGraphs;
+  Nodes localNodes;
   // create local nodes ready to use to make the blocks
   for (auto id : ids) {
-    m_localNodes.emplace(id, PFNode(id));
+    localNodes.emplace(id, PFNode(id));
   }
   // use the edge information to say what is linked and add this into the local blocks
-  for (const auto& edge : m_edges) {
+  for (const auto& edge : edges) {
     const Edge& e = edge.second;
     if (e.isLinked()) {  // note this is an undirected link - OK for undirected searches
-      m_localNodes[e.endIds()[0]].addChild(m_localNodes[e.endIds()[1]]);
+      localNodes[e.endIds()[0]].addChild(localNodes[e.endIds()[1]]);
     }
   }
   DAG::FloodFill<Identifier> FFill;
   // traverse does the work and returns a vector of connected node groups
-  for (const auto& group : FFill.traverse(m_localNodes)) {
+  for (const auto& group : FFill.traverse(localNodes)) {
     // each of the nodevectors is about to become a separate block
     // we need the vector of ids and the map of edges in order to make the block
     Ids subgraph;
@@ -28,14 +30,11 @@ GraphBuilder::GraphBuilder(const Ids& ids, Edges&& edges) : m_edges(edges), m_el
       subgraph.push_back(node->value());
     }
 #if WITHSORT
-    sortIds(subgraph);  // sort in descending order
+    subgraph.sort(std::greater<uint64_t>());  // sort in descending order
 #endif
-    m_subGraphs.push_back(subgraph);
+    subGraphs.push_back(subgraph);
   }
-}
-
-void GraphBuilder::sortIds(Ids& ids) {
-  ids.sort(std::greater<uint64_t>());  // sort in descending order
+  return subGraphs;
 }
 
 }  // end namespace papas

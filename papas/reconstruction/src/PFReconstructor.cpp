@@ -13,8 +13,6 @@
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/reconstruction/PFBlock.h"
-#include "papas/reconstruction/PFBlockBuilder.h"
-#include "papas/reconstruction/PFBlockSplitter.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/PDebug.h"
