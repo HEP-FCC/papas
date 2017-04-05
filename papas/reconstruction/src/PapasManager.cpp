@@ -63,7 +63,7 @@ void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype,
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();
-  papas::buildPFBlocks(m_event, ecalSubtype, hcalSubtype, trackSubtype, blocks, history);
+  buildPFBlocks(m_event, ecalSubtype, hcalSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the event
   m_event.addCollection(blocks);
   m_event.extendHistory(history);
@@ -73,7 +73,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& simplifiedblocks = createBlocks();
   auto& history = createHistory();
-  papas::simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
+  simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
   // store a pointer to the outputs into the event
   m_event.addCollection(simplifiedblocks);
   m_event.extendHistory(history);

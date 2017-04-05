@@ -7,7 +7,6 @@
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/FloodFill.h"
-
 #include "papas/reconstruction/PFBlock.h"
 #include "papas/utility/PDebug.h"
 
@@ -41,7 +40,7 @@ void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::
 }
 
 void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, Nodes& history) {
-  std::vector<const Ids> subGraphs = buildSubGraphs(ids, edges);
+  std::list<Ids> subGraphs = buildSubGraphs(ids, edges);
   for (const auto& elementIds : subGraphs) {
     PFBlock block(elementIds, edges, blocks.size(), subtype);  // make the block
     PDebug::write("Made {}", block);

@@ -31,7 +31,7 @@ namespace papas {
  *            an edge records the distance and links between two ids. The edges will be moved into the
  *            resulting blocks and become owned by them.
  */
-std::vector<const Ids> buildSubGraphs(const Ids& ids, const Edges& edges);
+std::list<Ids> buildSubGraphs(const Ids& ids, const Edges& edges);
 
 }  // end namespace papas
 #endif /* BuildSubGraphs_h */

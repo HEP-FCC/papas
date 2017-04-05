@@ -14,7 +14,6 @@
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/Edge.h"
 #include <list>
-#include <string>
 #include <unordered_map>
 #if WITHSORT
 #include <set>
