@@ -49,85 +49,85 @@ class Event {
 public:
   /// @brief  Constructor
   Event(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
-  
+
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the Event
    *   @param[in]  clusters unordered map of Clusters, all of which have the same identifier typeAndSubtype.
    *               The typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
   void addCollection(const Clusters& clusters);
-  
+
   /**
    *   @brief  adds a pointer to a Tracks collection (unordered map) into the Event
    *   @param[in]  tracks unordered map of Tracks, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
   void addCollection(const Tracks& tracks);
-  
+
   /**
    *   @brief  adds a pointer to a Blocks collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of Blocks, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
   void addCollection(const Blocks& blocks);
-  
+
   /**
    *   @brief  adds a pointer to a  Particles collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of Particles, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
   void addCollection(const Particles& particles);
-  
+
   /**
    *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
    */
   void setHistory(Nodes& history) { m_history = std::make_shared<Nodes>(history); }
-  
+
   /**
    *   @brief adds new history into existing papasevent history
    *
    */
   void extendHistory(const Nodes& history);
-  
+
   /**
    *   @brief  returns true if a collection with  type and subtype  of id  is found
    *   @param[in]  id the identifier of an object
    */
   bool hasCollection(Identifier id) const;
-  
+
   /**
    *   @brief  returns true if a collection with matching type and subtype  is found
    *   @param[in]  type The type of an object eg IdCoder::kEcalCluster
    *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
   bool hasCollection(const IdCoder::ItemType type, const IdCoder::SubType subtype) const;
-  
+
   /**
    *   @brief  returns true if an object matching the identifier is found in the Event collections
    *   @param[in]  id the identifier of an object
    */
   bool hasObject(Identifier id) const;
-  
+
   /**
    *   @brief  returns a Clusters collection with typeAndSubtype that match the identifier
    *   @param[in]  id the identifier of an object
    */
   const Clusters& clusters(Identifier id) const;
-  
+
   /**
    *   @brief  returns a Clusters collection matching type and subtype
    *   @param[in]  type The type of an object eg IdCoder::kEcalCluster
    *   @param[in]  subtype The subtype of an object eg 'm' for merged
    */
   const Clusters& clusters(const IdCoder::ItemType type, const IdCoder::SubType subtype) const;
-  
+
   /**
    *   @brief  returns a Clusters collection matching type and subtype as a string
    *   @param[in]  typeAndSubtype The type and subtype of an object as a string eg "em" for ecals-merged.
    */
   const Clusters& clusters(const std::string& typeAndSubtype) const;
-  
+
   /**
    *   @brief  returns a Cluster with the required id
    *   @param[in]  id the identifier of an object
@@ -139,49 +139,49 @@ public:
    *   @param[in]  subtype The subtype of the track eg 's' for smeared
    */
   const Tracks& tracks(const IdCoder::SubType subtype) const;
-  
+
   /**
    *   @brief  returns a Tracks collection with typeAndSubtype that match the identifier
    *   @param[in]  id the identifier of an object
    */
   const Tracks& tracks(Identifier id) const { return tracks(IdCoder::subtype(id)); };
-  
+
   /**
    *   @brief  returns a Track with the required id
    *   @param[in]  id the identifier of an object
    */
   const Track& track(Identifier id) const { return tracks(id).at(id); };
-  
+
   /**
    *   @brief  returns a Particles collection matching type and subtype
    *   @param[in]  subtype The subtype of the particle eg 'r' for reconstructed
    */
   const Particles& particles(const IdCoder::SubType subtype) const;
-  
+
   /**
    *   @brief  returns a Particles collection with typeAndSubtype that match the identifier
    *   @param[in]  id the identifier of an object
    */
   const Particles& particles(Identifier id) const { return particles(IdCoder::subtype(id)); };
-  
+
   /**
    *   @brief  returns a Particle with the required id
    *   @param[in]  id the identifier of an object
    */
   const Particle& particle(Identifier id) const { return particles(id).at(id); };
-  
+
   /**
    *   @brief  returns a Blocks collection matching type and subtype
    *   @param[in]  subtype The subtype of the block eg 'r' for reconstructed
    */
   const Blocks& blocks(const IdCoder::SubType subtype) const;
-  
+
   /**
    *   @brief  returns a Blocks collection with typeAndSubtype that match the identifier
    *   @param[in]  id the identifier of an object
    */
   const Blocks& blocks(Identifier id) const { return blocks(IdCoder::subtype(id)); };
-  
+
   /**
    *   @brief  returns a Block with the required id
    *   @param[in]  id the identifier of an object
@@ -194,7 +194,7 @@ public:
    */
   template <class T>
   Ids collectionIds(const T& collection) const;
-  
+
   /**
    *   @brief  takes all the history collection and merged them into one single history
    */

@@ -172,7 +172,7 @@ std::string PFBlock::edgeMatrixString() const {
         } else if (hasEdge(e1, e2)) {
           const auto& ed = edge(e1, e2);
           if (ed.distance() < 0 || ed.isLinked() == false)
-            out.write("     ---");  //not linked/no distance
+            out.write("     ---");  // not linked/no distance
           else {                    // linked and has distance
             out.write("{:8.4f}", ed.distance());
           }

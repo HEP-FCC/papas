@@ -21,6 +21,7 @@ void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::Su
   // the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
 
   Edges edges;
+  //distances/links for tracks to ecals
   EventRuler ruler(event);
   for (auto id1 : ecalids) {
     for (auto id2 : trackids) {
@@ -30,6 +31,7 @@ void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::Su
       edges.emplace(edge.key(), std::move(edge));
     }
   }
+  //distances/links for tracks to hcals
   for (auto id1 : hcalids) {
     for (auto id2 : trackids) {  // trac
       Distance dist = ruler.distance(id1, id2);
