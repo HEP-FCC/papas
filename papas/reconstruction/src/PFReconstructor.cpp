@@ -26,7 +26,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
   auto blockids = m_event.getCollectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   for (auto bid : blockids) {
-      reconstructBlock( m_event.block(bid));
+    reconstructBlock(m_event.block(bid));
   }
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");

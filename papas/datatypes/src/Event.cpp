@@ -52,7 +52,7 @@ const Clusters& Event::clusters(const std::string& typeAndSubtype) const {
   // return the corresponding collection with this type and subtype
   return clusters(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
 }
-  
+
 Ids Event::getCollectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) const {
   // return the collection ids
   Ids ids;
@@ -85,17 +85,17 @@ const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kTrack, subtype)) return m_emptyTracks;
   return *m_tracksCollection.at(subtype);
 }
-  
+
 const Particles& Event::particles(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyParticles;
   return *m_particlesCollection.at(subtype);
 }
-  
+
 const Blocks& Event::blocks(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kBlock, subtype)) return m_emptyBlocks;
   return *m_blocksCollection.at(subtype);
 }
-  
+
 bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   // Check if this collection is present
   bool found = false;

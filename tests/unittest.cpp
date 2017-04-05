@@ -430,9 +430,9 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
   REQUIRE(IdCoder::isBlock(block2.id()) == true);
-  REQUIRE(block2.getEdge(edge4.key()).key() == edge4.key());
-  REQUIRE_THROWS(block2.getEdge(edge1.key()).key());
-  REQUIRE_THROWS(block2.getEdge(edge1.key()));
+  REQUIRE(block2.edge(edge4.key()).key() == edge4.key());
+  REQUIRE_THROWS(block2.edge(edge1.key()).key());
+  REQUIRE_THROWS(block2.edge(edge1.key()));
   REQUIRE(block2.edge(id4, id5).isLinked() == false);
   REQUIRE(block2.edge(id4, id6).distance() == 0.1234);
 

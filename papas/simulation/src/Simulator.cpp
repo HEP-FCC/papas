@@ -35,9 +35,9 @@ Simulator::Simulator(const Event& papasevent, const Detector& detector, Clusters
   Ids ids;
   for (auto& p : particles)
     ids.insert(p.first);
-/*#if WITHSORT
-  ids.sort(std::greater<Identifier>());
-#endif*/
+  /*#if WITHSORT
+    ids.sort(std::greater<Identifier>());
+  #endif*/
   for (auto& id : ids) {
     simulateParticle(particles[id]);
   }

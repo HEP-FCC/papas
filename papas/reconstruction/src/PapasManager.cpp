@@ -58,8 +58,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   m_event.extendHistory(history);
 }
 
-void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype,
-                               char trackSubtype) {
+void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype, char trackSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
   auto& history = createHistory();

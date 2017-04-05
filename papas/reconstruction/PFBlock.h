@@ -41,13 +41,14 @@ public:
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
-    /**
+  
+  /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
   @param[in] id : is the Identifier of item of interest
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
- */
+  */
   std::list<Edge::EdgeKey> linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
@@ -62,19 +63,19 @@ public:
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
   int countHcal() const;          ///< Counts how many hcal cluster ids are in the block
   int countTracks() const;        ///< Counts how many tracks are in the block
-  int size() const { return m_elementIds.size(); }         ///< length of the element_unqiueids
-  Identifier id() const { return m_id; };                  ///<Unique ID of the block
-  const Edges& edges() const { return m_edges; }           ///<Unordered map of all the edges in a block
-  std::string info() const;                                ///< printable one line summary of a Block
-  std::string elementsString() const;                      ///< String listing all elements in a Block
-  std::string edgeMatrixString() const;                    ///< String representation of matrix of edges in a block
-  bool  hasEdge(Identifier id1, Identifier id2) const;     ///<check if edge exists
-  const Edge& getEdge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
-  const Edge& getEdge(Edge::EdgeKey key) const;                           ///< return Edge corresponding to Edge key
-private:
+  int size() const { return m_elementIds.size(); }            ///< length of the element_unqiueids
+  Identifier id() const { return m_id; };                     ///<Unique ID of the block
+  const Edges& edges() const { return m_edges; }              ///<Unordered map of all the edges in a block
+  std::string info() const;                                   ///< printable one line summary of a Block
+  std::string elementsString() const;                         ///< String listing all elements in a Block
+  std::string edgeMatrixString() const;                       ///< String representation of matrix of edges in a block
+  bool hasEdge(Identifier id1, Identifier id2) const;         ///<check if edge exists
+  const Edge& edge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
+ private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
+  const Edge& edge(Edge::EdgeKey key) const;               ///< return Edge corresponding to Edge key
 
   Identifier m_id;            ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy

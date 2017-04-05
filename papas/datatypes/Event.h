@@ -166,7 +166,7 @@ public:
    *   @param[in]  id the identifier of an object
    */
   const PFBlock& block(Identifier id) const { return blocks(id).at(id); };
-  
+
   /**
    *   @brief  returns a list of all the Ids inside a collection
    *   @param[in]  collection the collection
@@ -188,9 +188,10 @@ public:
   void clear();
   void setEventNo(unsigned int eventNo) { m_eventNo = eventNo; }
   unsigned int eventNo() const { return m_eventNo; }
-  
+
   Ids getCollectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) const;
   Ids getCollectionIds(const std::string& typeAndSubtype) const;
+
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
@@ -245,42 +246,40 @@ Ids Event::collectionIds(const T& collection) const {
   }
   return ids;
 }
-  
-  /*template <class T>
-  const std::unordered_map<Identifier, T>& Event::getCollection(IdCoder::ItemType type, IdCoder::SubType subtype) const
-  {
-    if (!hasCollection(type, subtype)) {
-      switch (type) {
-        case IdCoder::ItemType::kNone:
-          throw "unrecognised type";
-        case IdCoder::ItemType::kEcalCluster:
-        case IdCoder::ItemType::kHcalCluster:
-          return m_emptyClusters;
-        case IdCoder::ItemType::kTrack:
-          return m_emptyTracks;
-        case IdCoder::ItemType::kParticle:
-          return m_emptyParticles;
-        case IdCoder::ItemType::kBlock:
-          return  m_emptyBlocks;
-      }
-    }
+
+/*template <class T>
+const std::unordered_map<Identifier, T>& Event::getCollection(IdCoder::ItemType type, IdCoder::SubType subtype) const
+{
+  if (!hasCollection(type, subtype)) {
     switch (type) {
       case IdCoder::ItemType::kNone:
         throw "unrecognised type";
       case IdCoder::ItemType::kEcalCluster:
-        return *m_ecalClustersCollection.at(subtype);
       case IdCoder::ItemType::kHcalCluster:
-        return *m_hcalClustersCollection.at(subtype);
+        return m_emptyClusters;
       case IdCoder::ItemType::kTrack:
-        return *m_tracksCollection.at(subtype);
+        return m_emptyTracks;
       case IdCoder::ItemType::kParticle:
-        return *m_particlesCollection.at(subtype);
+        return m_emptyParticles;
       case IdCoder::ItemType::kBlock:
-        return *m_blocksCollection.at(subtype);
+        return  m_emptyBlocks;
     }
-  }*/
-  
-
+  }
+  switch (type) {
+    case IdCoder::ItemType::kNone:
+      throw "unrecognised type";
+    case IdCoder::ItemType::kEcalCluster:
+      return *m_ecalClustersCollection.at(subtype);
+    case IdCoder::ItemType::kHcalCluster:
+      return *m_hcalClustersCollection.at(subtype);
+    case IdCoder::ItemType::kTrack:
+      return *m_tracksCollection.at(subtype);
+    case IdCoder::ItemType::kParticle:
+      return *m_particlesCollection.at(subtype);
+    case IdCoder::ItemType::kBlock:
+      return *m_blocksCollection.at(subtype);
+  }
+}*/
 }
 
 #endif /* Event_h */

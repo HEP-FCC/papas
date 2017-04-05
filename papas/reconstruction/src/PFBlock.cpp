@@ -27,7 +27,6 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-  // m_elementIds.sort(blockIdComparer);
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {
@@ -36,8 +35,8 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char 
       // move the edge from one unordered map to the other
       const auto& e = edges.find(Edge::makeKey(id1, id2));
       if (e != edges.end()) {
-         m_edges.emplace(e->second.key(), std::move(e->second));
-         edges.erase(e);
+        m_edges.emplace(e->second.key(), std::move(e->second));
+        edges.erase(e);
       }
     }
   }
@@ -69,20 +68,19 @@ std::string PFBlock::shortName() const {
   return out.str();
 }
 
-const Edge& PFBlock::getEdge(Edge::EdgeKey key) const {
+const Edge& PFBlock::edge(Edge::EdgeKey key) const {
   auto edge = m_edges.find(key);
   if (edge == m_edges.end()) throw std::range_error("Edge not found");
   return edge->second;
 }
-  
-  
-  const Edge& PFBlock::getEdge(Identifier id1, Identifier id2) const {
-    /// Find the edge corresponding to e1 e2
-    ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
-    ///                      order gives same result)
-    ///                        '''
-    return getEdge(Edge::makeKey(id1, id2));
-  }
+
+const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
+  /// Find the edge corresponding to e1 e2
+  ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
+  ///                      order gives same result)
+  ///                        '''
+  return edge(Edge::makeKey(id1, id2));
+}
 
 std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
   /**
@@ -172,7 +170,7 @@ std::string PFBlock::edgeMatrixString() const {
           out.write("       .");  // diagonal
           break;
         } else if (hasEdge(e1, e2)) {
-          const auto& ed = getEdge(e1, e2);
+          const auto& ed = edge(e1, e2);
           if (ed.distance() < 0)
             out.write("     ---");  //-ve distance
           else if (ed.isLinked() == false)
@@ -181,7 +179,7 @@ std::string PFBlock::edgeMatrixString() const {
             out.write("{:8.4f}", ed.distance());
           }
         } else {                  // no edge so no link
-          out.write("     xxx");  // not linked
+          out.write("     ---");  // not linked
         }
       }
     }
@@ -189,7 +187,6 @@ std::string PFBlock::edgeMatrixString() const {
   }
   return out.str();
 }
-
 
 bool PFBlock::hasEdge(Identifier id1, Identifier id2) const {
   /// Find the edge corresponding to e1 e2

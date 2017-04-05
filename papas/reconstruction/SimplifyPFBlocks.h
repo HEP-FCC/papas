@@ -49,6 +49,6 @@ void simplifyPFBlock(const Edges& edges, const PFBlock& block, Blocks& simplifie
 /** Checks PFBlock and removes unneeded edge links
  * @param[in] block Block which is to be simplified
  */
-Edges getEdgesToUnlink(const PFBlock& block);
+Edges edgesToUnlink(const PFBlock& block);
 }  // end namespace papas
 #endif /* SimplifyPFBlocks_h */

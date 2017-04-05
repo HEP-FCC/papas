@@ -19,8 +19,8 @@ connected objects. Blocks of connected items, PFBlocks,are created from the subg
 * @param[inout] blocks external collection into which new blocks will be added
 * @param[inout] history external collection of Nodes to which parent child relations can be added
 */
-void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::SubType hcalSubtype,
-                   char trackSubtype, Blocks& blocks, Nodes& history);
+void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::SubType hcalSubtype, char trackSubtype,
+                   Blocks& blocks, Nodes& history);
 
 /**
  * Takes a list of Ids and an unordered map of associated edges which have distance and link info
