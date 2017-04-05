@@ -70,6 +70,11 @@ public:
   std::string elementsString() const;                      ///< String listing all elements in a Block
   std::string edgeMatrixString() const;                    ///< String representation of matrix of edges in a block
   bool hasEdge(Identifier id1, Identifier id2) const;      ///<check if edge exists
+  
+  /**Find the edge corresponding to id1, id2 (order of id1, id2 does not matter and give the same edge).
+   @param[in] id1 : is the Identifier of one end of the required edge
+   @param[in] id2 : is the Identifier of other end of the required edge
+  */
   const Edge& edge(Identifier id1, Identifier id2) const;  ///<return edge corresponding to two ids
   const Edge& edge(Edge::EdgeKey key) const;               ///<return edge corresponding to Edge key
 private:

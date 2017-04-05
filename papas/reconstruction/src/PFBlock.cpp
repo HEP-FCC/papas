@@ -75,20 +75,10 @@ const Edge& PFBlock::edge(Edge::EdgeKey key) const {
 }
 
 const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
-  /// Find the edge corresponding to e1 e2
-  ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
-  ///                      order gives same result)
-  ///                        '''
   return edge(Edge::makeKey(id1, id2));
 }
 
 std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
-  /**
-   Returns list of keys of all edges of a given edge type that are connected to a given id.
-   Arguments:
-   id : is the identifier of item of interest
-   edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
-   */
   std::list<Edge::EdgeKey> linkedEdgeKeys;
   for (auto const& edge : m_edges) {
     // if this is an edge that includes the id
@@ -170,11 +160,11 @@ std::string PFBlock::edgeMatrixString() const {
           out.write("       .");  // diagonal
           break;
         } else if (hasEdge(e1, e2)) {
-          const auto& ed = edge(e1, e2);
-          if (ed.distance() < 0 || ed.isLinked() == false)
+          const auto& edge = PFBlock::edge(e1, e2);
+          if (edge.distance() < 0 || edge.isLinked() == false)
             out.write("     ---");  // not linked/no distance
           else {                    // linked and has distance
-            out.write("{:8.4f}", ed.distance());
+            out.write("{:8.4f}", edge.distance());
           }
         } else {                  // no edge so no link
           out.write("     ---");  // not linked
