@@ -7,19 +7,16 @@
 namespace papas {
 
 void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history) {
-  const auto& blocks = event.blocks(blockSubtype);
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  auto blockids = event.collectionIds<Blocks>(blocks, withsort);
+
+  auto blockids = event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    PDebug::write("Splitting {}", blocks.at(bid));
-    auto unlink = findEdgesToUnlink(blocks.at(bid));
-    simplifyPFBlock(unlink, blocks.at(bid), simplifiedblocks, history);
+    const auto& block = event.block(bid);
+    PDebug::write("Splitting {}", block);
+    auto unlink = edgesToUnlink(block);
+    simplifyPFBlock(unlink, block, simplifiedblocks, history);
   }
 }
 
@@ -48,11 +45,11 @@ void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simpli
   }
 }
 
-Edges findEdgesToUnlink(const PFBlock& block) {
+Edges edgesToUnlink(const PFBlock& block) {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {
-    std::list<Edge::EdgeKey> linkedIds;
+    Ids linkedIds;  // std::set<Edge::EdgeKey> linkedIds; //unordered?
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {
@@ -62,17 +59,18 @@ Edges findEdgesToUnlink(const PFBlock& block) {
           firstHCAL = true;
           for (auto elem : linkedIds) {  // find minimum distance between track and Hcals
             if (firstHCAL) {
-              minDist = block.findEdge(Edge::makeKey(id, elem)).distance();
+              minDist = block.edge(id, elem).distance();
               firstHCAL = false;
             } else {
-              minDist = fmin(minDist, block.findEdge(Edge::makeKey(id, elem)).distance());
+              minDist = fmin(minDist, block.edge(id, elem).distance());
             }
           }
           // unlink anything that is greater than minimum distance
           for (auto elem : linkedIds) {
             auto key = Edge::makeKey(id, elem);
-            if (block.findEdge(key).distance() > minDist) {  // (could be more than one at zero distance)
-              toUnlink[key] = block.findEdge(key);           // should toUnlink be list of keys rather than edges
+            auto& edge = block.edge(id, elem);
+            if (edge.distance() > minDist) {  // (could be more than one at zero distance)
+              toUnlink[key] = edge;           // should toUnlink be list of keys rather than edges
             }
           }
         }

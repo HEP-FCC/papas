@@ -41,14 +41,14 @@ public:
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
-  const Edge& findEdge(Edge::EdgeKey key) const;                           ///< return Edge corresponding to Edge key
+
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
   @param[in] id : is the Identifier of item of interest
   @param[in] edgetype : is an optional type of edge. If specified then only links of the given edgetype will be returned
   @return vector of EdgeKeys of the selected linked edges
- */
+  */
   std::list<Edge::EdgeKey> linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype = Edge::EdgeType::kUnknown) const;
 
   /**
@@ -57,8 +57,7 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the id
   */
-
-  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown, bool sort = false) const;
+  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block
@@ -70,8 +69,9 @@ public:
   std::string info() const;                                ///< printable one line summary of a Block
   std::string elementsString() const;                      ///< String listing all elements in a Block
   std::string edgeMatrixString() const;                    ///< String representation of matrix of edges in a block
-  const Edge& edge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
-
+  bool hasEdge(Identifier id1, Identifier id2) const;      ///<check if edge exists
+  const Edge& edge(Identifier id1, Identifier id2) const;  ///<return edge corresponding to two ids
+  const Edge& edge(Edge::EdgeKey key) const;               ///<return edge corresponding to Edge key
 private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;

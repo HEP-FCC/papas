@@ -24,17 +24,9 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   m_propHelix = std::make_shared<HelixPropagator>(detector.field());
   m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
-  const auto& blocks = m_event.blocks(blockSubtype);
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
-
+  auto blockids = m_event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   for (auto bid : blockids) {
-    const PFBlock& block = blocks.at(bid);
-    PDebug::write("Processing {}", block);
-    reconstructBlock(block);
+    reconstructBlock(m_event.block(bid));
   }
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");
@@ -46,6 +38,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
+  PDebug::write("Processing {}", block);
   Ids ids = block.elementIds();
   for (auto id : ids) {
     m_locked[id] = false;
@@ -55,7 +48,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // keeping only the elements that have not been used so far
   Ids uids;
   for (auto id : ids) {
-    if (!m_locked[id]) uids.push_back(id);
+    if (!m_locked[id]) uids.insert(id);
   }
   if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
     Identifier id = *uids.begin();
@@ -91,7 +84,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
   }
   for (auto& id : ids) {
     if (!m_locked[id]) {
-      m_unused.push_back(id);
+      m_unused.insert(id);
     }
   }
 }
@@ -191,19 +184,15 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
 
   Ids ecalIds;
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, withsort));
+  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack));
   for (auto trackId : trackIds) {
-    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, withsort)) {
+    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work
        # ask colin.*/
       if (!m_locked[ecalId]) {
-        ecalIds.push_back(ecalId);
+        ecalIds.insert(ecalId);
         m_locked[ecalId] = true;
       }
     }
@@ -219,9 +208,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
       const Track& track = m_event.track(id);
       auto parentIds = Ids{block.id(), id};
       auto ecalLinks = block.linkedIds(id, Edge::kEcalTrack);
-      parentIds.insert(parentIds.end(), ecalLinks.begin(), ecalLinks.end());
+      parentIds.insert(ecalLinks.begin(), ecalLinks.end());
       auto hcalLinks = block.linkedIds(id, Edge::kHcalTrack);
-      parentIds.insert(parentIds.end(), hcalLinks.begin(), hcalLinks.end());
+      parentIds.insert(hcalLinks.begin(), hcalLinks.end());
       reconstructTrack(track, 211, parentIds);
       trackEnergy += track.energy();
     }
@@ -239,7 +228,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
                                    # Make a photon from the ecal energy
                                    # We make only one photon using only the combined ecal energies*/
         auto parentIds = ecalIds;
-        parentIds.push_back(block.id());
+        parentIds.insert(block.id());
         reconstructCluster(hcal, papas::Layer::kEcal, parentIds, excess);
       }
 
@@ -252,7 +241,7 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
           // again history is confusingbecause hcal is used to provide direction
           // be better to make several smaller photons one per ecal?
           auto parentIds = ecalIds;
-          parentIds.push_back(block.id());
+          parentIds.insert(block.id());
           reconstructCluster(hcal, papas::Layer::kEcal, parentIds, ecalEnergy);
         }
       }

@@ -14,7 +14,7 @@ Ids HistoryHelper::linkedIds(Identifier id, DAG::enumVisitType direction) const 
   const auto& nodes = bfs.traverseNodes(startnode, direction);
   Ids ids;
   for (const auto& node : nodes) {
-    ids.push_back(node->value());
+    ids.insert(node->value());
   }
   return ids;
 }
@@ -29,7 +29,7 @@ Ids HistoryHelper::filteredIds(Ids ids, const IdCoder::ItemType type, const IdCo
   Ids matchedIds;
   for (auto id : ids) {
     if (IdCoder::type(id) == type && IdCoder::subtype(id) == subtype) {
-      matchedIds.push_back(id);
+      matchedIds.insert(id);
     }
   }
   return matchedIds;
@@ -39,7 +39,7 @@ Ids HistoryHelper::filteredIds(Ids ids, const std::string& typeAndSubtype) const
   Ids matchedIds;
   for (auto id : ids) {
     if (IdCoder::typeAndSubtype(id) == typeAndSubtype) {
-      matchedIds.push_back(id);
+      matchedIds.insert(id);
     }
   }
   return matchedIds;

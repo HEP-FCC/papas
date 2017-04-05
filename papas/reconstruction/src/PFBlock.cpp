@@ -27,17 +27,17 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-  m_elementIds.sort(blockIdComparer);
   // extract the relevant parts of the complete set of edges and store this within the block
   // note the edges will be removed from the edges unordered_map
   for (auto id1 : m_elementIds) {
     for (auto id2 : m_elementIds) {
       if (id1 >= id2) continue;
       // move the edge from one unordered map to the other
-      auto e = edges.find(Edge::makeKey(id1, id2));
-      if (e == edges.end()) throw std::range_error("Required Edge is missing from edges collection");
-      m_edges.emplace(e->second.key(), std::move(e->second));
-      edges.erase(e);
+      const auto& e = edges.find(Edge::makeKey(id1, id2));
+      if (e != edges.end()) {
+        m_edges.emplace(e->second.key(), std::move(e->second));
+        edges.erase(e);
+      }
     }
   }
 }
@@ -68,10 +68,18 @@ std::string PFBlock::shortName() const {
   return out.str();
 }
 
-const Edge& PFBlock::findEdge(Edge::EdgeKey key) const {
+const Edge& PFBlock::edge(Edge::EdgeKey key) const {
   auto edge = m_edges.find(key);
   if (edge == m_edges.end()) throw std::range_error("Edge not found");
   return edge->second;
+}
+
+const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
+  /// Find the edge corresponding to e1 e2
+  ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
+  ///                      order gives same result)
+  ///                        '''
+  return edge(Edge::makeKey(id1, id2));
 }
 
 std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
@@ -93,15 +101,14 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType m
   return linkedEdgeKeys;  // todo consider sorting
 }
 
-Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const {
+Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(id, edgetype)) {
     auto found = m_edges.find(key);
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
-    linkedIds.push_back(found->second.otherId(id));
+    linkedIds.insert(found->second.otherId(id));
   }
-  if (sort) linkedIds.sort(std::greater<Identifier>());
   return linkedIds;
 }
 
@@ -162,12 +169,15 @@ std::string PFBlock::edgeMatrixString() const {
         if (e1 == e2) {
           out.write("       .");  // diagonal
           break;
-        } else if (edge(e1, e2).distance() < 0)
-          out.write("     ---");  //-ve distance
-        else if (edge(e1, e2).isLinked() == false)
-          out.write("     xxx");  // not linked
-        else {                    // linked and has distance
-          out.write("{:8.4f}", edge(e1, e2).distance());
+        } else if (hasEdge(e1, e2)) {
+          const auto& ed = edge(e1, e2);
+          if (ed.distance() < 0 || ed.isLinked() == false)
+            out.write("     ---");  // not linked/no distance
+          else {                    // linked and has distance
+            out.write("{:8.4f}", ed.distance());
+          }
+        } else {                  // no edge so no link
+          out.write("     ---");  // not linked
         }
       }
     }
@@ -175,15 +185,18 @@ std::string PFBlock::edgeMatrixString() const {
   }
   return out.str();
 }
-const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
+
+bool PFBlock::hasEdge(Identifier id1, Identifier id2) const {
   /// Find the edge corresponding to e1 e2
   ///                      Note that make_key deals with whether it is get_edge(e1, e2) or get_edge(e2, e1) (either
   ///                      order gives same result)
-  ///                        '''
-  auto found = m_edges.find(Edge::makeKey(id1, id2));
-  if (found == m_edges.end()) throw std::range_error("Required edge not found");
-  return found->second;
+  ///
+  bool found = true;
+  auto edge = m_edges.find(Edge::makeKey(id1, id2));
+  if (edge == m_edges.end()) found = false;
+  return found;
 }
+
 std::string PFBlock::info() const {  // One liner summary of PFBlock
   fmt::MemoryWriter out;
   out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),

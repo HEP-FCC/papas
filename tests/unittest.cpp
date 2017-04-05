@@ -399,8 +399,8 @@ TEST_CASE("PFBlocks") {
   Identifier id5 = IdCoder::makeId(5, IdCoder::kHcalCluster, 't');
   Identifier id6 = IdCoder::makeId(6, IdCoder::kTrack, 't');
 
-  Ids ids{id1, id2, id3};
-  Ids ids2{id4, id5, id6};
+  Ids ids({id1, id2, id3});
+  Ids ids2({id4, id5, id6});
 
   Edge edge(id1, id2, false, 0.00023);
   Edge edge1(id1, id3, true, 10030.0);
@@ -430,9 +430,9 @@ TEST_CASE("PFBlocks") {
   REQUIRE(block2.elementIds() == ids2);
   REQUIRE(block2.size() == 3);
   REQUIRE(IdCoder::isBlock(block2.id()) == true);
-  REQUIRE(block2.findEdge(edge4.key()).key() == edge4.key());
-  REQUIRE_THROWS(block2.findEdge(edge1.key()).key());
-  REQUIRE_THROWS(block2.findEdge(edge1.key()));
+  REQUIRE(block2.edge(edge4.key()).key() == edge4.key());
+  REQUIRE_THROWS(block2.edge(edge1.key()).key());
+  REQUIRE_THROWS(block2.edge(edge1.key()));
   REQUIRE(block2.edge(id4, id5).isLinked() == false);
   REQUIRE(block2.edge(id4, id6).distance() == 0.1234);
 
@@ -580,7 +580,7 @@ TEST_CASE("test_papasevent") {
   REQUIRE_THROWS(event.addCollection(ecals));
 
   // check we can get back collections OK
-  REQUIRE(event.clusters("et").size() == 2);
+  REQUIRE(event.clusters(IdCoder::type('e'), 't').size() == 2);
   REQUIRE(event.hasCollection(499) == false);
   REQUIRE(event.hasCollection(IdCoder::kEcalCluster, 't') == true);
   REQUIRE(event.hasCollection(lastid) == true);
