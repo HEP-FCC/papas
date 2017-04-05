@@ -10,37 +10,41 @@ namespace papas {
 /// an event
 
 Event::Event(std::shared_ptr<Nodes> hist)
-    : m_ecalClustersCollection(),
-      m_hcalClustersCollection(),
-      m_tracksCollection(),
-      m_particlesCollection(),
-      m_blocksCollection(),
+    : m_ecalClustersFolder(),
+      m_hcalClustersFolder(),
+      m_tracksFolder(),
+      m_particlesFolder(),
+      m_blocksFolder(),
       m_history(hist){};
 
-void Event::addCollection(const Clusters& clusters) {
+void Event::addCollectionToFolder(const Clusters& clusters) {
   // decide if the clusters are from Ecal or Hcal and add to appropriate collection
   if (clusters.size() == 0) return;
   if (IdCoder::isEcal(clusters.begin()->first))
-    addCollectionInternal<Cluster>(clusters, m_ecalClustersCollection);
+    addCollectionToFolderInternal<Cluster>(clusters, m_ecalClustersFolder);
   else
-    addCollectionInternal<Cluster>(clusters, m_hcalClustersCollection);
+    addCollectionToFolderInternal<Cluster>(clusters, m_hcalClustersFolder);
 }
 
-void Event::addCollection(const Tracks& tracks) { addCollectionInternal<Track>(tracks, m_tracksCollection); };
-
-void Event::addCollection(const Particles& particles) {
-  addCollectionInternal<Particle>(particles, m_particlesCollection);
+void Event::addCollectionToFolder(const Tracks& tracks) {
+  addCollectionToFolderInternal<Track>(tracks, m_tracksFolder);
 };
 
-void Event::addCollection(const Blocks& blocks) { addCollectionInternal<PFBlock>(blocks, m_blocksCollection); };
+void Event::addCollectionToFolder(const Particles& particles) {
+  addCollectionToFolderInternal<Particle>(particles, m_particlesFolder);
+};
+
+void Event::addCollectionToFolder(const Blocks& blocks) {
+  addCollectionToFolderInternal<PFBlock>(blocks, m_blocksFolder);
+};
 
 const Clusters& Event::clusters(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
   // return the corresponding collection
   if (!hasCollection(type, subtype)) return m_emptyClusters;
   if (type == IdCoder::ItemType::kEcalCluster)
-    return *(m_ecalClustersCollection.at(subtype));
+    return *(m_ecalClustersFolder.at(subtype));
   else
-    return *(m_hcalClustersCollection.at(subtype));
+    return *(m_hcalClustersFolder.at(subtype));
 };
 
 const Clusters& Event::clusters(Identifier id) const {
@@ -83,17 +87,17 @@ Ids Event::collectionIds(const std::string& typeAndSubtype) const {
 
 const Tracks& Event::tracks(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kTrack, subtype)) return m_emptyTracks;
-  return *m_tracksCollection.at(subtype);
+  return *m_tracksFolder.at(subtype);
 }
 
 const Particles& Event::particles(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kParticle, subtype)) return m_emptyParticles;
-  return *m_particlesCollection.at(subtype);
+  return *m_particlesFolder.at(subtype);
 }
 
 const Blocks& Event::blocks(const IdCoder::SubType subtype) const {
   if (!hasCollection(IdCoder::ItemType::kBlock, subtype)) return m_emptyBlocks;
-  return *m_blocksCollection.at(subtype);
+  return *m_blocksFolder.at(subtype);
 }
 
 bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype) const {
@@ -101,19 +105,19 @@ bool Event::hasCollection(IdCoder::ItemType type, const IdCoder::SubType subtype
   bool found = false;
   switch (type) {
   case IdCoder::kEcalCluster:
-    found = (m_ecalClustersCollection.find(subtype) != m_ecalClustersCollection.end());
+    found = (m_ecalClustersFolder.find(subtype) != m_ecalClustersFolder.end());
     break;
   case IdCoder::kHcalCluster:
-    found = (m_hcalClustersCollection.find(subtype) != m_hcalClustersCollection.end());
+    found = (m_hcalClustersFolder.find(subtype) != m_hcalClustersFolder.end());
     break;
   case IdCoder::kTrack:
-    found = (m_tracksCollection.find(subtype) != m_tracksCollection.end());
+    found = (m_tracksFolder.find(subtype) != m_tracksFolder.end());
     break;
   case IdCoder::kBlock:
-    found = (m_blocksCollection.find(subtype) != m_blocksCollection.end());
+    found = (m_blocksFolder.find(subtype) != m_blocksFolder.end());
     break;
   case IdCoder::kParticle:
-    found = (m_particlesCollection.find(subtype) != m_particlesCollection.end());
+    found = (m_particlesFolder.find(subtype) != m_particlesFolder.end());
     break;
   default:
     break;
@@ -160,11 +164,11 @@ void Event::extendHistory(const Nodes& history) {
 }
 
 void Event::clear() {
-  m_ecalClustersCollection.clear();
-  m_hcalClustersCollection.clear();
-  m_tracksCollection.clear();
-  m_particlesCollection.clear();
-  m_blocksCollection.clear();
+  m_ecalClustersFolder.clear();
+  m_hcalClustersFolder.clear();
+  m_tracksFolder.clear();
+  m_particlesFolder.clear();
+  m_blocksFolder.clear();
   m_history = 0;
 }
 }

@@ -468,7 +468,7 @@ TEST_CASE("BlockSplitter") {
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
   Event event;
-  event.addCollection(blocks);
+  event.addCollectionToFolder(blocks);
   Blocks simplifiedBlocks;
   simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);
   REQUIRE(simplifiedBlocks.size() == 2);
@@ -484,7 +484,7 @@ TEST_CASE("Merge") {
   Clusters mergedClusters;
   Nodes nodes;
   Event event;
-  event.addCollection(eclusters);
+  event.addCollectionToFolder(eclusters);
 
   papas::EventRuler ruler(event);
   mergeClusters(event, "et", ruler, mergedClusters, nodes);
@@ -511,7 +511,7 @@ TEST_CASE("merge_pair") {
   Clusters mergedClusters;
   Nodes nodes;
   Event event;
-  event.addCollection(hclusters);
+  event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
   mergeClusters(event, "ht", ruler, mergedClusters, nodes);
@@ -531,7 +531,7 @@ TEST_CASE("merge_pair_away") {
 
   Nodes nodes;
   Event event;
-  event.addCollection(hclusters);
+  event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
   mergeClusters(event, "ht", ruler, mergedClusters, nodes);
@@ -553,7 +553,7 @@ TEST_CASE("merge_different_layers") {
 
   Nodes nodes;
   Event event;
-  REQUIRE_THROWS(event.addCollection(hclusters));
+  REQUIRE_THROWS(event.addCollectionToFolder(hclusters));
 
   return;
 }
@@ -574,10 +574,10 @@ TEST_CASE("test_papasevent") {
     tracks.emplace(track.id(), std::move(track));
     lastid = track.id();
   }
-  event.addCollection(ecals);
-  event.addCollection(tracks);
+  event.addCollectionToFolder(ecals);
+  event.addCollectionToFolder(tracks);
   // check that adding the same collection twice fails
-  REQUIRE_THROWS(event.addCollection(ecals));
+  REQUIRE_THROWS(event.addCollectionToFolder(ecals));
 
   // check we can get back collections OK
   REQUIRE(event.clusters(IdCoder::type('e'), 't').size() == 2);
@@ -612,8 +612,8 @@ TEST_CASE("test_history") {
     history.emplace(lastid, std::move(pnode));
     history.at(lastid).addChild(history.at(lastcluster));
   }
-  event.addCollection(ecals);
-  event.addCollection(particles);
+  event.addCollectionToFolder(ecals);
+  event.addCollectionToFolder(particles);
   event.extendHistory(history);
   HistoryHelper hhelper(event);
   // find what is connected to the last particle created
@@ -641,7 +641,7 @@ TEST_CASE("merge_inside") {
   Nodes nodes;
   Event testevent;
   Clusters mergedClusters;
-  testevent.addCollection(hclusters);
+  testevent.addCollectionToFolder(hclusters);
   papas::EventRuler ruler(testevent);
   mergeClusters(testevent, "ht", ruler, mergedClusters, nodes);
   REQUIRE(mergedClusters.size() == 1);

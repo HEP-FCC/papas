@@ -16,7 +16,8 @@ namespace papas {
 
  The PapasManager class uses the following strategy. It creates concrete collections of objects such as
  Clusters, Tracks etc. These collections are empty but are stored by the papasManager class eg clusters would be
- stored in m_ownedClusters list. The empty collections are passed by reference to the Algorithms such as simulate and
+ stored in m_ownedClustersList list. The empty collections are passed by reference to the Algorithms such as simulate
+ and
  reconstruct and the algorithms fill these collections with concrete objects such as clusters.
  After the algorithm has been run the address of the collection is also stored in the Event. This is a
  lightweight class containing unordered_maps of pointers to const collections that can be used along side an object id
@@ -95,11 +96,11 @@ protected:
   Nodes& createHistory();      // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
 
-  std::list<Clusters> m_ownedClusters;    //<Holds all the clusters collections created during an event
-  std::list<Tracks> m_ownedTracks;        //<Holds all the tracks collections created during an event
-  std::list<Blocks> m_ownedBlocks;        //<Holds all the blocks collections created during an event
-  std::list<Particles> m_ownedParticles;  //<Holds all the particles collections created during an event
-  std::list<Nodes> m_ownedHistory;        //<Holds all the histories created during an event
+  std::list<Clusters> m_ownedClustersList;    //<Holds all the clusters collections created during an event
+  std::list<Tracks> m_ownedTracksList;        //<Holds all the tracks collections created during an event
+  std::list<Blocks> m_ownedBlocksList;        //<Holds all the blocks collections created during an event
+  std::list<Particles> m_ownedParticlesList;  //<Holds all the particles collections created during an event
+  std::list<Nodes> m_ownedHistoryList;        //<Holds all the histories created during an event
   Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
 
   // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids

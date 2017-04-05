@@ -74,9 +74,7 @@ const Edge& PFBlock::edge(Edge::EdgeKey key) const {
   return edge->second;
 }
 
-const Edge& PFBlock::edge(Identifier id1, Identifier id2) const {
-  return edge(Edge::makeKey(id1, id2));
-}
+const Edge& PFBlock::edge(Identifier id1, Identifier id2) const { return edge(Edge::makeKey(id1, id2)); }
 
 std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType matchtype) const {
   std::list<Edge::EdgeKey> linkedEdgeKeys;

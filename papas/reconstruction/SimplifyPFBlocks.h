@@ -22,7 +22,7 @@ class Event;
  auto& history = createHistory();
  void simplifyPFBlocks(m_event, 'r',simplifiedblocks, history);
  //store a pointer to the ouputs into the event
- m_event.addCollection(simplifiedblocks);
+ m_event.addCollectionToFolder(simplifiedblocks);
  m_event.addHistory(history);  }
  @endcode
  * @param[in]  event contains collections of tracks, clusters and history
