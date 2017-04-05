@@ -7,19 +7,16 @@
 namespace papas {
 
 void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history) {
-  const auto& blocks = event.blocks(blockSubtype);
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  auto blockids = event.collectionIds<Blocks>(blocks, withsort);
+  
+  auto blockids = event.getCollectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated
   for (auto bid : blockids) {
-    PDebug::write("Splitting {}", blocks.at(bid));
-    auto unlink = findEdgesToUnlink(blocks.at(bid));
-    simplifyPFBlock(unlink, blocks.at(bid), simplifiedblocks, history);
+    const auto & block =event.block(bid);
+    PDebug::write("Splitting {}", block);
+    auto unlink = findEdgesToUnlink(block);
+    simplifyPFBlock(unlink, block, simplifiedblocks, history);
   }
 }
 

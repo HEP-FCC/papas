@@ -18,12 +18,14 @@ void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::
   const auto& ecals = event.clusters(IdCoder::ItemType::kEcalCluster, ecalSubtype);
   const auto& hcals = event.clusters(IdCoder::ItemType::kHcalCluster, hcalSubtype);
   const auto& tracks = event.tracks( trackSubtype);
-  auto ids = event.collectionIds<Clusters>(ecals);
-  for (auto id : event.collectionIds<Clusters>(hcals))
-    ids.insert(id);
-  for (auto id : event.collectionIds<Tracks>(tracks))
-    ids.insert(id);
-
+  auto ecalids = event.getCollectionIds(IdCoder::ItemType::kEcalCluster, ecalSubtype);
+  auto hcalids = event.getCollectionIds(IdCoder::ItemType::kHcalCluster, hcalSubtype);
+  
+  auto ids = event.getCollectionIds(IdCoder::ItemType::kTrack, trackSubtype);
+  //the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
+  ids.insert(hcalids.begin(), hcalids.end());
+  ids.insert(ecalids.begin(), ecalids.end());
+  
   Edges edges;
   EventRuler ruler(event);
   for (auto id1 : ids) {

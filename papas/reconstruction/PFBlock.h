@@ -57,8 +57,7 @@ public:
    @param[in] edgetype : is an optional type of edge. If specified only links of the given edgetype will be returned
    @return vector of ids that are linked to the id
   */
-
-  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown, bool sort = false) const;
+  Ids linkedIds(Identifier id, Edge::EdgeType edgetype = Edge::EdgeType::kUnknown) const;
 
   std::string shortName() const;  ///< Short descriptor of block such as E3H1T2 (three Ecals, 1 Hcal, 2 tracks)
   int countEcal() const;          ///< Counts how many ecal cluster ids are in the block

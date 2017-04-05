@@ -93,7 +93,7 @@ std::list<Edge::EdgeKey> PFBlock::linkedEdgeKeys(Identifier id, Edge::EdgeType m
   return linkedEdgeKeys;  // todo consider sorting
 }
 
-Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const {
+Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype) const {
   /// Returns list of all linked ids of a given edge type that are connected to a given id -
   Ids linkedIds;
   for (auto key : linkedEdgeKeys(id, edgetype)) {
@@ -101,7 +101,6 @@ Ids PFBlock::linkedIds(Identifier id, Edge::EdgeType edgetype, bool sort) const 
     if (found == m_edges.end()) throw std::range_error("Required EdgeKey is missing from Linked Edges collection");
     linkedIds.insert(found->second.otherId(id));
   }
-  //if (sort) linkedIds.sort(std::greater<Identifier>());
   return linkedIds;
 }
 

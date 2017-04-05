@@ -172,7 +172,7 @@ public:
    *   @param[in]  collection the collection
    */
   template <class T>
-  Ids collectionIds(const T& collection, bool sort = false) const;
+  Ids collectionIds(const T& collection) const;
   /**
    *   @brief  takes all the history collection and merged them into one single history
    */
@@ -188,7 +188,9 @@ public:
   void clear();
   void setEventNo(unsigned int eventNo) { m_eventNo = eventNo; }
   unsigned int eventNo() const { return m_eventNo; }
-
+  
+  Ids getCollectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) const;
+  Ids getCollectionIds(const std::string& typeAndSubtype) const;
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
@@ -236,12 +238,11 @@ void Event::addCollectionInternal(
 }
 
 template <class T>
-Ids Event::collectionIds(const T& collection, bool sort) const {
+Ids Event::collectionIds(const T& collection) const {
   Ids ids;
   for (const auto& item : collection) {
     ids.insert(item.first);
   }
-  //if (sort) ids.sort(std::greater<Identifier>());
   return ids;
 }
   

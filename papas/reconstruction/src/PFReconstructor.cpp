@@ -24,17 +24,9 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
   m_propHelix = std::make_shared<HelixPropagator>(detector.field());
   m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
-  const auto& blocks = m_event.blocks(blockSubtype);
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  auto blockids = m_event.collectionIds<Blocks>(blocks, withsort);
-
+  auto blockids = m_event.getCollectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   for (auto bid : blockids) {
-    const PFBlock& block = blocks.at(bid);
-    PDebug::write("Processing {}", block);
-    reconstructBlock(block);
+      reconstructBlock( m_event.block(bid));
   }
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");
@@ -46,6 +38,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
+  PDebug::write("Processing {}", block);
   Ids ids = block.elementIds();
   for (auto id : ids) {
     m_locked[id] = false;
@@ -191,13 +184,9 @@ void PFReconstructor::reconstructHcal(const PFBlock& block, Identifier hcalId) {
   // TODO assert(len(block.linked_ids(hcalid, "hcal_hcal"))==0  )
 
   Ids ecalIds;
-  bool withsort = false;
-#if WITHSORT
-  withsort = true;
-#endif
-  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack, withsort));
+  Ids trackIds(block.linkedIds(hcalId, Edge::EdgeType::kHcalTrack));
   for (auto trackId : trackIds) {
-    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack, withsort)) {
+    for (auto ecalId : block.linkedIds(trackId, Edge::EdgeType::kEcalTrack)) {
       /*the ecals get all grouped together for all tracks in the block
        # Maybe we want to link ecals to their closest track etc?
        # this might help with history work

@@ -17,16 +17,8 @@ namespace papas {
 
 void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
                    Nodes& history) {
-  // extract the clusters collection from the event
-  const auto& clusters = event.clusters(typeAndSubtype);
-  // make list of all the ids in this collection
-  Ids ids;
-  for (auto const& cluster : clusters) {
-    ids.insert(cluster.first);
-  }
-/*#if WITHSORT
-  ids.sort(std::greater<Identifier>());  // sort in descending order
-#endif*/
+  auto ids = event.getCollectionIds(typeAndSubtype);
+  
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters
   Edges edges;
@@ -45,8 +37,8 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
 
   for (const auto& subgraph : subGraphs) {
     std::list<const Cluster*> overlappingClusters;
-    for (const auto& c : subgraph) {
-      overlappingClusters.push_back(&clusters.at(c));
+    for (const auto& cid : subgraph) {
+      overlappingClusters.push_back(&(event.cluster(cid)));
     }
     // create the merged Cluster
     Cluster mergedCluster(overlappingClusters, merged.size(), 'm');
