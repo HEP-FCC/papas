@@ -17,7 +17,7 @@ namespace papas {
 
 void mergeClusters(const Event& event, const std::string& typeAndSubtype, const EventRuler& ruler, Clusters& merged,
                    Nodes& history) {
-  auto ids = event.getCollectionIds(typeAndSubtype);
+  auto ids = event.collectionIds(typeAndSubtype);
 
   // create unordered map containing all edge combinations, index them by edgeKey
   // the edges describe the distance between pairs of clusters

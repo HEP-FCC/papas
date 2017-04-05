@@ -53,7 +53,7 @@ const Clusters& Event::clusters(const std::string& typeAndSubtype) const {
   return clusters(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 
-Ids Event::getCollectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) const {
+Ids Event::collectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) const {
   // return the collection ids
   Ids ids;
   if (hasCollection(type, subtype)) switch (type) {
@@ -76,9 +76,9 @@ Ids Event::getCollectionIds(IdCoder::ItemType type, IdCoder::SubType subtype) co
   return ids;  // empty
 }
 
-Ids Event::getCollectionIds(const std::string& typeAndSubtype) const {
+Ids Event::collectionIds(const std::string& typeAndSubtype) const {
   // return the collection ids
-  return getCollectionIds(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
+  return collectionIds(IdCoder::type(typeAndSubtype[0]), typeAndSubtype[1]);
 }
 
 const Tracks& Event::tracks(const IdCoder::SubType subtype) const {

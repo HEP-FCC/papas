@@ -15,9 +15,9 @@ namespace papas {
 void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::SubType hcalSubtype, char trackSubtype,
                    Blocks& blocks, Nodes& history) {
 
-  auto ecalids = event.getCollectionIds(IdCoder::ItemType::kEcalCluster, ecalSubtype);
-  auto hcalids = event.getCollectionIds(IdCoder::ItemType::kHcalCluster, hcalSubtype);
-  auto trackids = event.getCollectionIds(IdCoder::ItemType::kTrack, trackSubtype);
+  auto ecalids = event.collectionIds(IdCoder::ItemType::kEcalCluster, ecalSubtype);
+  auto hcalids = event.collectionIds(IdCoder::ItemType::kHcalCluster, hcalSubtype);
+  auto trackids = event.collectionIds(IdCoder::ItemType::kTrack, trackSubtype);
   // the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
 
   Edges edges;

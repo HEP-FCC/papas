@@ -34,7 +34,7 @@ typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of 
 #if WITHSORT
 typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< collection of Ids
 #else
-typedef std::unordered_set<Identifier, std::greater<Identifier>> Ids;
+typedef std::unordered_set<Identifier> Ids;
 #endif
 typedef std::unordered_map<Identifier, Track> Tracks;      ///< collection of Tracks
 typedef std::unordered_map<Identifier, PFBlock> Blocks;    ///< collection of Blocks

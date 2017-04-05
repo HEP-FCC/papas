@@ -8,7 +8,7 @@ namespace papas {
 
 void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedblocks, Nodes& history) {
 
-  auto blockids = event.getCollectionIds(IdCoder::ItemType::kBlock, blockSubtype);
+  auto blockids = event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   // go through each block and see if it can be simplified
   // in some cases it will end up being split into smaller blocks
   // Note that the old block will be marked as disactivated

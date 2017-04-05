@@ -70,13 +70,13 @@ public:
   std::string elementsString() const;                         ///< String listing all elements in a Block
   std::string edgeMatrixString() const;                       ///< String representation of matrix of edges in a block
   bool hasEdge(Identifier id1, Identifier id2) const;         ///<check if edge exists
-  const Edge& edge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
+  const Edge& edge(Identifier id1, Identifier id2) const;     ///<return edge corresponding to two ids
+  const Edge& edge(Edge::EdgeKey key) const;                  ///<return edge corresponding to Edge key
  private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
-  const Edge& edge(Edge::EdgeKey key) const;               ///< return Edge corresponding to Edge key
-
+  
   Identifier m_id;            ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
   Edges m_edges;              ///< all the edges for elements in this block

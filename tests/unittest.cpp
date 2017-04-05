@@ -14,7 +14,7 @@
 #include <iostream>
 #include <numeric>
 #include <string>
-#include <unordered_map>
+//#include <unordered_map>
 
 // ROOT
 #include "TApplication.h"
@@ -399,8 +399,8 @@ TEST_CASE("PFBlocks") {
   Identifier id5 = IdCoder::makeId(5, IdCoder::kHcalCluster, 't');
   Identifier id6 = IdCoder::makeId(6, IdCoder::kTrack, 't');
 
-  Ids ids{id1, id2, id3};
-  Ids ids2{id4, id5, id6};
+  Ids ids({id1, id2, id3});
+  Ids ids2({id4, id5, id6});
 
   Edge edge(id1, id2, false, 0.00023);
   Edge edge1(id1, id3, true, 10030.0);
