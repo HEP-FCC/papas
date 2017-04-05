@@ -15,29 +15,34 @@ namespace papas {
 void buildPFBlocks(const Event& event, IdCoder::SubType  ecalSubtype,  IdCoder::SubType hcalSubtype,
                    char trackSubtype, Blocks& blocks, Nodes& history) {
 
-  const auto& ecals = event.clusters(IdCoder::ItemType::kEcalCluster, ecalSubtype);
-  const auto& hcals = event.clusters(IdCoder::ItemType::kHcalCluster, hcalSubtype);
-  const auto& tracks = event.tracks( trackSubtype);
   auto ecalids = event.getCollectionIds(IdCoder::ItemType::kEcalCluster, ecalSubtype);
   auto hcalids = event.getCollectionIds(IdCoder::ItemType::kHcalCluster, hcalSubtype);
-  
-  auto ids = event.getCollectionIds(IdCoder::ItemType::kTrack, trackSubtype);
+  auto trackids = event.getCollectionIds(IdCoder::ItemType::kTrack, trackSubtype);
   //the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
-  ids.insert(hcalids.begin(), hcalids.end());
-  ids.insert(ecalids.begin(), ecalids.end());
   
   Edges edges;
   EventRuler ruler(event);
-  for (auto id1 : ids) {
-    for (auto id2 : ids) {
-      if (id1 < id2) {
+  for (auto id1 : ecalids) {
+    for (auto id2 : trackids) {
         Distance dist = ruler.distance(id1, id2);
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
         // the edge object is added into the edges dictionary
         edges.emplace(edge.key(), std::move(edge));
-      }
     }
   }
+  for (auto id1 : hcalids) {
+    for (auto id2 : trackids) { //trac
+      Distance dist = ruler.distance(id1, id2);
+      Edge edge{id1, id2, dist.isLinked(), dist.distance()};
+      // the edge object is added into the edges dictionary
+      edges.emplace(edge.key(), std::move(edge));
+    }
+  }
+
+  //the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
+  auto& ids = trackids;
+  ids.insert(hcalids.begin(), hcalids.end());
+  ids.insert(ecalids.begin(), ecalids.end());
   buildPFBlocks(ids, std::move(edges), 'r', blocks, history);
 }
 

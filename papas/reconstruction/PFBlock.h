@@ -41,8 +41,7 @@ public:
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
-  const Edge& findEdge(Edge::EdgeKey key) const;                           ///< return Edge corresponding to Edge key
-  /**
+    /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances
   @param[in] id : is the Identifier of item of interest
@@ -69,8 +68,9 @@ public:
   std::string info() const;                                ///< printable one line summary of a Block
   std::string elementsString() const;                      ///< String listing all elements in a Block
   std::string edgeMatrixString() const;                    ///< String representation of matrix of edges in a block
-  const Edge& edge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
-
+  bool  hasEdge(Identifier id1, Identifier id2) const;     ///<check if edge exists
+  const Edge& getEdge(Identifier id1, Identifier id2) const;  ///<locate an edge corresponding to two ids
+  const Edge& getEdge(Edge::EdgeKey key) const;                           ///< return Edge corresponding to Edge key
 private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
