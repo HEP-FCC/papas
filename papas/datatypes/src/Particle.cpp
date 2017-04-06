@@ -1,15 +1,10 @@
 #include "papas/datatypes/Particle.h"
 
-/**
- * @brief  Particle from which more complex particles are derived
- */
+//#include <iomanip>
+#include <iostream>
 
-#include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Helix.h"
 #include "papas/datatypes/IdCoder.h"
 #include "spdlog/details/format.h"
-#include <iomanip>
-#include <iostream>
 
 namespace papas {
 

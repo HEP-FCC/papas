@@ -2,7 +2,8 @@
 #define RECONSTRUCTION_BUILDSUBGRAPHS_H
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/graphtools/DefinitionsNodes.h"
+
+#include <list>
 
 namespace papas {
 

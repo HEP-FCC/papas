@@ -3,6 +3,7 @@
 
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/graphtools/DefinitionsNodes.h"
+#include "papas/datatypes/IdCoder.h"
 #include <string>
 
 namespace papas {

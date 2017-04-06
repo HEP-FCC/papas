@@ -1,7 +1,6 @@
 #ifndef DefinitionsCollections_h
 #define DefinitionsCollections_h
 
-
 #include "papas/datatypes/IdCoder.h"
 
 #include <list>

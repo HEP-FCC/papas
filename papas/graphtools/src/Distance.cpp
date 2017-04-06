@@ -1,13 +1,5 @@
-//
-//  distance.cpp
-//  fastsim
-//
-//  Created by Alice Robson on 01/02/16.
-//
-//
-
 #include "papas/graphtools/Distance.h"
-//#include "papas/datatypes/IdCoder.h"
+
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Path.h"
 #include "papas/datatypes/Track.h"

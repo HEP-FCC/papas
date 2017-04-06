@@ -8,11 +8,13 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
-#include "papas/graphtools/Edge.h"
-#include "papas/datatypes/Cluster.h"
 
-
+#include <unordered_map>
+#include <string>
+#include <memory>
 namespace papas {
+  
+  
 /**
  *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
  *  internal ClusterCollections, Track Collections etc. It also contains a shared pointer to a  history object

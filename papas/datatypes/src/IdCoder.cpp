@@ -1,10 +1,12 @@
 #include "papas/datatypes/IdCoder.h"
-#include "papas/utility/StringFormatter.h"
+
 #include <assert.h>
 #include <bitset>
 #include <cmath>
 #include <inttypes.h>
 #include <iostream>
+
+#include "papas/utility/StringFormatter.h"
 
 //
 // Encode information into an identifier

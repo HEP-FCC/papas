@@ -2,8 +2,6 @@
 #define path_h
 
 #include <map>
-//#include <memory>
-//#include <vector>
 
 #include "TLorentzVector.h"
 #include "TVector3.h"

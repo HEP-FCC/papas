@@ -1,8 +1,8 @@
 #include "papas/graphtools/BuildSubGraphs.h"
-#include "papas/datatypes/DefinitionsCollections.h"
+
+#include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/graphtools/Edge.h"
 #include "papas/graphtools/FloodFill.h"
-#include "papas/utility/PDebug.h"
 
 namespace papas {
 

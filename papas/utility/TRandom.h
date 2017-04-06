@@ -1,11 +1,3 @@
-//
-//  TRandom.h
-//  papas
-//
-//  Created by Alice Robson on 16/01/17.
-//
-//
-
 #ifndef TRandom_h
 #define TRandom_h
 

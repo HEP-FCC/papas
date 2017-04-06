@@ -3,6 +3,7 @@
 
 #include "papas/datatypes/Definitions.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
+#include "papas/datatypes/IdCoder.h"
 
 #include <map>
 #include <list>

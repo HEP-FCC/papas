@@ -1,14 +1,11 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @file CMSEcal.cc
  * @brief Implementation of the CMS ECAL  */
 #include "papas/detectors/CMSEcal.h"
+
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/detectors/Material.h"
+
 
 namespace papas {
 

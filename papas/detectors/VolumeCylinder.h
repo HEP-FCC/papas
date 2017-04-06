@@ -4,7 +4,7 @@
 #include "papas/datatypes/Definitions.h"
 #include "papas/detectors/SurfaceCylinder.h"
 
-#include "TVector3.h"
+class TVector3;
 
 namespace papas {
 

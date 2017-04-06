@@ -1,7 +1,3 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
@@ -9,12 +5,11 @@
 #include "TVector3.h"
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Path.h"
-
-//Forward declarations
-class Track;
 
 namespace papas {
+  
+  //Forward declarations
+  class Path;
 /// Main Particle class
 ///
 /// Contains 4-momentum vector, particle id and accessor functions

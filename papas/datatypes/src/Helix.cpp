@@ -1,15 +1,9 @@
-//
-//  Helix.cpp
-//  papas
-//
-//  Created by Alice Robson on 11/05/16.
-//
-//
-
 #include "papas/datatypes/Helix.h"
-#include "papas/datatypes/Definitions.h"
-#include "papas/utility/DeltaR.h"
+
 #include <array>
+
+#include "papas/utility/DeltaR.h"
+
 
 namespace papas {
 extern double gconstc;

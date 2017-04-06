@@ -1,14 +1,13 @@
 #ifndef PAPAS_TRACK_H
 #define PAPAS_TRACK_H
 
-#include "TLorentzVector.h"
 #include "TVector3.h"
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/Path.h"
-
 
 namespace papas {
+  
+  class Path;
 /** @brief Determines the trajectory in space and time of a particle (charged or neutral).
 
 attributes:

@@ -1,11 +1,14 @@
-
 #ifndef straightlinepropagator_h
 #define straightlinepropagator_h
-#include "papas/detectors/Detector.h"
+
 #include "papas/simulation/Propagator.h"
+
+#include <memory>
 
 namespace papas {
 class Particle;
+  class Field;
+  class SurfaceCylinder;
 
 class StraightLinePropagator : public Propagator {
   /// Calculates where an uncharged particle crosses a detector cyclinder

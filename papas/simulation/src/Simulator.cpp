@@ -10,8 +10,12 @@
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Field.h"
 #include "papas/detectors/Calorimeter.h"
 #include "papas/detectors/Tracker.h"
+#include "papas/simulation/HelixPropagator.h"
+#include "papas/simulation/StraightLinePropagator.h"
 
 namespace papas {
 

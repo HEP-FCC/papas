@@ -1,13 +1,10 @@
 #include "papas/reconstruction/BuildPFBlocks.h"
-#include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/DefinitionsCollections.h"
+
 #include "papas/datatypes/Event.h"
-#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/BuildSubGraphs.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/FloodFill.h"
-#include "papas/reconstruction/PFBlock.h"
 #include "papas/utility/PDebug.h"
 
 namespace papas {
@@ -40,7 +37,6 @@ void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::Su
       edges.emplace(edge.key(), std::move(edge));
     }
   }
-
   // the ids should all be in the right order, so I wonder what the most efficient way to merge them would be?
   auto& ids = trackids;
   ids.insert(hcalids.begin(), hcalids.end());

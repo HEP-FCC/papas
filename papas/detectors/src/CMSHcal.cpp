@@ -1,12 +1,9 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @file CMS.cc
  * @brief Implementation of the CMS detector
  */
 #include "papas/detectors/CMSHcal.h"
+
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"

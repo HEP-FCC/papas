@@ -1,11 +1,11 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 #include "papas/detectors/SurfaceCylinder.h"
+
 #include "TVector3.h"
-#include "papas/utility/PDebug.h"
+
 #include <cmath>
+#include <iostream>
+
+#include "papas/utility/StringFormatter.h"
 
 namespace papas {
 

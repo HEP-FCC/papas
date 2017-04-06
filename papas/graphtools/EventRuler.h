@@ -1,18 +1,8 @@
-//
-//  EventRuler.h
-//
-//  Created by Alice Robson on 17/04/16.
-//
-//
-
 #ifndef EventRuler_h
 #define EventRuler_h
 
-#include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Track.h"
+#include "papas/datatypes/Definitions.h"
 #include "papas/graphtools/Ruler.h"
-#include <stdio.h>
 
 namespace papas {
 

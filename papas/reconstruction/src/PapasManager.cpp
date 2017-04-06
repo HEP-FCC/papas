@@ -1,4 +1,5 @@
 #include "papas/reconstruction/PapasManager.h"
+
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/EventRuler.h"
