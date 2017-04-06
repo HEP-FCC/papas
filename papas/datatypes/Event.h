@@ -36,8 +36,8 @@ namespace papas {
  *        r = reconstructed
  *        m = merged
  Usage example:
-  m_event.addCollection(ecalClusters);
-  m_event.addCollection(hcalClusters);
+  m_event.addCollectionToFolder(ecalClusters);
+  m_event.addCollectionToFolder(hcalClusters);
   ...
   const Cluster& cluster1 = m_event.cluster(id1);
  @endcode
@@ -55,28 +55,28 @@ public:
    *   @param[in]  clusters unordered map of Clusters, all of which have the same identifier typeAndSubtype.
    *               The typeAndSubtype will be used as the map index, eg "em" for ecals-merged.
    */
-  void addCollection(const Clusters& clusters);
+  void addCollectionToFolder(const Clusters& clusters);
 
   /**
    *   @brief  adds a pointer to a Tracks collection (unordered map) into the Event
    *   @param[in]  tracks unordered map of Tracks, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "tt" for track-true.
    */
-  void addCollection(const Tracks& tracks);
+  void addCollectionToFolder(const Tracks& tracks);
 
   /**
    *   @brief  adds a pointer to a Blocks collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of Blocks, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "br" for blocks-raw.
    */
-  void addCollection(const Blocks& blocks);
+  void addCollectionToFolder(const Blocks& blocks);
 
   /**
    *   @brief  adds a pointer to a  Particles collection (unordered map) into the Event
    *   @param[in]  blocks unordered map of Particles, all of which have the same identifier typeAndSubtype
    *               The typeAndSubtype will be used as the map index, eg "pr" for particles-reconstructed.
    */
-  void addCollection(const Particles& particles);
+  void addCollectionToFolder(const Particles& particles);
 
   /**
    *   @brief  makes history in Event point to an external history object
@@ -228,21 +228,23 @@ private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
    *           this collection type does not already exist. It then adds the collection into the Event.
+   *   @param [in] collection The collection that is to be added in
+   *   @param [inout] folder The folder to which the collection will be added
    */
   template <class T>
   void
-  addCollectionInternal(const std::unordered_map<Identifier, T>& collection,
-                        std::unordered_map<IdCoder::SubType, const std::unordered_map<Identifier, T>*>& collections);
+  addCollectionToFolderInternal(const std::unordered_map<Identifier, T>& collection,
+                                std::unordered_map<IdCoder::SubType, const std::unordered_map<Identifier, T>*>& folder);
   /// Unordered map of pointers to unordered map of (concrete) Ecal Clusters
-  CollectionClusters m_ecalClustersCollection;
+  ClustersFolder m_ecalClustersFolder;
   /// Unordered map of pointers to unordered map of (concrete) Hcal Clusters
-  CollectionClusters m_hcalClustersCollection;
+  ClustersFolder m_hcalClustersFolder;
   /// Unordered map of pointers to unordered map of (concrete) Tracks
-  CollectionTracks m_tracksCollection;
+  TracksFolder m_tracksFolder;
   /// Unordered map of pointers to unordered map of (concrete) Particles
-  CollectionParticles m_particlesCollection;
-  /// Unordered map of pointers to Blocks
-  CollectionBlocks m_blocksCollection;
+  ParticlesFolder m_particlesFolder;
+  /// Unordered map of pointers to unordered map of (concrete) Blocks
+  BlocksFolder m_blocksFolder;
   std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
   Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
   Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is found
@@ -252,9 +254,9 @@ private:
 };
 
 template <class T>
-void Event::addCollectionInternal(
+void Event::addCollectionToFolderInternal(
     const std::unordered_map<Identifier, T>& collection,
-    std::unordered_map<IdCoder::SubType, const std::unordered_map<Identifier, T>*>& collections) {
+    std::unordered_map<IdCoder::SubType, const std::unordered_map<Identifier, T>*>& folder) {
   Identifier firstId = 0;
   if (collection.size() == 0) return;
   for (const auto& it : collection) {
@@ -267,7 +269,7 @@ void Event::addCollectionInternal(
       throw "more than one typeandSubtype found in collection";
     }
   }
-  collections.emplace(IdCoder::subtype(firstId), &collection);
+  folder.emplace(IdCoder::subtype(firstId), &collection);
 }
 
 template <class T>

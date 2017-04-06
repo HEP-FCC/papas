@@ -28,21 +28,28 @@ class Track;
 class Edge;
 class Particle;
 
-typedef std::unordered_map<Identifier, Particle> Particles;  ///< collection of Particles
-typedef std::list<Particle> ListParticles;                   ///< collection of Particles
-typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of Edges
+typedef std::list<Particle> ListParticles;                   ///< list of Particles
+typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of Edge objects
 #if WITHSORT
-typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< collection of Ids
+typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< collection containing Id objects
 #else
-typedef std::unordered_set<Identifier> Ids;
+typedef std::unordered_set<Identifier> Ids;  ///< collection containing Id objects
 #endif
-typedef std::unordered_map<Identifier, Track> Tracks;      ///< collection of Tracks
-typedef std::unordered_map<Identifier, PFBlock> Blocks;    ///< collection of Blocks
-typedef std::unordered_map<Identifier, Cluster> Clusters;  ///< collection of Clusters
+typedef std::unordered_map<Identifier, Track> Tracks;        ///< collection containing Track objects
+typedef std::unordered_map<Identifier, PFBlock> Blocks;      ///< collection containing Block objects
+typedef std::unordered_map<Identifier, Cluster> Clusters;    ///< collection containing Cluster objects
+typedef std::unordered_map<Identifier, Particle> Particles;  ///< collection containing Particle objects
 
-typedef std::unordered_map<IdCoder::SubType, const Particles*> CollectionParticles;  ///< collection of Particles
-typedef std::unordered_map<IdCoder::SubType, const Tracks*> CollectionTracks;        ///< collection of Tracks
-typedef std::unordered_map<IdCoder::SubType, const Clusters*> CollectionClusters;    ///< collection of Clusters
-typedef std::unordered_map<IdCoder::SubType, const Blocks*> CollectionBlocks;        ///< collection of Clusters
+/// Folder is an unordered map in which we store pointers to collections that in turn contain Particle objects
+typedef std::unordered_map<IdCoder::SubType, const Particles*> ParticlesFolder;
+
+/// Folder is an unordered map in which we store pointers to collections that in turn contain Track objects
+typedef std::unordered_map<IdCoder::SubType, const Tracks*> TracksFolder;
+
+///< Folder is an unordered map in which we store pointers to collections that in turn contain Cluster objects
+typedef std::unordered_map<IdCoder::SubType, const Clusters*> ClustersFolder;
+
+///< Folder is an unordered map in which we store pointers to collections that in turn contain PFBlock objects
+typedef std::unordered_map<IdCoder::SubType, const Blocks*> BlocksFolder;
 }
 #endif /* DefinitionsCollections_h */

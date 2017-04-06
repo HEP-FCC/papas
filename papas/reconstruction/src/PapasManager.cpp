@@ -35,15 +35,15 @@ void PapasManager::simulate(Particles& particles) {
                       smearedTracks, particles, history);
 
   // store the addresses of the filled collections to the Event
-  m_event.addCollection(ecalClusters);
-  m_event.addCollection(hcalClusters);
-  m_event.addCollection(smearedEcalClusters);
-  m_event.addCollection(smearedHcalClusters);
-  m_event.addCollection(tracks);
-  m_event.addCollection(smearedTracks);
+  m_event.addCollectionToFolder(ecalClusters);
+  m_event.addCollectionToFolder(hcalClusters);
+  m_event.addCollectionToFolder(smearedEcalClusters);
+  m_event.addCollectionToFolder(smearedHcalClusters);
+  m_event.addCollectionToFolder(tracks);
+  m_event.addCollectionToFolder(smearedTracks);
   // NB can only add the particle collection once the particles are completed (eg paths added in)
   // this is because they are stored here as const objects
-  m_event.addCollection(particles);
+  m_event.addCollectionToFolder(particles);
   m_event.extendHistory(history);
 }
 
@@ -54,7 +54,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   auto& history = createHistory();
   papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, history);
   // add outputs into event
-  m_event.addCollection(mergedClusters);
+  m_event.addCollectionToFolder(mergedClusters);
   m_event.extendHistory(history);
 }
 
@@ -64,7 +64,7 @@ void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype, char tr
   auto& history = createHistory();
   buildPFBlocks(m_event, ecalSubtype, hcalSubtype, trackSubtype, blocks, history);
   // store a pointer to the ouputs into the event
-  m_event.addCollection(blocks);
+  m_event.addCollectionToFolder(blocks);
   m_event.extendHistory(history);
 }
 
@@ -74,7 +74,7 @@ void PapasManager::simplifyBlocks(char blockSubtype) {
   auto& history = createHistory();
   simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
   // store a pointer to the outputs into the event
-  m_event.addCollection(simplifiedblocks);
+  m_event.addCollectionToFolder(simplifiedblocks);
   m_event.extendHistory(history);
 }
 
@@ -82,44 +82,44 @@ void PapasManager::reconstruct(char blockSubtype) {
   auto& history = createHistory();
   auto& recParticles = createParticles();
   PFReconstructor pfReconstructor(m_event, blockSubtype, m_detector, recParticles, history);
-  m_event.addCollection(recParticles);
+  m_event.addCollectionToFolder(recParticles);
   m_event.extendHistory(history);
 }
 
 void PapasManager::clear() {
   m_event.clear();
-  m_ownedHistory.clear();
-  m_ownedClusters.clear();
-  m_ownedTracks.clear();
-  m_ownedBlocks.clear();
-  m_ownedParticles.clear();
+  m_ownedHistoryList.clear();
+  m_ownedClustersList.clear();
+  m_ownedTracksList.clear();
+  m_ownedBlocksList.clear();
+  m_ownedParticlesList.clear();
 }
 
 Clusters& PapasManager::createClusters() {
   // when the Clusters collection is added to the list its address changes
   // we must return the address of the created Clusters collection after it
   // has been added into the list
-  m_ownedClusters.emplace_back(Clusters());
-  return m_ownedClusters.back();
+  m_ownedClustersList.emplace_back(Clusters());
+  return m_ownedClustersList.back();
 }
 
 Tracks& PapasManager::createTracks() {
-  m_ownedTracks.emplace_back(Tracks());
-  return m_ownedTracks.back();
+  m_ownedTracksList.emplace_back(Tracks());
+  return m_ownedTracksList.back();
 }
 
 Blocks& PapasManager::createBlocks() {
-  m_ownedBlocks.emplace_back(Blocks());
-  return m_ownedBlocks.back();
+  m_ownedBlocksList.emplace_back(Blocks());
+  return m_ownedBlocksList.back();
 }
 
 Particles& PapasManager::createParticles() {
-  m_ownedParticles.emplace_back(Particles());
-  return m_ownedParticles.back();
+  m_ownedParticlesList.emplace_back(Particles());
+  return m_ownedParticlesList.back();
 }
 
 Nodes& PapasManager::createHistory() {
-  m_ownedHistory.emplace_back(Nodes());
-  return m_ownedHistory.back();
+  m_ownedHistoryList.emplace_back(Nodes());
+  return m_ownedHistoryList.back();
 }
 }  // end namespace papas
