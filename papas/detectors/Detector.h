@@ -3,19 +3,19 @@
 
 #include "papas/datatypes/Definitions.h"
 
-#include <memory>
 #include <list>
+#include <memory>
 
 namespace papas {
-  //forward declarations
-  class Field;
-  class Calorimeter;
-  class SurfaceCylinder;
-  class DetectorElement;
-  class Tracker;
-  class Track;
-  class Particle;
-  
+// forward declarations
+class Field;
+class Calorimeter;
+class SurfaceCylinder;
+class DetectorElement;
+class Tracker;
+class Track;
+class Particle;
+
 /// Base Detector Class which needs to be inherited from for new detectors
 ///
 /**
@@ -40,9 +40,10 @@ public:
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
-  double electronAcceptance(const Track& track) const ;
-  double electronEnergyResolution(const Particle& ptc) const ;
-  double muonAcceptance(const Track& track) const ;  double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
+  double electronAcceptance(const Track& track) const;
+  double electronEnergyResolution(const Particle& ptc) const;
+  double muonAcceptance(const Track& track) const;
+  double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
   const std::list<std::shared_ptr<const DetectorElement>> elements() const { return m_elements; }
 
 protected:

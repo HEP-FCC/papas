@@ -9,7 +9,6 @@
 #include "papas/detectors/CMSHcal.h"
 #include "papas/detectors/CMSTracker.h"
 
-
 namespace papas {
 
 CMS::CMS() : Detector() {

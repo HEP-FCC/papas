@@ -6,8 +6,8 @@
 #include "papas/datatypes/Definitions.h"
 
 namespace papas {
-  
-  class Path;
+
+class Path;
 /** @brief Determines the trajectory in space and time of a particle (charged or neutral).
 
 attributes:

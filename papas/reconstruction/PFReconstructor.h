@@ -1,17 +1,24 @@
 #ifndef PFReconstructor_h
 #define PFReconstructor_h
 
-#include "TVector3.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Event.h"
-#include "papas/detectors/Detector.h"
 #include "papas/graphtools/DefinitionsNodes.h"
+
+#include <memory>
+#include <unordered_map>
+
+#include "TVector3.h"
 
 namespace papas {
 
 class StraightLinePropagator;
 class HelixPropagator;
 class Propagator;
+class Event;
+class Detector;
+class PFBlock;
+class Track;
+class Cluster;
 
 class PFReconstructor {
   /** Handles reconstruction of particles from a Event

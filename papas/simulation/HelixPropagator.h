@@ -5,8 +5,8 @@
 
 namespace papas {
 class Particle;
-  class Field;
-  class SurfaceCylinder;
+class Field;
+class SurfaceCylinder;
 class HelixPropagator : public Propagator {
   /** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
   */

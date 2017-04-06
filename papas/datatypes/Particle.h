@@ -7,9 +7,9 @@
 #include "papas/datatypes/Definitions.h"
 
 namespace papas {
-  
-  //Forward declarations
-  class Path;
+
+// Forward declarations
+class Path;
 /// Main Particle class
 ///
 /// Contains 4-momentum vector, particle id and accessor functions

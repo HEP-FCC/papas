@@ -1,10 +1,8 @@
-
-
-//#include <iostream>
 #include "papas/simulation/StraightLinePropagator.h"
-#include "papas/detectors/SurfaceCylinder.h"
+
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Path.h"
+#include "papas/detectors/SurfaceCylinder.h"
 #include "papas/utility/GeoTools.h"
 
 #include <memory>

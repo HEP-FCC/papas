@@ -3,8 +3,8 @@
 
 #include "papas/datatypes/definitions.h"
 
-#include <iostream>
 #include <array>
+#include <iostream>
 
 namespace papas {
 /**

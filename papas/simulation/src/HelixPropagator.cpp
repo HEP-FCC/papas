@@ -1,12 +1,9 @@
-
+#include "papas/simulation/HelixPropagator.h"
 
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Path.h"
-#include "papas/simulation/HelixPropagator.h"
-#include "papas/utility/GeoTools.h"
 #include "papas/detectors/Field.h"
-
+#include "papas/utility/GeoTools.h"
 
 namespace papas {
 

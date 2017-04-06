@@ -1,15 +1,13 @@
 #include "papas/reconstruction/PapasManager.h"
 
-#include "papas/datatypes/Event.h"
-#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PFReconstructor.h"
 #include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/simulation/Simulator.h"
-#include "papas/utility/PDebug.h"
-#include <string>
+
+//#include <string>
 
 namespace papas {
 

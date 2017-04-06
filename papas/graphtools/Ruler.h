@@ -3,10 +3,10 @@
 
 namespace papas {
 
-  //forward declaration
+// forward declaration
 class Distance;
-  class Cluster;
-  class Track;
+class Cluster;
+class Track;
 
 /// Used to calculate distances between particle flow elements (clusters and track)
 class Ruler {

@@ -1,5 +1,5 @@
 #include "papas/utility/DeltaR.h"
-#include "TLorentzVector.h"
+
 #include <cmath>
 
 namespace papas {

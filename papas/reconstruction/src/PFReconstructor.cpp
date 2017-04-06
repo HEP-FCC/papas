@@ -4,22 +4,16 @@
 #include <math.h>
 #include <vector>
 
-#include "TLorentzVector.h"
-#include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/Event.h"
 #include "papas/datatypes/HistoryHelper.h"
-
 #include "papas/datatypes/ParticlePData.h"
 #include "papas/datatypes/Path.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Track.h"
+#include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/Detector.h"
 #include "papas/graphtools/Edge.h"
-#include "papas/reconstruction/PFBlock.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/PDebug.h"
-#include "papas/detectors/Detector.h"
-#include "papas/detectors/Calorimeter.h"
-
 
 namespace papas {
 

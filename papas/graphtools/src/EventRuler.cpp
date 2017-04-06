@@ -1,8 +1,6 @@
 #include "papas/graphtools/EventRuler.h"
 
-#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Event.h"
-#include "papas/datatypes/Track.h"
 #include "papas/graphtools/Distance.h"
 
 namespace papas {

@@ -6,6 +6,7 @@
 
 namespace papas {
 class Event;
+class PFBlock;
 
 /**
  simplifyPFBlocks takes a collection of PFBlocks and tries to simplify them.

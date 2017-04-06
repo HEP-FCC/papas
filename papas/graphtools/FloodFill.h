@@ -7,7 +7,6 @@
 #include <unordered_set>
 #include <vector>
 
-
 namespace DAG {
 ///
 ///  @author  Alice Robson

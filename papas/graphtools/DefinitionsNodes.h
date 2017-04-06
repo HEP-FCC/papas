@@ -2,11 +2,11 @@
 #define DefinitionsNodes_h
 
 #include "papas/datatypes/Definitions.h"
-#include "papas/graphtools/DirectedAcyclicGraph.h"
 #include "papas/datatypes/IdCoder.h"
+#include "papas/graphtools/DirectedAcyclicGraph.h"
 
-#include <map>
 #include <list>
+#include <map>
 
 namespace papas {
 

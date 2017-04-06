@@ -13,7 +13,7 @@
 #include <string>
 
 namespace papas {
-  class Detector;
+class Detector;
 
 /// Graphical representation of the detector - holds all the GDetectorElements together
 class GDetector : public Drawable {

@@ -4,7 +4,6 @@
 
 #include "papas/utility/DeltaR.h"
 
-
 namespace papas {
 extern double gconstc;
 

@@ -6,7 +6,6 @@
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
 
-
 namespace papas {
 
 CMSECAL::CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,

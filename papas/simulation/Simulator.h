@@ -8,16 +8,16 @@
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 
-//forward declarations
+// forward declarations
 class TVector3;
 class TLorentzVector;
 
 namespace papas {
-  //forward declarations
-  class HelixPropagator;
-  class StraightLinePropagator;
-  class Propagator;
-  class Event;
+// forward declarations
+class HelixPropagator;
+class StraightLinePropagator;
+class Propagator;
+class Event;
 class Detector;
 class DetectorElement;
 class SurfaceCylinder;
@@ -86,7 +86,7 @@ public:
    */
   // move this somewhere else
   Particle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                           const TVector3& vertex );  // TODO move elsewhere
+                           const TVector3& vertex);  // TODO move elsewhere
 
 private:
   void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon

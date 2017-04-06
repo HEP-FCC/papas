@@ -12,8 +12,8 @@
 #include "papas/display/Drawable.h"
 
 namespace papas {
-  
-  class DetectorElement;
+
+class DetectorElement;
 
 /// Class to draw the HCAL and ECAL detectors
 class GDetectorElement : public Drawable {

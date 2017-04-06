@@ -1,20 +1,20 @@
 #ifndef Event_h
 #define Event_h
 
+#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/graphtools/DefinitionsNodes.h"
-#include "papas/reconstruction/PFBlock.h"
-#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
+#include "papas/graphtools/DefinitionsNodes.h"
+#include "papas/reconstruction/PFBlock.h"
 
-#include <unordered_map>
-#include <string>
 #include <memory>
+#include <string>
+#include <unordered_map>
+
 namespace papas {
-  
-  
+
 /**
  *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
  *  internal ClusterCollections, Track Collections etc. It also contains a shared pointer to a  history object

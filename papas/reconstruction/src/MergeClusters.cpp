@@ -1,13 +1,8 @@
 #include "papas/reconstruction/MergeClusters.h"
 
-#include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
-#include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/BuildSubGraphs.h"
 #include "papas/graphtools/Distance.h"
-#include "papas/graphtools/Edge.h"
-#include "papas/graphtools/EventRuler.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/utility/PDebug.h"
 

@@ -3,7 +3,7 @@
 #include "papas/detectors/DetectorElement.h"
 
 namespace papas {
-  //Forward declaration
+// Forward declaration
 class Material;
 class VolumeCylinder;
 

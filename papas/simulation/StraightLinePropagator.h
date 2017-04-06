@@ -7,8 +7,8 @@
 
 namespace papas {
 class Particle;
-  class Field;
-  class SurfaceCylinder;
+class Field;
+class SurfaceCylinder;
 
 class StraightLinePropagator : public Propagator {
   /// Calculates where an uncharged particle crosses a detector cyclinder

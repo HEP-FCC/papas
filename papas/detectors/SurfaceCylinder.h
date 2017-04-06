@@ -2,6 +2,7 @@
 #define SURFACECYLINDER_H
 
 #include "papas/datatypes/Definitions.h"
+
 #include <ostream>
 
 namespace papas {

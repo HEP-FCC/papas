@@ -1,15 +1,18 @@
 #ifndef PapasManager_h
 #define PapasManager_h
+
 #include "papas/datatypes/DefinitionsCollections.h"
 #include "papas/datatypes/Event.h"
-#include "papas/detectors/Detector.h"
 #include "papas/graphtools/DefinitionsNodes.h"
-#include <list>
 
-namespace fcc {
-class MCParticleCollection;
-}
+#include <list>
+#include <string>
+
 namespace papas {
+
+// forward declarations
+class Detector;
+
 /**
  *  @brief The PapasManager class is a high level class to own the clusters, particles etc created in an event and
        to call the algorithms such as simulation, cluster merging, block building and reconstruction.

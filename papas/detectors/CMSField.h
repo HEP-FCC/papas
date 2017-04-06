@@ -5,7 +5,7 @@
 
 namespace papas {
 
-  //Forward declaration
+// Forward declaration
 class VolumeCylinder;
 /// CMS specific implementation of Detector Field element
 ///

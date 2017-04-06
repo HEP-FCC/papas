@@ -1,9 +1,7 @@
 #include "papas/simulation/Propagator.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/detectors/Detector.h"
-#include "papas/detectors/VolumeCylinder.h"
-#include "papas/detectors/DetectorElement.h"
 
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Field.h"
 
 namespace papas {
 void Propagator::propagate(Particle& ptc, const Detector& detector) const {

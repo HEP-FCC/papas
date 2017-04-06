@@ -2,6 +2,7 @@
 #define CMSECAL_H
 
 #include "papas/detectors/Calorimeter.h"
+
 #include <vector>
 
 namespace papas {

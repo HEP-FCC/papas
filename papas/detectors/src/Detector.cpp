@@ -1,10 +1,10 @@
 #include "papas/detectors/Detector.h"
 
-#include "papas/detectors/Field.h"
-#include "papas/detectors/Calorimeter.h"
-#include "papas/detectors/Tracker.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
+#include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/Field.h"
+#include "papas/detectors/Tracker.h"
 
 namespace papas {
 
@@ -48,13 +48,14 @@ void Detector::setupElements() {
     m_elements.push_back(el);
   }
 }
-  
-  double Detector::electronAcceptance(const Track& track) const {
-    return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5; }
-  
-  double Detector::electronEnergyResolution(const Particle& ptc) const {
-    return 0.1 / sqrt(ptc.e()); }
-  
-  double Detector::muonAcceptance(const Track& track) const {
-    return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
+
+double Detector::electronAcceptance(const Track& track) const {
+  return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;
+}
+
+double Detector::electronEnergyResolution(const Particle& ptc) const { return 0.1 / sqrt(ptc.e()); }
+
+double Detector::muonAcceptance(const Track& track) const {
+  return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5;
+}
 }  // end namespace papas

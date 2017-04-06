@@ -2,10 +2,10 @@
 #define distance_h
 
 namespace papas {
-  //forward declarations
+// forward declarations
 class Track;
 class Cluster;
-  
+
 /// @brief Determines the distance between two items, eg clusters or clusters and tracks, and records whether or not
 /// they are linked.
 class Distance {
