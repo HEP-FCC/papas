@@ -1,10 +1,12 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include "papas/datatypes/Definitions.h"
+
+#include <memory>
+
 #include "TLorentzVector.h"
 #include "TVector3.h"
-
-#include "papas/datatypes/Definitions.h"
 
 namespace papas {
 

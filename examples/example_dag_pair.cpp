@@ -1,5 +1,7 @@
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
+#include <iostream>
+
 class idpair {
 public:
   int itype;

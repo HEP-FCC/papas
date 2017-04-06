@@ -1,7 +1,7 @@
 #ifndef RECONSTRUCTION_EDGE_H
 #define RECONSTRUCTION_EDGE_H
 
-#include "papas/datatypes/definitions.h"
+#include "papas/datatypes/Definitions.h"
 
 #include <array>
 #include <iostream>

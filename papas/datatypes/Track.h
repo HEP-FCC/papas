@@ -1,9 +1,11 @@
 #ifndef PAPAS_TRACK_H
 #define PAPAS_TRACK_H
 
+#include "papas/datatypes/Definitions.h"
+
 #include "TVector3.h"
 
-#include "papas/datatypes/Definitions.h"
+#include <memory>
 
 namespace papas {
 

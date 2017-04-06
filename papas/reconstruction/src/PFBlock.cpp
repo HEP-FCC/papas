@@ -1,7 +1,7 @@
 #include "papas/reconstruction/PFBlock.h"
 
 #include <algorithm>
-//#include <iomanip>
+#include <iomanip>  //needed for lxplus
 #include <vector>
 
 #include "papas/utility/PDebug.h"
