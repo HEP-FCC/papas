@@ -1,16 +1,14 @@
-//
-//  Created by Alice Robson on 02/12/15.
-//
-//
 #ifndef path_h
 #define path_h
 
+#include <map>
+//#include <memory>
+//#include <vector>
+
 #include "TLorentzVector.h"
 #include "TVector3.h"
+
 #include "papas/datatypes/Definitions.h"
-#include <map>
-#include <memory>
-#include <vector>
 
 namespace papas {
 

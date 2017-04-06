@@ -7,6 +7,8 @@
 #include "papas/datatypes/Path.h"
 #include "papas/utility/GeoTools.h"
 
+#include <memory>
+
 namespace papas {
 
 StraightLinePropagator::StraightLinePropagator(std::shared_ptr<const Field> field) : Propagator(field) {}

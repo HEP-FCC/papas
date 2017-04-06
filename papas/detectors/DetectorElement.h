@@ -1,13 +1,8 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef DETECTORELEMENT_H
 #define DETECTORELEMENT_H
 
 #include "papas/detectors/Material.h"
 #include "papas/detectors/VolumeCylinder.h"
-#include <list>
 
 namespace papas {
 

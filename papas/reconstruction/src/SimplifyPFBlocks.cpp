@@ -3,6 +3,7 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
+#include "papas/utility/PDebug.h"
 
 namespace papas {
 

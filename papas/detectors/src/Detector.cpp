@@ -5,6 +5,9 @@
 #include "papas/detectors/Detector.h"
 #include "papas/detectors/Material.h"
 #include "papas/detectors/SurfaceCylinder.h"
+#include "papas/detectors/Field.h"
+#include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/Tracker.h"
 #include <list>
 #include <vector>
 

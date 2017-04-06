@@ -16,6 +16,8 @@
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/PDebug.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Calorimeter.h"
 
 namespace papas {
 

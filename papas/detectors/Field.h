@@ -1,15 +1,9 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef FIELD_H
 #define FIELD_H
 #include "papas/detectors/DetectorElement.h"
-#include "papas/detectors/Material.h"
-#include "papas/detectors/VolumeCylinder.h"
 
 namespace papas {
-
+  //Forward declaration
 class Material;
 class VolumeCylinder;
 

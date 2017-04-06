@@ -10,7 +10,8 @@
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-class Detector;
+#include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/Tracker.h"
 
 namespace papas {
 

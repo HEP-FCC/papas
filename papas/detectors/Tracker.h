@@ -1,13 +1,7 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef TRACKER_H
 #define TRACKER_H
 
 #include "papas/detectors/DetectorElement.h"
-#include "papas/detectors/Material.h"
-#include <list>
 
 namespace papas {
 

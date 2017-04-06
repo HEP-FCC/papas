@@ -1,13 +1,10 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef VOLUMECYLINDER_H
 #define VOLUMECYLINDER_H
 
-#include "TVector3.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/detectors/SurfaceCylinder.h"
+
+#include "TVector3.h"
 
 namespace papas {
 

@@ -2,6 +2,11 @@
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/datatypes/Event.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
+#include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/IdCoder.h"
+#include "papas/datatypes/Particle.h"
+#include "papas/datatypes/Track.h"
+#include "papas/graphtools/Edge.h"
 
 namespace papas {
 

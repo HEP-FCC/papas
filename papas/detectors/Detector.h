@@ -1,22 +1,20 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef DETECTOR_H
 #define DETECTOR_H
 
-#include <memory>
-
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
-#include "papas/detectors/Calorimeter.h"
-#include "papas/detectors/DetectorElement.h"
-#include "papas/detectors/Field.h"
-#include "papas/detectors/SurfaceCylinder.h"
-#include "papas/detectors/Tracker.h"
+
+#include <memory>
+#include <list>
 
 namespace papas {
-
+  //forward declarations
+  class Field;
+  class Calorimeter;
+  class SurfaceCylinder;
+  class DetectorElement;
+  class Tracker;
+  
 /// Base Detector Class which needs to be inherited from for new detectors
 ///
 /**

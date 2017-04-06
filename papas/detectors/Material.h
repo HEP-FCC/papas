@@ -1,7 +1,3 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef MATERIAL_H
 #define MATERIAL_H
 

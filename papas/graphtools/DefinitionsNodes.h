@@ -1,17 +1,12 @@
-//
-//  DefinitionsNodes.h
-//  papas
-//
-//  Created by Alice Robson on 12/05/16.
-//
-//
-
 #ifndef DefinitionsNodes_h
 #define DefinitionsNodes_h
 
-#include "papas/datatypes/IdCoder.h"
+#include "papas/datatypes/Definitions.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
+
 #include <map>
+#include <list>
+
 namespace papas {
 
 typedef DAG::Node<Identifier> PFNode;

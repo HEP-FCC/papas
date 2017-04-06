@@ -5,6 +5,12 @@
 #include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/reconstruction/PFBlock.h"
+#include "papas/datatypes/Cluster.h"
+#include "papas/datatypes/Particle.h"
+#include "papas/datatypes/Track.h"
+#include "papas/graphtools/Edge.h"
+#include "papas/datatypes/Cluster.h"
+
 
 namespace papas {
 /**

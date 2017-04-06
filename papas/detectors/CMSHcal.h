@@ -1,7 +1,3 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef CMSHCAL_H
 #define CMSHCAL_H
 

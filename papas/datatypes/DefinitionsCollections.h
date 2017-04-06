@@ -1,18 +1,9 @@
-//
-//  DefinitionsCollections.h
-//
-//  Created by Alice Robson on 26/05/16.
-//
-//
-
 #ifndef DefinitionsCollections_h
 #define DefinitionsCollections_h
 
-#include "papas/datatypes/Cluster.h"
+
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Track.h"
-#include "papas/graphtools/Edge.h"
+
 #include <list>
 #include <unordered_map>
 #if WITHSORT

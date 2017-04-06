@@ -3,6 +3,8 @@
 //
 //
 #include "papas/display/GDetector.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Calorimeter.h"
 
 namespace papas {
 

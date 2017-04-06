@@ -1,8 +1,5 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 #include "papas/display/GDetectorElement.h"
+#include "papas/detectors/DetectorElement.h"
 #include <map>
 
 namespace papas {

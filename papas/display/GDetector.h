@@ -5,13 +5,15 @@
 #ifndef PAPAS_GDETECTOR_H
 #define PAPAS_GDETECTOR_H
 
-#include "papas/detectors/Detector.h"
+//#include "papas/detectors/Detector.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GDetectorElement.h"
 #include <list>
 #include <memory>
+#include <string>
 
 namespace papas {
+  class Detector;
 
 /// Graphical representation of the detector - holds all the GDetectorElements together
 class GDetector : public Drawable {

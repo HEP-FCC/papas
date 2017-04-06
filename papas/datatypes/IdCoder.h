@@ -2,6 +2,7 @@
 #define IdCoder_h
 
 #include "papas/datatypes/Definitions.h"
+
 #include <inttypes.h>
 #include <iostream>
 

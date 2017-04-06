@@ -7,9 +7,11 @@
 
 #include "TLorentzVector.h"
 #include "TVector3.h"
+
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Path.h"
-#include "papas/utility/PDebug.h"
+
+//Forward declarations
 class Track;
 
 namespace papas {

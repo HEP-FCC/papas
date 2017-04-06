@@ -1,11 +1,3 @@
-//
-//  Definitions.h
-//  papas
-//
-//  Created by Alice Robson on 12/05/16.
-//
-//
-
 #ifndef Definitions_h
 #define Definitions_h
 

@@ -1,7 +1,3 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef CMSFIELD_H
 #define CMSFIELD_H
 
@@ -9,6 +5,7 @@
 
 namespace papas {
 
+  //Forward declaration
 class VolumeCylinder;
 /// CMS specific implementation of Detector Field element
 ///

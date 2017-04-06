@@ -1,13 +1,8 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef SURFACECYLINDER_H
 #define SURFACECYLINDER_H
 
 #include "papas/datatypes/Definitions.h"
 #include <ostream>
-#include <string>
 
 namespace papas {
 /**
