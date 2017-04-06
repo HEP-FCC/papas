@@ -5,7 +5,6 @@
 #ifndef PAPAS_GDETECTOR_H
 #define PAPAS_GDETECTOR_H
 
-//#include "papas/detectors/Detector.h"
 #include "papas/display/Drawable.h"
 #include "papas/display/GDetectorElement.h"
 #include <list>

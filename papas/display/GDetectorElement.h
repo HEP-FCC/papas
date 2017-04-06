@@ -8,11 +8,11 @@
 #include "TBox.h"
 #include "TEllipse.h"
 
-//#include "papas/detectors/DetectorElement.h"
 #include "papas/display/Drawable.h"
 
 namespace papas {
 
+  //Forward Declaration
 class DetectorElement;
 
 /// Class to draw the HCAL and ECAL detectors

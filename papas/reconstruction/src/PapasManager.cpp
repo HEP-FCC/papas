@@ -7,8 +7,6 @@
 #include "papas/reconstruction/SimplifyPFBlocks.h"
 #include "papas/simulation/Simulator.h"
 
-//#include <string>
-
 namespace papas {
 
 PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_event() {}

@@ -1,4 +1,5 @@
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/Cluster.h"
 
 namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with

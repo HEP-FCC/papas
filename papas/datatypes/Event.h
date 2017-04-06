@@ -14,6 +14,8 @@
 #include <unordered_map>
 
 namespace papas {
+  
+  class Cluster;
 
 /**
  *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
