@@ -1,12 +1,5 @@
-//
-//  path.cpp
-//  fastsim_cmake
-//
-//  Created by Alice Robson on 02/12/15.
-//
-//
-
 #include "papas/datatypes/Path.h"
+
 #include <iostream>
 
 namespace papas {

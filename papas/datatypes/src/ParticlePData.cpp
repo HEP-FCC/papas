@@ -1,12 +1,5 @@
-//
-//  ParticlePData.cpp
-//  papas
-//
-//  Created by Alice Robson on 11/05/16.
-//
-//
-
 #include "papas/datatypes/ParticlePData.h"
+
 namespace papas {
 
 const double ParticlePData::m_e = 0.000511;

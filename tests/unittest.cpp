@@ -1,51 +1,32 @@
-// STL
-#include <iostream>
-#include <memory>
-#include <vector>
-
 // catch
 #define CATCH_CONFIG_MAIN
-
 #include "tests/catch.hpp"
 
 // C++
-#include <cstdlib>
-#include <functional>
 #include <iostream>
 #include <numeric>
 #include <string>
 #include <unordered_map>
+#include <memory>
+#include <vector>
 
 // ROOT
 #include "TApplication.h"
-#include "TFile.h"
 #include "TLorentzVector.h"
-#include "TROOT.h"
 #include "TVector3.h"
 
 #include "papas/display/Display.h"
 #include "papas/display/GTrajectory.h"
 #include "papas/display/ViewPane.h"
-
-// SSD libs
-#include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Path.h"
-#include "papas/datatypes/Track.h"
 #include "papas/detectors/CMS.h"
 #include "papas/detectors/CMSField.h"
-
-#include "papas/detectors/Material.h"
-#include "papas/detectors/SurfaceCylinder.h"
-#include "papas/detectors/VolumeCylinder.h"
+#include "papas/detectors/Calorimeter.h"
+#include "papas/simulation/StraightLinePropagator.h"
+#include "papas/simulation/HelixPropagator.h"
 #include "papas/graphtools/Distance.h"
-#include "papas/graphtools/Edge.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"

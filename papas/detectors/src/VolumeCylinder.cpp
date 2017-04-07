@@ -1,11 +1,8 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 #include "papas/detectors/VolumeCylinder.h"
-#include "TVector3.h"
+
 #include <cmath>
-#include <iostream>
+
+#include "TVector3.h"
 
 namespace papas {
 

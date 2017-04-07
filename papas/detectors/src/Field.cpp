@@ -1,12 +1,4 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 #include "papas/detectors/Field.h"
-#include "papas/detectors/Material.h"
-#include "papas/detectors/VolumeCylinder.h"
-#include <list>
-#include <vector>
 
 namespace papas {
 

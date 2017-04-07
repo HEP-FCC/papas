@@ -1,10 +1,3 @@
-//
-//  Helix.hpp
-//
-//  Created by Alice Robson on 11/05/16.
-//
-//
-
 #ifndef Helix_h
 #define Helix_h
 

@@ -1,11 +1,8 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef CMSECAL_H
 #define CMSECAL_H
 
 #include "papas/detectors/Calorimeter.h"
+
 #include <vector>
 
 namespace papas {

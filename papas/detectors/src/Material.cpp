@@ -1,9 +1,5 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
-
 #include "papas/detectors/Material.h"
+
 #include "papas/utility/TRandom.h"
 
 namespace papas {

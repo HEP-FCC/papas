@@ -1,18 +1,13 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @file CMS.cpp
  * @brief Implementation of the CMS detector
  */
 #include "papas/detectors/CMS.h"
+
 #include "papas/detectors/CMSEcal.h"
 #include "papas/detectors/CMSField.h"
 #include "papas/detectors/CMSHcal.h"
 #include "papas/detectors/CMSTracker.h"
-
-#include <vector>
 
 namespace papas {
 

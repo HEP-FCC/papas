@@ -1,12 +1,9 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @file CMS.cc
  * @brief Implementation of the CMS detector
  */
 #include "papas/detectors/CMSTracker.h"
+
 #include "papas/datatypes/Track.h"
 #include "papas/utility/TRandom.h"
 

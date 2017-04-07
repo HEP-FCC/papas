@@ -1,11 +1,14 @@
 #ifndef Cluster_h
 #define Cluster_h
 
-#include "TVector3.h"
 #include "papas/datatypes/Definitions.h"
-#include "papas/datatypes/IdCoder.h"
+
 #include <list>
 #include <stdio.h>
+
+#include "TVector3.h"
+
+#include "papas/datatypes/IdCoder.h"
 
 namespace papas {
 

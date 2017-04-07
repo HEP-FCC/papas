@@ -1,19 +1,23 @@
 #ifndef Simulator_h
 #define Simulator_h
 
-#include "TLorentzVector.h"
-#include "TVector3.h"
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Definitions.h"
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Event.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/graphtools/DefinitionsNodes.h"
-#include "papas/simulation/HelixPropagator.h"
-#include "papas/simulation/StraightLinePropagator.h"
+
+// forward declarations
+class TVector3;
+class TLorentzVector;
 
 namespace papas {
+// forward declarations
+class HelixPropagator;
+class StraightLinePropagator;
+class Propagator;
+class Event;
 class Detector;
 class DetectorElement;
 class SurfaceCylinder;
@@ -82,7 +86,7 @@ public:
    */
   // move this somewhere else
   Particle& addGunParticle(int pdgid, double charge, double thetamin, double thetamax, double ptmin, double ptmax,
-                           const TVector3& vertex = TVector3(0., 0., 0.));  // TODO move elsewhere
+                           const TVector3& vertex);  // TODO move elsewhere
 
 private:
   void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon

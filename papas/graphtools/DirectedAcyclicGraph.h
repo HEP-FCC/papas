@@ -1,18 +1,9 @@
-//
-//  DirectedAcyclicGraph.h
-//
-//
-//  Created by Alice Robson on 14/12/15.
-//  Copyright © 2015 CERN. All rights reserved.
-//
-
 #ifndef DirectedAcyclicGraph_h
 #define DirectedAcyclicGraph_h
 
-#include <iostream>
-#include <list>
 #include <queue>
 #include <unordered_set>
+#include <vector>
 
 /// Directed Acyclic Graph
 /**

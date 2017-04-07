@@ -1,12 +1,12 @@
-
 #ifndef helixpropagator_h
 #define helixpropagator_h
-#include "papas/detectors/Detector.h"
+
 #include "papas/simulation/Propagator.h"
 
 namespace papas {
 class Particle;
-
+class Field;
+class SurfaceCylinder;
 class HelixPropagator : public Propagator {
   /** Class to determine where the (helix) path of a charged particle crosses the detector cyclinders
   */

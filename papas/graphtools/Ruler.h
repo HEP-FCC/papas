@@ -1,12 +1,12 @@
 #ifndef Ruler_h
 #define Ruler_h
 
-#include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Track.h"
-
 namespace papas {
 
+// forward declaration
 class Distance;
+class Cluster;
+class Track;
 
 /// Used to calculate distances between particle flow elements (clusters and track)
 class Ruler {

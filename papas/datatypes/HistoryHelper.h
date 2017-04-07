@@ -2,11 +2,13 @@
 #define HistoryHelper_h
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/Event.h"
 #include "papas/datatypes/IdCoder.h"
 #include "papas/graphtools/DirectedAcyclicGraph.h"
 
 namespace papas {
+
+// forward declarations
+class Event;
 /**
  *  @brief The HistoryHelper is used to access history information stored in a Event.
  *  The Event contains history information eg which clusters and tracks were used

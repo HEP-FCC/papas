@@ -1,15 +1,8 @@
-//
-//  Cluster.cpp
-//  papas
-//
-//  Created by Alice Robson on 28/04/16.
-//
-//
-
 #include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/IdCoder.h"
-#include "papas/utility/StringFormatter.h"
+
 #include <iomanip>
+
+#include "papas/utility/StringFormatter.h"
 
 namespace papas {
 

@@ -1,17 +1,10 @@
-
 #include "papas/reconstruction/PFBlock.h"
 
 #include <algorithm>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <unordered_set>
+#include <iomanip>  //needed for lxplus
 #include <vector>
 
-#include "papas/datatypes/IdCoder.h"
-#include "papas/graphtools/Edge.h"
 #include "papas/utility/PDebug.h"
-#include "spdlog/details/format.h"
 
 namespace papas {
 

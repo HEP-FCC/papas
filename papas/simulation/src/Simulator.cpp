@@ -1,16 +1,16 @@
 #include "papas/simulation/Simulator.h"
-#include "papas/datatypes/Cluster.h"
-#include "papas/datatypes/Definitions.h"
+
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
 #include "papas/datatypes/ParticlePData.h"
-#include "papas/datatypes/Path.h"
-#include "papas/datatypes/Track.h"
+#include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Tracker.h"
+#include "papas/simulation/HelixPropagator.h"
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
-class Detector;
 
 namespace papas {
 

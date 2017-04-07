@@ -1,7 +1,6 @@
-
 #include "papas/datatypes/HistoryHelper.h"
+
 #include "papas/datatypes/Event.h"
-#include "papas/graphtools/DirectedAcyclicGraph.h"
 
 namespace papas {
 

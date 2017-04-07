@@ -1,12 +1,12 @@
 #ifndef propagator_h
 #define propagator_h
-#include "papas/detectors/Field.h"
-#include <memory>
-namespace papas {
 
+#include <memory>
+
+namespace papas {
+class Field;
 class Particle;
 class Detector;
-class PFParticle;
 class SurfaceCylinder;
 
 class Propagator {

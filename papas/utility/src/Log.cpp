@@ -1,12 +1,5 @@
-//
-//  Log.cpp
-//  papas
-//
-//  Created by Alice Robson on 31/05/16.
-//
-//
 #include "papas/utility/Log.h"
-#include <iostream>
+
 #include <string>
 
 namespace papas {

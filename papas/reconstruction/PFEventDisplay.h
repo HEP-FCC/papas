@@ -1,11 +1,3 @@
-//
-//  PFEventDisplay.h
-//  papas
-//
-//  Created by Alice Robson on 28/04/16.
-//
-//
-
 #ifndef PFEventDisplay_h
 #define PFEventDisplay_h
 

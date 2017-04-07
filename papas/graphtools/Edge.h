@@ -1,8 +1,9 @@
 #ifndef RECONSTRUCTION_EDGE_H
 #define RECONSTRUCTION_EDGE_H
 
-#include "array"
-#include "papas/datatypes/IdCoder.h"
+#include "papas/datatypes/Definitions.h"
+
+#include <array>
 #include <iostream>
 
 namespace papas {

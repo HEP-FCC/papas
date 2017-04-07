@@ -1,21 +1,20 @@
-//
-//  Created by Alice Robson on 29/11/15.
-//
-//
 #ifndef DETECTOR_H
 #define DETECTOR_H
 
+#include "papas/datatypes/Definitions.h"
+
+#include <list>
 #include <memory>
 
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Track.h"
-#include "papas/detectors/Calorimeter.h"
-#include "papas/detectors/DetectorElement.h"
-#include "papas/detectors/Field.h"
-#include "papas/detectors/SurfaceCylinder.h"
-#include "papas/detectors/Tracker.h"
-
 namespace papas {
+// forward declarations
+class Field;
+class Calorimeter;
+class SurfaceCylinder;
+class DetectorElement;
+class Tracker;
+class Track;
+class Particle;
 
 /// Base Detector Class which needs to be inherited from for new detectors
 ///
@@ -41,9 +40,9 @@ public:
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
-  double electronAcceptance(const Track& track) const { return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5; }
-  double electronEnergyResolution(const Particle& ptc) const { return 0.1 / sqrt(ptc.e()); }
-  double muonAcceptance(const Track& track) const { return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5; }
+  double electronAcceptance(const Track& track) const;
+  double electronEnergyResolution(const Particle& ptc) const;
+  double muonAcceptance(const Track& track) const;
   double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
   const std::list<std::shared_ptr<const DetectorElement>> elements() const { return m_elements; }
 

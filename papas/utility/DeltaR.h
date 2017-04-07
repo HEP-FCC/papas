@@ -1,6 +1,6 @@
-
 #ifndef deltar_h
 #define deltar_h
+
 namespace papas {
 
 /** TODO ask Colin what this is

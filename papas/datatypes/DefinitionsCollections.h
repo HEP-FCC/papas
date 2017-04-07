@@ -1,18 +1,8 @@
-//
-//  DefinitionsCollections.h
-//
-//  Created by Alice Robson on 26/05/16.
-//
-//
-
 #ifndef DefinitionsCollections_h
 #define DefinitionsCollections_h
 
-#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/IdCoder.h"
-#include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Track.h"
-#include "papas/graphtools/Edge.h"
+
 #include <list>
 #include <unordered_map>
 #if WITHSORT
@@ -31,9 +21,9 @@ class Particle;
 typedef std::list<Particle> ListParticles;                   ///< list of Particles
 typedef std::unordered_map<unsigned long long, Edge> Edges;  ///< collection of Edge objects
 #if WITHSORT
-typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< collection containing Id objects
+typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< set containing Identifiers
 #else
-typedef std::unordered_set<Identifier> Ids;  ///< collection containing Id objects
+typedef std::unordered_set<Identifier> Ids;  ///< set containing Identifiers
 #endif
 typedef std::unordered_map<Identifier, Track> Tracks;        ///< collection containing Track objects
 typedef std::unordered_map<Identifier, PFBlock> Blocks;      ///< collection containing Block objects

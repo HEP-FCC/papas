@@ -1,7 +1,3 @@
-//
-//  Created by Alice Robson on 09/11/15.
-//
-//
 /**
  * @file CMS.cc
  * @brief Implementation of the CMS detector

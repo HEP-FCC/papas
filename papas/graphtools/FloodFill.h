@@ -2,7 +2,10 @@
 #define TOOLS_FLOODFILL_H
 
 #include "papas/graphtools/DirectedAcyclicGraph.h"
+
 #include <map>
+#include <unordered_set>
+#include <vector>
 
 namespace DAG {
 ///

@@ -2,9 +2,8 @@
 #define RECONSTRUCTION_PFBLOCK_H
 
 #include "papas/datatypes/DefinitionsCollections.h"
-#include "papas/datatypes/IdCoder.h"
-#include "papas/graphtools/DefinitionsNodes.h"
 #include "papas/graphtools/Edge.h"
+
 #include <iostream>
 #include <string>
 

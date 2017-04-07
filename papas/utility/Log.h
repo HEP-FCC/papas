@@ -1,11 +1,3 @@
-//
-//  log.h
-//  papas
-//
-//  Created by Alice Robson on 31/05/16.
-//
-//
-
 #ifndef log_h
 #define log_h
 
