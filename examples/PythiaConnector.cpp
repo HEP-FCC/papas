@@ -108,7 +108,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     } catch (std::string message) {
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
-    m_store.clear();
+    //m_store.clear();
   }
 
   m_reader.endOfEvent();

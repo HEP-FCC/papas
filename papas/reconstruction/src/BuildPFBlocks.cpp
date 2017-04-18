@@ -54,6 +54,7 @@ void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, 
     makeHistoryLinks(block.elementIds(), {id}, history);
     blocks.emplace(id, std::move(block));
   }
+  std::cout<< "Edges;" << edges.size() <<std::endl;
 }
 
 }  // end namespace papas

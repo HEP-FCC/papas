@@ -10,6 +10,11 @@
 namespace papas {
 
 PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_event() {}
+  
+  
+  /*PapasManager::~PapasManager() {
+    clear();
+  };*/
 
 void PapasManager::simulate(Particles& particles) {
   // create empty collections that will be passed to simulator to fill

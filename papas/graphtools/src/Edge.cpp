@@ -1,5 +1,5 @@
 #include "papas/graphtools/Edge.h"
-
+#include "papas/utility/PDebug.h"
 #include <math.h>
 
 #include "papas/datatypes/IdCoder.h"
@@ -11,6 +11,9 @@ Edge::Edge(Identifier endId1, Identifier endId2, bool isLinked, double distance)
       m_isLinked(isLinked),
       m_distance(distance),
       m_key(Edge::makeKey(endId1, endId2)) {}
+
+  Edge::~Edge() {
+    PDebug::write("Delete {} ", *this);};
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */

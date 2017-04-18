@@ -34,6 +34,13 @@ PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char 
     }
   }
 }
+  
+  /*PFBlock:: ~PFBlock(){
+    PDebug::write("Delete {}", *this);
+    m_elementIds.clear();
+    m_edges.clear();
+  };*/
+  
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
@@ -180,7 +187,7 @@ bool PFBlock::hasEdge(Identifier id1, Identifier id2) const {
 
 std::string PFBlock::info() const {  // One liner summary of PFBlock
   fmt::MemoryWriter out;
-  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),
+  out.write("{:8} :{:6}:{} ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), m_id, countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

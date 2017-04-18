@@ -39,6 +39,7 @@ public:
   PFBlock(const Ids& elementIds, Edges& edges, unsigned int index,
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
+                                         //~PFBlock();
   const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
 
   /**
