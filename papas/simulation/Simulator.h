@@ -46,10 +46,12 @@ public:
   Simulator(const Event& event, const Detector& detector, Clusters& ecalClusters, Clusters& hcalClusters,
             Clusters& smearedEcalClusters, Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks,
             Particles& particles, Nodes& history);
+
   /** Simulate a particle, to produce tracks, smearedtracks, clusters, smearedclusters and path info
    @param[in] ptc the particle to be simulated
   */
   void simulateParticle(Particle& ptc);
+
   /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
    */
@@ -63,13 +65,14 @@ public:
   Nodes& history() { return m_history; }  /// return a reference to history nodes collection
   // const Particles& particles() const { return m_particles; }  ///< Return particles collection
   void clear();  ///< Clear all the collections of clusters, particles, tracks
-                 /**
-                  Smears a Cluster
-                  @param[in] cluster the cluster that is to be smeared
-                  @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
-                  the cluster belongs
-                  @return the smeared Cluster (moved)
-                  */
+
+  /**
+   Smears a Cluster
+   @param[in] cluster the cluster that is to be smeared
+   @param[in] detectorLayer the layer to be used for smearing. Note this is not always the same as the layer to which
+   the cluster belongs
+   @return the smeared Cluster (moved)
+   */
   Cluster smearCluster(const Cluster& cluster,
                        papas::Layer detectorLayer = papas::Layer::kNone);  ///<randomise cluster energy
 
@@ -94,13 +97,14 @@ private:
   void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
   void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
   void simulateMuon(Particle& ptc);      ///< Simulates a muon(no smearing)
-                                         /**
-                                          Determines if a smeared Cluster is detectable
-                                          @param[in] smearedCluster for which we need to determine if it is accepted
-                                          @param[in] acceptLayer detector layer used for acceptance NB not always the same layer as the cluster
-                                          @param[in] accept if true then the cluster will be accepted
-                                          @return boolean true/false
-                                          */
+
+  /**
+   Determines if a smeared Cluster is detectable
+   @param[in] smearedCluster for which we need to determine if it is accepted
+   @param[in] acceptLayer detector layer used for acceptance NB not always the same layer as the cluster
+   @param[in] accept if true then the cluster will be accepted
+   @return boolean true/false
+   */
   bool acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer = papas::Layer::kNone,
                             bool accept = false) const;
 
@@ -120,6 +124,7 @@ private:
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
   const Cluster& storeSmearedEcalCluster(Cluster&& smearedCluster, Identifier parentId);
+
   /**
    Moves the smearedCluster into the smeared Hcals collection and updates the history
    @param[in] smearedCluster cluster to be stored
@@ -127,12 +132,14 @@ private:
    @return the stored Cluster (nb this is not the same as the original smearedCluster which has been moved)
    */
   const Cluster& storeSmearedHcalCluster(Cluster&& smearedCluster, Identifier parentId);
+
   /**
    Makes a track based on particle properties and stored into tracks collection, updating history
    @param[in] ptc particle from which to construct track
    @return the new stored Track
    */
   const Track& makeAndStoreTrack(const Particle& ptc);
+
   /**
    Smears a track by randomisation of the energy of a track
    @param[in] track the unsmeared track
@@ -146,14 +153,20 @@ private:
    @param[in] accept. If set to true the track is always accepted
    @return true if track is detected, false otherwise
    */
-  bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;  ///< check if track is detected
-                                                                                  /**
-                                                                                   Determines if an electron smearedtrack is detected
-                                                                                   @param[in] smearedtrack the smeared track
-                                                                                   @param[in] accept. If set to true the track is always accepted
-                                                                                   @return true if track is detected, false otherwise
+  bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;
+
+  /**
+                                                                                   Determines if an electron
+     smearedtrack is detected
+                                                                                   @param[in] smearedtrack the smeared
+     track
+                                                                                   @param[in] accept. If set to true the
+     track is always accepted
+                                                                                   @return true if track is detected,
+     false otherwise
                                                                                    */
   bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept = false) const;
+
   /**
    Determines if a muon smearedtrack is detected
    @param[in] smearedtrack the smeared track
@@ -161,22 +174,19 @@ private:
    @return true if track is detected, false otherwise
    */
   bool acceptMuonSmearedTrack(const Track& smearedTrack, bool accept = false) const;
+
   /**
    Stores a smearedtrack and updates the history
    @param[in] smearedtrack the smeared track which will be moved intot he smeared track store
    @param[in] parentid used to update history
    */
   void storeSmearedTrack(Track&& smearedtrack, Identifier parentid);
+
   /** Return shared ptr to the appropriate propagator (straightline or helix)
    @param[in] charge charge of particle
    */
   std::shared_ptr<const Propagator> propagator(double charge) const;
-  /**
-   Update the History
-   @param[in] newid the new object being added to history
-   @param[in] parentif the id of the parent (if 0 there is no parent)
-  */
-  void addNode(const Identifier newid, const Identifier parentid = 0);
+
   /**
    Returns the detector element associated with a particular layer
    @param[in] layer an enumeration describing which layer eg Layer::kEcal

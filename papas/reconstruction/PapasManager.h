@@ -96,14 +96,13 @@ protected:
   Clusters& createClusters();  // Create an empty concrete collection of clusters ready for filling by an algorithm
   Tracks& createTracks();      // Create an empty concrete collection of tracks ready for filling by an algorithm
   Blocks& createBlocks();      // Create an empty concrete collection of blocks ready for filling by an algorithm
-  Nodes& createHistory();      // Create an empty concrete collection of history nodes ready for filling by an algorithm
   const Detector& m_detector;
 
   std::list<Clusters> m_ownedClustersList;    //<Holds all the clusters collections created during an event
   std::list<Tracks> m_ownedTracksList;        //<Holds all the tracks collections created during an event
   std::list<Blocks> m_ownedBlocksList;        //<Holds all the blocks collections created during an event
   std::list<Particles> m_ownedParticlesList;  //<Holds all the particles collections created during an event
-  std::list<Nodes> m_ownedHistoryList;        //<Holds all the histories created during an event
+  Nodes m_history; //Holds all the history information
   Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
 
   // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids

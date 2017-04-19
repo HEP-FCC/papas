@@ -9,7 +9,7 @@
 
 namespace papas {
 
-PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_event() {}
+PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_history(), m_event(m_history) {}
 
 void PapasManager::simulate(Particles& particles) {
   // create empty collections that will be passed to simulator to fill
@@ -24,12 +24,10 @@ void PapasManager::simulate(Particles& particles) {
   auto& smearedHcalClusters = createClusters();
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
-  auto& history = createHistory();
-  m_event.setHistory(history);
-
+     
   // run the simulator which will fill the above objects
   Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters, smearedHcalClusters, tracks,
-                      smearedTracks, particles, history);
+                      smearedTracks, particles, m_history);
 
   // store the addresses of the filled collections to the Event
   m_event.addCollectionToFolder(ecalClusters);
@@ -41,51 +39,42 @@ void PapasManager::simulate(Particles& particles) {
   // NB can only add the particle collection once the particles are completed (eg paths added in)
   // this is because they are stored here as const objects
   m_event.addCollectionToFolder(particles);
-  m_event.extendHistory(history);
 }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   EventRuler ruler(m_event);
   // create collections ready to receive outputs
   auto& mergedClusters = createClusters();
-  auto& history = createHistory();
-  papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, history);
+  papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, m_history);
   // add outputs into event
   m_event.addCollectionToFolder(mergedClusters);
-  m_event.extendHistory(history);
 }
 
 void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype, char trackSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& blocks = createBlocks();
-  auto& history = createHistory();
-  buildPFBlocks(m_event, ecalSubtype, hcalSubtype, trackSubtype, blocks, history);
+  buildPFBlocks(m_event, ecalSubtype, hcalSubtype, trackSubtype, blocks, m_history);
   // store a pointer to the ouputs into the event
   m_event.addCollectionToFolder(blocks);
-  m_event.extendHistory(history);
 }
 
 void PapasManager::simplifyBlocks(char blockSubtype) {
   // create empty collections to hold the ouputs, the ouput will be added by the algorithm
   auto& simplifiedblocks = createBlocks();
-  auto& history = createHistory();
-  simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, history);
+  simplifyPFBlocks(m_event, blockSubtype, simplifiedblocks, m_history);
   // store a pointer to the outputs into the event
   m_event.addCollectionToFolder(simplifiedblocks);
-  m_event.extendHistory(history);
 }
 
 void PapasManager::reconstruct(char blockSubtype) {
-  auto& history = createHistory();
   auto& recParticles = createParticles();
-  PFReconstructor pfReconstructor(m_event, blockSubtype, m_detector, recParticles, history);
+  PFReconstructor pfReconstructor(m_event, blockSubtype, m_detector, recParticles, m_history);
   m_event.addCollectionToFolder(recParticles);
-  m_event.extendHistory(history);
 }
 
 void PapasManager::clear() {
   m_event.clear();
-  m_ownedHistoryList.clear();
+  m_history.clear();
   m_ownedClustersList.clear();
   m_ownedTracksList.clear();
   m_ownedBlocksList.clear();
@@ -115,8 +104,4 @@ Particles& PapasManager::createParticles() {
   return m_ownedParticlesList.back();
 }
 
-Nodes& PapasManager::createHistory() {
-  m_ownedHistoryList.emplace_back(Nodes());
-  return m_ownedHistoryList.back();
-}
 }  // end namespace papas

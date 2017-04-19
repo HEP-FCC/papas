@@ -8,7 +8,7 @@ HistoryHelper::HistoryHelper(const Event& event) : m_event(event) {}
 
 Ids HistoryHelper::linkedIds(Identifier id, DAG::enumVisitType direction) const {
   const auto& history = m_event.history();
-  const auto& startnode = history->at(id);
+  const auto& startnode = history.at(id);
   DAG::BFSRecurseVisitor<PFNode> bfs;
   const auto& nodes = bfs.traverseNodes(startnode, direction);
   Ids ids;

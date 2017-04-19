@@ -212,7 +212,7 @@ Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction,
     }
     Cluster cluster(energy, pos, csize, m_ecalClusters.size(), IdCoder::kEcalCluster, subtype);
     Identifier id = cluster.id();
-    addNode(id, ptc.id());
+    makeHistoryLink( ptc.id(),id, m_history);
     PDebug::write("Made {}", cluster);
     m_ecalClusters.emplace(id, std::move(cluster));
     return m_ecalClusters[id];
@@ -235,7 +235,7 @@ Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction,
     }
     Cluster cluster(energy, pos, csize, m_hcalClusters.size(), IdCoder::kHcalCluster, subtype);
     Identifier id = cluster.id();
-    addNode(id, ptc.id());
+    makeHistoryLink( ptc.id(),id, m_history);
     PDebug::write("Made {}", cluster);
     m_hcalClusters.emplace(id, std::move(cluster));
     return m_hcalClusters[id];
@@ -283,14 +283,14 @@ bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer
 
 const Cluster& Simulator::storeSmearedEcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
-  addNode(id, parentId);
+  makeHistoryLink( parentId,id, m_history);
   m_smearedEcalClusters.emplace(id, std::move(smearedCluster));
   return m_smearedEcalClusters[id];
 }
 
 const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Identifier parentId) {
   auto id = smearedCluster.id();
-  addNode(id, parentId);
+  makeHistoryLink(parentId,id, m_history);
   m_smearedHcalClusters.emplace(id, std::move(smearedCluster));
   return m_smearedHcalClusters[id];
 }
@@ -300,15 +300,14 @@ const Track& Simulator::makeAndStoreTrack(const Particle& ptc) {
   Identifier id = track.id();
   PDebug::write("Made {}", track);
   m_tracks.emplace(id, std::move(track));
-  addNode(id, ptc.id());
+  makeHistoryLink( ptc.id(),id, m_history);
   return m_tracks.at(id);
 }
 
-void Simulator::storeSmearedTrack(Track&& track, Identifier parentid) {
+void Simulator::storeSmearedTrack(Track&& track, Identifier parentId) {
   Identifier id = track.id();
   m_smearedTracks.emplace(id, std::move(track));
-  addNode(id, parentid);
-}
+  makeHistoryLink( parentId,id, m_history);}
 
 Track Simulator::smearTrack(const Track& track, double resolution) const {
   double scale_factor = rootrandom::Random::gauss(1, resolution);
@@ -344,17 +343,6 @@ bool Simulator::acceptMuonSmearedTrack(const Track& smearedTrack, bool accept) c
   } else {
     PDebug::write("Rejected Smeared{}", smearedTrack);
     return false;
-  }
-}
-
-void Simulator::addNode(Identifier newid, const Identifier parentid) {
-  // add the new node into the set of all nodes
-  PFNode node{newid};
-  m_history.emplace(newid, std::move(node));
-  if (parentid) {
-    PFNode& parent = m_history[parentid];
-    PFNode& child = m_history[newid];
-    parent.addChild(child);
   }
 }
 

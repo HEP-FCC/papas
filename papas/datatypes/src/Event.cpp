@@ -5,7 +5,7 @@ namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
 
-Event::Event(std::shared_ptr<Nodes> hist)
+Event::Event(Nodes& hist)
     : m_ecalClustersFolder(),
       m_hcalClustersFolder(),
       m_tracksFolder(),
@@ -154,7 +154,7 @@ void Event::extendHistory(const Nodes& history) {
   // the following adds this history into the papasevent history
   for (const auto& node : history) {
     for (const auto& c : node.second.children()) {
-      makeHistoryLink(node.first, c->value(), *m_history);
+      makeHistoryLink(node.first, c->value(), m_history);
     }
   }
 }
@@ -165,6 +165,6 @@ void Event::clear() {
   m_tracksFolder.clear();
   m_particlesFolder.clear();
   m_blocksFolder.clear();
-  m_history = 0;
+  m_history.clear();
 }
 }
