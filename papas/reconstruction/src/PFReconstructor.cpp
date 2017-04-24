@@ -16,62 +16,87 @@
 #include "papas/utility/PDebug.h"
 
 namespace papas {
-
-PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
-                                 Nodes& history)
-    : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
-  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
-  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
-  auto blockids = m_event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
-  for (auto bid : blockids) {
-    reconstructBlock(m_event.block(bid));
+  
+  PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
+                                   Nodes& history)
+  : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
+    m_propHelix = std::make_shared<HelixPropagator>(detector.field());
+    m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
+    auto blockids = m_event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
+    for (auto bid : blockids) {
+      reconstructBlock(m_event.block(bid));
+    }
+    if (m_unused.size() > 0) {
+      PDebug::write("unused elements ");
+      for (auto u : m_unused)
+        PDebug::write("{},", u);
+      // TODO warning message
+    }
   }
-  PDebug::write ("finished reconstruction");
-  if (m_unused.size() > 0) {
-    PDebug::write("unused elements ");
-    for (auto u : m_unused)
-      PDebug::write("{},", u);
-    // TODO warning message
-  }
-  PDebug::write ("finished reconstruction");
-}
-
-void PFReconstructor::reconstructBlock(const PFBlock& block) {
-  // see class description for summary of reconstruction approach
-  PDebug::write("Processing {}", block);
-  Ids ids = block.elementIds();
-  for (auto id : ids) {
-    m_locked[id] = false;
-  }
-  reconstructMuons(block);
-  reconstructElectrons(block);
-  // keeping only the elements that have not been used so far
-  Ids uids;
-  for (auto id : ids) {
-    if (!m_locked[id]) uids.insert(id);
-  }
-  if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
-    Identifier id = *uids.begin();
-    auto parentIds = Ids{block.id(), id};
-    if (IdCoder::isEcal(id)) {
-      reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
-    } else if (IdCoder::isHcal(id)) {
-      reconstructCluster(m_event.cluster(id), papas::Layer::kHcal, parentIds);
-    } else if (IdCoder::isTrack(id)) {
-      reconstructTrack(m_event.track(id), 211, parentIds);
-    } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
-              // TODO
-  PDebug::write ("finished block",IdCoder::pretty(block.id()));
-}
-
-void PFReconstructor::reconstructMuons(const PFBlock& block) {
-  /// Reconstruct muons in block.
-  Ids ids = block.elementIds();
-  for (auto id : ids) {
-    if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 13)) {
-
+  
+  void PFReconstructor::reconstructBlock(const PFBlock& block) {
+    // see class description for summary of reconstruction approach
+    PDebug::write("Processing {}", block);
+    Ids ids = block.elementIds();
+    for (auto id : ids) {
+      m_locked[id] = false;
+    }
+    reconstructMuons(block);
+    reconstructElectrons(block);
+    // keeping only the elements that have not been used so far
+    Ids uids;
+    for (auto id : ids) {
+      if (!m_locked[id]) uids.insert(id);
+    }
+    if (uids.size() == 1) {  //#TODO WARNING!!! LOTS OF MISSING CASES
+      Identifier id = *uids.begin();
       auto parentIds = Ids{block.id(), id};
-      reconstructTrack(m_event.track(id), 13, parentIds);
+      if (IdCoder::isEcal(id)) {
+        reconstructCluster(m_event.cluster(id), papas::Layer::kEcal, parentIds);
+      } else if (IdCoder::isHcal(id)) {
+        reconstructCluster(m_event.cluster(id), papas::Layer::kHcal, parentIds);
+      } else if (IdCoder::isTrack(id)) {
+        reconstructTrack(m_event.track(id), 211, parentIds);
+      } else {  // ask Colin about energy balance - what happened to the associated clusters that one would expect?
+                // TODO
+      }
+    } else {
+      for (auto id : uids) {
+        if (IdCoder::isHcal(id)) {
+          reconstructHcal(block, id);
+        }
+      }
+      for (auto id : ids) {
+        if (IdCoder::isTrack(id) && !m_locked[id]) {
+          /* unused tracks, so not linked to HCAL
+           # reconstructing charged hadrons*/
+          auto parentIds = Ids{block.id(), id};
+          reconstructTrack(m_event.track(id), 211, parentIds);
+          for (auto idlink : block.linkedIds(id, Edge::EdgeType::kEcalTrack)) {
+            // TODO ask colin what happened to possible photons here:
+            // TODO add in extra photons but decide where they should go?
+            m_locked[idlink] = true;
+          }
+        }
+      }
+    }
+    for (auto& id : ids) {
+      if (!m_locked[id]) {
+        m_unused.insert(id);
+      }
+    }
+    PDebug::write ("finished block",IdCoder::pretty(block.id()));
+  }
+  
+  void PFReconstructor::reconstructMuons(const PFBlock& block) {
+    /// Reconstruct muons in block.
+    Ids ids = block.elementIds();
+    for (auto id : ids) {
+      if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 13)) {
+        
+        auto parentIds = Ids{block.id(), id};
+        reconstructTrack(m_event.track(id), 13, parentIds);
+      }
     }
   }
   

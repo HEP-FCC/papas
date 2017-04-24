@@ -40,7 +40,7 @@ public:
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-
+  ~PFBlock();
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
   The list is sorted in order of increasing egde distances

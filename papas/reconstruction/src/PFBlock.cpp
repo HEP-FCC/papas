@@ -16,6 +16,12 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
   else
     return IdCoder::type(id1) < IdCoder::type(id2);
 }
+  
+  PFBlock::~PFBlock(){
+    PDebug::write("Delete {}", *this);
+    m_elementIds.clear();
+    m_edges.clear();
+  };
 
 PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
