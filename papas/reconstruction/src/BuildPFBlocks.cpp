@@ -41,10 +41,10 @@ void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::Su
   auto& ids = trackids;
   ids.insert(hcalids.begin(), hcalids.end());
   ids.insert(ecalids.begin(), ecalids.end());
-  buildPFBlocks(ids, std::move(edges), 'r', blocks, history);
+  buildPFBlocks(ids, edges, 'r', blocks, history);
 }
 
-void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, Nodes& history) {
+void buildPFBlocks(const Ids& ids, const Edges& edges, char subtype, Blocks& blocks, Nodes& history) {
   std::list<Ids> subGraphs = buildSubGraphs(ids, edges);
   for (const auto& elementIds : subGraphs) {
     PFBlock block(elementIds, edges, blocks.size(), subtype);  // make the block
@@ -54,6 +54,7 @@ void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, 
     makeHistoryLinks(block.elementIds(), {id}, history);
     blocks.emplace(id, std::move(block));
   }
+  std::cout<< "Edges;" << edges.size() <<std::endl;
 }
 
 }  // end namespace papas
