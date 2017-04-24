@@ -74,8 +74,8 @@ FILE(GLOB files8 "${CMAKE_SOURCE_DIR}/spdlog/*.h")
 INSTALL(FILES ${files8} DESTINATION include/papas/spdlog/)
 FILE(GLOB files9 "${CMAKE_SOURCE_DIR}/spdlog/details/*.h")
 INSTALL(FILES ${files9} DESTINATION include/papas/spdlog/details/)
-FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sink/*.h")
-INSTALL(FILES ${files10} DESTINATION include/papas/spdlog/sink/)
+FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sinks/*.h")
+INSTALL(FILES ${files10} DESTINATION include/papas/spdlog/sinks/)
 
 
 project(papaslib)
@@ -85,22 +85,22 @@ ${CMAKE_SOURCE_DIR}
 )
 
 # remove ### to get back root dicts
-###REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
+REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
 
 message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
-###add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
-###add_dependencies(papasDict papas-dictgen )
-###target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
+add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
+add_dependencies(papasDict papas-dictgen )
+target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
 add_library(papas SHARED ${sources} )
 target_link_libraries(  papas ${ROOT_LIBRARIES} )
 target_compile_definitions(papas PRIVATE WITHSORT=1)
 install(TARGETS papas DESTINATION lib)
-###install(TARGETS papasDict DESTINATION lib)
+install(TARGETS papasDict DESTINATION lib)
 
-# Install the dictionary
-###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
-###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
+# Install the dictionar
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
 
 #install(DIRECTORY sources DESTINATION include)
 

@@ -233,7 +233,7 @@ public:
    *   @param[in]  typeAndSubtype The type and subtype of a collection eg "em" for ecal merged
    */
   Ids collectionIds(const std::string& typeAndSubtype) const;
-
+  std::string info() const;
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that

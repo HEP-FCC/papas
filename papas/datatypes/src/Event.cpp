@@ -1,6 +1,11 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Cluster.h"
 
+#include <iomanip> //lxplus needs this
+#include <iostream>
+
+#include "spdlog/details/format.h"
+
 namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
@@ -167,4 +172,33 @@ void Event::clear() {
   m_blocksFolder.clear();
   m_history.clear();
 }
+  
+  std::string Event::info() const {
+    fmt::MemoryWriter out;
+    out.write("Papas::Event\n");
+    out.write("history = {}", m_history.size());
+    out.write("\necals =");
+    for (auto c : m_ecalClustersFolder) {
+      out.write(" {}{} +", c.first, c.second->size());
+    }
+    out.write("\nhcals =");
+    for (auto c : m_hcalClustersFolder) {
+      out.write(" {}{} +", c.first, c.second->size());
+    }
+    out.write("\ntracks =");
+    for (auto c : m_tracksFolder) {
+      out.write(" {}{} +", c.first, c.second->size());
+    }
+    out.write("\nblocks =");
+    for (auto c : m_blocksFolder) {
+      out.write(" {}{} +", c.first, c.second->size());
+    }
+    out.write("\nparticles =");
+    for (auto c : m_particlesFolder) {
+      out.write(" {}{} +", c.first, c.second->size());
+    }
+    out.write("\n");
+    return out.str();
+  }
+
 }
