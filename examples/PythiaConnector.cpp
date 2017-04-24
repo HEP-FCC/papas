@@ -92,25 +92,30 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
-  papasManager.clear();
-  papasManager.setEventNo(eventNo);
-  const fcc::MCParticleCollection* ptcs(nullptr);
+  // papasManager.clear();
+   papasManager.setEventNo(eventNo);
+  // const fcc::MCParticleCollection* ptcs(nullptr);
+  const fcc::MCParticleCollection* ptcs;
   if (m_store.get("GenParticle", ptcs)) {
+
     try {
+      papasManager.clear();
       papas::Particles& genParticles = papasManager.createParticles();
+
       makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
       papasManager.simulate(genParticles);
       papasManager.mergeClusters("es");
       papasManager.mergeClusters("hs");
       papasManager.buildBlocks('m', 'm', 's');
+      // papasManager.buildBlocks('s', 's', 's');
       papasManager.simplifyBlocks('r');
       papasManager.reconstruct('s');
+
     } catch (std::string message) {
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
-    m_store.clear();
   }
-
+  m_store.clear();
   m_reader.endOfEvent();
 }
 

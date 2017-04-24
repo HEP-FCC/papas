@@ -26,12 +26,14 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   for (auto bid : blockids) {
     reconstructBlock(m_event.block(bid));
   }
+  PDebug::write ("finished reconstruction");
   if (m_unused.size() > 0) {
     PDebug::write("unused elements ");
     for (auto u : m_unused)
       PDebug::write("{},", u);
     // TODO warning message
   }
+  PDebug::write ("finished reconstruction");
 }
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
@@ -85,6 +87,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
       m_unused.insert(id);
     }
   }
+  PDebug::write ("finished block",IdCoder::pretty(block.id()));
 }
 
 void PFReconstructor::reconstructMuons(const PFBlock& block) {

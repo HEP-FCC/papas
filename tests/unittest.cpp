@@ -448,7 +448,7 @@ TEST_CASE("BlockSplitter") {
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
-  Event event;
+  Event event(emptyNodes);
   event.addCollectionToFolder(blocks);
   Blocks simplifiedBlocks;
   simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);
@@ -464,7 +464,7 @@ TEST_CASE("Merge") {
   eclusters.emplace(cluster2.id(), cluster2);
   Clusters mergedClusters;
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(eclusters);
 
   papas::EventRuler ruler(event);
@@ -491,7 +491,7 @@ TEST_CASE("merge_pair") {
   hclusters.emplace(cluster2.id(), cluster2);
   Clusters mergedClusters;
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
@@ -511,7 +511,7 @@ TEST_CASE("merge_pair_away") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
@@ -533,15 +533,15 @@ TEST_CASE("merge_different_layers") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   REQUIRE_THROWS(event.addCollectionToFolder(hclusters));
 
   return;
 }
 
 TEST_CASE("test_papasevent") {
-
-  Event event;
+  Nodes nodes;
+  Event event(nodes);
   Clusters ecals;
   Tracks tracks;
   Identifier lastid = 0;
@@ -573,8 +573,9 @@ TEST_CASE("test_papasevent") {
 }
 
 TEST_CASE("test_history") {
-  Event event;
+  
   Nodes history;
+  Event event(history);
   Clusters ecals;
   Particles particles;
   Identifier lastid = 0;
@@ -620,7 +621,7 @@ TEST_CASE("merge_inside") {
 
   Tracks tracks;
   Nodes nodes;
-  Event testevent;
+  Event testevent(nodes);
   Clusters mergedClusters;
   testevent.addCollectionToFolder(hclusters);
   papas::EventRuler ruler(testevent);

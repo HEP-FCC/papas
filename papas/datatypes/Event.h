@@ -233,6 +233,8 @@ public:
    *   @param[in]  typeAndSubtype The type and subtype of a collection eg "em" for ecal merged
    */
   Ids collectionIds(const std::string& typeAndSubtype) const;
+  
+  std::string info() const;                                      ///< text descriptor 
 
 private:
   /**

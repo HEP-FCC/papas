@@ -39,6 +39,7 @@ void PapasManager::simulate(Particles& particles) {
   // NB can only add the particle collection once the particles are completed (eg paths added in)
   // this is because they are stored here as const objects
   m_event.addCollectionToFolder(particles);
+  std::cout << m_event.info() <<std::endl;
 }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
@@ -48,6 +49,7 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, m_history);
   // add outputs into event
   m_event.addCollectionToFolder(mergedClusters);
+  std::cout << m_event.info() <<std::endl;
 }
 
 void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype, char trackSubtype) {
