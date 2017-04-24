@@ -18,7 +18,7 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 }
   
   PFBlock::~PFBlock(){
-    PDebug::write("Delete {}", *this);
+    //PDebug::write("Delete {}", *this);
     m_elementIds.clear();
     m_edges.clear();
   };
