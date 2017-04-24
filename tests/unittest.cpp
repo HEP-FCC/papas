@@ -448,7 +448,12 @@ TEST_CASE("BlockSplitter") {
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
+<<<<<<< HEAD
   Event event(emptyNodes);
+=======
+  Nodes hist;
+  Event event(hist);
+>>>>>>> lxplus
   event.addCollectionToFolder(blocks);
   Blocks simplifiedBlocks;
   simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);

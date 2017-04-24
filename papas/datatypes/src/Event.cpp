@@ -6,6 +6,11 @@
 
 #include "spdlog/details/format.h"
 
+#include <iomanip> //lxplus needs this
+#include <iostream>
+
+#include "spdlog/details/format.h"
+
 namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
@@ -200,4 +205,5 @@ std::string Event::info() const {
   out.write("\n");
   return out.str();
 }
+
 }
