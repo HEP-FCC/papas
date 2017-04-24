@@ -38,10 +38,10 @@ void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simpli
       if (toUnlink.find(edge.first) != toUnlink.end()) {
         e.setLinked(false);
       }
-      modifiedEdges.emplace(e.key(), std::move(e));
+      modifiedEdges.emplace(e.key(), e);
     }
     // create new blocks and add into simplifiedBlocks
-    buildPFBlocks(block.elementIds(), std::move(modifiedEdges), 's', simplifiedBlocks, history);
+    buildPFBlocks(block.elementIds(), modifiedEdges, 's', simplifiedBlocks, history);
     PDebug::write("Checking {}", block);
   }
 }
