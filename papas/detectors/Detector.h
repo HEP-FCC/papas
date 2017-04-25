@@ -52,8 +52,8 @@ protected:
   void setupElements();
   // shared pointers allow user to have their own derived ECAL and HCAL calorimeter class
   // that has a fixed interface defined by Calorimeter
-  std::shared_ptr<const class Calorimeter> m_ecal;
-  std::shared_ptr<const class Calorimeter> m_hcal;
+  std::shared_ptr<const Calorimeter> m_ecal;
+  std::shared_ptr<const Calorimeter> m_hcal;
   std::shared_ptr<const Tracker> m_tracker;
   std::shared_ptr<const Field> m_field;
 

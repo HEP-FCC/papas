@@ -69,7 +69,8 @@ enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };
 template <typename N>  // N is the templated Node
 class Visitor {
 public:
-  Visitor();                              ///<Constructor
+  Visitor();///<Constructor
+  virtual ~Visitor() = default;
   virtual void visit(const N* node) = 0;  ///< Key function for visitor pattern
 
   /// returns vector of all child nodes (including the start node and all children of children)
@@ -120,6 +121,7 @@ template <typename N>
 class BFSVisitor : public Visitor<N> {
 public:
   BFSVisitor();
+  virtual ~BFSVisitor() = default;
   void visit(const N* node) override;  ///< key to visitor pattern
   const Nodevector<N>& traverseChildren(const N& node, int depth = -1) override;
   const Nodevector<N>& traverseParents(const N& node, int depth = -1) override;

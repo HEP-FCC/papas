@@ -16,6 +16,8 @@ public:
   /** Constructor
    */
   Propagator(std::shared_ptr<const Field> field) : m_field(field){};
+  
+  virtual ~Propagator() = default;
 
   /**
    Propagate particle to the selected cylinder and store the point where the particle crossed the cylinder

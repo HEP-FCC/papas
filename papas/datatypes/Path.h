@@ -26,6 +26,8 @@ public:
   Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
   /** Constructor */
   Path();
+  
+  virtual ~Path()= default;
   /** Add a new point to path
    * @param layer for the new point which is used to index unordered map of points
    * @param vec new point to be added

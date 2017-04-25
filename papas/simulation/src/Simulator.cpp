@@ -29,8 +29,8 @@ Simulator::Simulator(const Event& papasevent, const Detector& detector, Clusters
       m_history(history)
 
 {
-  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
-  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
+  m_propHelix = std::make_shared<HelixPropagator>(HelixPropagator(detector.field()));
+  m_propStraight = std::make_shared<StraightLinePropagator>(StraightLinePropagator(detector.field()));
   // make sure we can process the particles in order if needed (highest energy first)
   Ids ids;
   for (auto& p : particles)

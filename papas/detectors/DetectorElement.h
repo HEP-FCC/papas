@@ -25,6 +25,7 @@ public:
    * @param[in] const Material& material : material
    */
   DetectorElement(Layer layer, const VolumeCylinder& volume, const Material& material);
+  virtual ~DetectorElement() = default;
   const VolumeCylinder& volumeCylinder() const { return m_volume; }  ///< return the volume cyclinder
   Layer layer() const { return m_layer; };                           ///< returns kEcal, kHcal etc
   const Material& material() const { return m_material; }
