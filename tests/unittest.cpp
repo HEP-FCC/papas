@@ -4,10 +4,10 @@
 
 // C++
 #include <iostream>
+#include <memory>
 #include <numeric>
 #include <string>
 #include <unordered_map>
-#include <memory>
 #include <vector>
 
 // ROOT
@@ -15,24 +15,24 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
-#include "papas/display/Display.h"
-#include "papas/display/GTrajectory.h"
-#include "papas/display/ViewPane.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/detectors/CMS.h"
 #include "papas/detectors/CMSField.h"
 #include "papas/detectors/Calorimeter.h"
-#include "papas/simulation/StraightLinePropagator.h"
-#include "papas/simulation/HelixPropagator.h"
+#include "papas/display/Display.h"
+#include "papas/display/GTrajectory.h"
+#include "papas/display/ViewPane.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/reconstruction/SimplifyPFBlocks.h"
+#include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/Simulator.h"
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/TRandom.h"
 
 using namespace papas;
@@ -573,7 +573,7 @@ TEST_CASE("test_papasevent") {
 }
 
 TEST_CASE("test_history") {
-  
+
   Nodes history;
   Event event(history);
   Clusters ecals;

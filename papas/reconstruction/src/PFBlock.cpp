@@ -16,12 +16,12 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
   else
     return IdCoder::type(id1) < IdCoder::type(id2);
 }
-  
-  PFBlock::~PFBlock(){
-    //PDebug::write("Delete {}", *this);
-    m_elementIds.clear();
-    m_edges.clear();
-  };
+
+PFBlock::~PFBlock() {
+  // PDebug::write("Delete {}", *this);
+  m_elementIds.clear();
+  m_edges.clear();
+};
 
 PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
@@ -32,21 +32,20 @@ PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index,
     for (auto id2 : m_elementIds) {
       if (id1 >= id2) continue;
       // move the edge from one unordered map to the other
-      auto e = edges.find(Edge::makeKey(id1, id2)); //now makes a copy
+      auto e = edges.find(Edge::makeKey(id1, id2));  // now makes a copy
       if (e != edges.end()) {
         m_edges.emplace(e->second.key(), std::move(e->second));
-        //edges.erase(e);
+        // edges.erase(e);
       }
     }
   }
 }
-  
-  /*PFBlock:: ~PFBlock(){
-    PDebug::write("Delete {}", *this);
-    m_elementIds.clear();
-    m_edges.clear();
-  };*/
-  
+
+/*PFBlock:: ~PFBlock(){
+  PDebug::write("Delete {}", *this);
+  m_elementIds.clear();
+  m_edges.clear();
+};*/
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block

@@ -51,7 +51,8 @@ public:
 
   ///< Takes pythia particles and creates Papas type particles adding them into
   /// an empty Particles collection
-  void makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs, papas::Particles& particles);
+  void makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs, papas::Particles& particles,
+                                                const papas::Detector& detector);
   papas::Clusters ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters, float size,
                                          papas::IdCoder::ItemType itemtype, char subtype) const;
   void AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters);

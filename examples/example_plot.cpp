@@ -20,9 +20,9 @@
 using namespace papas;
 
 int main(int argc, char* argv[]) {
-  
+
   rootrandom::Random::seed(0xdeadbeef);
-  
+
   if (argc < 2) {
     std::cerr << "Usage: ./example_plot filename [logname]" << std::endl;
     return 1;

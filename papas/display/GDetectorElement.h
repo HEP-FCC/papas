@@ -12,7 +12,7 @@
 
 namespace papas {
 
-  //Forward Declaration
+// Forward Declaration
 class DetectorElement;
 
 /// Class to draw the HCAL and ECAL detectors

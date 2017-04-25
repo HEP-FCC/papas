@@ -43,14 +43,14 @@ public:
    @param[in] (papas) particles to which simulation information will be added
    @param[in] history structure into which new history can be added, may be empty at start
   */
-  Simulator(const Event& event, const Detector& detector, Clusters& ecalClusters, Clusters& hcalClusters,
-            Clusters& smearedEcalClusters, Clusters& smearedHcalClusters, Tracks& tracks, Tracks& smearedtracks,
-            Particles& particles, Nodes& history);
+  Simulator(const Event& event, char particleSubtype, const Detector& detector, Clusters& ecalClusters,
+            Clusters& hcalClusters, Clusters& smearedEcalClusters, Clusters& smearedHcalClusters, Tracks& tracks,
+            Tracks& smearedtracks, Nodes& history);
 
   /** Simulate a particle, to produce tracks, smearedtracks, clusters, smearedclusters and path info
    @param[in] ptc the particle to be simulated
   */
-  void simulateParticle(Particle& ptc);
+  void simulateParticle(const Particle& ptc);
 
   /* Find the cluster with the specified identifier
    @param[in] clusterId the identifier of the cluster
@@ -92,11 +92,11 @@ public:
                            const TVector3& vertex);  // TODO move elsewhere
 
 private:
-  void simulatePhoton(Particle& ptc);    ///< Simulates cluster from a Photon
-  void simulateHadron(Particle& ptc);    ///< Simulates clusters and track from a Hadron
-  void simulateNeutrino(Particle& ptc);  ///< Simulates a neutrino
-  void simulateElectron(Particle& ptc);  ///< Simulates an electron (no smearing)
-  void simulateMuon(Particle& ptc);      ///< Simulates a muon(no smearing)
+  void simulatePhoton(const Particle& ptc);    ///< Simulates cluster from a Photon
+  void simulateHadron(const Particle& ptc);    ///< Simulates clusters and track from a Hadron
+  void simulateNeutrino(const Particle& ptc);  ///< Simulates a neutrino
+  void simulateElectron(const Particle& ptc);  ///< Simulates an electron (no smearing)
+  void simulateMuon(const Particle& ptc);      ///< Simulates a muon(no smearing)
 
   /**
    Determines if a smeared Cluster is detectable
@@ -203,7 +203,6 @@ private:
   Clusters& m_smearedHcalClusters;  ///< smeared hcal clusters
   Tracks& m_tracks;                 ///< tracks
   Tracks& m_smearedTracks;          ///< smeared tracks
-  Particles& m_particles;           ///< all particles
   Nodes& m_history;                 ///< Records relationships of everything that is simulated
 
   std::shared_ptr<StraightLinePropagator> m_propStraight;  ///<used to determine the path of uncharged particles

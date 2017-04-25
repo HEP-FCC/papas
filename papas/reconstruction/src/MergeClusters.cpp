@@ -30,6 +30,16 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
   // a new merged cluster.
   auto subGraphs = buildSubGraphs(ids, edges);
 
+  /* Note on debate as to safety of storing const Cluster* in overlappingClusters.
+    In particular the question "Could the Clusters that are being pointed to move and thus the pointers become
+     invalid?"
+   (1) According to Stroustrup (4th edition chapter 31, page 886).  “When inserting and erasing elements in a vector,
+   elements may be moved. In contrast elements stored in a list or an associative container do not move when new
+   elements are inserted or other elements are erased.
+   (2) In addition, at the time when we store const Cluster* into the list, the unordered_map of Cluster in which the
+   Cluster lives  is already a const object.
+    So this should be OK.
+  */
   for (const auto& subgraph : subGraphs) {
     std::list<const Cluster*> overlappingClusters;
     for (const auto& cid : subgraph) {

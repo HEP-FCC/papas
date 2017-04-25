@@ -14,8 +14,8 @@
 #include <unordered_map>
 
 namespace papas {
-  
-  class Cluster;
+
+class Cluster;
 
 /**
  *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
@@ -233,7 +233,7 @@ public:
    *   @param[in]  typeAndSubtype The type and subtype of a collection eg "em" for ecal merged
    */
   Ids collectionIds(const std::string& typeAndSubtype) const;
-  std::string info() const;                                      ///< text descriptor
+  std::string info() const;  ///< text descriptor
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
@@ -255,12 +255,12 @@ private:
   ParticlesFolder m_particlesFolder;
   /// Unordered map of pointers to unordered map of (concrete) Blocks
   BlocksFolder m_blocksFolder;
-  Nodes& m_history;  ///< points to the merged history (built from the sucessive histories)
-  Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
-  Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is found
-  Particles m_emptyParticles;        ///<Used to return an empty collection when no collection is found
-  Blocks m_emptyBlocks;              ///<Used to return an empty collection when no collection is found
-  unsigned int m_eventNo;            ///<event number
+  Nodes& m_history;            ///< points to the merged history (built from the sucessive histories)
+  Clusters m_emptyClusters;    ///<Used to return an empty collection when no collection is found
+  Tracks m_emptyTracks;        ///<Used to return an empty collection when no collection is found
+  Particles m_emptyParticles;  ///<Used to return an empty collection when no collection is found
+  Blocks m_emptyBlocks;        ///<Used to return an empty collection when no collection is found
+  unsigned int m_eventNo;      ///<event number
 };
 
 template <class T>

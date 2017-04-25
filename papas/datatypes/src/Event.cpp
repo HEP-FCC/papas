@@ -1,12 +1,7 @@
-#include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Event.h"
+#include "papas/datatypes/Cluster.h"
 
 #include <iomanip>  //lxplus needs this
-#include <iostream>
-
-#include "spdlog/details/format.h"
-
-#include <iomanip> //lxplus needs this
 #include <iostream>
 
 #include "spdlog/details/format.h"
@@ -205,5 +200,4 @@ std::string Event::info() const {
   out.write("\n");
   return out.str();
 }
-
 }

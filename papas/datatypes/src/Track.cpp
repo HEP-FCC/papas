@@ -1,7 +1,7 @@
 #include "papas/datatypes/Track.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 #include "papas/datatypes/IdCoder.h"
 #include "papas/utility/StringFormatter.h"

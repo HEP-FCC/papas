@@ -11,8 +11,9 @@ namespace papas {
 
 PapasManager::PapasManager(const Detector& detector) : m_detector(detector), m_history(), m_event(m_history) {}
 
+void PapasManager::addParticles(const Particles& particles) { m_event.addCollectionToFolder(particles); }
 
-void PapasManager::simulate(Particles& particles) {
+void PapasManager::simulate(char particleSubtype) {
   // create empty collections that will be passed to simulator to fill
   // the new collection is to be a concrete class owned by the PapasManger
   // and stored in a list of collections.
@@ -25,10 +26,10 @@ void PapasManager::simulate(Particles& particles) {
   auto& smearedHcalClusters = createClusters();
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
-     
+
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters, smearedHcalClusters, tracks,
-                      smearedTracks, particles, m_history);
+  Simulator simulator(m_event, particleSubtype, m_detector, ecalClusters, hcalClusters, smearedEcalClusters,
+                      smearedHcalClusters, tracks, smearedTracks, m_history);
 
   // store the addresses of the filled collections to the Event
   m_event.addCollectionToFolder(ecalClusters);
@@ -37,10 +38,8 @@ void PapasManager::simulate(Particles& particles) {
   m_event.addCollectionToFolder(smearedHcalClusters);
   m_event.addCollectionToFolder(tracks);
   m_event.addCollectionToFolder(smearedTracks);
-  // NB can only add the particle collection once the particles are completed (eg paths added in)
-  // this is because they are stored here as const objects
-  m_event.addCollectionToFolder(particles);
-  std::cout << m_event.info() <<std::endl;
+
+  // PDebug::Write("Simulation created {}", m_event.info());
 }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
@@ -50,7 +49,6 @@ void PapasManager::mergeClusters(const std::string& typeAndSubtype) {
   papas::mergeClusters(m_event, typeAndSubtype, ruler, mergedClusters, m_history);
   // add outputs into event
   m_event.addCollectionToFolder(mergedClusters);
-  std::cout << m_event.info() <<std::endl;
 }
 
 void PapasManager::buildBlocks(const char ecalSubtype, char hcalSubtype, char trackSubtype) {

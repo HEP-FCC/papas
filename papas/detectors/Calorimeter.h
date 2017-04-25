@@ -18,7 +18,7 @@ public:
   using DetectorElement::DetectorElement;
 
   virtual ~Calorimeter() = default;
-  
+
   /** energy Resolution of ECAL
    @param[in] energy : energy
    @param[in] eta : angle of arrival

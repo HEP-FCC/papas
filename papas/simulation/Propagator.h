@@ -16,7 +16,7 @@ public:
   /** Constructor
    */
   Propagator(std::shared_ptr<const Field> field) : m_field(field){};
-  
+
   virtual ~Propagator() = default;
 
   /**
@@ -25,13 +25,18 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field (used only for charged particles, defaults to zero if not set)
    */
-  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const = 0;
+  virtual void propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const = 0;
 
   /**  Propagate particle all cylinders of the detector
     @param[in] ptc particle that is to be propagated
     @param[in] detector  Detector through which to propagate
     */
-  void propagate(Particle& ptc, const Detector& detector) const;
+  void propagate(const Particle& ptc, const Detector& detector) const;
+
+  /** Sets the particle path to a helix or a straightline
+   @param[in] ptc particle that is to be propagated
+   */
+  virtual void setPath(Particle& ptc) const = 0;
 
 protected:
   std::shared_ptr<const Field> m_field;

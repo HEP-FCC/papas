@@ -69,7 +69,7 @@ enum class enumVisitType { CHILDREN, PARENTS, UNDIRECTED };
 template <typename N>  // N is the templated Node
 class Visitor {
 public:
-  Visitor();///<Constructor
+  Visitor();  ///<Constructor
   virtual ~Visitor() = default;
   virtual void visit(const N* node) = 0;  ///< Key function for visitor pattern
 

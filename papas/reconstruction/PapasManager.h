@@ -50,8 +50,7 @@ public:
    * @param[in] detector : the detector to be used in the simulation and reconstruction
    */
   PapasManager(const Detector& detector);
-  
-  //~PapasManager();
+
   /**
    *   @brief  Runs Papas simulation on a collection of papas simulated particles creating
    *          their clusters and tracks and paths and also history information of the connections
@@ -70,7 +69,7 @@ public:
    *       particles-simulated "ps"
    *       history
    */
-  void simulate(Particles& particles);
+  void simulate(char particleSubtype = 's');
   /**
    *   @brief  Merges a set of clusters according to detector sensitivities.
    *   @param[in]  typeAndSubtype: identifies which clusters to merge, eg "hs" for hcals-smeared clusters
@@ -88,24 +87,25 @@ public:
   /**
    *   @brief  return Event object
    *   @return  Event     */
-  const Event& event() const { return m_event; }                          //< Access the event
+  const Event& event() const { return m_event; }                          ///< Access the event
+  void addParticles(const Particles& particles);                          ///< Add particles collection to the event
   const Detector& detector() const { return m_detector; }                 ///< Access the detector
   void setEventNo(unsigned int eventNo) { m_event.setEventNo(eventNo); }  ///< Set the event No
   void clear();                                                           ///<clears all owned objects and the Event
-  Particles& createParticles();  // Create an empty concrete collection of particles for filling by an algorithm
+  Particles& createParticles();  ///< Create an empty concrete collection of particles for filling by an algorithm
 
 protected:
-  Clusters& createClusters();  // Create an empty concrete collection of clusters ready for filling by an algorithm
-  Tracks& createTracks();      // Create an empty concrete collection of tracks ready for filling by an algorithm
-  Blocks& createBlocks();      // Create an empty concrete collection of blocks ready for filling by an algorithm
+  Clusters& createClusters();  ///< Create an empty concrete collection of clusters ready for filling by an algorithm
+  Tracks& createTracks();      ///<  Create an empty concrete collection of tracks ready for filling by an algorithm
+  Blocks& createBlocks();      ///<  Create an empty concrete collection of blocks ready for filling by an algorithm
   const Detector& m_detector;
 
-  std::list<Clusters> m_ownedClustersList;    //<Holds all the clusters collections created during an event
-  std::list<Tracks> m_ownedTracksList;        //<Holds all the tracks collections created during an event
-  std::list<Blocks> m_ownedBlocksList;        //<Holds all the blocks collections created during an event
-  std::list<Particles> m_ownedParticlesList;  //<Holds all the particles collections created during an event
-  Nodes m_history; //Holds all the history information
-  Event m_event;  // object that can be passed to algorithms to allow access to objects such as a track
+  std::list<Clusters> m_ownedClustersList;    ///<Holds all the clusters collections created during an event
+  std::list<Tracks> m_ownedTracksList;        ///<Holds all the tracks collections created during an event
+  std::list<Blocks> m_ownedBlocksList;        ///<Holds all the blocks collections created during an event
+  std::list<Particles> m_ownedParticlesList;  ///<Holds all the particles collections created during an event
+  Nodes m_history;                            ///< Holds all the history information
+  Event m_event;  ///< object that can be passed to algorithms to allow access to objects such as a track
 
   // bool operator()(Identifier i, Identifier j);//todo reinstate was used for sorting ids
 };

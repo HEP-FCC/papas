@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
       if (i == eventNo)
         start = std::chrono::steady_clock::now();
       else {
-         papasManager.clear();
+        papasManager.clear();
       }
       pythiaConnector.processEvent(i, papasManager);
     }

@@ -54,6 +54,7 @@ public:
                                                                   @param[in] layer position to search for the path location
                                                                   */
   void setPath(std::shared_ptr<Path> path) { m_path = path; }
+
   const std::shared_ptr<Path> path() const { return m_path; }  ///< Return pointer to path
   Identifier id() const { return m_id; }                       ///< unique Identifier for object
   bool isElectroMagnetic() const;                              ///< Is it electroMagnetic

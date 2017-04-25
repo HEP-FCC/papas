@@ -25,11 +25,11 @@ Simulator PapasManagerTester::setSimulator(Particles& particles) {
   auto& smearedHcalClusters = createClusters();
   auto& tracks = createTracks();
   auto& smearedTracks = createTracks();
-  //auto& history = createHistory();
+  // auto& history = createHistory();
 
   // run the simulator which will fill the above objects
-  Simulator simulator(m_event, m_detector, ecalClusters, hcalClusters, smearedEcalClusters, smearedHcalClusters, tracks,
-                      smearedTracks, particles, m_history);
+  Simulator simulator(m_event, 's', m_detector, ecalClusters, hcalClusters, smearedEcalClusters, smearedHcalClusters,
+                      tracks, smearedTracks, m_history);
   return simulator;
 }
 

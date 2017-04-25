@@ -12,9 +12,9 @@ Edge::Edge(Identifier endId1, Identifier endId2, bool isLinked, double distance)
       m_distance(distance),
       m_key(Edge::makeKey(endId1, endId2)) {}
 
-  Edge::~Edge() {
-    //PDebug::write("Delete {} ", *this);
-  };
+Edge::~Edge(){
+    // PDebug::write("Delete {} ", *this);
+};
 
 /** Static function. Makes a unique key that can be used to locate the required edge
  */

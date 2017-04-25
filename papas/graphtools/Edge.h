@@ -32,7 +32,6 @@ public:
   typedef uint64_t EdgeKey;
   /// Constructor
   Edge() : m_endIds({{0, 0}}), m_isLinked(false), m_distance(0){};  // extra braces to shut buggy xcode warning
-  
 
   /**
    *   @brief  Edge constructor - note that the ordering of idEnd1 and idEnd2 does not matter
