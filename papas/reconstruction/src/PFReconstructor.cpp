@@ -32,7 +32,7 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
       PDebug::write("{},", u);
     // TODO warning message
   }
-  PDebug::write("finished reconstruction");
+  PDebug::write("Finished reconstruction");
 }
 
 PFReconstructor::~PFReconstructor() {}
@@ -88,7 +88,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
       m_unused.insert(id);
     }
   }
-  PDebug::write("finished block", IdCoder::pretty(block.id()));
+  PDebug::write("Finished block", IdCoder::pretty(block.id()));
 }
 
 void PFReconstructor::reconstructMuons(const PFBlock& block) {
@@ -299,14 +299,13 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
-                                  // TODO make more flexible and able to detect what type of cluster
   PDebug::write("Made {} from Merged{}", particle, cluster);
   insertParticle(parentIds, particle);
 }
 
 void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids& parentIds) {
   /*construct a charged hadron/electron/muon from the track
-   */
+  */
   if (m_locked[track.id()]) return;
   pdgId = pdgId * track.charge();
   TLorentzVector p4 = TLorentzVector();

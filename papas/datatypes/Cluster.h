@@ -54,7 +54,7 @@ public:
   double angularSize() const;  ///< The angle that the cluster boundary makes (not valid for merged clusters)
   double size() const;         ///< The radius of the cluster
   double pt() const {
-    return m_energy * m_position.Perp();
+    return m_energy * m_position.Unit().Perp();
   }                                                ///< Transverse momentum (magnitude of p3 in transverse plane)
   double energy() const { return m_energy; }       ///< Energy
   double eta() const { return m_position.Eta(); }  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))

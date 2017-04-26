@@ -22,6 +22,8 @@ double CMSECAL::clusterSize(const Particle& ptc) const {
 }
 
 bool CMSECAL::acceptance(const Cluster& cluster) const {
+  if (cluster.id() == 3343906130156847108)
+    std::cout << "here "<<cluster.pt()<< cluster.energy() << cluster.position().Unit().Perp();
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());
   if (eta < m_etaCrack)

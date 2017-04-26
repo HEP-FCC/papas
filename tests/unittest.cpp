@@ -88,9 +88,11 @@ TEST_CASE("Helixpath") {  /// Helix path test
   Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, 3.8);
   HelixPropagator helixprop(field);
   //(particle.p4(), {0,0,0}, 3.8, -1);
+  helixprop.setPath(particle);
   helixprop.propagateOne(particle, cyl1);
   const auto& tvec = particle.path()->namedPoint(cyl1.layer());
   auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, 3.8);
+  helixprop.setPath(particle2);
   helixprop.propagateOne(particle2, cyl1);
   const auto& tvec2 = particle2.path()->namedPoint(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
@@ -199,7 +201,7 @@ TEST_CASE("StraightLine") {
 
   TLorentzVector tlv{1, 0, 1, 2.};
   Particle photon(22, 0, tlv, 0, 't');
-
+  propStraight.setPath(photon);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -215,6 +217,7 @@ TEST_CASE("StraightLine") {
   tlv = TLorentzVector(1, 0, -1, 2.);
 
   Particle photon2(22, 0, tlv, 1, 't');
+  propStraight.setPath(photon2);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -227,6 +230,7 @@ TEST_CASE("StraightLine") {
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
   Particle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
+  propStraight.setPath(photon3);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
@@ -234,6 +238,7 @@ TEST_CASE("StraightLine") {
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector(1, 0, -1, 2.);
   Particle photon4(22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
+  propStraight.setPath(photon4);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
@@ -245,6 +250,7 @@ TEST_CASE("StraightLine") {
                                   0., 0.5, 0,
                               },
                               0.);
+  propStraight.setPath(photon5);
   propStraight.propagateOne(photon5, cyl1);
   points = photon5.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(1.));

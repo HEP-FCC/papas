@@ -85,7 +85,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
         papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex,
                                  ptc.core().status);
-        // set the particles papas path
+        // set the particles papas path (allows particles to be const when passed to simulator)
         std::shared_ptr<papas::Path> ppath;
         if (fabs(particle.charge()) < 0.5) {
           ppath = std::make_shared<papas::Path>(papas::Path(particle.p4(), particle.startVertex(), particle.charge()));
@@ -105,16 +105,12 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
-  // papasManager.clear();
   papasManager.setEventNo(eventNo);
-  // const fcc::MCParticleCollection* ptcs(nullptr);
   const fcc::MCParticleCollection* ptcs;
   if (m_store.get("GenParticle", ptcs)) {
-
     try {
       papasManager.clear();
       papas::Particles& genParticles = papasManager.createParticles();
-
       makePapasParticlesFromGeneratedParticles(ptcs, genParticles, papasManager.detector());
       papasManager.addParticles(genParticles);
       papasManager.simulate('s');
@@ -123,12 +119,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
       papasManager.buildBlocks('m', 'm', 's');
       papasManager.simplifyBlocks('r');
       papasManager.reconstruct('s');
-
     } catch (std::string message) {
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
-
-    // m_store.clear();
   }
   m_store.clear();
   m_reader.endOfEvent();
