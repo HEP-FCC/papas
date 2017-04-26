@@ -1,10 +1,10 @@
 platform='unknown'
 sw_afs=0
 unamestr=`uname`
-
-export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
+source /cvmfs/fcc.cern.ch/sw/0.8/init_fcc_stack.sh $1
+#export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
 #if [ -z ${FCCPAPASCPP+x} ]; then
-    unset $FCCPAPASCPP
+    unset FCCPAPASCPP
     echo "FCCPAPASCPP is unset, setting to $PWD/install";
     export FCCPAPASCPP=$PWD/install
     export PATH=$FCCPAPASCPP/bin:$PATH    

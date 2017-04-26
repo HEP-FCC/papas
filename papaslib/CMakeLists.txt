@@ -13,14 +13,11 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 # which point to directories outside the build tree to the install RPATH
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-
 # the RPATH to be used when installing, but only if it's not a system directory
 LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
 IF("${isSystemDir}" STREQUAL "-1")
    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 ENDIF("${isSystemDir}" STREQUAL "-1")
-
-
 
 include_directories(
 ${CMAKE_SOURCE_DIR}
@@ -28,7 +25,6 @@ ${CMAKE_SOURCE_DIR}
 
 SET(CMAKE_INSTALL_PATH "${CMAKE_SOURCE_DIR}/install")
 Message(STATUS,"install" ${CMAKE_INSTALL_PATH} )
-
 
 file(GLOB_RECURSE sources
          
@@ -50,9 +46,14 @@ file(GLOB_RECURSE headers
          ${CMAKE_SOURCE_DIR}/papas/reconstruction/*.h
          ${CMAKE_SOURCE_DIR}/papas/simulation/*.h
          ${CMAKE_SOURCE_DIR}/papas/utility/*.h
+         ${CMAKE_SOURCE_DIR}/spdlog/*.h
+         ${CMAKE_SOURCE_DIR}/spdlog/sinks/*.h
+         ${CMAKE_SOURCE_DIR}/spdlog/details/*.h
          )
 
-message("${CMAKE_SOURCE_DIR}")
+#message("${CMAKE_SOURCE_DIR
+#${CMAKE_SOURCE_DIR}/spdlog/*.hCMAKE_SOURCE_DIR}/spdlog/*.h
+#${CMAKE_SOURCE_DIR}/spdlog/*.h
 #message("Headers: ${headers}")
 #message("Headers: ${sources}")
 
@@ -70,12 +71,14 @@ FILE(GLOB files6 "${CMAKE_SOURCE_DIR}/papas/display/*.h")
 INSTALL(FILES ${files6} DESTINATION include/papas/display/)
 FILE(GLOB files7 "${CMAKE_SOURCE_DIR}/papas/utility/*.h")
 INSTALL(FILES ${files7} DESTINATION include/papas/utility/)
-FILE(GLOB files8 "${CMAKE_SOURCE_DIR}/spdlog/*.h")
-INSTALL(FILES ${files8} DESTINATION include/papas/spdlog/)
+FILE(GLOB files8 "${CMAKE_SOURCE_DIR}/spdlog/*.*")
+INSTALL(FILES ${files8} DESTINATION include/spdlog/)
 FILE(GLOB files9 "${CMAKE_SOURCE_DIR}/spdlog/details/*.h")
-INSTALL(FILES ${files9} DESTINATION include/papas/spdlog/details/)
-FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sinks/*.h")
-INSTALL(FILES ${files10} DESTINATION include/papas/spdlog/sinks/)
+INSTALL(FILES ${files9} DESTINATION include/spdlog/details/)
+FILE(GLOB files11 "${CMAKE_SOURCE_DIR}/spdlog/details/*.cc")
+INSTALL(FILES ${files11} DESTINATION include/spdlog/details/)
+FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sinks/*.*")
+INSTALL(FILES ${files10} DESTINATION include/spdlog/sinks/)
 
 
 project(papaslib)
@@ -85,22 +88,22 @@ ${CMAKE_SOURCE_DIR}
 )
 
 # remove ### to get back root dicts
-REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
+###REFLEX_GENERATE_DICTIONARY(papas ${headers} SELECTION selection.xml)
 
-message(STATUS, "bin" ${PROJECT_BINARY_DIR})
+#message(STATUS, "bin" ${PROJECT_BINARY_DIR})
 
-add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
-add_dependencies(papasDict papas-dictgen )
-target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
+###add_library(papasDict SHARED ${sources} ${headers} papas.cxx)
+###add_dependencies(papasDict papas-dictgen )
+###target_link_libraries( papasDict papas ${ROOT_LIBRARIES} )
 add_library(papas SHARED ${sources} )
 target_link_libraries(  papas ${ROOT_LIBRARIES} )
 target_compile_definitions(papas PRIVATE WITHSORT=1)
 install(TARGETS papas DESTINATION lib)
-install(TARGETS papasDict DESTINATION lib)
+###install(TARGETS papasDict DESTINATION lib)
 
-# Install the dictionar
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
+# Install the dictionary
+###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasDict.rootmap DESTINATION lib)
+###install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papas_rdict.pcm DESTINATION lib)
 
 #install(DIRECTORY sources DESTINATION include)
 
