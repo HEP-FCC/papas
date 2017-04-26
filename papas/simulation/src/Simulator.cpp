@@ -273,6 +273,8 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
 
 bool Simulator::acceptSmearedCluster(const Cluster& smearedCluster, papas::Layer acceptLayer, bool accept) const {
   // Determine if this smeared cluster will be detected
+  if (smearedCluster.id()==3343906130156847108)
+    std::cout << "here " << smearedCluster.pt()<< std::endl;
   if (acceptLayer == papas::Layer::kNone) acceptLayer = IdCoder::layer(smearedCluster.id());
   if (m_detector.calorimeter(acceptLayer)->acceptance(smearedCluster) || accept) {
     return true;

@@ -30,7 +30,6 @@ void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simpli
     simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
     // update history
     makeHistoryLinks(block.elementIds(), {newblock.id()}, history);
-    PDebug::write("Checking {}", block);
   } else {
     Edges modifiedEdges;
     for (auto edge : block.edges()) {  // copying edges
@@ -42,7 +41,6 @@ void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simpli
     }
     // create new blocks and add into simplifiedBlocks
     buildPFBlocks(block.elementIds(), modifiedEdges, 's', simplifiedBlocks, history);
-    PDebug::write("Checking {}", block);
   }
 }
 

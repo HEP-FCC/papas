@@ -50,11 +50,7 @@ public:
   bool status() const { return m_status; }    ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   std::string info() const;                                      ///< text descriptor of the particle
-                                                                 /** check id this position exists in particle path
-                                                                  @param[in] layer position to search for the path location
-                                                                  */
-  void setPath(std::shared_ptr<Path> path) { m_path = path; }
-
+  void setPath(std::shared_ptr<Path> path) { m_path = path; }  ///< set the Particle path
   const std::shared_ptr<Path> path() const { return m_path; }  ///< Return pointer to path
   Identifier id() const { return m_id; }                       ///< unique Identifier for object
   bool isElectroMagnetic() const;                              ///< Is it electroMagnetic

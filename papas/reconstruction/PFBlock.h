@@ -41,7 +41,6 @@ public:
   PFBlock(PFBlock&& pfblock) = default;  // allow move
 
   const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
-  ~PFBlock();
 
   /**
   Returns list of all edges of a given edge type that are connected to a given id.

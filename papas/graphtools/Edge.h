@@ -42,7 +42,6 @@ public:
    *   @param[in]  distance distance between two elements
    */
   Edge(Identifier idEnd1, Identifier idEnd2, bool isLinked, double distance);
-  ~Edge();
   std::array<Identifier, 2> endIds() const { return m_endIds; }  ///< array of ids of ends
   bool isLinked() const { return m_isLinked; }                   ///<is the edge a link
   void setLinked(bool link) { m_isLinked = link; };              ///< set the link status (to true or false)
