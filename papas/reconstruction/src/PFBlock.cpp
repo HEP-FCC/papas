@@ -17,35 +17,32 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
     return IdCoder::type(id1) < IdCoder::type(id2);
 }
 
-/*PFBlock::~PFBlock() {
-  // PDebug::write("Delete {}", *this);
-  m_elementIds.clear();
-  m_edges.clear();
-};*/
-
-PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index, char subtype)
-    : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
-  PFBlock::tempBlockCount += 1;
-  // extract the relevant parts of the complete set of edges and store this within the block
-  // note the edges will be removed from the edges unordered_map
-  for (auto id1 : m_elementIds) {
-    for (auto id2 : m_elementIds) {
-      if (id1 >= id2) continue;
-      // move the edge from one unordered map to the other
-      auto e = edges.find(Edge::makeKey(id1, id2));  // now makes a copy
-      if (e != edges.end()) {
-        m_edges.emplace(e->second.key(), std::move(e->second));
-        // edges.erase(e);
+  PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index, char subtype)
+  : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
+    PFBlock::tempBlockCount += 1;
+    // extract the relevant parts of the complete set of edges and store this within the block
+    // note the edges will be removed from the edges unordered_map
+    for (auto id1 : m_elementIds) {
+      for (auto id2 : m_elementIds) {
+        if (id1 >= id2) continue;
+        // move the edge from one unordered map to the other
+        auto e = edges.find(Edge::makeKey(id1, id2));
+        if (e != edges.end()) {
+          Edge edgecopy = e->second;
+          m_edges.emplace(e->second.key(), edgecopy);
+          // edges.erase(e);
+        }
       }
     }
   }
-}
-
-/*PFBlock:: ~PFBlock(){
-  PDebug::write("Delete {}", *this);
-  m_elementIds.clear();
-  m_edges.clear();
-};*/
+  
+PFBlock::~PFBlock() {
+    // PDebug::write("Delete {}", *this);
+    //If I remove ~PFBlock and use the default destructor I get a seg fault under Gaudi
+    //This is a mystery
+    m_elementIds.clear();
+    m_edges.clear();
+};
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
