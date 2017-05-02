@@ -40,6 +40,7 @@ public:
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
 
+  ~PFBlock();/// destructor
   const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
 
   /**
@@ -80,6 +81,7 @@ public:
 private:
   PFBlock(PFBlock& pfblock) = default;  // avoid copying of blocks
   PFBlock(const PFBlock& pfblock) = default;
+ 
   PFBlock& operator=(const PFBlock&) = default;
 
   Identifier m_id;            ///<  identifier for this block
