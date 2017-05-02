@@ -18,7 +18,8 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 }
 
 PFBlock::~PFBlock() {
-  // PDebug::write("Delete {}", *this);
+  // //If I remove ~PFBlock and use the default destructor I get a seg fault under Gaudi
+  //This is a mystery
   m_elementIds.clear();
   m_edges.clear();
 };

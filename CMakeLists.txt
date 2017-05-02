@@ -53,11 +53,7 @@ include_directories(
 "${FCCEDM_INCLUDE_DIRS}"
 )
 
-
 add_definitions(-Wno-unused-variable -Wno-unused-parameter -pthread)
-#--temporary fix of inconsistency in ROOT CMake macros
-#set(ROOT_genreflex_cmd ${ROOT_genreflex_CMD})
-
 
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
@@ -66,8 +62,6 @@ include(CTest)
 #if(papas_documentation)
     include(cmake/papasDoxygen.cmake)
 #endif()
-
-
 
 #--- add version files ---------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/papasVersion.h
@@ -78,14 +72,11 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/papasVersion.h
 #--- add CMake infrastructure --------------------------------------------------
 include(cmake/papasCreateConfig.cmake)
 
-
 #--- add license files ---------------------------------------------------------
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
         DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-
-#add_subdirectory(papascpp)
 add_subdirectory(papaslib)
 add_subdirectory(examples)
 add_subdirectory(tests)
