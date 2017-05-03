@@ -51,11 +51,8 @@ file(GLOB_RECURSE headers
          ${CMAKE_SOURCE_DIR}/spdlog/details/*.h
          )
 
-#message("${CMAKE_SOURCE_DIR
-#${CMAKE_SOURCE_DIR}/spdlog/*.hCMAKE_SOURCE_DIR}/spdlog/*.h
-#${CMAKE_SOURCE_DIR}/spdlog/*.h
 #message("Headers: ${headers}")
-#message("Headers: ${sources}")
+#message("Sources: ${sources}")
 
 FILE(GLOB files "${CMAKE_SOURCE_DIR}/papas/datatypes/*.h")
 INSTALL(FILES ${files} DESTINATION include/papas/datatypes/)

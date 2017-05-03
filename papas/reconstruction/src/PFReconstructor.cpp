@@ -20,8 +20,8 @@ namespace papas {
 PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
                                  Nodes& history)
     : m_event(event), m_detector(detector), m_particles(particles), m_history(history) {
-  m_propHelix = std::make_shared<HelixPropagator>(HelixPropagator(detector.field()));
-  m_propStraight = std::make_shared<StraightLinePropagator>(StraightLinePropagator(detector.field()));
+  m_propHelix = std::make_shared<HelixPropagator>(detector.field());
+  m_propStraight = std::make_shared<StraightLinePropagator>(detector.field());
   auto blockids = m_event.collectionIds(IdCoder::ItemType::kBlock, blockSubtype);
   for (auto bid : blockids) {
     reconstructBlock(m_event.block(bid));
@@ -34,8 +34,6 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   }
   PDebug::write("Finished reconstruction");
 }
-
-PFReconstructor::~PFReconstructor() {}
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach

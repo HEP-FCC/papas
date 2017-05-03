@@ -38,8 +38,6 @@ void PapasManager::simulate(char particleSubtype) {
   m_event.addCollectionToFolder(smearedHcalClusters);
   m_event.addCollectionToFolder(tracks);
   m_event.addCollectionToFolder(smearedTracks);
-
-  // PDebug::Write("Simulation created {}", m_event.info());
 }
 
 void PapasManager::mergeClusters(const std::string& typeAndSubtype) {

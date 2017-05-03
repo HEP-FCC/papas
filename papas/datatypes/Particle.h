@@ -50,10 +50,10 @@ public:
   bool status() const { return m_status; }    ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   std::string info() const;                                      ///< text descriptor of the particle
-  void setPath(std::shared_ptr<Path> path) { m_path = path; }  ///< set the Particle path
-  const std::shared_ptr<Path> path() const { return m_path; }  ///< Return pointer to path
-  Identifier id() const { return m_id; }                       ///< unique Identifier for object
-  bool isElectroMagnetic() const;                              ///< Is it electroMagnetic
+  void setPath(std::shared_ptr<Path> path) { m_path = path; }    ///< set the Particle path
+  const std::shared_ptr<Path> path() const { return m_path; }    ///< Return pointer to path
+  Identifier id() const { return m_id; }                         ///< unique Identifier for object
+  bool isElectroMagnetic() const;                                ///< Is it electroMagnetic
 private:
   TLorentzVector m_tlv;          ///<4-momentum, px, py, pz, E
   int m_pdgId;                   ///<particle type

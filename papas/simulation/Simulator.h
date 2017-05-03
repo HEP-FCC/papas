@@ -156,15 +156,11 @@ private:
   bool acceptSmearedTrack(const Track& smearedtrack, bool accept = false) const;
 
   /**
-                                                                                   Determines if an electron
-     smearedtrack is detected
-                                                                                   @param[in] smearedtrack the smeared
-     track
-                                                                                   @param[in] accept. If set to true the
-     track is always accepted
-                                                                                   @return true if track is detected,
-     false otherwise
-                                                                                   */
+   Determines if an electron smearedtrack is detected
+   @param[in] smearedtrack the smeared track
+   @param[in] accept. If set to true the  track is always accepted
+   @return true if track is detected, false otherwise
+   */
   bool acceptElectronSmearedTrack(const Track& smearedTrack, bool accept = false) const;
 
   /**
@@ -194,7 +190,6 @@ private:
   */
   std::shared_ptr<const DetectorElement> elem(papas::Layer layer) const;
 
-  // void testing();
   const Event& m_event;             ///< Event (for consistent Algorithm arguments)?
   const Detector& m_detector;       ///< the Detector
   Clusters& m_ecalClusters;         ///< ecal clusters (prior to smearing)

@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   os << "Cluster: " << std::setw(6) << std::left << IdCoder::pretty(cluster.id()) << ":" << cluster.id() << ": "
      << cluster.info();
   os << " sub(";
-  if (cluster.subClusters().empty()) //match python pdebug outputs
+  if (cluster.subClusters().empty())  // match python pdebug outputs
     os << IdCoder::pretty(cluster.id()) << ", ";
   else {
     for (const auto& c : cluster.subClusters()) {

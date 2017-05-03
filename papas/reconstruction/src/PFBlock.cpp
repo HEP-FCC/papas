@@ -19,7 +19,7 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 
 PFBlock::~PFBlock() {
   // //If I remove ~PFBlock and use the default destructor I get a seg fault under Gaudi
-  //This is a mystery
+  // This is a mystery
   m_elementIds.clear();
   m_edges.clear();
 };
@@ -42,7 +42,6 @@ PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index,
     }
   }
 }
-
 
 int PFBlock::countEcal() const {
   // Counts how many ecal cluster ids are in the block
@@ -189,7 +188,7 @@ bool PFBlock::hasEdge(Identifier id1, Identifier id2) const {
 
 std::string PFBlock::info() const {  // One liner summary of PFBlock
   fmt::MemoryWriter out;
-  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), /*m_id,*/ countEcal(),
+  out.write("{:8} :{:6}: ecals = {} hcals = {} tracks = {}", shortName(), IdCoder::pretty(m_id), countEcal(),
             countHcal(), countTracks());
   return out.str();
 }

@@ -87,10 +87,10 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
         // set the particles papas path (allows particles to be const when passed to simulator)
         std::shared_ptr<papas::Path> ppath;
         if (fabs(particle.charge()) < 0.5) {
-          ppath = std::make_shared<papas::Path>(papas::Path(particle.p4(), particle.startVertex(), particle.charge()));
+          ppath = std::make_shared<papas::Path>(particle.p4(), particle.startVertex(), particle.charge());
         } else {
-          ppath = std::make_shared<papas::Helix>(
-              papas::Helix(particle.p4(), particle.startVertex(), particle.charge(), detector.field()->getMagnitude()));
+          ppath = std::make_shared<papas::Helix>(particle.p4(), particle.startVertex(), particle.charge(),
+                                                 detector.field()->getMagnitude());
         }
         particle.setPath(ppath);
         particles.emplace(particle.id(), particle);
@@ -121,8 +121,9 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     } catch (std::string message) {
       papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
     }
+    m_store.clear();
   }
-  m_store.clear();
+
   m_reader.endOfEvent();
 }
 
