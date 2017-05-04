@@ -19,6 +19,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
+
   papas::PDebug::File("physics.txt");
   rootrandom::Random::seed(0xdeadbeef);
 
@@ -40,7 +41,7 @@ int main(int argc, char* argv[]) {
     papas::PapasManager papasManager(CMSDetector);
 
     unsigned int eventNo = 0;
-    unsigned int nEvents = 10;
+    unsigned int nEvents = 10000;
 
     auto start = std::chrono::steady_clock::now();
 
