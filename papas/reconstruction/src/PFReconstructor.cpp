@@ -34,6 +34,11 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   }
   PDebug::write("Finished reconstruction");
 }
+  
+  PFReconstructor::~PFReconstructor() {
+    m_locked.clear();
+    m_unused.clear();
+  };
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
