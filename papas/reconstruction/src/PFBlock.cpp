@@ -8,8 +8,6 @@
 
 namespace papas {
 
-int PFBlock::tempBlockCount = 0;
-
 bool blockIdComparer(Identifier id1, Identifier id2) {
   if (IdCoder::type(id1) == IdCoder::type(id2))
     return id1 > id2;
@@ -27,7 +25,6 @@ PFBlock::~PFBlock() {
 
 PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, uint32_t index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
-  PFBlock::tempBlockCount += 1;
   // copy the relevant parts of the complete set of edges and store this within the block
   for (auto id1 : m_elementIds) {
     for (auto id2 : m_elementIds) {
@@ -35,7 +32,7 @@ PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, uint32_t index, cha
       // copy the edge from one unordered map to the other
       auto e = edges.find(Edge::makeKey(id1, id2));
       if (e != edges.end()) {
-        m_edges.emplace(e->first, e->second); //I checked and this copies the edge
+        m_edges.emplace(e->first, e->second); //I checked - this copies the edge
       }
     }
   }
@@ -193,8 +190,10 @@ std::string PFBlock::info() const {  // One liner summary of PFBlock
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   os << "block:" << block.info() << std::endl;
-  os << block.elementsString();
-  os << block.edgeMatrixString();
+  if (block.edges().size() >0) {
+    os << block.elementsString();
+    os << block.edgeMatrixString();
+  }
   return os;
 }
 

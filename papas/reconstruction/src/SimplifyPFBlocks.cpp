@@ -21,15 +21,17 @@ void simplifyPFBlocks(const Event& event, char blockSubtype, Blocks& simplifiedb
 }
 
 void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simplifiedBlocks, Nodes& history) {
+  // take a block, unlink some of the edges and
+  // create smaller blocks or a simplified blocks
+  // or if nothing has changed take a copy of the original block
   if (toUnlink.size() == 0) {
-    // no change to this block
-    // make a copy of the block and put it in the simplified blocks
-    Edges newedges = block.edges();  // copy edges
-    PFBlock newblock(block.elementIds(), newedges, simplifiedBlocks.size(), 's');
+    // no change needed, just make a copy of block
+    PFBlock newblock(block.elementIds(), block.edges(), simplifiedBlocks.size(), 's'); //will copy edges and ids
     PDebug::write("Made {}", newblock);
-    simplifiedBlocks.emplace(newblock.id(), std::move(newblock));
+    auto id  = newblock.id();
+    simplifiedBlocks.emplace(id, std::move(newblock));
     // update history
-    makeHistoryLinks(block.elementIds(), {newblock.id()}, history);
+    makeHistoryLinks(block.elementIds(), {id}, history);
   } else {
     Edges modifiedEdges;
     for (auto edge : block.edges()) {  // copying edges
@@ -48,7 +50,7 @@ Edges edgesToUnlink(const PFBlock& block) {
   Edges toUnlink;
   Ids ids = block.elementIds();
   if (ids.size() > 1) {
-    Ids linkedIds;  // std::set<Edge::EdgeKey> linkedIds; //unordered?
+    Ids linkedIds;
     bool firstHCAL;
     double minDist = -1;
     for (auto id : ids) {

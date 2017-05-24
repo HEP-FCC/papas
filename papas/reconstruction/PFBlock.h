@@ -19,8 +19,7 @@ namespace papas {
 
  Edges m_edges : Unordered map of all the edge combinations in the block
           use  edge(id1,id2) to find an edge
- static int tempBlockCount: sequential numbering of blocks (useful for debugging/tracing etc)
-
+ 
  Usage:
  block = PFBlock(element_ids,  edges, 'r')
  os << block;
@@ -85,7 +84,6 @@ private:
   Identifier m_id;            ///<  identifier for this block
   Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
   Edges m_edges;              ///< all the edges for elements in this block
-  static int tempBlockCount;  ///< sequential numbering of blocks, not essential but helpful for debugging
 };
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block);

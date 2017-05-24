@@ -35,10 +35,10 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   PDebug::write("Finished reconstruction");
 }
   
-  PFReconstructor::~PFReconstructor() { //needed to avoid seg fault (may be connected to optimisation)
+PFReconstructor::~PFReconstructor() { //needed to avoid seg fault (may be connected to optimisation)
     m_locked.clear();
     m_unused.clear();
-  };
+};
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
@@ -317,7 +317,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
                     track.path()->namedPoint(papas::Position::kVertex));
 
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
-  // particle.set_path(track.path)
+  propagator(particle.charge())->setPath(particle);
   m_locked[track.id()] = true;
   PDebug::write("Made {} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);
