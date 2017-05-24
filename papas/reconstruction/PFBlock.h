@@ -36,7 +36,7 @@ public:
    extracted will be removed from the Edges object and will become owned by the PFBlock
    @param[in] subtype The subtype for the identifier of the block eg 's' for split block
    */
-  PFBlock(const Ids& elementIds, const Edges& edges, unsigned int index,
+  PFBlock(const Ids& elementIds, const Edges& edges, uint32_t index,
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
   ~PFBlock();                            /// destructor

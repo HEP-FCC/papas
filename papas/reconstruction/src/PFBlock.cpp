@@ -19,25 +19,23 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 
 PFBlock::~PFBlock() {
   // //If I remove ~PFBlock and use the default destructor I get a seg fault under Gaudi
-  // This is a mystery
+  // everything looks fine just before (the Block prints correctly) but
+  //when this point is reached it has id of zero and a ridiculous size for m_edges.
   m_elementIds.clear();
   m_edges.clear();
 };
 
-PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, unsigned int index, char subtype)
+PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, uint32_t index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
   PFBlock::tempBlockCount += 1;
-  // extract the relevant parts of the complete set of edges and store this within the block
-  // note the edges will be removed from the edges unordered_map
+  // copy the relevant parts of the complete set of edges and store this within the block
   for (auto id1 : m_elementIds) {
     for (auto id2 : m_elementIds) {
       if (id1 >= id2) continue;
-      // move the edge from one unordered map to the other
+      // copy the edge from one unordered map to the other
       auto e = edges.find(Edge::makeKey(id1, id2));
       if (e != edges.end()) {
-        Edge edgecopy = e->second;
-        m_edges.emplace(e->second.key(), edgecopy);
-        // edges.erase(e);
+        m_edges.emplace(e->first, e->second); //I checked and this copies the edge
       }
     }
   }

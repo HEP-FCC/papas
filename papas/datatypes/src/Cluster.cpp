@@ -8,14 +8,14 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type,
+Cluster::Cluster(double energy, const TVector3& position, double size_m, uint32_t index, IdCoder::ItemType type,
                  char subtype)
     : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position), m_subClusters({}) {
   setSize(size_m);
   setEnergy(energy);
 }
 
-Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, char subtype, float val)
+Cluster::Cluster(const Cluster& c, uint32_t index, IdCoder::ItemType type, char subtype, float val)
     : m_id(IdCoder::makeId(index, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
@@ -23,7 +23,7 @@ Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, c
       m_energy(c.m_energy),
       m_subClusters({}) {}
 
-Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
+Cluster::Cluster(std::list<const Cluster*> overlappingClusters, uint32_t index, char subtype)
     : m_subClusters(overlappingClusters) {
   Identifier firstId = 0;
   char type;

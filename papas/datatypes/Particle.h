@@ -30,7 +30,7 @@ public:
    @param[in] startvertex start vertex (3d point)
    @param[in] status Status (1 = stable)
    */
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, uint32_t index, char subtype,
            const TVector3& startvertex = TVector3(0., 0., 0.), double status = 1);
   const TLorentzVector& p4() const { return m_tlv; }  ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }        ///< 3-momentum px, py, pz,

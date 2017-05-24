@@ -260,7 +260,7 @@ Cluster Simulator::smearCluster(const Cluster& parent, papas::Layer detectorLaye
   double energyresolution = sp_calorimeter->energyResolution(parent.energy(), parent.eta());
   double response = sp_calorimeter->energyResponse(parent.energy(), parent.eta());
   double energy = parent.energy() * rootrandom::Random::gauss(response, energyresolution);
-  unsigned int counter;
+  uint32_t counter;
   if (IdCoder::layer(parent.id()) == Layer::kEcal)
     counter = m_smearedEcalClusters.size();
   else
