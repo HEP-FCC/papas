@@ -26,9 +26,9 @@ void simplifyPFBlock(const Edges& toUnlink, const PFBlock& block, Blocks& simpli
   // or if nothing has changed take a copy of the original block
   if (toUnlink.size() == 0) {
     // no change needed, just make a copy of block
-    PFBlock newblock(block.elementIds(), block.edges(), simplifiedBlocks.size(), 's'); //will copy edges and ids
+    PFBlock newblock(block.elementIds(), block.edges(), simplifiedBlocks.size(), 's');  // will copy edges and ids
     PDebug::write("Made {}", newblock);
-    auto id  = newblock.id();
+    auto id = newblock.id();
     simplifiedBlocks.emplace(id, std::move(newblock));
     // update history
     makeHistoryLinks(block.elementIds(), {id}, history);

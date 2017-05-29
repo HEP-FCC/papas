@@ -16,9 +16,9 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
 }
 
 PFBlock::~PFBlock() {
-  // //If I remove ~PFBlock and use the default destructor I get a seg fault under Gaudi
+  // //If I move ~PFBlock to the header files or if I   use the default destructor I get a seg fault under Gaudi
   // everything looks fine just before (the Block prints correctly) but
-  //when this point is reached it has id of zero and a ridiculous size for m_edges.
+  // when this point is reached it has id of zero and a ridiculous size for m_edges.
   m_elementIds.clear();
   m_edges.clear();
 };
@@ -32,7 +32,7 @@ PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, uint32_t index, cha
       // copy the edge from one unordered map to the other
       auto e = edges.find(Edge::makeKey(id1, id2));
       if (e != edges.end()) {
-        m_edges.emplace(e->first, e->second); //I checked - this copies the edge
+        m_edges.emplace(e->first, e->second);  // I checked - this copies the edge
       }
     }
   }
@@ -190,8 +190,8 @@ std::string PFBlock::info() const {  // One liner summary of PFBlock
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   os << "block:" << block.info() << std::endl;
-  if (block.edges().size() >0) {
-    os << block.elementsString();
+  os << block.elementsString();
+  if (block.edges().size() > 0) {
     os << block.edgeMatrixString();
   }
   return os;

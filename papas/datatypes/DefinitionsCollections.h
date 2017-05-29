@@ -18,7 +18,7 @@ class Track;
 class Edge;
 class Particle;
 
-typedef std::list<Particle> ListParticles;                   ///< list of Particles
+typedef std::list<Particle> ListParticles;         ///< list of Particles
 typedef std::unordered_map<uint64_t, Edge> Edges;  ///< collection of Edge objects
 #if WITHSORT
 typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< set containing Identifiers

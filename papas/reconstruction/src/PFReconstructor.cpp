@@ -34,10 +34,10 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
   }
   PDebug::write("Finished reconstruction");
 }
-  
-PFReconstructor::~PFReconstructor() { //needed to avoid seg fault (may be connected to optimisation)
-    m_locked.clear();
-    m_unused.clear();
+
+PFReconstructor::~PFReconstructor() {  // needed to avoid seg fault (may be connected to optimisation)
+  m_locked.clear();
+  m_unused.clear();
 };
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
