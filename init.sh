@@ -12,7 +12,7 @@ fi
 if [[ "$unamestr" == 'Linux' ]]; then
     platform='Linux'
     export LD_LIBRARY_PATH=$FCCPAPASCPP/lib:$LD_LIBRARY_PATH
-    source /cvmfs/fcc.cern.ch/sw/0.8/init_fcc_stack.sh $1
+    source /cvmfs/fcc.cern.ch/sw/0.8.1/init_fcc_stack.sh $1
 #export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
 elif [[ "$unamestr" == 'Darwin' ]]; then
     platform='Darwin'

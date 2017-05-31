@@ -143,8 +143,8 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& pcoll = m_store.create<fcc::ParticleCollection>("GenParticle");
 
-  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
-  writer.registerForWrite<fcc::ParticleCollection>("GenParticle");
+  writer.registerForWrite("evtinfo");
+  writer.registerForWrite("GenParticle");
 
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
@@ -174,8 +174,8 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
 
-  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
-  writer.registerForWrite<fcc::CaloClusterCollection>("Cluster");
+  writer.registerForWrite("evtinfo");
+  writer.registerForWrite("Cluster");
 
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
