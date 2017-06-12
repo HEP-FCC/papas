@@ -14,8 +14,8 @@
 #include <unordered_map>
 
 namespace papas {
-  
-  class Cluster;
+
+class Cluster;
 
 /**
  *  @brief The Event stores pointers to collections of Clusters, Tracks, Blocks, Particles in its
@@ -58,7 +58,7 @@ namespace papas {
 class Event {
 public:
   /// @brief  Constructor
-  Event(std::shared_ptr<Nodes> hist = std::make_shared<Nodes>(Nodes()));
+  Event(Nodes& hist);
 
   /**
    *   @brief  adds a pointer to a Clusters collection (unordered map) into the Event
@@ -92,7 +92,7 @@ public:
    *   @brief  makes history in Event point to an external history object
    *   @param[in]  history unordered map of Nodes,    *
    */
-  void setHistory(Nodes& history) { m_history = std::make_shared<Nodes>(history); }
+  void setHistory(Nodes& history) { m_history = history; }
 
   /**
    *   @brief adds new history into existing papasevent history
@@ -212,7 +212,7 @@ public:
   /**
    *   @brief  returns the merged history
    */
-  std::shared_ptr<const Nodes> history() const { return m_history; }
+  const Nodes& history() const { return m_history; }
 
   /**
    *   @brief  resets everything, deletes all the clusters, tracks etc etc
@@ -233,7 +233,7 @@ public:
    *   @param[in]  typeAndSubtype The type and subtype of a collection eg "em" for ecal merged
    */
   Ids collectionIds(const std::string& typeAndSubtype) const;
-
+  std::string info() const;  ///< text descriptor
 private:
   /**
    *   @brief  templated class method used by the AddCollection methods to check that typeAndSubype match and that
@@ -255,25 +255,22 @@ private:
   ParticlesFolder m_particlesFolder;
   /// Unordered map of pointers to unordered map of (concrete) Blocks
   BlocksFolder m_blocksFolder;
-  std::shared_ptr<Nodes> m_history;  ///< points to the merged history (built from the sucessive histories)
-  Clusters m_emptyClusters;          ///<Used to return an empty collection when no collection is found
-  Tracks m_emptyTracks;              ///<Used to return an empty collection when no collection is found
-  Particles m_emptyParticles;        ///<Used to return an empty collection when no collection is found
-  Blocks m_emptyBlocks;              ///<Used to return an empty collection when no collection is found
-  unsigned int m_eventNo;            ///<event number
+  Nodes& m_history;            ///< points to the merged history (built from the sucessive histories)
+  Clusters m_emptyClusters;    ///<Used to return an empty collection when no collection is found
+  Tracks m_emptyTracks;        ///<Used to return an empty collection when no collection is found
+  Particles m_emptyParticles;  ///<Used to return an empty collection when no collection is found
+  Blocks m_emptyBlocks;        ///<Used to return an empty collection when no collection is found
+  unsigned int m_eventNo;      ///<event number
 };
 
 template <class T>
 void Event::addCollectionToFolderInternal(
     const std::unordered_map<Identifier, T>& collection,
     std::unordered_map<IdCoder::SubType, const std::unordered_map<Identifier, T>*>& folder) {
-  Identifier firstId = 0;
   if (collection.size() == 0) return;
+  Identifier firstId = collection.begin()->first;
+  if (hasCollection(firstId)) throw "Collection already exists";
   for (const auto& it : collection) {
-    if (!firstId) {
-      firstId = it.first;
-      if (hasCollection(firstId)) throw "Collection already exists";
-    }
     if (IdCoder::typeAndSubtype(it.first) != IdCoder::typeAndSubtype(firstId)) {
       std::cout << IdCoder::pretty(it.first) << " : " << IdCoder::pretty(firstId) << std::endl;
       throw "more than one typeandSubtype found in collection";

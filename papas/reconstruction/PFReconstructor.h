@@ -90,6 +90,7 @@ public:
   */
   PFReconstructor(const Event& event, char blockSubtype, const Detector& detector, Particles& particles,
                   Nodes& history);
+  ~PFReconstructor();
 
   // const Particles& particles() const { return m_particles; }  //
 private:

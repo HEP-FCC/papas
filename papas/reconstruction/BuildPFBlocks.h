@@ -43,7 +43,7 @@ void buildPFBlocks(const Event& event, IdCoder::SubType ecalSubtype, IdCoder::Su
  * @param[inout] history external collection of Nodes to which parent child relations can be added
 
  */
-void buildPFBlocks(const Ids& ids, Edges&& edges, char subtype, Blocks& blocks, Nodes& history);
+void buildPFBlocks(const Ids& ids, const Edges& edges, char subtype, Blocks& blocks, Nodes& history);
 
 }  // end namespace papas
 #endif /* BUILDPFBLOCKS_h */

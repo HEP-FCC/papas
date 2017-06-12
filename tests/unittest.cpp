@@ -4,10 +4,10 @@
 
 // C++
 #include <iostream>
+#include <memory>
 #include <numeric>
 #include <string>
 #include <unordered_map>
-#include <memory>
 #include <vector>
 
 // ROOT
@@ -15,24 +15,24 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
-#include "papas/display/Display.h"
-#include "papas/display/GTrajectory.h"
-#include "papas/display/ViewPane.h"
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
 #include "papas/detectors/CMS.h"
 #include "papas/detectors/CMSField.h"
 #include "papas/detectors/Calorimeter.h"
-#include "papas/simulation/StraightLinePropagator.h"
-#include "papas/simulation/HelixPropagator.h"
+#include "papas/display/Display.h"
+#include "papas/display/GTrajectory.h"
+#include "papas/display/ViewPane.h"
 #include "papas/graphtools/Distance.h"
 #include "papas/graphtools/EventRuler.h"
 #include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/reconstruction/MergeClusters.h"
 #include "papas/reconstruction/PapasManagerTester.h"
 #include "papas/reconstruction/SimplifyPFBlocks.h"
+#include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/Simulator.h"
+#include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/TRandom.h"
 
 using namespace papas;
@@ -88,9 +88,11 @@ TEST_CASE("Helixpath") {  /// Helix path test
   Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, 3.8);
   HelixPropagator helixprop(field);
   //(particle.p4(), {0,0,0}, 3.8, -1);
+  helixprop.setPath(particle);
   helixprop.propagateOne(particle, cyl1);
   const auto& tvec = particle.path()->namedPoint(cyl1.layer());
   auto particle2 = Particle(211, -1, TLorentzVector{0., 2, 1, 5}, 2, 'r', TVector3{0, 0, 0}, 3.8);
+  helixprop.setPath(particle2);
   helixprop.propagateOne(particle2, cyl1);
   const auto& tvec2 = particle2.path()->namedPoint(cyl1.layer());
   REQUIRE(fabs(tvec.X()) == Approx(fabs(tvec2.Y())));
@@ -199,7 +201,7 @@ TEST_CASE("StraightLine") {
 
   TLorentzVector tlv{1, 0, 1, 2.};
   Particle photon(22, 0, tlv, 0, 't');
-
+  propStraight.setPath(photon);
   propStraight.propagateOne(photon, cyl1);
   propStraight.propagateOne(photon, cyl2);
   auto points = photon.path()->points();
@@ -215,6 +217,7 @@ TEST_CASE("StraightLine") {
   tlv = TLorentzVector(1, 0, -1, 2.);
 
   Particle photon2(22, 0, tlv, 1, 't');
+  propStraight.setPath(photon2);
   propStraight.propagateOne(photon2, cyl1);
   propStraight.propagateOne(photon2, cyl2);
   points = photon2.path()->points();
@@ -227,6 +230,7 @@ TEST_CASE("StraightLine") {
   // extrapolating from a vertex close to +endcap
   tlv = TLorentzVector(1, 0, 1, 2.);
   Particle photon3(22, 0, tlv, 3, 's', {0, 0, 1.5}, 0.);
+  propStraight.setPath(photon3);
   propStraight.propagateOne(photon3, cyl1);
   points = photon3.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
@@ -234,6 +238,7 @@ TEST_CASE("StraightLine") {
   // extrapolating from a vertex close to -endcap
   tlv = TLorentzVector(1, 0, -1, 2.);
   Particle photon4(22, 0, tlv, 4, 's', {0, 0, -1.5}, 0.);
+  propStraight.setPath(photon4);
   propStraight.propagateOne(photon4, cyl1);
   points = photon4.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(.5));
@@ -245,6 +250,7 @@ TEST_CASE("StraightLine") {
                                   0., 0.5, 0,
                               },
                               0.);
+  propStraight.setPath(photon5);
   propStraight.propagateOne(photon5, cyl1);
   points = photon5.path()->points();
   REQUIRE(points[papas::Position::kEcalIn].Perp() == Approx(1.));
@@ -448,7 +454,7 @@ TEST_CASE("BlockSplitter") {
 
   Edges to_unlink;
   to_unlink[edge1.key()] = edge1;
-  Event event;
+  Event event(emptyNodes);
   event.addCollectionToFolder(blocks);
   Blocks simplifiedBlocks;
   simplifyPFBlocks(event, 'r', simplifiedBlocks, emptyNodes);
@@ -464,7 +470,7 @@ TEST_CASE("Merge") {
   eclusters.emplace(cluster2.id(), cluster2);
   Clusters mergedClusters;
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(eclusters);
 
   papas::EventRuler ruler(event);
@@ -491,7 +497,7 @@ TEST_CASE("merge_pair") {
   hclusters.emplace(cluster2.id(), cluster2);
   Clusters mergedClusters;
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
@@ -511,7 +517,7 @@ TEST_CASE("merge_pair_away") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   event.addCollectionToFolder(hclusters);
 
   papas::EventRuler ruler(event);
@@ -533,15 +539,15 @@ TEST_CASE("merge_different_layers") {
   Clusters mergedClusters;
 
   Nodes nodes;
-  Event event;
+  Event event(nodes);
   REQUIRE_THROWS(event.addCollectionToFolder(hclusters));
 
   return;
 }
 
 TEST_CASE("test_papasevent") {
-
-  Event event;
+  Nodes nodes;
+  Event event(nodes);
   Clusters ecals;
   Tracks tracks;
   Identifier lastid = 0;
@@ -573,8 +579,9 @@ TEST_CASE("test_papasevent") {
 }
 
 TEST_CASE("test_history") {
-  Event event;
+
   Nodes history;
+  Event event(history);
   Clusters ecals;
   Particles particles;
   Identifier lastid = 0;
@@ -620,7 +627,7 @@ TEST_CASE("merge_inside") {
 
   Tracks tracks;
   Nodes nodes;
-  Event testevent;
+  Event testevent(nodes);
   Clusters mergedClusters;
   testevent.addCollectionToFolder(hclusters);
   papas::EventRuler ruler(testevent);

@@ -21,7 +21,13 @@ public:
    @param[in] cyl cylinder to which the particle is to be propagated.
    @param[in] field magnitude of magnetic field
    */
-  virtual void propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const override;
+  virtual void propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const override;
+
+  /** Sets the particle path to a helix
+   @param[in] ptc particle that is to be propagated
+   */
+  virtual void setPath(Particle& ptc) const override;
 };
 }  // end namespace papas
+
 #endif

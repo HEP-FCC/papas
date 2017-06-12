@@ -13,6 +13,7 @@
 #include "papas/detectors/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
+#include "papas/utility/TRandom.h"
 
 #include <TApplication.h>
 
@@ -20,10 +21,17 @@ using namespace papas;
 
 int main(int argc, char* argv[]) {
 
-  if (argc != 2) {
-    std::cerr << "Usage: ./mainexe filename" << std::endl;
+  rootrandom::Random::seed(0xdeadbeef);
+
+  if (argc < 2) {
+    std::cerr << "Usage: ./example_plot filename [logname]" << std::endl;
     return 1;
   }
+  if (argc == 3) {
+    const char* lname = argv[2];
+    PDebug::File(lname);  // physics debug output
+  }
+
   const char* fname = argv[1];
   PythiaConnector pythiaConnector(fname);
 
@@ -35,5 +43,6 @@ int main(int argc, char* argv[]) {
   pythiaConnector.processEvent(eventNo, papasManager);
   TApplication tApp("theApp", &argc, argv);
   pythiaConnector.displayEvent(papasManager);
+  papasManager.clear();
   return EXIT_SUCCESS;
 }

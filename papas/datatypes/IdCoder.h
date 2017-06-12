@@ -56,7 +56,7 @@ public:
    @param[in]  value: a float representing energy or momentum etc
    @return identifier
    */
-  static Identifier makeId(unsigned int index, ItemType type, char subtype = 'u', float value = 0.0);
+  static Identifier makeId(uint32_t index, ItemType type, char subtype = 'u', float value = 0.0);
 
   /** returns the item type of the identifier
    This is one of: None = 0, kEcalCluster = 1, kHcalCluster, kTrack, kParticle, kBlock
@@ -90,12 +90,12 @@ public:
    @param[in] id: identifier
    @return the  index
    */
-  static unsigned int index(Identifier id);  ///< Returns encoded index
+  static uint32_t index(Identifier id);  ///< Returns encoded index
 
   /** Takes an identifier and returns a unique id component of it (excludes value information)
    @param[in] id: identifier
    @return the index   */
-  static unsigned int uniqueId(Identifier id);  ///< Returns encoded unique id
+  static uint32_t uniqueId(Identifier id);  ///< Returns encoded unique id
 
   static char typeLetter(Identifier id);  ///< One letter short code eg 'e' for ecal, 't' for track, 'x' for unknown
   static std::string typeAndSubtype(Identifier id);  ///< Two letter string of type and subtype eg "em"
@@ -147,12 +147,12 @@ public:
   static int bitshift() { return m_bitshift; }
 
 private:
-  static const unsigned int m_bitshift1 = 61;  ///< encoding parameter
-  static const unsigned int m_bitshift2 = 53;  ///< encoding parameter
-  static const unsigned int m_bitshift = 21;   ///< encoding parameter (max size of counter)
+  static const uint32_t m_bitshift1 = 61;  ///< encoding parameter
+  static const uint32_t m_bitshift2 = 53;  ///< encoding parameter
+  static const uint32_t m_bitshift = 21;   ///< encoding parameter (max size of counter)
   /// checks that the identifier can be correctly decoded
-  static bool checkValid(Identifier id, ItemType type, char subt, float val, unsigned int uid);
-  static bool checkUIDValid(Identifier id, unsigned int uniqueid);
+  static bool checkValid(Identifier id, ItemType type, char subt, float val, uint32_t uid);
+  static bool checkUIDValid(Identifier id, uint32_t uniqueid);
   static uint64_t floatToBits(float value);  /// convert float into binary
   static float bitsToFloat(uint64_t bits);   /// convert binary into float
 };

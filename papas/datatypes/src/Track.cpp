@@ -1,14 +1,14 @@
 #include "papas/datatypes/Track.h"
 
+#include <iomanip>  //lxplus needs this
 #include <iostream>
-#include <iomanip>
 
 #include "papas/datatypes/IdCoder.h"
 #include "papas/utility/StringFormatter.h"
 
 namespace papas {
 
-Track::Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, unsigned int index, char subtype)
+Track::Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, uint32_t index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::ItemType::kTrack, subtype, p3.Mag())),
       m_p3(p3),
       m_charge(charge),

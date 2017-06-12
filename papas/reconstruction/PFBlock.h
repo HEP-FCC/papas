@@ -19,7 +19,6 @@ namespace papas {
 
  Edges m_edges : Unordered map of all the edge combinations in the block
           use  edge(id1,id2) to find an edge
- static int tempBlockCount: sequential numbering of blocks (useful for debugging/tracing etc)
 
  Usage:
  block = PFBlock(element_ids,  edges, 'r')
@@ -36,10 +35,11 @@ public:
    extracted will be removed from the Edges object and will become owned by the PFBlock
    @param[in] subtype The subtype for the identifier of the block eg 's' for split block
    */
-  PFBlock(const Ids& elementIds, Edges& edges, unsigned int index,
+  PFBlock(const Ids& elementIds, const Edges& edges, uint32_t index,
           char subtype = 'u');           // relevant parts of edges will be removed and become owned by PFBlock
   PFBlock(PFBlock&& pfblock) = default;  // allow move
-  const Ids& elementIds(bool sort = false) const { return m_elementIds; }  ///< returns vector of all ids in the block
+  ~PFBlock();                            /// destructor
+  const Ids& elementIds() const { return m_elementIds; }  ///< returns vector of all ids in the block
 
   /**
   Returns list of all edges of a given edge type that are connected to a given id.
@@ -81,10 +81,9 @@ private:
   PFBlock(const PFBlock& pfblock) = default;
   PFBlock& operator=(const PFBlock&) = default;
 
-  Identifier m_id;            ///<  identifier for this block
-  Ids m_elementIds;           ///<  ids of elements in this block ordered by type and decreasing energy
-  Edges m_edges;              ///< all the edges for elements in this block
-  static int tempBlockCount;  ///< sequential numbering of blocks, not essential but helpful for debugging
+  Identifier m_id;   ///<  identifier for this block
+  Ids m_elementIds;  ///<  ids of elements in this block ordered by type and decreasing energy
+  Edges m_edges;     ///< all the edges for elements in this block
 };
 
 std::ostream& operator<<(std::ostream& os, const PFBlock& block);

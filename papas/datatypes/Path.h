@@ -18,14 +18,20 @@ namespace papas {
 class Path {
 public:
   typedef std::map<papas::Position, TVector3> Points;  ///< Map of path points indexed by position
-                                                       /*Constructor
-                                                        @param p4 4-momentum
-                                                        @param origin position of start of path
-                                                        @param magnetic field
-                                                        */
+
+  /**Constructor
+   @param p4 4-momentum
+   @param origin position of start of path
+   @param magnetic field
+  */
   Path(const TLorentzVector& p4, const TVector3& origin, double field = 0.);
+
   /** Constructor */
   Path();
+
+  /** Destructor*/
+  virtual ~Path() = default;  // needed to allow virtual destruction
+
   /** Add a new point to path
    * @param layer for the new point which is used to index unordered map of points
    * @param vec new point to be added

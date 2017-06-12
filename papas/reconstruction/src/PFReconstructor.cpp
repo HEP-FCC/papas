@@ -32,7 +32,13 @@ PFReconstructor::PFReconstructor(const Event& event, char blockSubtype, const De
       PDebug::write("{},", u);
     // TODO warning message
   }
+  PDebug::write("Finished reconstruction");
 }
+
+PFReconstructor::~PFReconstructor() {  // needed to avoid seg fault (may be connected to optimisation)
+  m_locked.clear();
+  m_unused.clear();
+};
 
 void PFReconstructor::reconstructBlock(const PFBlock& block) {
   // see class description for summary of reconstruction approach
@@ -85,6 +91,7 @@ void PFReconstructor::reconstructBlock(const PFBlock& block) {
       m_unused.insert(id);
     }
   }
+  PDebug::write("Finished block", IdCoder::pretty(block.id()));
 }
 
 void PFReconstructor::reconstructMuons(const PFBlock& block) {
@@ -104,8 +111,8 @@ void PFReconstructor::reconstructElectrons(const PFBlock& block) {
   Ids ids = block.elementIds();
 
   /* the simulator does not simulate electron energy deposits in ecal.
-  # therefore, one should not lock the ecal clusters linked to the
-  # electron track as these clusters are coming from other particles.*/
+   # therefore, one should not lock the ecal clusters linked to the
+   # electron track as these clusters are coming from other particles.*/
   for (auto id : ids) {
     if (IdCoder::isTrack(id) && isFromParticle(id, "ps", 11)) {
 
@@ -131,8 +138,8 @@ void PFReconstructor::insertParticle(const Ids& parentIds, Particle& newparticle
 
 bool PFReconstructor::isFromParticle(Identifier id, const std::string& typeAndSubtype, int pdgid) const {
   /*returns: True if object identifier comes, directly or indirectly,
-from a particle of type type_and_subtype, with this absolute pdgid.
-*/
+   from a particle of type type_and_subtype, with this absolute pdgid.
+   */
   auto historyHelper = HistoryHelper(m_event);
   auto parentIds = historyHelper.linkedIds(id, typeAndSubtype, DAG::enumVisitType::PARENTS);
   bool isFromPdgId = false;
@@ -144,19 +151,19 @@ from a particle of type type_and_subtype, with this absolute pdgid.
 
 double PFReconstructor::neutralHadronEnergyResolution(double energy, double eta) const {
   /*Currently returns the hcal resolution of the detector in use.
-  That's a generic solution, but CMS is doing the following
-  (implementation in commented code)
-http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
-  */
+   That's a generic solution, but CMS is doing the following
+   (implementation in commented code)
+   http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3350
+   */
   auto resolution = m_detector.hcal()->energyResolution(energy, eta);
   return resolution;
 }
 
 double PFReconstructor::nsigmaHcal(const Cluster& cluster) const {
   /*Currently returns 2.
-  CMS is doing the following (implementation in commented code)
-http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
-  */
+   CMS is doing the following (implementation in commented code)
+   http://cmslxr.fnal.gov/source/RecoParticleFlow/PFProducer/src/PFAlgo.cc#3365
+   */
   return 2;
 }
 
@@ -283,6 +290,7 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   TVector3 p3(cluster.position().Unit() * momentum);
   TLorentzVector p4(p3.Px(), p3.Py(), p3.Pz(), energy);  // mass is not accurate here
   Particle particle(pdgId, 0., p4, m_particles.size(), 'r', vertex);
+  propagator(particle.charge())->setPath(particle);
   propagator(particle.charge())->propagateOne(particle, m_detector.ecal()->volumeCylinder().inner());
   if (layer == papas::Layer::kHcal) {  // alice not sure
     particle.path()->addPoint(papas::Position::kHcalIn, cluster.position());
@@ -294,7 +302,6 @@ void PFReconstructor::reconstructCluster(const Cluster& cluster, papas::Layer la
   // of the hcal?
   // nb this only is problem if the cluster and the assigned layer are different
   m_locked[cluster.id()] = true;  // alice : just OK but not nice if hcal used to make ecal.
-  // TODO make more flexible and able to detect what type of cluster
   PDebug::write("Made {} from Merged{}", particle, cluster);
   insertParticle(parentIds, particle);
 }
@@ -310,7 +317,7 @@ void PFReconstructor::reconstructTrack(const Track& track, int pdgId, const Ids&
                     track.path()->namedPoint(papas::Position::kVertex));
 
   //#todo fix this so it picks up smeared track points (need to propagate smeared track)
-  // particle.set_path(track.path)
+  propagator(particle.charge())->setPath(particle);
   m_locked[track.id()] = true;
   PDebug::write("Made {} from Smeared{}", particle, track);
   insertParticle(parentIds, particle);

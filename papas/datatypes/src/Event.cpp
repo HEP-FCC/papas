@@ -1,11 +1,16 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Cluster.h"
 
+#include <iomanip>  //lxplus needs this
+#include <iostream>
+
+#include "spdlog/details/format.h"
+
 namespace papas {
 /// Event holds pointers to collections of particles, clusters etc and the address of the history associated with
 /// an event
 
-Event::Event(std::shared_ptr<Nodes> hist)
+Event::Event(Nodes& hist)
     : m_ecalClustersFolder(),
       m_hcalClustersFolder(),
       m_tracksFolder(),
@@ -154,7 +159,7 @@ void Event::extendHistory(const Nodes& history) {
   // the following adds this history into the papasevent history
   for (const auto& node : history) {
     for (const auto& c : node.second.children()) {
-      makeHistoryLink(node.first, c->value(), *m_history);
+      makeHistoryLink(node.first, c->value(), m_history);
     }
   }
 }
@@ -165,6 +170,34 @@ void Event::clear() {
   m_tracksFolder.clear();
   m_particlesFolder.clear();
   m_blocksFolder.clear();
-  m_history = 0;
+  m_history.clear();
+}
+
+std::string Event::info() const {
+  fmt::MemoryWriter out;
+  out.write("Papas::Event: {}\n", m_eventNo);
+  out.write("\thistory = {}", m_history.size());
+  out.write("\n\tecals =");
+  for (auto c : m_ecalClustersFolder) {
+    out.write(" {}({}) +", c.first, c.second->size());
+  }
+  out.write("\n\thcals =");
+  for (auto c : m_hcalClustersFolder) {
+    out.write(" {}({}) +", c.first, c.second->size());
+  }
+  out.write("\n\ttracks =");
+  for (auto c : m_tracksFolder) {
+    out.write(" {}({}) +", c.first, c.second->size());
+  }
+  out.write("\n\tblocks =");
+  for (auto c : m_blocksFolder) {
+    out.write(" {}({}) +", c.first, c.second->size());
+  }
+  out.write("\n\tparticles =");
+  for (auto c : m_particlesFolder) {
+    out.write(" {}({}) +", c.first, c.second->size());
+  }
+  out.write("\n");
+  return out.str();
 }
 }

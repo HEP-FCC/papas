@@ -8,8 +8,6 @@
 
 namespace papas {
 
-int PFBlock::tempBlockCount = 0;
-
 bool blockIdComparer(Identifier id1, Identifier id2) {
   if (IdCoder::type(id1) == IdCoder::type(id2))
     return id1 > id2;
@@ -17,19 +15,24 @@ bool blockIdComparer(Identifier id1, Identifier id2) {
     return IdCoder::type(id1) < IdCoder::type(id2);
 }
 
-PFBlock::PFBlock(const Ids& element_ids, Edges& edges, unsigned int index, char subtype)
+PFBlock::~PFBlock() {
+  // //If I move ~PFBlock to the header files or if I   use the default destructor I get a seg fault under Gaudi
+  // everything looks fine just before (the Block prints correctly) but
+  // when this point is reached it has id of zero and a ridiculous size for m_edges.
+  m_elementIds.clear();
+  m_edges.clear();
+};
+
+PFBlock::PFBlock(const Ids& element_ids, const Edges& edges, uint32_t index, char subtype)
     : m_id(IdCoder::makeId(index, IdCoder::kBlock, subtype, element_ids.size())), m_elementIds(element_ids) {
-  PFBlock::tempBlockCount += 1;
-  // extract the relevant parts of the complete set of edges and store this within the block
-  // note the edges will be removed from the edges unordered_map
+  // copy the relevant parts of the complete set of edges and store this within the block
   for (auto id1 : m_elementIds) {
     for (auto id2 : m_elementIds) {
       if (id1 >= id2) continue;
-      // move the edge from one unordered map to the other
-      const auto& e = edges.find(Edge::makeKey(id1, id2));
+      // copy the edge from one unordered map to the other
+      auto e = edges.find(Edge::makeKey(id1, id2));
       if (e != edges.end()) {
-        m_edges.emplace(e->second.key(), std::move(e->second));
-        edges.erase(e);
+        m_edges.emplace(e->first, e->second);  // I checked - this copies the edge
       }
     }
   }
@@ -188,7 +191,9 @@ std::string PFBlock::info() const {  // One liner summary of PFBlock
 std::ostream& operator<<(std::ostream& os, const PFBlock& block) {
   os << "block:" << block.info() << std::endl;
   os << block.elementsString();
-  os << block.edgeMatrixString();
+  if (block.edges().size() > 0) {
+    os << block.edgeMatrixString();
+  }
   return os;
 }
 

@@ -1,4 +1,3 @@
-
 //
 //  PythiaConnector.cpp
 //  papas
@@ -17,12 +16,15 @@
 #include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
 
+#include "papas/datatypes/Helix.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/simulation/Simulator.h"
-#include "papas/utility/PDebug.h"
-
+#include "papas/datatypes/Path.h"
+#include "papas/detectors/Detector.h"
+#include "papas/detectors/Field.h"
 #include "papas/display/PFApp.h"
+#include "papas/simulation/Simulator.h"
 #include "papas/utility/Log.h"
+#include "papas/utility/PDebug.h"
 
 #include <exception>
 #include <string>
@@ -47,7 +49,8 @@ PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore(
 }
 
 void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCParticleCollection* ptcs,
-                                                               papas::Particles& particles) {
+                                                               papas::Particles& particles,
+                                                               const papas::Detector& detector) {
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
   int countp = 0;
@@ -81,6 +84,15 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
         papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex,
                                  ptc.core().status);
+        // set the particles papas path (allows particles to be const when passed to simulator)
+        std::shared_ptr<papas::Path> ppath;
+        if (fabs(particle.charge()) < 0.5) {
+          ppath = std::make_shared<papas::Path>(particle.p4(), particle.startVertex(), particle.charge());
+        } else {
+          ppath = std::make_shared<papas::Helix>(particle.p4(), particle.startVertex(), particle.charge(),
+                                                 detector.field()->getMagnitude());
+        }
+        particle.setPath(ppath);
         particles.emplace(particle.id(), particle);
         papas::PDebug::write("Made {}", particle);
       }
@@ -92,14 +104,15 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   // make a papas particle collection from the next event
   // then run simulate and reconstruct
   m_reader.goToEvent(eventNo);
-  papasManager.clear();
   papasManager.setEventNo(eventNo);
-  const fcc::MCParticleCollection* ptcs(nullptr);
+  const fcc::MCParticleCollection* ptcs;
   if (m_store.get("GenParticle", ptcs)) {
     try {
+      papasManager.clear();
       papas::Particles& genParticles = papasManager.createParticles();
-      makePapasParticlesFromGeneratedParticles(ptcs, genParticles);
-      papasManager.simulate(genParticles);
+      makePapasParticlesFromGeneratedParticles(ptcs, genParticles, papasManager.detector());
+      papasManager.addParticles(genParticles);
+      papasManager.simulate('s');
       papasManager.mergeClusters("es");
       papasManager.mergeClusters("hs");
       papasManager.buildBlocks('m', 'm', 's');
@@ -130,8 +143,8 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& pcoll = m_store.create<fcc::ParticleCollection>("GenParticle");
 
-  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
-  writer.registerForWrite<fcc::ParticleCollection>("GenParticle");
+  writer.registerForWrite("evtinfo");
+  writer.registerForWrite("GenParticle");
 
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
@@ -161,8 +174,8 @@ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
 
-  writer.registerForWrite<fcc::EventInfoCollection>("evtinfo");
-  writer.registerForWrite<fcc::CaloClusterCollection>("Cluster");
+  writer.registerForWrite("evtinfo");
+  writer.registerForWrite("Cluster");
 
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);

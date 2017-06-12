@@ -19,8 +19,8 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
+
   papas::PDebug::File("physics.txt");
-  // randomgen::setEngineSeed(0xdeadbeef);  // make results reproduceable
   rootrandom::Random::seed(0xdeadbeef);
 
   if (argc != 2) {
@@ -41,14 +41,14 @@ int main(int argc, char* argv[]) {
     papas::PapasManager papasManager(CMSDetector);
 
     unsigned int eventNo = 0;
-    unsigned int nEvents = 10;
+    unsigned int nEvents = 10000;
 
     auto start = std::chrono::steady_clock::now();
 
     for (unsigned i = eventNo; i < eventNo + nEvents; ++i) {
 
       papas::PDebug::write("Event: {}", i);
-      if (i % 10 == 0) {
+      if (i % 100 == 0) {
         std::cout << "reading event " << i << std::endl;
       }
       if (i == eventNo)

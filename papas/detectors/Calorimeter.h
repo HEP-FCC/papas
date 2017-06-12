@@ -17,6 +17,9 @@ public:
   enum LOCATION { kBarrel = 0, kEndCap = 1 };
   using DetectorElement::DetectorElement;
 
+  /**Destructor*/
+  virtual ~Calorimeter() = default;  // needed for classes that inherit
+
   /** energy Resolution of ECAL
    @param[in] energy : energy
    @param[in] eta : angle of arrival

@@ -27,7 +27,7 @@ public:
    @param[in] index used to create track identifier, normally the index of the collection to which the track will belong
    @param[in] the subtype of the track used in creating the identifer
    */
-  Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, unsigned int index, char subtype = 'u');
+  Track(const TVector3& p3, double charge, const std::shared_ptr<Path> path, uint32_t index, char subtype = 'u');
   double energy() const { return m_p3.Mag(); }  ///<energy
   double charge() const { return m_charge; }
   Identifier id() const { return m_id; }       ///<identifier

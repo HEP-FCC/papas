@@ -1,5 +1,4 @@
 #include "papas/graphtools/Edge.h"
-
 #include <math.h>
 
 #include "papas/datatypes/IdCoder.h"

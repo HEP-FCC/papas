@@ -11,15 +11,18 @@ namespace papas {
 
 StraightLinePropagator::StraightLinePropagator(std::shared_ptr<const Field> field) : Propagator(field) {}
 
-void StraightLinePropagator::propagateOne(Particle& ptc, const SurfaceCylinder& cyl) const {
+void StraightLinePropagator::setPath(Particle& ptc) const {
+  if (ptc.path() == nullptr) {
+    auto line = std::make_shared<Path>(ptc.p4(), ptc.startVertex(), ptc.charge());
+    ptc.setPath(line);
+  }
+}
+
+void StraightLinePropagator::propagateOne(const Particle& ptc, const SurfaceCylinder& cyl) const {
   auto layer = cyl.layer();
   double cylinderz = cyl.z();
   double cylinderradius = cyl.radius();
   std::shared_ptr<Path> line = ptc.path();
-  if (line == nullptr) {
-    line = std::make_shared<Path>(Path(ptc.p4(), ptc.startVertex(), ptc.charge()));
-    ptc.setPath(line);
-  }
   auto udir = line->unitDirection();
   auto origin = line->origin();
   double theta = udir.Theta();

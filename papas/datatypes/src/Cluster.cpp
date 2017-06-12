@@ -8,22 +8,22 @@ namespace papas {
 
 double Cluster::s_maxEnergy = 0;
 
-Cluster::Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType type,
+Cluster::Cluster(double energy, const TVector3& position, double size_m, uint32_t index, IdCoder::ItemType type,
                  char subtype)
-    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position), m_subClusters({this}) {
+    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position), m_subClusters({}) {
   setSize(size_m);
   setEnergy(energy);
 }
 
-Cluster::Cluster(const Cluster& c, unsigned int index, IdCoder::ItemType type, char subtype, float val)
+Cluster::Cluster(const Cluster& c, uint32_t index, IdCoder::ItemType type, char subtype, float val)
     : m_id(IdCoder::makeId(index, type, subtype, val)),
       m_size(c.m_size),
       m_angularSize(c.m_angularSize),
       m_position(c.m_position),
       m_energy(c.m_energy),
-      m_subClusters({&c}) {}
+      m_subClusters({}) {}
 
-Cluster::Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype)
+Cluster::Cluster(std::list<const Cluster*> overlappingClusters, uint32_t index, char subtype)
     : m_subClusters(overlappingClusters) {
   Identifier firstId = 0;
   char type;
@@ -87,8 +87,12 @@ std::ostream& operator<<(std::ostream& os, const Cluster& cluster) {
   os << "Cluster: " << std::setw(6) << std::left << IdCoder::pretty(cluster.id()) << ":" << cluster.id() << ": "
      << cluster.info();
   os << " sub(";
-  for (const auto& c : cluster.subClusters()) {
-    os << IdCoder::pretty(c->id()) << ", ";
+  if (cluster.subClusters().empty())  // match python pdebug outputs
+    os << IdCoder::pretty(cluster.id()) << ", ";
+  else {
+    for (const auto& c : cluster.subClusters()) {
+      os << IdCoder::pretty(c->id()) << ", ";
+    }
   }
   os << ")";
   return os;

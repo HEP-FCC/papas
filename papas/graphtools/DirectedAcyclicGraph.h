@@ -70,6 +70,7 @@ template <typename N>  // N is the templated Node
 class Visitor {
 public:
   Visitor();                              ///<Constructor
+  virtual ~Visitor() = default;           ///< Destructor (needed for classes that inherit)
   virtual void visit(const N* node) = 0;  ///< Key function for visitor pattern
 
   /// returns vector of all child nodes (including the start node and all children of children)
@@ -119,7 +120,8 @@ protected:
 template <typename N>
 class BFSVisitor : public Visitor<N> {
 public:
-  BFSVisitor();
+  BFSVisitor();                        ///< Constructor
+  virtual ~BFSVisitor() = default;     ///< Destructor (needed for classes that inherit)
   void visit(const N* node) override;  ///< key to visitor pattern
   const Nodevector<N>& traverseChildren(const N& node, int depth = -1) override;
   const Nodevector<N>& traverseParents(const N& node, int depth = -1) override;

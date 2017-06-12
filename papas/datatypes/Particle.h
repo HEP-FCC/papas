@@ -30,7 +30,7 @@ public:
    @param[in] startvertex start vertex (3d point)
    @param[in] status Status (1 = stable)
    */
-  Particle(int pdgid, double charge, const TLorentzVector& tlv, unsigned int index, char subtype,
+  Particle(int pdgid, double charge, const TLorentzVector& tlv, uint32_t index, char subtype,
            const TVector3& startvertex = TVector3(0., 0., 0.), double status = 1);
   const TLorentzVector& p4() const { return m_tlv; }  ///< 4-momentum, px, py, pz, E
   TVector3 p3() const { return m_tlv.Vect(); }        ///< 3-momentum px, py, pz,
@@ -50,13 +50,10 @@ public:
   bool status() const { return m_status; }    ///<status code, e.g. from generator. 1:stable.
   const TVector3& startVertex() const { return m_startVertex; }  ///<start vertex (3d point)
   std::string info() const;                                      ///< text descriptor of the particle
-                                                                 /** check id this position exists in particle path
-                                                                  @param[in] layer position to search for the path location
-                                                                  */
-  void setPath(std::shared_ptr<Path> path) { m_path = path; }
-  const std::shared_ptr<Path> path() const { return m_path; }  ///< Return pointer to path
-  Identifier id() const { return m_id; }                       ///< unique Identifier for object
-  bool isElectroMagnetic() const;                              ///< Is it electroMagnetic
+  void setPath(std::shared_ptr<Path> path) { m_path = path; }    ///< set the Particle path
+  const std::shared_ptr<Path> path() const { return m_path; }    ///< Return pointer to path
+  Identifier id() const { return m_id; }                         ///< unique Identifier for object
+  bool isElectroMagnetic() const;                                ///< Is it electroMagnetic
 private:
   TLorentzVector m_tlv;          ///<4-momentum, px, py, pz, E
   int m_pdgId;                   ///<particle type

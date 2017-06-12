@@ -26,7 +26,7 @@ public:
    @param[in]  id identifier type of cluster eg kEcalCluster or kHcalCluster
    @param[in]  subtype single char describing type of cluster eg s = smeared, t= true, m = merged
     */
-  Cluster(double energy, const TVector3& position, double size_m, unsigned int index, IdCoder::ItemType id,
+  Cluster(double energy, const TVector3& position, double size_m, uint32_t index, IdCoder::ItemType id,
           char subtype = 't');
 
   /** Constructor: makes new cluster with a new id based on a copy of an existing cluster. The new id must be provided.
@@ -37,7 +37,7 @@ public:
    @param[in]  val the value that will be used when creating the Cluster identifier and which is used for sorting.
                 When creating a merged cluster it should ideally be set to the total eneergy of the cluster
       */
-  Cluster(const Cluster& cluster, unsigned int index, IdCoder::ItemType type, char subtype = 'u', float val = 0.0);
+  Cluster(const Cluster& cluster, uint32_t index, IdCoder::ItemType type, char subtype = 'u', float val = 0.0);
 
   /** Constructor: makes new merged cluster
    @param[in]  overlappingClusters list of clusters to be merged, they must have same type and subtype and must be
@@ -46,7 +46,7 @@ public:
    @param[in]  index of the collection into which the cluster is to be stored
    @param[in]  subtype subtype of cluster to be created eg 'm' for merged,
    */
-  Cluster(std::list<const Cluster*> overlappingClusters, unsigned int index, char subtype = 'm');
+  Cluster(std::list<const Cluster*> overlappingClusters, uint32_t index, char subtype = 'm');
   Cluster() = default;
   Cluster(Cluster&& c);                       // needed for unordered_map
   Cluster(const Cluster& cluster) = default;  // needed for unordered_map
@@ -54,7 +54,7 @@ public:
   double angularSize() const;  ///< The angle that the cluster boundary makes (not valid for merged clusters)
   double size() const;         ///< The radius of the cluster
   double pt() const {
-    return m_energy * m_position.Perp();
+    return m_energy * m_position.Unit().Perp();
   }                                                ///< Transverse momentum (magnitude of p3 in transverse plane)
   double energy() const { return m_energy; }       ///< Energy
   double eta() const { return m_position.Eta(); }  ///< Pseudo-rapidity (-ln(tan self._tlv.Theta()/2))
