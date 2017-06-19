@@ -10,7 +10,7 @@ double Cluster::s_maxEnergy = 0;
 
 Cluster::Cluster(double energy, const TVector3& position, double size_m, uint32_t index, IdCoder::ItemType type,
                  char subtype)
-    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position), m_subClusters({}) {
+    : m_id(IdCoder::makeId(index, type, subtype, fmax(0, energy))), m_position(position) {
   setSize(size_m);
   setEnergy(energy);
 }

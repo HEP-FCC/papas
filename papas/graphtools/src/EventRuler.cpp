@@ -11,18 +11,18 @@ Distance EventRuler::distance(Identifier id1, Identifier id2) const {
   // figure out the object types and then call ClusterCluster or ClusterTrack distance measures
   if (IdCoder::isCluster(id1) && IdCoder::isCluster(id2))
     if (IdCoder::type(id1) == IdCoder::type(id2))
-      return std::move(clusterClusterDistance(id1, id2));
+      return clusterClusterDistance(id1, id2);
     else  // hcal ecal not linked
       return Distance();
   else if (IdCoder::isTrack(id2) && IdCoder::isCluster(id1))
-    return std::move(clusterTrackDistance(id1, id2));
+    return clusterTrackDistance(id1, id2);
   else if (IdCoder::isTrack(id1) && IdCoder::isCluster(id2))
-    return std::move(clusterTrackDistance(id2, id1));
+    return clusterTrackDistance(id2, id1);
   else if (IdCoder::isTrack(id1) && IdCoder::isTrack(id2))
-    return std::move(Distance());
+    return Distance();
   std::cout << IdCoder::type(id1) << ":" << IdCoder::type(id2) << std::endl;
   throw "Distance between ids could not be computed";
-  return std::move(Distance());
+  return Distance();
 }
 
 Distance EventRuler::clusterClusterDistance(Identifier id1, Identifier id2) const {

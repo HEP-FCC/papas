@@ -5,6 +5,7 @@ ${MAINDIR}
 ${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
+message(STATUS "Found podio: ${ROOT_LIBRARIES}")
 
 
 add_executable(example_simple example_simple.cpp PythiaConnector.cpp )
@@ -24,6 +25,7 @@ target_link_libraries(example_pdebug papas ${ROOT_LIBRARIES} datamodel datamodel
 
 add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )
 target_link_libraries(example_plot papas ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
+
 
 #todo fix this
 #add_executable(example_gun example_gun.cpp )

@@ -11,7 +11,7 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/reconstruction/PapasManager.h"
 
-#include "datamodel/CaloClusterCollection.h"
+//#include "datamodel/CaloClusterCollection.h"
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
@@ -166,6 +166,7 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   writer.finish();
 }
 
+/*
 void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
 
   podio::ROOTWriter writer(fname, &m_store);
@@ -217,7 +218,7 @@ void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc
     p3.z = c.second.position().Z();
   }
 }
-
+*/
 /*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
 
   const fcc::ParticleCollection* ptcs(nullptr);
