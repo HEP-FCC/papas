@@ -33,8 +33,8 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detEle
     double radius = elem.radius();
     double dz = elem.z();
 
-    m_circles.push_back(std::move(TEllipse(0., 0., radius, radius)));
-    m_boxes.push_back(std::move(TBox(-dz, -radius, dz, radius)));
+    m_circles.push_back({0., 0., radius, radius});
+    m_boxes.push_back({-dz, -radius, dz, radius});
   }
 
   // Choose color according to which element it is
@@ -59,8 +59,8 @@ GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detEle
 
 GDetectorElement::GDetectorElement(double radius, double dz) {
 
-  m_circles.push_back(std::move(TEllipse(0., 0., radius, radius)));
-  m_boxes.push_back(std::move(TBox(-dz, -radius, dz, radius)));
+  m_circles.push_back({0., 0., radius, radius});
+  m_boxes.push_back({-dz, -radius, dz, radius});
 
   // Choose color according to which element it is
   int color = 0;

@@ -445,7 +445,7 @@ TEST_CASE("BlockSplitter") {
   // create history nodes
   Nodes historyNodes;
   for (auto id : ids)
-    historyNodes.emplace(id, std::move(PFNode(id)));
+    historyNodes.emplace(id, PFNode(id));
 
   Nodes emptyNodes;
   Blocks blocks;

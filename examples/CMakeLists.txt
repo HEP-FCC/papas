@@ -6,7 +6,6 @@ ${MAINDIR}/spdlog
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-
 add_executable(example_simple example_simple.cpp PythiaConnector.cpp )
 target_compile_definitions(example_simple PRIVATE WITHSORT=1)
 target_link_libraries(example_simple papas ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
