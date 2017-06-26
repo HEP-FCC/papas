@@ -123,7 +123,6 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
     }
     m_store.clear();
   }
-
   m_reader.endOfEvent();
 }
 
