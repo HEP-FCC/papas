@@ -12,7 +12,7 @@ namespace papas {
 /// CMS specific implementation of Detector
 class CMS : public Detector {
 public:
-  CMS();
+  CMS(double innerEcal = 1.30, double outerEcal= 1.55, double innerHcal = 1.,double outerHcal= 2.9);
 
 private:
 };

@@ -11,10 +11,10 @@
 
 namespace papas {
 
-CMS::CMS() : Detector() {
+CMS::CMS(double innerEcal, double outerEcal, double innerHcal,double outerHcal) : Detector() {
   // ECAL detector Element
   m_ecal = std::make_shared<const CMSECAL>(
-      VolumeCylinder(Layer::kEcal, 1.55, 2.1, 1.30, 2),
+      VolumeCylinder(Layer::kEcal, outerEcal, 2.1,innerEcal, 2),
       Material("CMS_ECAL", 8.9e-3, 0.275),
       1.479,                        // eta_crack
       std::vector<double>{0.3, 1},  // emin barrel and endcap
@@ -25,7 +25,7 @@ CMS::CMS() : Detector() {
 
   // HCAL detector element
   m_hcal = std::make_shared<const CMSHCAL>(
-      VolumeCylinder(Layer::kHcal, 2.9, 3.6, 1.9, 2.6),
+      VolumeCylinder(Layer::kHcal, outerHcal, 3.6, innerHcal, 2.6),
       Material("CMS_HCAL", 0.0, 0.17),
       1.3,  // eta crack
       std::vector<std::vector<double>>{{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
