@@ -1,19 +1,19 @@
-#ifndef CMS_H
-#define CMS_H
+#ifndef Clic_H
+#define Clic_H
 
 #include "papas/detectors/Detector.h"
 
 namespace papas {
 
 /**
- * @file CMS.h
- * @brief Implementation of CMS detector
+ * @file Clic.h
+ * @brief Implementation of Clic detector
  */
-/// CMS specific implementation of Detector
-class CMS : public Detector {
+/// Clic specific implementation of Detector
+class Clic : public Detector {
 public:
 
-  CMS(double innerEcal = 1.30, double outerEcal= 1.55, double innerHcal = 1.9,double outerHcal= 2.9);
+  Clic(double innerEcal = 1.30, double outerEcal= 1.55, double innerHcal = 2.85,double outerHcal= 5.3);
   double electronAcceptance(const Track& track) const ;
   double electronEnergyResolution(const Particle& ptc) const ;
   double muonAcceptance(const Track& track) const ;

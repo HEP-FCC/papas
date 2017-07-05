@@ -26,7 +26,7 @@ bool CMSTracker::acceptance(const Track& track) const {
   return accept;
 }
 
-double CMSTracker::ptResolution(const Track& track) const {
+double CMSTracker::resolution(const Track& track) const {
   double pt = track.p3().Perp();  // TODO inherited from Colin: depends on the field
   (void)pt;                       // suppress unused parameter warning
   return 1.1e-2;                  // updated on 9/16 from 5e-3;

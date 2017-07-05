@@ -86,7 +86,7 @@ void Simulator::simulateHadron(const Particle& ptc) {
   // make a track if it is charged
   if (ptc.charge() != 0) {
     auto track = makeAndStoreTrack(ptc);
-    auto resolution = m_detector.tracker()->ptResolution(track);
+    auto resolution = m_detector.tracker()->resolution(track);
     auto smeared = smearTrack(track, resolution);
     if (acceptSmearedTrack(smeared)) {
       storeSmearedTrack(std::move(smeared), track.id());
@@ -161,7 +161,7 @@ void Simulator::simulateMuon(const Particle& ptc) {
   */
   PDebug::write("Simulating Muon");
   propagator(ptc.charge())->propagate(ptc, m_detector);
-  auto ptres = m_detector.muonPtResolution(ptc);
+  auto ptres = m_detector.muonResolution(ptc);
   auto track = makeAndStoreTrack(ptc);
   auto smeared = smearTrack(track, ptres);
   if (acceptMuonSmearedTrack(smeared)) {

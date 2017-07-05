@@ -4,6 +4,7 @@
 
 #include "PythiaConnector.h"
 #include "papas/detectors/CMS.h"
+#include "papas/detectors/Clic.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
@@ -34,8 +35,10 @@ int main(int argc, char* argv[]) {
   Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
-  CMS CMSDetector;
-  papas::PapasManager papasManager{CMSDetector};
+  //CMS CMSDetector;
+  //papas::PapasManager papasManager{CMSDetector};
+  Clic ClicDetector;
+  papas::PapasManager papasManager{ClicDetector};
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
 

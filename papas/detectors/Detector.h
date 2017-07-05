@@ -40,10 +40,10 @@ public:
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
-  double electronAcceptance(const Track& track) const;
-  double electronEnergyResolution(const Particle& ptc) const;
-  double muonAcceptance(const Track& track) const;
-  double muonPtResolution(const Particle& /*ptc*/) const { return 0.02; }
+  virtual double electronAcceptance(const Track& track) const =0;
+  virtual double electronEnergyResolution(const Particle& ptc) const=0;
+  virtual double muonAcceptance(const Track& track) const=0;
+  virtual double muonResolution(const Particle& /*ptc*/) const =0;
   const std::list<std::shared_ptr<const DetectorElement>> elements() const { return m_elements; }
 
 protected:

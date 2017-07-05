@@ -5,6 +5,8 @@
 #include "papas/detectors/CMS.h"
 #include "papas/utility/PDebug.h"
 
+#include "papas/datatypes/Track.h"
+#include "papas/datatypes/Particle.h"
 #include "papas/detectors/CMSEcal.h"
 #include "papas/detectors/CMSField.h"
 #include "papas/detectors/CMSHcal.h"
@@ -12,11 +14,12 @@
 
 namespace papas {
 
-CMS::CMS(double innerEcal, double outerEcal, double innerHcal,double outerHcal) : Detector() {
+CMS::CMS(double innerEcal, double outerEcal, double innerHcal, double outerHcal) : Detector() {
   // ECAL detector Element
-  PDebug::write("Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
+  PDebug::write(
+      "Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
   m_ecal = std::make_shared<const CMSECAL>(
-      VolumeCylinder(Layer::kEcal, outerEcal, 2.1,innerEcal, 2),
+      VolumeCylinder(Layer::kEcal, outerEcal, 2.1, innerEcal, 2),
       Material("CMS_ECAL", 8.9e-3, 0.275),
       1.479,                        // eta_crack
       std::vector<double>{0.3, 1},  // emin barrel and endcap
@@ -39,5 +42,18 @@ CMS::CMS(double innerEcal, double outerEcal, double innerHcal,double outerHcal) 
   m_field = std::make_shared<const CMSField>(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8);
   setupElements();  // sets up a list of all detector elements (m_elements) (needed for propagation)
 }
+
+double CMS::electronAcceptance(const Track& track) const {
+  return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;
+}
+
+double CMS::electronEnergyResolution(const Particle& ptc) const {
+  return 0.1 / sqrt(ptc.e());
+}
+
+double CMS::muonAcceptance(const Track& track) const {
+  return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5;
+}
+double CMS::muonResolution(const Particle& ptc) const { return 0.02; }
 
 }  // end namespace papas
