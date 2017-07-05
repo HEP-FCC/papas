@@ -1,4 +1,4 @@
-/**
+clictrack/**
  * @file Clic.cc
  * @brief Implementation of the Clic detector
  */
@@ -17,7 +17,12 @@ ClicTracker::ClicTracker(const VolumeCylinder& volume)
 
 ClicTracker::ClicTracker(const VolumeCylinder&& volume)
     : Tracker(Layer::kTracker, volume, Material("void", 0, 0)), m_thetaMax(0.8 * M_PI / 180.) {
-    m_resMap = {{90, {8.2e-2, 9.1e-2}}, {80, {8.2e-4, 9.1e-3}}};
+    m_resMap = {{90, {8.2e-2, 9.1e-2}},
+                {80, {8.2e-4, 9.1e-3}},
+                {30, {9.9e-5, 3.8e-3}},
+                {20, {3.9e-5, 1.6e-3}},
+                {10, {2e-5, 7.2e-4}}
+              };
 }
 
 bool ClicTracker::acceptance(const Track& track) const {
