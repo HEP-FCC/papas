@@ -1,7 +1,3 @@
-clictrack/**
- * @file Clic.cc
- * @brief Implementation of the Clic detector
- */
 #include "papas/detectors/ClicTracker.h"
 
 #include "papas/datatypes/Track.h"
@@ -13,10 +9,10 @@ clictrack/**
 namespace papas {
 
 ClicTracker::ClicTracker(const VolumeCylinder& volume)
-    : Tracker(Layer::kTracker, volume, Material("void", 0, 0)), m_thetaMax(80. * M_PI / 180.) {}
+    : Tracker(Layer::kTracker, volume, Material("void", 0, 0)), m_thetaMax(0.8 * M_PI / 180.) {}
 
 ClicTracker::ClicTracker(const VolumeCylinder&& volume)
-    : Tracker(Layer::kTracker, volume, Material("void", 0, 0)), m_thetaMax(80. * M_PI / 180.) {
+    : Tracker(Layer::kTracker, volume, Material("void", 0, 0)), m_thetaMax(0.8 * M_PI / 180.) {
     m_resMap = {{90, {8.2e-2, 9.1e-2}},
                 {80, {8.2e-4, 9.1e-3}},
                 {30, {9.9e-5, 3.8e-3}},

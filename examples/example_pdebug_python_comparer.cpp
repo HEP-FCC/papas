@@ -35,10 +35,11 @@ int main(int argc, char* argv[]) {
   Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
-  //CMS CMSDetector;
-  //papas::PapasManager papasManager{CMSDetector};
-  Clic ClicDetector;
-  papas::PapasManager papasManager{ClicDetector};
+  auto field = std::make_shared<const Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8));
+  auto CMSDetector = CMS(1.30, 1.55, 1.9, 2.9, field);
+  papas::PapasManager papasManager{CMSDetector};
+  //Clic ClicDetector;
+  //papas::PapasManager papasManager{ClicDetector};
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
 
