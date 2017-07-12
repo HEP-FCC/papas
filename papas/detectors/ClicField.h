@@ -13,16 +13,13 @@ class ClicField : public Field {
 public:
   /** Constructor
    *
-   * @param[in] volume The field cyclinders
+   
    * @param[in] magnitude field strength
+   * @param[in] field cyclinder radius
+   * @param[in] field cyclinder z
    */
-  ClicField(const VolumeCylinder&& volume, double magnitude);
-  /** Constructor
-   *
-   * @param[in] volume the field cyclinders
-   * @param[in] magnitude field strength
-   */ ClicField(const VolumeCylinder& volume, double magnitude);
-
+  ClicField(double magnitude, double radius , double z);
+  
 private:
 };
 

@@ -15,8 +15,14 @@
 #include <cmath>
 
 namespace papas {
+  
+  Clic::Clic (std::shared_ptr<const Calorimeter> ecal,
+        std::shared_ptr<const Calorimeter> hcal,
+        std::shared_ptr<const Tracker> tracker,
+        std::shared_ptr<const Field> field)
+  : Detector(ecal, hcal, tracker, field) {}
 
-Clic::Clic(double innerEcal, double outerEcal, double innerHcal,double outerHcal) : Detector() {
+/*Clic::Clic(double innerEcal, double outerEcal, double innerHcal,double outerHcal) : Detector() {
   // ECAL detector Element
   PDebug::write("Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
   
@@ -49,8 +55,41 @@ Clic::Clic(double innerEcal, double outerEcal, double innerHcal,double outerHcal
 
   // Field detector element
   m_field = std::make_shared<const ClicField>(VolumeCylinder(Layer::kField, 3.5, 4.8), 2);
-  setupElements();  // sets up a list of all detector elements (m_elements) (needed for propagation)
+  setupElements();
+  // sets up a list of all detector elements (m_elements) (needed for propagation)
 }
+  
+  
+  Clic::Clic(double innerEcal, double outerEcal, double innerHcal,double outerHcal) : Detector() {
+    // ECAL detector Element
+    PDebug::write("Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
+    
+    double depth = 0.25;
+    double innerRadius = innerEcal;
+    double innerZ = 2.6;
+    int nX0 = 23;  //CLIC CDR, page 70, value for CLIC_ILD
+    int nLambdaI = 1;  //ibid
+    
+    
+   
+    
+    // HCAL detector element
+    m_hcal = std::make_shared<const ClicHCAL>(
+                                              VolumeCylinder(Layer::kHcal, outerHcal, 5.3, innerHcal, 2.85),
+                                              Material("Clic_HCAL", 0.018, 0.17),
+                                              1.3,  // eta crack
+                                              std::vector<std::vector<double>>{{0.6, 0,0.025}, {0,0,0}},
+                                              std::vector<std::vector<double>>{{0,0,0}, {0,0,0}});
+    // Tracker detector element
+    m_tracker = std::make_shared<const ClicTracker>(VolumeCylinder(Layer::kTracker, 2.14, 2.6));
+    
+    // Field detector element
+    m_field = std::make_shared<const ClicField>(VolumeCylinder(Layer::kField, 3.5, 4.8), 2);
+    setupElements();
+    // sets up a list of all detector elements (m_elements) (needed for propagation)
+  }
+  */
+  
   double Clic::electronAcceptance(const Track& track) const {
   return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;
 }

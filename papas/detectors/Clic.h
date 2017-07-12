@@ -3,6 +3,7 @@
 
 #include "papas/detectors/Detector.h"
 #include "papas/detectors/VolumeCylinder.h"
+#include "papas/detectors/ClicField.h"
 
 namespace papas {
 
@@ -13,8 +14,10 @@ namespace papas {
 /// Clic specific implementation of Detector
 class Clic : public Detector {
 public:
-
-  Clic(double innerEcal = 2.15, double outerEcal= 2.4, double innerHcal = 2.4,double outerHcal= 5.3, std::shared_ptr<const Field> field = std::make_shared<const Field>(ClicField(VolumeCylinder(Layer::kField, 3.5, 4.8), 2)));
+  Clic (std::shared_ptr<const Calorimeter> ecal,
+        std::shared_ptr<const Calorimeter> hcal,
+        std::shared_ptr<const Tracker> tracker,
+        std::shared_ptr<const Field> field);
   double electronAcceptance(const Track& track) const ;
   double electronEnergyResolution(const Particle& ptc) const ;
   double muonAcceptance(const Track& track) const ;

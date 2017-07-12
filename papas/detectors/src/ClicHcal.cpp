@@ -11,15 +11,16 @@
 
 namespace papas {
 
-ClicHCAL::ClicHCAL(const VolumeCylinder& volume, const Material& material, double etacrack,
-                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
-    : Calorimeter(Layer::kHcal, volume, material), m_etaCrack(etacrack), m_eres(eres), m_eresp(eresp) {}
+ClicHCAL::ClicHCAL(double innerRadius, double innerZ, double outerRadius, double outerZ, double clusterSize,
+                   std::vector<double> eresBarrel, double x0, double lambdaI, double eResponse, double etaAcceptance)
+    : Calorimeter(Layer::kHcal,
+                  VolumeCylinder(Layer::kHcal, outerRadius, outerZ, innerRadius, innerZ),
+                  Material("Clic_HCAL", x0, lambdaI)),
+      m_clusterSize(clusterSize),
+      m_etaAcceptance(etaAcceptance),
+      m_eresBarrel(eresBarrel),
+      m_eResponse(eResponse) {}
 
-ClicHCAL::ClicHCAL(const VolumeCylinder&& volume, const Material&& material, double etacrack,
-                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
-    : Calorimeter(Layer::kHcal, volume, material), m_etaCrack(etacrack), m_eres(eres), m_eresp(eresp) {}
-
-// will need to be rewritten for different detectors
 /**
  Cluster_size as a function of the type of particle
  @param ptc particle
@@ -27,7 +28,7 @@ ClicHCAL::ClicHCAL(const VolumeCylinder&& volume, const Material&& material, dou
  */
 double ClicHCAL::clusterSize(const Particle& ptc) const {
   (void)ptc;  // suppress warning messages for unused parameters;
-  return 0.25;
+  return m_clusterSize;
 }
 
 /* Decides whether a cluster will be seen by a detector
@@ -37,21 +38,20 @@ double ClicHCAL::clusterSize(const Particle& ptc) const {
 bool ClicHCAL::acceptance(const Cluster& cluster) const {
   auto energy = cluster.energy();
   auto eta = fabs(cluster.position().Eta());
-  if (eta < 2.76)  //TODO: check this value
-                   return (energy>1.);
-    else
-      return false;}
+  if (eta < m_etaAcceptance)  // TODO: check this value
+    return (energy > 1.);
+  else
+    return false;
+}
 
 double ClicHCAL::energyResolution(double energy, double eta) const {
-  int part = kBarrel;
-  double stoch = m_eres[part][0] / sqrt(energy);
-  double noise = m_eres[part][1] / energy;
-  double constant = m_eres[part][2];
+  // int part = kBarrel;
+  double stoch = m_eresBarrel[0] / sqrt(energy);
+  double noise = m_eresBarrel[1] / energy;
+  double constant = m_eresBarrel[2];
   return sqrt(pow(stoch, 2) + pow(noise, 2) + pow(constant, 2));
 }
 
-double ClicHCAL::energyResponse(double energy, double eta) const {
-  return 1;
-}
+double ClicHCAL::energyResponse(double energy, double eta) const { return m_eResponse; }
 
 }  // end namespace papas

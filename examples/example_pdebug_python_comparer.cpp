@@ -14,7 +14,36 @@
 #include <chrono>
 #include <iostream>
 
+#include "papas/detectors/ClicEcal.h"
+#include "papas/detectors/ClicField.h"
+#include "papas/detectors/ClicHcal.h"
+#include "papas/detectors/ClicTracker.h"
+
 using namespace papas;
+
+Clic CreateClic() {
+
+  auto ecal = std::make_shared<const ClicECAL>();
+  std::vector<double> eresBarrel{0.6, 0., 0.025};
+  auto hcal = std::make_shared<const ClicHCAL>(2.4,         // innerRadius
+                                               2.85,        // innerZ
+                                               4.8,         // outerRadius
+                                               5.3,         // outerZ
+                                               0.25,        // clusterSize
+                                               eresBarrel,  // eresBarrel
+                                               0.018,       // x0
+                                               0.17,        // lambdaI
+                                               1.,          // eResponse
+                                               2.76);       // etaAcceptance
+
+  auto tracker = std::make_shared<const ClicTracker>(2.14,  // outerRadius
+                                                     2.6);  // outerZ
+  auto field = std::make_shared<const ClicField>(2,         // field magnitude
+                                                 3.5,       // outerRadius
+                                                 4.8);      // outerZ
+
+  return Clic(ecal, hcal, tracker, field);
+}
 
 int main(int argc, char* argv[]) {
 
@@ -35,11 +64,13 @@ int main(int argc, char* argv[]) {
   Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
-  auto field = std::make_shared<const Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8));
+  auto field = std::make_shared<const CMSField>(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8);
   auto CMSDetector = CMS(1.30, 1.55, 1.9, 2.9, field);
-  papas::PapasManager papasManager{CMSDetector};
-  //Clic ClicDetector;
-  //papas::PapasManager papasManager{ClicDetector};
+  // auto papasManager = papas::PapasManager(CMSDetector);
+  auto clic = CreateClic();
+
+  // Clic ClicDetector;
+  auto papasManager = papas::PapasManager(clic);
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
 

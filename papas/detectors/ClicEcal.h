@@ -28,8 +28,18 @@ public:
    * @param[in] emin vector of minimum energy { barrel, endcap}
    * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
    */
-  ClicECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
-          std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp);
+  ClicECAL(double innerRadius = 2.15,
+           double innerZ = 2.6,
+           double depth = .25,
+           int nX0 = 23,
+           int nLambdaI = 1,
+           double clusterSizePhoton = .015,
+           double clusterSize = 0.045,
+           double etaAcceptance = 2.76,
+           double eminBarrel = 0.5,
+           double eminEndcap = 0.5,
+           std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
+           double eResponse = 1.);
 
   /** Minimum size that will be seen by a detector
    @param[in]  ptc  particle that is to be detected
@@ -56,12 +66,13 @@ public:
 
   // TODOAJR space_resolution(self, ptc):
 private:
-  double m_etaCrack;                         ///< ask Colin
-  std::vector<double> m_emin;                ///< vector contains two elements (Barrel and EndCap)
-  std::vector<std::vector<double>> m_eres;   ///< two vectors (Barrel and EndCap) each of 3 elements
-                                             ///< TODO describe elements
-  std::vector<std::vector<double>> m_eresp;  ///< two vectors (Barrel and EndCap) each of 3 elements
-                                             ///< TODO describe elements
+  double m_clusterSize;        ///< cluater size for other particles
+  double m_clusterSizePhoton;  ///<cluster size for photon and electron
+  double m_eminBarrel;
+  double m_eminEndcap;
+  std::vector<double> m_eresBarrel;
+  double m_eResponse;  ///<energy response
+  double m_etaAcceptance;
 };
 
 }  // end namespace papas
