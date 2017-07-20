@@ -11,8 +11,6 @@ namespace papas {
 ClicECAL::ClicECAL(double innerRadius,
                    double innerZ,
                    double depth,
-                   int nX0,
-                   int nLambdaI,
                    double clusterSizePhoton,
                    double clusterSize,
                    double etaAcceptance,
@@ -20,6 +18,8 @@ ClicECAL::ClicECAL(double innerRadius,
                    double eminEndcap,
                    std::vector<double>
                        eresBarrel,
+                   int nX0,
+                   int nLambdaI,
                    double eResponse)
     : Calorimeter(Layer::kEcal,
                   VolumeCylinder(Layer::kEcal, innerRadius + depth, innerZ + depth, innerRadius, innerZ),

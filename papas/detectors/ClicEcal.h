@@ -31,14 +31,14 @@ public:
   ClicECAL(double innerRadius = 2.15,
            double innerZ = 2.6,
            double depth = .25,
-           int nX0 = 23,
-           int nLambdaI = 1,
            double clusterSizePhoton = .015,
            double clusterSize = 0.045,
            double etaAcceptance = 2.76,
            double eminBarrel = 0.5,
            double eminEndcap = 0.5,
            std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
+           int nX0 = 23,
+           int nLambdaI = 1,
            double eResponse = 1.);
 
   /** Minimum size that will be seen by a detector

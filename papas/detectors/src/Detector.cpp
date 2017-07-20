@@ -18,8 +18,8 @@ Detector::Detector(std::shared_ptr<const Calorimeter> ecal,
                    std::shared_ptr<const Field>
                        field)
     : m_ecal(ecal), m_hcal(hcal), m_tracker(tracker), m_field(field) {
-      setupElements();
-    }
+  setupElements();
+}
 
 std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const {
   switch (layer) {

@@ -46,8 +46,7 @@ namespace papas {
   
   CMS::CMS(double innerEcal, double outerEcal, double innerHcal, double outerHcal, std::shared_ptr<const Field> field) : Detector() {
     // ECAL detector Element
-    PDebug::write(
-                  "Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
+    
     m_ecal = std::make_shared<const CMSECAL>(
                                              VolumeCylinder(Layer::kEcal, outerEcal, 2.1, innerEcal, 2),
                                              Material("CMS_ECAL", 8.9e-3, 0.275),

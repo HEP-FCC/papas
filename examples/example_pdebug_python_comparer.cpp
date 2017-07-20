@@ -24,6 +24,7 @@ using namespace papas;
 Clic CreateClic() {
 
   auto ecal = std::make_shared<const ClicECAL>();
+
   std::vector<double> eresBarrel{0.6, 0., 0.025};
   auto hcal = std::make_shared<const ClicHCAL>(2.4,         // innerRadius
                                                2.85,        // innerZ
@@ -36,11 +37,25 @@ Clic CreateClic() {
                                                1.,          // eResponse
                                                2.76);       // etaAcceptance
 
-  auto tracker = std::make_shared<const ClicTracker>(2.14,  // outerRadius
-                                                     2.6);  // outerZ
-  auto field = std::make_shared<const ClicField>(2,         // field magnitude
-                                                 3.5,       // outerRadius
-                                                 4.8);      // outerZ
+  std::map<int, std::pair<double, double>> resMap = {{90, {8.2e-2, 9.1e-2}},
+                                                     {80, {8.2e-4, 9.1e-3}},
+                                                     {30, {9.9e-5, 3.8e-3}},
+                                                     {20, {3.9e-5, 1.6e-3}},
+                                                     {10, {2e-5, 7.2e-4}}};
+  auto tracker = std::make_shared<const ClicTracker>(2.14,    // outerRadius
+                                                     2.6,     // outerZ
+                                                     0,       // x0 = 0,
+                                                     0,       // lambdaI = 0,
+                                                     0.8,     // thetaParam = 0.8,
+                                                     resMap,  // resmap
+                                                     0.4,     // double ptThresholdLow = 0.4,
+                                                     0.95,    // double ptProbabilityLow = 0.95,
+                                                     2.,      // double ptThresholdHigh = 2.,
+                                                     0.99);   // double ptProbabilityHigh = 0.99);
+
+  auto field = std::make_shared<const ClicField>(2,     // field magnitude
+                                                 3.5,   // outerRadius
+                                                 4.8);  // outerZ
 
   return Clic(ecal, hcal, tracker, field);
 }

@@ -33,7 +33,8 @@ public:
            double x0 = 0.018,
            double lambdaI = 0.17,
            double eResponse = 1,
-           double etaAcceptance = 2.76);
+           double etaAcceptance = 2.76,
+           double energyAcceptance = 1.);
 
   double clusterSize(const Particle& ptc) const override;
   bool acceptance(const Cluster& cluster) const override;
@@ -41,10 +42,12 @@ public:
   double energyResponse(double energy, double eta = 0) const override;
   // TODOAJR space_resolution(self, ptc):
 private:
-  double m_clusterSize;
-  double m_etaAcceptance;
+  double m_clusterSize;  ///<size of cluster for detection
   std::vector<double> m_eresBarrel;
   double m_eResponse;  ///< energy response default to 1.
+  double m_etaAcceptance;
+  double m_energyAcceptance;
+  
 };
 
 }  // end namespace papas
