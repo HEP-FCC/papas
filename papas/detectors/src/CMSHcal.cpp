@@ -11,23 +11,26 @@
 
 namespace papas {
 
-CMSHCAL::CMSHCAL(const VolumeCylinder& volume, const Material& material, double etacrack,
-                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
-    : Calorimeter(Layer::kHcal, volume, material), m_etaCrack(etacrack), m_eres(eres), m_eresp(eresp) {}
+CMSHCAL::CMSHCAL(double innerRadius, double innerZ, double outerRadius, double outerZ, double clusterSize, double x0,
+                 double lambdaI, double etacrack, std::vector<std::vector<double>> eres,
+                 std::vector<std::vector<double>> eresp, std::vector<double> acceptanceParameters)
+    : Calorimeter(Layer::kHcal,
+                  VolumeCylinder(Layer::kHcal, outerRadius, outerZ, innerRadius, innerZ),
+                  Material("Clic_HCAL", x0, lambdaI)),
+      m_clusterSize(clusterSize),
+      m_etaCrack(etacrack),
+      m_eres(eres),
+      m_eresp(eresp),
+      m_acceptanceParameters(acceptanceParameters) {}
 
-CMSHCAL::CMSHCAL(const VolumeCylinder&& volume, const Material&& material, double etacrack,
-                 std::vector<std::vector<double>> eres, std::vector<std::vector<double>> eresp)
-    : Calorimeter(Layer::kHcal, volume, material), m_etaCrack(etacrack), m_eres(eres), m_eresp(eresp) {}
-
-// will need to be rewritten for different detectors
 /**
  Cluster_size as a function of the type of particle
  @param ptc particle
  @return size of resulting cluster
  */
 double CMSHCAL::clusterSize(const Particle& ptc) const {
-  (void)ptc;  // suppress warning messages for unused parameters;
-  return 0.2;
+  (void)ptc;             // suppress warning messages for unused parameters;
+  return m_clusterSize;  // default 0.2
 }
 
 /* Decides whether a cluster will be seen by a detector
@@ -37,9 +40,23 @@ double CMSHCAL::clusterSize(const Particle& ptc) const {
 bool CMSHCAL::acceptance(const Cluster& cluster) const {
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());
-
   bool accept = false;
+  auto& pars = m_acceptanceParameters;
+
   if (eta < m_etaCrack) {
+    if (energy > pars[0])
+      accept = rootrandom::Random::uniform(0, 1) < (pars[1] / (1 + exp((energy + pars[2]) / (pars[3]))));
+  } else if (eta < pars[4]) {
+    if (energy > pars[5]) {
+      if (energy < pars[6])
+        accept = rootrandom::Random::uniform(0, 1) < (pars[7] + pars[8] * energy + pars[9] * (pow(energy, 2)));
+      else
+        accept = rootrandom::Random::uniform(0, 1) < (pars[10] / (1 + exp((energy + pars[11]) / pars[12])));
+    }
+  } else if (eta < pars[13] && energy > pars[14])
+    accept = true;
+
+  /*if (eta < m_etaCrack) {
     if (energy > 1.) accept = rootrandom::Random::uniform(0, 1) < (1 / (1 + exp((energy - 1.93816) / (-1.75330))));
   } else if (eta < 3.) {
     if (energy > 1.1) {
@@ -49,7 +66,7 @@ bool CMSHCAL::acceptance(const Cluster& cluster) const {
         accept = rootrandom::Random::uniform(0, 1) < (8.09522e-01 / (1 + exp((energy - 9.90855) / -5.30366)));
     }
   } else if (eta < 5. && energy > 7)
-    accept = true;
+    accept = true;*/
 
   return accept;
 }

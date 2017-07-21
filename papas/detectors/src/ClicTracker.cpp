@@ -25,8 +25,7 @@ ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, dou
 
 bool ClicTracker::acceptance(const Track& track) const {
   double pt = track.p3().Perp();
-  double theta = fabs(track.theta());  /// theta = abs(track.theta())
-
+  double theta = fabs(track.theta());  
   if (theta < m_thetaMax) {
     if (pt > m_ptThresholdLow)  // 0.4)
       return (rootrandom::Random::uniform(0, 1) < m_ptProbabilityLow);

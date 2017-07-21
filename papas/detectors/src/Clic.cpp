@@ -3,8 +3,8 @@
  * @brief Implementation of the Clic detector
  */
 #include "papas/detectors/Clic.h"
-#include "papas/utility/PDebug.h"
 
+#include "papas/utility/PDebug.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
 #include "papas/detectors/ClicEcal.h"
@@ -17,9 +17,12 @@
 namespace papas {
 
 Clic::Clic(std::shared_ptr<const Calorimeter> ecal,
-           std::shared_ptr<const Calorimeter> hcal,
-           std::shared_ptr<const Tracker> tracker,
-           std::shared_ptr<const Field> field,
+           std::shared_ptr<const Calorimeter>
+               hcal,
+           std::shared_ptr<const Tracker>
+               tracker,
+           std::shared_ptr<const Field>
+               field,
            double electronAcceptanceMagnitude,
            double electronAcceptanceEta,
            double muonAcceptanceMagnitude,
@@ -46,7 +49,7 @@ double Clic::muonAcceptance(const Track& track) const {
   /// returns True if muon is seen.
   /// The CLIC CDR gives 99% for E > 7.5GeV and polar angle > 10 degrees
   ///
-  return (track.p3().Mag() > m_muonAcceptanceTheta &&                  // 7.5
+  return (track.p3().Mag() > m_muonAcceptanceMagnitude &&              // 7.5
           fabs(track.theta()) < m_muonAcceptanceTheta * M_PI / 180.);  // 80
 }
 

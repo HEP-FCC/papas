@@ -3,8 +3,8 @@
  * @brief Implementation of the CMS detector
  */
 #include "papas/detectors/CMS.h"
-#include "papas/utility/PDebug.h"
 
+#include "papas/utility/PDebug.h"
 #include "papas/datatypes/Track.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/detectors/CMSEcal.h"
@@ -14,75 +14,45 @@
 
 namespace papas {
 
-/*::CMS(double innerEcal, double outerEcal, double innerHcal, double outerHcal) : Detector() {
-  // ECAL detector Element
-  PDebug::write(
-      "Detector: ecal inner {}, outer {}, hcal inner {} , outer{}", innerEcal, outerEcal, innerHcal, outerHcal);
-  m_ecal = std::make_shared<const CMSECAL>(
-      VolumeCylinder(Layer::kEcal, outerEcal, 2.1, innerEcal, 2),
-      Material("CMS_ECAL", 8.9e-3, 0.275),
-      1.479,                        // eta_crack
-      std::vector<double>{0.3, 1},  // emin barrel and endcap
-      std::vector<std::vector<double>>{{4.22163e-02, 1.55903e-01, 7.14166e-03},
-                                       {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
-      std::vector<std::vector<double>>{{1.00071, -9.04973, -2.48554},
-                                       {9.95665e-01, -3.31774, -2.11123}});  // barrel and endcap
+  CMS::CMS(std::shared_ptr<const Calorimeter> ecal,
+           std::shared_ptr<const Calorimeter> hcal,
+           std::shared_ptr<const Tracker> tracker,
+           std::shared_ptr<const Field> field,
+           double electronAcceptanceMagnitude,
+           double electronAcceptanceEta,
+           double muonAcceptanceMagnitude,
+           double muonAcceptanceTheta,
+           double electronEnergyFactor,
+           double muonResolution)
+  : Detector(ecal, hcal, tracker, field),
+  m_electronAcceptanceMagnitude(electronAcceptanceMagnitude),
+  m_electronAcceptanceEta(electronAcceptanceEta),
+  m_muonAcceptanceMagnitude(muonAcceptanceMagnitude),
+  m_muonAcceptanceTheta(muonAcceptanceTheta),
+  m_electronEnergyFactor(electronEnergyFactor),
+  m_muonResolution(muonResolution) {}
 
-  // HCAL detector element
-  m_hcal = std::make_shared<const CMSHCAL>(
-      VolumeCylinder(Layer::kHcal, outerHcal, 3.6, innerHcal, 2.6),
-      Material("CMS_HCAL", 0.0, 0.17),
-      1.3,  // eta crack
-      std::vector<std::vector<double>>{{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
-      std::vector<std::vector<double>>{{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}});
-  // Tracker detector element
-  m_tracker = std::make_shared<const CMSTracker>(VolumeCylinder(Layer::kTracker, 1.29, 1.99));
-
-  // Field detector element
-  m_field = std::make_shared<const CMSField>(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8);
-  setupElements();  // sets up a list of all detector elements (m_elements) (needed for propagation)
-}*/
-
-  
-  CMS::CMS(double innerEcal, double outerEcal, double innerHcal, double outerHcal, std::shared_ptr<const Field> field) : Detector() {
-    // ECAL detector Element
-    
-    m_ecal = std::make_shared<const CMSECAL>(
-                                             VolumeCylinder(Layer::kEcal, outerEcal, 2.1, innerEcal, 2),
-                                             Material("CMS_ECAL", 8.9e-3, 0.275),
-                                             1.479,                        // eta_crack
-                                             std::vector<double>{0.3, 1},  // emin barrel and endcap
-                                             std::vector<std::vector<double>>{{4.22163e-02, 1.55903e-01, 7.14166e-03},
-                                               {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
-                                             std::vector<std::vector<double>>{{1.00071, -9.04973, -2.48554},
-                                               {9.95665e-01, -3.31774, -2.11123}});  // barrel and endcap
-    
-    // HCAL detector element
-    m_hcal = std::make_shared<const CMSHCAL>(
-                                             VolumeCylinder(Layer::kHcal, outerHcal, 3.6, innerHcal, 2.6),
-                                             Material("CMS_HCAL", 0.0, 0.17),
-                                             1.3,  // eta crack
-                                             std::vector<std::vector<double>>{{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
-                                             std::vector<std::vector<double>>{{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}});
-    // Tracker detector element
-    m_tracker = std::make_shared<const CMSTracker>(VolumeCylinder(Layer::kTracker, 1.29, 1.99));
-    
-    // Field detector element
-    m_field = field; ;
-    setupElements();  // sets up a list of all detector elements (m_elements) (needed for propagation)
-  }
   
 double CMS::electronAcceptance(const Track& track) const {
-  return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;
+  return track.p3().Mag() > m_electronAcceptanceMagnitude && fabs(track.p3().Eta()) < m_electronAcceptanceEta;
 }
 
 double CMS::electronEnergyResolution(const Particle& ptc) const {
-  return 0.1 / sqrt(ptc.e());
+  return m_electronEnergyFactor / sqrt(ptc.e());  //default factor = 0.1
 }
 
 double CMS::muonAcceptance(const Track& track) const {
-  return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5;
+  /// returns True if muon is seen.
+  /// The CLIC CDR gives 99% for E > 7.5GeV and polar angle > 10 degrees
+  ///
+  return (track.p3().Mag() > m_muonAcceptanceMagnitude &&                  // default m_muonAcceptanceMagnitude=7.5
+          fabs(track.theta()) < m_muonAcceptanceTheta * M_PI / 180.);  //default m_muonAcceptanceTheta 80
 }
-double CMS::muonResolution(const Particle& ptc) const { return 0.02; }
+
+double CMS::muonResolution(const Particle& ptc) const {
+  return m_muonResolution;  // default 0.02;
+}
+
+
 
 }  // end namespace papas

@@ -22,11 +22,17 @@ class ClicECAL : public Calorimeter {
 public:
   /** Constructor
    *
-   * @param[in] volume The ECAL cyclinders
-   * @param[in] material ECAL material
-   * @param[in] eta_crack ask Colin
-   * @param[in] emin vector of minimum energy { barrel, endcap}
-   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   @param[in] innerRadius radius of inner cyclinder of ECAL
+   @param[in] innerZ z of inside of ECAL
+   @param[in] depth of ECAL cyclinder
+  @param[in] clusterSizePhoton size of ECAL cluster from photon
+   @param[in] clusterSize size of ECAL cluster from hadrons
+   @param[in] etaAcceptance max eta for acceptance in endcap
+   @param[in] emin minimum energies for acceptance in barrel and endcap default = {0.5, 0.5}
+   @param[in] eresBarrel energy resolution parameters for barrel  default   {0.165, 0.010, 0.015}
+   @param[in] nX0 number of X0 for material in ECAL
+   @param[in] nLambdaI number of lambdaI for material in ECAL
+   @param[in] eResponse energy response;
    */
   ClicECAL(double innerRadius = 2.15,
            double innerZ = 2.6,
@@ -34,8 +40,7 @@ public:
            double clusterSizePhoton = .015,
            double clusterSize = 0.045,
            double etaAcceptance = 2.76,
-           double eminBarrel = 0.5,
-           double eminEndcap = 0.5,
+           std::vector<double> emin = {0.5, 0.5},
            std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
            int nX0 = 23,
            int nLambdaI = 1,
@@ -66,13 +71,12 @@ public:
 
   // TODOAJR space_resolution(self, ptc):
 private:
-  double m_clusterSize;        ///< cluater size for other particles
-  double m_clusterSizePhoton;  ///<cluster size for photon and electron
-  double m_eminBarrel;
-  double m_eminEndcap;
-  std::vector<double> m_eresBarrel;
-  double m_eResponse;  ///<energy response
-  double m_etaAcceptance;
+  double m_clusterSize;              ///< cluater size for other particles
+  double m_clusterSizePhoton;        ///<cluster size for photon and electron
+  std::vector<double> m_emin;        ///< min energy for acceptance in barrel and endcap
+  std::vector<double> m_eresBarrel;  ///< energy resolution paremeters for barrel
+  double m_eResponse;                ///<energy response
+  double m_etaAcceptance;            ///<
 };
 
 }  // end namespace papas

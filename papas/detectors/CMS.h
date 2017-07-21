@@ -2,28 +2,55 @@
 #define CMS_H
 
 #include "papas/detectors/Detector.h"
-#include "papas/detectors/VolumeCylinder.h"
-#include "papas/detectors/CMSField.h"
 
 namespace papas {
-  
-  class CMSField;
 
 /**
  * @file CMS.h
  * @brief Implementation of CMS detector
  */
 /// CMS specific implementation of Detector
+
+/** Constructor
+ *
+ @param[in] ecal shared pointer to ECAL class
+ @param[in] hcal shared pointer to HCAL class
+ @param[in] tracker shared pointer to tracker class
+ @param[in] field shared pointer to field class
+ @param[in] electronAcceptanceMagnitudetrack energy must exceed this for electron acceptance
+ @param[in] electronAcceptanceEta track eta must be less than this for electron acceptance
+ @param[in] muonAcceptanceMagnitude track energy must exceed this for muon  acceptance
+ @param[in] muonAcceptanceTheta track energy must be less than this for muon acceptance
+ @param[in] electronEnergyFactor governs energy resolution for electron
+ @param[in] muonResolution energy resolution for muon
+ */
 class CMS : public Detector {
 public:
+  CMS(std::shared_ptr<const Calorimeter> ecal,
+      std::shared_ptr<const Calorimeter>
+          hcal,
+      std::shared_ptr<const Tracker>
+          tracker,
+      std::shared_ptr<const Field>
+          field,
+      double electronAcceptanceMagnitude = 5.,
+      double electronAcceptanceEta = 2.5,
+      double muonAcceptanceMagnitude = 7.5,
+      double muonAcceptanceTheta = 80,
+      double electronEnergyFactor = 0.1,
+      double muonResolution = 0.02);
+  double electronAcceptance(const Track& track) const;
+  double electronEnergyResolution(const Particle& ptc) const;
+  double muonAcceptance(const Track& track) const;
+  double muonResolution(const Particle& ptc) const;
 
-  //CMS(double innerEcal = 1.30, double outerEcal= 1.55, double innerHcal = 1.9,double outerHcal= 2.9);
-  CMS(double innerEcal = 1.30, double outerEcal= 1.55, double innerHcal = 1.9,double outerHcal= 2.9, std::shared_ptr<const Field> field = std::make_shared<const Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8)));
-  double electronAcceptance(const Track& track) const override ;
-  double electronEnergyResolution(const Particle& ptc) const  override;
-  double muonAcceptance(const Track& track) const override;
-  double muonResolution(const Particle& ptc) const override ;
 private:
+  double m_electronAcceptanceMagnitude;  // track energy must exceed this for electron acceptance
+  double m_electronAcceptanceEta;        // track eta must be less than this for electron acceptance
+  double m_muonAcceptanceMagnitude;      // track energy must exceed this for muon  acceptance
+  double m_muonAcceptanceTheta;          // track energy must be less than this for muon acceptance
+  double m_electronEnergyFactor;         // governs energy resolution electron
+  double m_muonResolution;               // energy resolution muon
 };
 
 }  // end namespace papas

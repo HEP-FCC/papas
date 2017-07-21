@@ -9,12 +9,8 @@ namespace papas {
 
 class Particle;
 class Cluster;
-class Material;
-class VolumeCylinder;
 
 /// CMS specific ECAL calorimeter implementation
-///
-///  It is intended to be replicated/modfied by users to match other required detector characteristics
 ///
 /// CMSECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution etc methods
 
@@ -22,14 +18,42 @@ class CMSECAL : public Calorimeter {
 public:
   /** Constructor
    *
-   * @param[in] volume The ECAL cyclinders
-   * @param[in] material ECAL material
-   * @param[in] eta_crack ask Colin
-   * @param[in] emin vector of minimum energy { barrel, endcap}
-   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   @param[in] innerRadius radius of inner cyclinder of ECAL
+   @param[in] innerZ z of inside of ECAL
+   @param[in] outerRadius radius of outer cyclinder of ECAL
+   @param[in] outerZ z of inside of ECAL
+   @param[in] x0  X0 of ECAL material
+   @param[in] lambdaI lambdaI of ECAL material
+   @param[in] clusterSizePhoton size of ECAL cluster from photon
+   @param[in] clusterSize size of ECAL cluster from hadrons
+   @param[in] etaCrack eta that is on boundary between barrel and endcap
+   @param[in] etaAcceptanceThreshold max eta for acceptance in endcap
+   @param[in] ptAcceptanceThreshold min pt for acceptance in endcap
+   @param[in] etaEndcapMin min eta for detection in endcap
+   @param[in] etaEndcapMax max eta for detection in endcap
+   @param[in] emin minimum energies for acceptance in barrel and endcap default = {0.3, 1}
+   @param[in] eres energy resolution parameters for barrel and endcap default {{4.22163e-02, 1.55903e-01, 7.14166e-03},
+   {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
+   @param[in] eresp energy response parameters for barrel and endcap defaults to {{1.00071, -9.04973, -2.48554},
+   {9.95665e-01, -3.31774, -2.11123}});
    */
-  CMSECAL(const VolumeCylinder&& volume, const Material&& material, double eta_crack, std::vector<double> emin,
-          std::vector<std::vector<double>> eres, const std::vector<std::vector<double>> eresp);
+  CMSECAL(double innerRadius = 1.3,
+          double innerZ = 2,
+          double outerRadius = 1.55,
+          double outerZ = 2.1,
+          double x0 = 8.9e-3,
+          double lambdaI = 0.275,
+          double clusterSizePhoton = 0.04,
+          double clusterSize = 0.07,
+          double etaCrack = 1.479,
+          double etaAcceptanceThreshold = 2.93,
+          double ptAcceptanceThreshold = 0.2,
+          double etaEndcapMin = 1.479,
+          double etaEndcapMax = 3.,
+          std::vector<double> emin = {0.3, 1},  // emin barrel and endcap
+          std::vector<std::vector<double>> eres = {{4.22163e-02, 1.55903e-01, 7.14166e-03},
+                                                   {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
+          std::vector<std::vector<double>> eresp = {{1.00071, -9.04973, -2.48554}, {9.95665e-01, -3.31774, -2.11123}});
 
   /** Minimum size that will be seen by a detector
    @param[in]  ptc  particle that is to be detected
@@ -50,18 +74,22 @@ public:
    */
   double energyResolution(double energy, double eta = 0) const override;
 
-  /** TODO ask Colin for comment details
+  /** Energy response for CMS ECAL
    */
   double energyResponse(double energy = 0, double eta = 0) const override;
 
   // TODOAJR space_resolution(self, ptc):
 private:
-  double m_etaCrack;                         ///< ask Colin
-  std::vector<double> m_emin;                ///< vector contains two elements (Barrel and EndCap)
-  std::vector<std::vector<double>> m_eres;   ///< two vectors (Barrel and EndCap) each of 3 elements
-                                             ///< TODO describe elements
-  std::vector<std::vector<double>> m_eresp;  ///< two vectors (Barrel and EndCap) each of 3 elements
-                                             ///< TODO describe elements
+  double m_etaCrack;                         ///< eta that forms boundary between barrel and encap
+  double m_clusterSizePhoton;                ///< size of cluster from Photon
+  double m_clusterSize;                      ///< size of cluster from other particles
+  double m_etaAcceptanceThreshold;           ///<max eta for acceptance in endcap
+  double m_ptAcceptanceThreshold;            ///<min pt for acceptance in endcap
+  double m_etaEndcapMin;                     ///<min eta for detection in endcap
+  double m_etaEndcapMax;                     ///<max eta for detection in endcap
+  std::vector<double> m_emin;                ///< vector min energy for detection (Barrel and EndCap) length 2
+  std::vector<std::vector<double>> m_eres;   ///< energy resolution parameters(Barrel and EndCap) each of 3 elements
+  std::vector<std::vector<double>> m_eresp;  ///< energy response parameters (Barrel and EndCap) each of 3 elements
 };
 
 }  // end namespace papas

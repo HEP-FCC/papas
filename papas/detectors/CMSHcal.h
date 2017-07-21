@@ -9,8 +9,6 @@ namespace papas {
 
 class Particle;
 class Cluster;
-class Material;
-class VolumeCylinder;
 
 /// CMS specific implementation of  HCAL Detector element
 ///
@@ -18,44 +16,45 @@ class CMSHCAL : public Calorimeter {
 public:
   /** Constructor
    *
-   * @param[in] volume The HCAL cyclinders
-   * @param[in] material HCAL material
-   * @param[in] eta_crack ask Colin
-   * @param[in] emin vector of minimum energy { barrel, endcap}
-   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   @param[in] innerRadius radius of inner cyclinder of HCAL
+   @param[in] innerZ z of inside of HCAL
+   @param[in] outerRadius radius of outer cyclinder of HCAL
+   @param[in] outerZ z of inside of HCAL
+   @param[in] X0 of HCAL material
+   @param[in] lambdaI lambdaI of HCAL material
+   @param[in] clusterSize size of HCAL clusters
+   @param[in] etaCrack eta that is on boundary between barrel and endcap
+   @param[in] eres energy resolution parameters for barrel and endcap default {{0.8062, 2.753, 0.1501}, {6.803e-06,
+   6.676, 0.1716}}
+   @param[in] eresp energy response parameters for barrel and endcap defaults to {{1.036, 4.452, -2.458}, {1.071, 9.471,
+   -2.823}}
+   @param[in] acceptanceParmaters parameters for acceptance length 15 defaults to {
+   1., 1., - 1.9381, -1.75330, 3., 1.1, 10., 1.05634, - 1.66943e-01, 1.05997e-02, 8.09522e-01 ,- 9.90855 , -5.30366,
+   5., 7. }
    */
-  CMSHCAL(const VolumeCylinder&& volume,
-          const Material&& material,
-          double m_eta_crack,
-          std::vector<std::vector<double>>
-              eres,
-          std::vector<std::vector<double>>
-              eresp);
-  /** Constructor
-   *
-   * @param[in] volume The HCAL cyclinders
-   * @param[in] material HCAL material
-   * @param[in] eta_crack ask Colin
-   * @param[in] emin vector of minimum energy { barrel, endcap}
-   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
-   */
-  CMSHCAL(const VolumeCylinder& volume,
-          const Material& material,
-          double m_etaCrack,
-          std::vector<std::vector<double>>
-              eres,
-          std::vector<std::vector<double>>
-              eresp);
-
+  CMSHCAL(double innerRadius = 1.9,
+          double innerZ = 2.6,
+          double outerRadius = 2.9,
+          double outerZ = 3.6,
+          double clusterSize = 0.2,
+          double x0 = 0.,
+          double lambdaI = 0.17,
+          double etaCrack = 1.3,
+          std::vector<std::vector<double>> eres = {{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
+          std::vector<std::vector<double>> eresp = {{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}},
+          std::vector<double> acceptanceParameters = {1.,  // energy
+                                                      1., -1.9381, -1.75330, 3., 1.1, 10., 1.05634, -1.66943e-01,
+                                                      1.05997e-02, 8.09522e-01, -9.90855, -5.30366, 5., 7.});
   double clusterSize(const Particle& ptc) const override;
   bool acceptance(const Cluster& cluster) const override;
   double energyResolution(double energy, double eta = 0) const override;
   double energyResponse(double energy, double eta = 0) const override;
-  // TODOAJR space_resolution(self, ptc):
 private:
-  double m_etaCrack;
-  std::vector<std::vector<double>> m_eres;   /// energy resolution
-  std::vector<std::vector<double>> m_eresp;  /// ask Colin what this is};
+  double m_clusterSize;  ///< size of cluster in HCAL
+  double m_etaCrack;  ///< eta divide between barrel and endcap
+  std::vector<std::vector<double>> m_eres;     ///< energy resolution
+  std::vector<std::vector<double>> m_eresp;    ///< energy response
+  std::vector<double> m_acceptanceParameters;  ///< list of parameters used in CMS acceptance
 };
 
 }  // end namespace papas

@@ -9,27 +9,34 @@
 
 namespace papas {
 
-CMSTracker::CMSTracker(const VolumeCylinder& volume) : Tracker(Layer::kTracker, volume, Material("void", 0, 0)) {}
-
-CMSTracker::CMSTracker(const VolumeCylinder&& volume) : Tracker(Layer::kTracker, volume, Material("void", 0, 0)) {}
+CMSTracker::CMSTracker(double radius, double z, double x0, double lambdaI, double resolution, double ptThreshold,
+                       double etaThresholdLow, double ptProbabilityLow, double etaThresholdHigh,
+                       double ptProbabilityHigh)
+    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("void", x0, lambdaI)),
+      m_resolution(resolution),
+      m_ptThreshold(ptThreshold),
+      m_etaThresholdLow(etaThresholdLow),
+      m_ptProbabilityLow(ptProbabilityLow),
+      m_etaThresholdHigh(etaThresholdHigh),
+      m_ptProbabilityHigh(ptProbabilityHigh) {}
 
 bool CMSTracker::acceptance(const Track& track) const {
   double pt = track.p3().Perp();
   double eta = fabs(track.p3().Eta());
-  // randomgen::RandUniform rUniform{0, 1};
   bool accept = false;
-  if (eta < 1.35 && pt > 0.5) {
-    accept = rootrandom::Random::uniform(0, 1) < 0.95;
-  } else if (eta < 2.5 && pt > 0.5) {
-    accept = rootrandom::Random::uniform(0, 1) < 0.9;
+  if (eta < m_etaThresholdLow && pt > m_ptThreshold) {                // (eta < 1.35 && pt > 0.5)
+    accept = rootrandom::Random::uniform(0, 1) < m_ptProbabilityLow;  // 0.95
+  } else if (eta < m_etaThresholdHigh && pt > m_ptThreshold) {
+    accept = rootrandom::Random::uniform(0, 1) < m_ptProbabilityHigh;  // 0.9  }
+    return accept;
   }
   return accept;
 }
 
 double CMSTracker::resolution(const Track& track) const {
-  double pt = track.p3().Perp();  // TODO inherited from Colin: depends on the field
-  (void)pt;                       // suppress unused parameter warning
-  return 1.1e-2;                  // updated on 9/16 from 5e-3;
+  double pt = track.p3().Perp();
+  (void)pt;             // suppress unused parameter warning
+  return m_resolution;  // updated on 9/16 from 5e-3;
 }
 
 }  // end namespace papas

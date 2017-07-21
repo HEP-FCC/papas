@@ -49,7 +49,6 @@ bool ClicHCAL::acceptance(const Cluster& cluster) const {
 }
 
 double ClicHCAL::energyResolution(double energy, double eta) const {
-  // int part = kBarrel;
   double stoch = m_eresBarrel[0] / sqrt(energy);
   double noise = m_eresBarrel[1] / energy;
   double constant = m_eresBarrel[2];

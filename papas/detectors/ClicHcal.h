@@ -18,11 +18,17 @@ class ClicHCAL : public Calorimeter {
 public:
   /** Constructor
    *
-   * @param[in] volume The HCAL cyclinders
-   * @param[in] material HCAL material
-   * @param[in] eta_crack ask Colin
-   * @param[in] emin vector of minimum energy { barrel, endcap}
-   * @param[in] eres vector of  vectors of energy resolution { barrel, endcap}
+   @param[in] innerRadius radius of inner cyclinder of HCAL
+   @param[in] innerZ z of inside of HCAL
+   @param[in] outerRadius radius of outer cyclinder of HCAL
+   @param[in] outerZ z of inside of HCAL
+   @param[in] X0 of HCAL material
+   @param[in] lambdaI lambdaI of HCAL material
+   @param[in] clusterSize size of HCAL clusters
+   @param[in] eresBarrel energy resolution parameters for barrel and endcap, length 3,  defaults to {0.6, 0., 0.025}
+   @param[in] eResponse energy response
+   @param[in] etaAcceptance max eta for acceptance
+   @param[in] energyAcceptance min energy for acceptance
    */
   ClicHCAL(double innerRadius = 2.4,
            double innerZ = 2.85,
@@ -32,7 +38,7 @@ public:
            std::vector<double> eresBarrel = {0.6, 0., 0.025},
            double x0 = 0.018,
            double lambdaI = 0.17,
-           double eResponse = 1,
+           double eResponse = 1.,
            double etaAcceptance = 2.76,
            double energyAcceptance = 1.);
 
@@ -40,14 +46,12 @@ public:
   bool acceptance(const Cluster& cluster) const override;
   double energyResolution(double energy, double eta = 0) const override;
   double energyResponse(double energy, double eta = 0) const override;
-  // TODOAJR space_resolution(self, ptc):
 private:
-  double m_clusterSize;  ///<size of cluster for detection
-  std::vector<double> m_eresBarrel;
+  double m_clusterSize;  ///<size of cluster in HCAL
+  std::vector<double> m_eresBarrel; ///< energy resolution parameters for barrel (length 3)
   double m_eResponse;  ///< energy response default to 1.
-  double m_etaAcceptance;
-  double m_energyAcceptance;
-  
+  double m_etaAcceptance; ///< max eta for acceptance
+  double m_energyAcceptance; ///< min energy for acceptance
 };
 
 }  // end namespace papas
