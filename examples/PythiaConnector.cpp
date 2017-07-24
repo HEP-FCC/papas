@@ -130,7 +130,7 @@ void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   papas::PFApp myApp{};  // I think this should turn into a PapasManager member
   myApp.display(papasManager.event(), papasManager.detector());
   gSystem->ProcessEvents();
-  int a=0;
+  int a = 0;
 }
 
 void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {

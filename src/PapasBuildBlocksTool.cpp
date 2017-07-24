@@ -1,7 +1,7 @@
 #include "PapasBuildBlocksTool.h"
 
-#include "papas/reconstruction/BuildPFBlocks.h"
 #include "papas/detectors/Detector.h"
+#include "papas/reconstruction/BuildPFBlocks.h"
 
 DECLARE_TOOL_FACTORY(PapasBuildBlocksTool)
 

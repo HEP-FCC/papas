@@ -49,9 +49,10 @@ public:
   bool acceptance(const Cluster& cluster) const override;
   double energyResolution(double energy, double eta = 0) const override;
   double energyResponse(double energy, double eta = 0) const override;
+
 private:
-  double m_clusterSize;  ///< size of cluster in HCAL
-  double m_etaCrack;  ///< eta divide between barrel and endcap
+  double m_clusterSize;                        ///< size of cluster in HCAL
+  double m_etaCrack;                           ///< eta divide between barrel and endcap
   std::vector<std::vector<double>> m_eres;     ///< energy resolution
   std::vector<std::vector<double>> m_eresp;    ///< energy response
   std::vector<double> m_acceptanceParameters;  ///< list of parameters used in CMS acceptance

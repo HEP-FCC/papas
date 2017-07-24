@@ -14,7 +14,8 @@ ClicECAL::ClicECAL(double innerRadius,
                    double clusterSizePhoton,
                    double clusterSize,
                    double etaAcceptance,
-                   std::vector<double> emin,
+                   std::vector<double>
+                       emin,
                    std::vector<double>
                        eresBarrel,
                    int nX0,
@@ -42,9 +43,9 @@ bool ClicECAL::acceptance(const Cluster& cluster) const {
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());
   if (eta < volumeCylinder().inner().etaJunction())
-    return (energy > m_emin[0]); //barrel
+    return (energy > m_emin[0]);  // barrel
   else if (eta < m_etaAcceptance)
-    return energy > m_emin[1]; //endcap
+    return energy > m_emin[1];  // endcap
   else
     return false;
 }

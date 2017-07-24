@@ -17,6 +17,8 @@ file(GLOB_RECURSE sources
          
          ${CMAKE_SOURCE_DIR}/papas/datatypes/*.cpp
          ${CMAKE_SOURCE_DIR}/papas/detectors/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/detectors/cms/*.cpp
+         ${CMAKE_SOURCE_DIR}/papas/detectors/clic/*.cpp
          ${CMAKE_SOURCE_DIR}/papas/graphtools/*.cpp
          ${CMAKE_SOURCE_DIR}/papas/display/*.cpp
          ${CMAKE_SOURCE_DIR}/papas/reconstruction/*.cpp
@@ -28,6 +30,8 @@ file(GLOB_RECURSE headers
          
          ${CMAKE_SOURCE_DIR}/papas/datatypes/*.h
          ${CMAKE_SOURCE_DIR}/papas/detectors/*.h
+         ${CMAKE_SOURCE_DIR}/papas/detectors/cms/*.h
+         ${CMAKE_SOURCE_DIR}/papas/detectors/clic/*.h
          ${CMAKE_SOURCE_DIR}/papas/graphtools/*.h
          ${CMAKE_SOURCE_DIR}/papas/display/*.h
          ${CMAKE_SOURCE_DIR}/papas/reconstruction/*.h
@@ -50,9 +54,9 @@ INSTALL(FILES ${files3} DESTINATION include/papas/reconstruction/)
 FILE(GLOB files4 "${CMAKE_SOURCE_DIR}/papas/detectors/*.h")
 INSTALL(FILES ${files4} DESTINATION include/papas/detectors/)
 FILE(GLOB files4a "${CMAKE_SOURCE_DIR}/papas/detectors/cms/*.h")
-INSTALL(FILES ${files4} DESTINATION include/papas/detectors/cms/)
+INSTALL(FILES ${files4a} DESTINATION include/papas/detectors/cms/)
 FILE(GLOB files4b "${CMAKE_SOURCE_DIR}/papas/detectors/clic/*.h")
-INSTALL(FILES ${files4} DESTINATION include/papas/detectors/clic/)
+INSTALL(FILES ${files4b} DESTINATION include/papas/detectors/clic/)
 FILE(GLOB files5 "${CMAKE_SOURCE_DIR}/papas/graphtools/*.h")
 INSTALL(FILES ${files5} DESTINATION include/papas/graphtools/)
 FILE(GLOB files6 "${CMAKE_SOURCE_DIR}/papas/display/*.h")

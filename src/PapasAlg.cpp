@@ -19,7 +19,7 @@ StatusCode PapasAlg::initialize() {
     m_tools.push_back(tool<IPapasTool>(toolname));
   }
   debug() << "papas service making" << endmsg;
-  m_papasDetSvc = service(m_detServiceName); //service("CMSDetSvc");
+  m_papasDetSvc = service(m_detServiceName);  // service("CMSDetSvc");
   if (!m_papasDetSvc) {
     error() << "Unable to locate Papas Detector Service " << m_detServiceName << endmsg;
     return StatusCode::FAILURE;

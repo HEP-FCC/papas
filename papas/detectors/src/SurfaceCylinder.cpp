@@ -19,14 +19,14 @@ std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder) {
   os << cylinder.info();
   return os;
 }
-  
-  double SurfaceCylinder::thetaJunction() const {
-    //Return theta of the barrel endcap junction
-    return atan(m_radius/m_z);
-  }
-  
-  double SurfaceCylinder::etaJunction() const{
-    //Return eta of the barrel endcap junction'''
-    return -log( tan(thetaJunction() / 2.) );
-  }
+
+double SurfaceCylinder::thetaJunction() const {
+  // Return theta of the barrel endcap junction
+  return atan(m_radius / m_z);
+}
+
+double SurfaceCylinder::etaJunction() const {
+  // Return eta of the barrel endcap junction'''
+  return -log(tan(thetaJunction() / 2.));
+}
 }  // end namespace papas

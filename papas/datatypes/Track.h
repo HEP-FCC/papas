@@ -5,8 +5,8 @@
 
 #include "TVector3.h"
 
-#include <memory>
 #include <cmath>
+#include <memory>
 
 namespace papas {
 
@@ -33,7 +33,7 @@ public:
   double charge() const { return m_charge; }
   Identifier id() const { return m_id; }       ///<identifier
   const TVector3& p3() const { return m_p3; }  /// momentum
-  double theta() const { return M_PI/2. - p3().Theta();}
+  double theta() const { return M_PI / 2. - p3().Theta(); }
   const std::shared_ptr<Path> path() const { return m_path; }
   void setEnergy(double energy);
   void setSize(double value);

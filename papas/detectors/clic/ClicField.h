@@ -19,7 +19,8 @@ public:
    * @param[in] field cyclinder material x0
    * @param[in] field cyclinder material lambdaI
    */
-  ClicField(double magnitude = 2., double radius =3.5, double z = 4.8, double x0 = 0., double lambdaI = 0.);
+  ClicField(double magnitude = 2., double radius = 3.5, double z = 4.8, double x0 = 0., double lambdaI = 0.);
+
 private:
 };
 

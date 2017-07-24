@@ -38,13 +38,13 @@ StatusCode PapasSimulatorTool::finalize() { return GaudiTool::finalize(); }
 
 StatusCode PapasSimulatorTool::run(papas::Event& pevent, std::shared_ptr<papas::Detector> spDetector) {
 
-  //auto detector = papas::CMS();  // todo consider making this be passed as part of the papas tool interface
+  // auto detector = papas::CMS();  // todo consider making this be passed as part of the papas tool interface
   auto history = papas::Nodes();
-  //debug() <<  " papas acceptance" << detector.ecal()->energyResolution(100, 0);
-  debug() <<  " papas acceptance" << spDetector->ecal()->energyResolution(100, 0 );
-  debug() << "papas simulator making" <<endmsg;
+  // debug() <<  " papas acceptance" << detector.ecal()->energyResolution(100, 0);
+  debug() << " papas acceptance" << spDetector->ecal()->energyResolution(100, 0);
+  debug() << "papas simulator making" << endmsg;
   papas::Detector& thing = *(spDetector.get());
-  debug() <<  " papas eres" << thing.ecal()->energyResolution(100, 0 ) <<endmsg;
+  debug() << " papas eres" << thing.ecal()->energyResolution(100, 0) << endmsg;
   // run the simulator which will add information to the particles and fill the other collections
   std::string ptype = m_particleSubtype;
   papas::Simulator(pevent, ptype.c_str()[0], thing, m_ecalClusters, m_hcalClusters, m_smearedEcalClusters,

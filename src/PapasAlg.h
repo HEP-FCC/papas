@@ -49,9 +49,7 @@ private:
   ///<seed for papas physics debug ouput default to "" no output
   Gaudi::Property<std::string> m_physicsDebugFile{this, "physicsDebugFile", "",
                                                   "name of optional file to output physics info"};
-  Gaudi::Property<std::string> m_detServiceName{this, "detService", "",
-    "name of detector service"};
-
+  Gaudi::Property<std::string> m_detServiceName{this, "detService", "", "name of detector service"};
 };
 
 #endif  // PAPASALG_H

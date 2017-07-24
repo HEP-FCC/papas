@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     std::cout << "no sort";
 #endif
     // Create CMS detector and PapasManager
-    papas::CMS CMSDetector =papas::CreateDefaultCMS();
+    papas::CMS CMSDetector = papas::CreateDefaultCMS();
     papas::PapasManager papasManager(CMSDetector);
 
     unsigned int eventNo = 0;

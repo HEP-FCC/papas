@@ -21,7 +21,8 @@ void mergeClusters(const Event& event, const std::string& typeAndSubtype, const 
     for (auto id2 : ids) {
       if (id1 < id2) {
         Distance dist = ruler.distance(id1, id2);
-        //PDebug::write("Distance {} {} {} {}", IdCoder::pretty(id1), //IdCoder::pretty(id2), dist.distance(), dist.isLinked());
+        // PDebug::write("Distance {} {} {} {}", IdCoder::pretty(id1), //IdCoder::pretty(id2), dist.distance(),
+        // dist.isLinked());
         Edge edge{id1, id2, dist.isLinked(), dist.distance()};
         edges.emplace(edge.key(), std::move(edge));
       }

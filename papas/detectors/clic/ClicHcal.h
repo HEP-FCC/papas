@@ -46,12 +46,13 @@ public:
   bool acceptance(const Cluster& cluster) const override;
   double energyResolution(double energy, double eta = 0) const override;
   double energyResponse(double energy, double eta = 0) const override;
+
 private:
-  double m_clusterSize;  ///<size of cluster in HCAL
-  std::vector<double> m_eresBarrel; ///< energy resolution parameters for barrel (length 3)
-  double m_eResponse;  ///< energy response default to 1.
-  double m_etaAcceptance; ///< max eta for acceptance
-  double m_energyAcceptance; ///< min energy for acceptance
+  double m_clusterSize;              ///<size of cluster in HCAL
+  std::vector<double> m_eresBarrel;  ///< energy resolution parameters for barrel (length 3)
+  double m_eResponse;                ///< energy response default to 1.
+  double m_etaAcceptance;            ///< max eta for acceptance
+  double m_energyAcceptance;         ///< min energy for acceptance
 };
 
 }  // end namespace papas

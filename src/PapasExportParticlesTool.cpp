@@ -23,7 +23,7 @@ StatusCode PapasExportParticlesTool::createOutputStructures() {
 
 StatusCode PapasExportParticlesTool::run(papas::Event& pevent, std::shared_ptr<papas::Detector> spDetector) {
   // convert each papas particle into an MCParticle
-  (void) spDetector;
+  (void)spDetector;
   std::string ptype = m_particleSubtype;
   for (const auto& pp : pevent.particles(ptype.c_str()[0])) {
     fcc::Particle ptc = m_particles->create();

@@ -35,7 +35,7 @@ private:
   Gaudi::Property<std::string> m_particleSubtype{this, "particleSubtype", "", "particle subtype"};
   /// pointer to the reconstructed particles collection
   fcc::ParticleCollection* m_particles;  /// mcparticles collection
-   /// pointer to papas detector
+                                         /// pointer to papas detector
 };
 
 #endif  // SIM_PAPASPARTICLEEXPORTER_H

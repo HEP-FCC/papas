@@ -23,7 +23,7 @@ StatusCode PapasPFReconstructorTool::clear() {
 }
 
 StatusCode PapasPFReconstructorTool::run(papas::Event& pevent, std::shared_ptr<papas::Detector> spDetector) {
-  
+
   papas::Nodes history;
   std::string btype = m_blockSubtype;
   papas::PFReconstructor(pevent, btype.c_str()[0], *spDetector.get(), m_recParticles, history);

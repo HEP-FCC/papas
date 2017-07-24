@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
     }
 
     // testing (move elsewhere)
-    //pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.event().clusters("em"));
+    // pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.event().clusters("em"));
 
     // produce papas display
     TApplication tApp("theApp", &argc, argv);

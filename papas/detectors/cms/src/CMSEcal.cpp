@@ -39,8 +39,7 @@ CMSECAL::CMSECAL(double innerRadius,
       m_etaEndcapMax(etaEndcapMax),
       m_emin(emin),
       m_eres(eres),
-      m_eresp(eresp)
-{}
+      m_eresp(eresp) {}
 
 double CMSECAL::clusterSize(const Particle& ptc) const {
   int pdgid = abs(ptc.pdgId());

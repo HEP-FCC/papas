@@ -27,9 +27,12 @@ class Detector {
 public:
   Detector();
   Detector(std::shared_ptr<const Calorimeter> ecal,
-           std::shared_ptr<const Calorimeter> hcal,
-           std::shared_ptr<const Tracker> tracker,
-           std::shared_ptr<const Field> field);
+           std::shared_ptr<const Calorimeter>
+               hcal,
+           std::shared_ptr<const Tracker>
+               tracker,
+           std::shared_ptr<const Field>
+               field);
   /** Returns shared_ptr to detector elements
    * @param[in] layer : enum kEcal, kHcal, kTrack, kField
    */
@@ -43,10 +46,10 @@ public:
   std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
   std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
   std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
-  virtual double electronAcceptance(const Track& track) const =0;
-  virtual double electronEnergyResolution(const Particle& ptc) const=0;
-  virtual double muonAcceptance(const Track& track) const=0;
-  virtual double muonResolution(const Particle& /*ptc*/) const =0;
+  virtual double electronAcceptance(const Track& track) const = 0;
+  virtual double electronEnergyResolution(const Particle& ptc) const = 0;
+  virtual double muonAcceptance(const Track& track) const = 0;
+  virtual double muonResolution(const Particle& /*ptc*/) const = 0;
   const std::list<std::shared_ptr<const DetectorElement>> elements() const { return m_elements; }
 
 protected:

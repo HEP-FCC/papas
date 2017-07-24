@@ -8,24 +8,24 @@
 
 namespace papas {
 
-ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, double thetaParam, std::map<int, std::pair<double, double>> resMap, double ptThresholdLow, double ptProbabilityLow, double ptThresholdHigh,double ptProbabilityHigh)
-    : Tracker( Layer::kTracker,VolumeCylinder(Layer::kTracker, radius, z),
-              Material("void", 0, 0)),
-              m_thetaMax(thetaParam * M_PI / 180.), //0.8
-              m_resMap(resMap),  // m_resMap = {{90, {8.2e-2, 9.1e-2}},
-                                 // {80, {8.2e-4, 9.1e-3}},
-                                 // {30, {9.9e-5, 3.8e-3}},
-                                 // {20, {3.9e-5, 1.6e-3}},
-                                 // {10, {2e-5, 7.2e-4}}
-              m_ptThresholdLow (ptThresholdLow),
-              m_ptProbabilityLow(ptProbabilityLow),
-              m_ptThresholdHigh (ptThresholdHigh),
-              m_ptProbabilityHigh(ptProbabilityHigh)
-  {};
+ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, double thetaParam,
+                         std::map<int, std::pair<double, double>> resMap, double ptThresholdLow,
+                         double ptProbabilityLow, double ptThresholdHigh, double ptProbabilityHigh)
+    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("void", 0, 0)),
+      m_thetaMax(thetaParam * M_PI / 180.),  // 0.8
+      m_resMap(resMap),                      // m_resMap = {{90, {8.2e-2, 9.1e-2}},
+                                             // {80, {8.2e-4, 9.1e-3}},
+                                             // {30, {9.9e-5, 3.8e-3}},
+                                             // {20, {3.9e-5, 1.6e-3}},
+                                             // {10, {2e-5, 7.2e-4}}
+      m_ptThresholdLow(ptThresholdLow),
+      m_ptProbabilityLow(ptProbabilityLow),
+      m_ptThresholdHigh(ptThresholdHigh),
+      m_ptProbabilityHigh(ptProbabilityHigh){};
 
 bool ClicTracker::acceptance(const Track& track) const {
   double pt = track.p3().Perp();
-  double theta = fabs(track.theta());  
+  double theta = fabs(track.theta());
   if (theta < m_thetaMax) {
     if (pt > m_ptThresholdLow)  // 0.4)
       return (rootrandom::Random::uniform(0, 1) < m_ptProbabilityLow);
