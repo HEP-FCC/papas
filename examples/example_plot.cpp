@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #include "PythiaConnector.h"
-#include "papas/detectors/CMS.h"
+#include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   PythiaConnector pythiaConnector(fname);
 
   // Create CMS detector and PapasManager
-  CMS CMSDetector;
+  auto CMSDetector = CreateDefaultCMS();
   papas::PapasManager papasManager{CMSDetector};
 
   unsigned int eventNo = 0;

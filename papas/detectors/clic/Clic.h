@@ -3,7 +3,7 @@
 
 #include "papas/detectors/Detector.h"
 #include "papas/detectors/VolumeCylinder.h"
-#include "papas/detectors/ClicField.h"
+#include "papas/detectors/clic/ClicField.h"
 
 namespace papas {
 

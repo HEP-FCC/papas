@@ -53,5 +53,9 @@ private:
   double m_muonResolution;               // energy resolution muon
 };
 
+  /* creates a default CMS detector
+  */
+CMS CreateDefaultCMS();
+  
 }  // end namespace papas
 #endif

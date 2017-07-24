@@ -2,7 +2,7 @@
  * @file CMS.cc
  * @brief Implementation of the CMS detector
  */
-#include "papas/detectors/CMSHcal.h"
+#include "papas/detectors/cms/CMSHcal.h"
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"

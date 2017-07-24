@@ -2,15 +2,15 @@
  * @file Clic.cpp
  * @brief Implementation of the Clic detector
  */
-#include "papas/detectors/Clic.h"
+#include "papas/detectors/clic/Clic.h"
 
 #include "papas/utility/PDebug.h"
 #include "papas/datatypes/Particle.h"
 #include "papas/datatypes/Track.h"
-#include "papas/detectors/ClicEcal.h"
-#include "papas/detectors/ClicField.h"
-#include "papas/detectors/ClicHcal.h"
-#include "papas/detectors/ClicTracker.h"
+#include "papas/detectors/clic/ClicEcal.h"
+#include "papas/detectors/clic/ClicField.h"
+#include "papas/detectors/clic/ClicHcal.h"
+#include "papas/detectors/clic/ClicTracker.h"
 
 #include <cmath>
 

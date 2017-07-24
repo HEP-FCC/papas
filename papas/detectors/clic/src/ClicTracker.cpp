@@ -1,4 +1,4 @@
-#include "papas/detectors/ClicTracker.h"
+#include "papas/detectors/clic/ClicTracker.h"
 
 #include "papas/datatypes/Track.h"
 #include "papas/utility/TRandom.h"

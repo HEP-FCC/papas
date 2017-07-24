@@ -1,7 +1,7 @@
 /**
  * @file CMSEcal.cc
  * @brief Implementation of the CMS ECAL  */
-#include "papas/detectors/CMSEcal.h"
+#include "papas/detectors/cms/CMSEcal.h"
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"

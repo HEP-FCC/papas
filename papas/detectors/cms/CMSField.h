@@ -17,7 +17,7 @@ public:
    * @param[in] x0 field cyclinder material X0
    * @param[in] lambdaI field cyclinder material lambdaI
    */
-  CMSField(double magnitude, double radius, double z, double x0, double lambdaI);
+  CMSField(double magnitude=3.8, double radius=2.9, double z=3.6, double x0=0., double lambdaI=0.);
 
 private:
 };

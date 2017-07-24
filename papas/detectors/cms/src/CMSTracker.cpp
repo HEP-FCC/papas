@@ -2,7 +2,7 @@
  * @file CMS.cc
  * @brief Implementation of the CMS detector
  */
-#include "papas/detectors/CMSTracker.h"
+#include "papas/detectors/cms/CMSTracker.h"
 
 #include "papas/datatypes/Track.h"
 #include "papas/utility/TRandom.h"

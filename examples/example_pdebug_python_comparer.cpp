@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 #include "PythiaConnector.h"
-#include "papas/detectors/CMS.h"
-#include "papas/detectors/Clic.h"
+#include "papas/detectors/cms/CMS.h"
+#include "papas/detectors/clic/Clic.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
@@ -14,15 +14,15 @@
 #include <chrono>
 #include <iostream>
 
-#include "papas/detectors/ClicEcal.h"
-#include "papas/detectors/ClicField.h"
-#include "papas/detectors/ClicHcal.h"
-#include "papas/detectors/ClicTracker.h"
+#include "papas/detectors/clic/ClicEcal.h"
+#include "papas/detectors/clic/ClicField.h"
+#include "papas/detectors/clic/ClicHcal.h"
+#include "papas/detectors/clic/ClicTracker.h"
 
-#include "papas/detectors/CMSEcal.h"
-#include "papas/detectors/CMSField.h"
-#include "papas/detectors/CMSHcal.h"
-#include "papas/detectors/CMSTracker.h"
+#include "papas/detectors/cms/CMSEcal.h"
+#include "papas/detectors/cms/CMSField.h"
+#include "papas/detectors/cms/CMSHcal.h"
+#include "papas/detectors/cms/CMSTracker.h"
 
 using namespace papas;
 

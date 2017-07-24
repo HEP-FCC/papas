@@ -1,7 +1,7 @@
 /**
  * @file ClicEcal.cc
  * @brief Implementation of the Clic ECAL  */
-#include "papas/detectors/ClicEcal.h"
+#include "papas/detectors/clic/ClicEcal.h"
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"

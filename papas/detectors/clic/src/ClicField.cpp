@@ -2,7 +2,7 @@
  * @file Clic.cc
  * @brief Implementation of the Clic detector
  */
-#include "papas/detectors/ClicField.h"
+#include "papas/detectors/clic/ClicField.h"
 
 namespace papas {
 

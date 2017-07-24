@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #include "PythiaConnector.h"
-#include "papas/detectors/CMS.h"
+#include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/Log.h"
 #include "papas/utility/PDebug.h"
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
   papas::Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
-  papas::CMS CMSDetector;
+  papas::CMS CMSDetector = papas::CreateDefaultCMS();
   papas::PapasManager papasManager{CMSDetector};
   try {
     // read and process a single event
