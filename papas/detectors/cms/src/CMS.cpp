@@ -35,7 +35,7 @@ CMS::CMS(std::shared_ptr<const Calorimeter> ecal,
       m_electronEnergyFactor(electronEnergyFactor),
       m_muonResolution(muonResolution) {}
 
-double CMS::electronAcceptance(const Track& track) const {
+bool CMS::electronAcceptance(const Track& track) const {
   return track.p3().Mag() > m_electronAcceptanceMagnitude && fabs(track.p3().Eta()) < m_electronAcceptanceEta;
 }
 
@@ -43,7 +43,7 @@ double CMS::electronEnergyResolution(const Particle& ptc) const {
   return m_electronEnergyFactor / sqrt(ptc.e());  // default factor = 0.1
 }
 
-double CMS::muonAcceptance(const Track& track) const {
+bool CMS::muonAcceptance(const Track& track) const {
   /// returns True if muon is seen.
   /// The CLIC CDR gives 99% for E > 7.5GeV and polar angle > 10 degrees
   ///

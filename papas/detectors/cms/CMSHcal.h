@@ -45,9 +45,22 @@ public:
           std::vector<double> acceptanceParameters = {1.,  // energy
                                                       1., -1.9381, -1.75330, 3., 1.1, 10., 1.05634, -1.66943e-01,
                                                       1.05997e-02, 8.09522e-01, -9.90855, -5.30366, 5., 7.});
+  /** Minimum size that will be seen by a detector
+   @param[in]  ptc  particle that is to be detected
+   @return minimum size of cluster that can be seen (TODO units)
+   */
   double clusterSize(const Particle& ptc) const override;
-  bool acceptance(const Cluster& cluster) const override;
+  /** Decides whether a cluster will be seen by a detector
+   @param[in]  cluster the cluster to be analysed
+   @return true if cluster is detected, false it if is too small to be seen
+   */ / bool acceptance(const Cluster& cluster) const override;
+  /** energy resolution for the HCAL
+   @param[in] energy energy
+   @param[in] eta eta   */
   double energyResolution(double energy, double eta = 0) const override;
+  /** energy response for the HCAL
+   @param[in] energy energy
+   @param[in] eta eta   */
   double energyResponse(double energy, double eta = 0) const override;
 
 private:

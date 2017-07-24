@@ -26,7 +26,6 @@ public:
    @param[in] ptThresholdHigh upper pt threshold
    @param[in] ptProbabilityHigh upper threshold acceptance probabilty
    */
-
   ClicTracker(double radius = 2.14,
               double z = 2.6,
               double x0 = 0,

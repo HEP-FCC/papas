@@ -39,18 +39,30 @@ public:
       double muonAcceptanceTheta = 80,
       double electronEnergyFactor = 0.1,
       double muonResolution = 0.02);
-  double electronAcceptance(const Track& track) const;
+  /**  Return whether or not an electron will be accepted
+   @param[in] track track of the electron
+   */
+  bool electronAcceptance(const Track& track) const;
+  /** Energy resolution for an electron
+   @param[in] particle particle which should be an electron
+   */
   double electronEnergyResolution(const Particle& ptc) const;
-  double muonAcceptance(const Track& track) const;
+  /**  Return whether or not a muon will be accepted
+   @param[in] track track of the muon
+   */
+  bool muonAcceptance(const Track& track) const;
+  /** Energy resolution for a muon
+   @param[in] particle particle which should be a muon
+   */
   double muonResolution(const Particle& ptc) const;
 
 private:
-  double m_electronAcceptanceMagnitude;  // track energy must exceed this for electron acceptance
-  double m_electronAcceptanceEta;        // track eta must be less than this for electron acceptance
-  double m_muonAcceptanceMagnitude;      // track energy must exceed this for muon  acceptance
-  double m_muonAcceptanceTheta;          // track energy must be less than this for muon acceptance
-  double m_electronEnergyFactor;         // governs energy resolution electron
-  double m_muonResolution;               // energy resolution muon
+  double m_electronAcceptanceMagnitude;  ///< track energy must exceed this for electron acceptance
+  double m_electronAcceptanceEta;        ///< track eta must be less than this for electron acceptance
+  double m_muonAcceptanceMagnitude;      ///< track energy must exceed this for muon  acceptance
+  double m_muonAcceptanceTheta;          ///< track energy must be less than this for muon acceptance
+  double m_electronEnergyFactor;         ///< governs energy resolution electron
+  double m_muonResolution;               ///< energy resolution muon
 };
 
 /* creates a default CMS detector

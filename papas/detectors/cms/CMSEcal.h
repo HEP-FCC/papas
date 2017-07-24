@@ -83,10 +83,10 @@ private:
   double m_etaCrack;                         ///< eta that forms boundary between barrel and encap
   double m_clusterSizePhoton;                ///< size of cluster from Photon
   double m_clusterSize;                      ///< size of cluster from other particles
-  double m_etaAcceptanceThreshold;           ///<max eta for acceptance in endcap
-  double m_ptAcceptanceThreshold;            ///<min pt for acceptance in endcap
-  double m_etaEndcapMin;                     ///<min eta for detection in endcap
-  double m_etaEndcapMax;                     ///<max eta for detection in endcap
+  double m_etaAcceptanceThreshold;           ///< max eta for acceptance in endcap
+  double m_ptAcceptanceThreshold;            ///< min pt for acceptance in endcap
+  double m_etaEndcapMin;                     ///< min eta for detection in endcap
+  double m_etaEndcapMax;                     ///< max eta for detection in endcap
   std::vector<double> m_emin;                ///< vector min energy for detection (Barrel and EndCap) length 2
   std::vector<std::vector<double>> m_eres;   ///< energy resolution parameters(Barrel and EndCap) each of 3 elements
   std::vector<std::vector<double>> m_eresp;  ///< energy response parameters (Barrel and EndCap) each of 3 elements

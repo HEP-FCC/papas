@@ -42,9 +42,22 @@ public:
            double etaAcceptance = 2.76,
            double energyAcceptance = 1.);
 
+  /**Size of a cluster depost in the HCAL
+   @param[in] particle particle
+   */
   double clusterSize(const Particle& ptc) const override;
+  /** Decides whether a cluster will be seen by a detector
+   @param[in]  cluster the cluster to be analysed
+   @return true if cluster is detected, false it if is too small to be seen
+   */
   bool acceptance(const Cluster& cluster) const override;
+  /** energy resolution for the HCAL
+   @param[in] energy energy
+   @param[in] eta eta   */
   double energyResolution(double energy, double eta = 0) const override;
+  /** energy response for the HCAL
+   @param[in] energy energy
+   @param[in] eta eta   */
   double energyResponse(double energy, double eta = 0) const override;
 
 private:

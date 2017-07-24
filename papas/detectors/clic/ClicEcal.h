@@ -25,7 +25,7 @@ public:
    @param[in] innerRadius radius of inner cyclinder of ECAL
    @param[in] innerZ z of inside of ECAL
    @param[in] depth of ECAL cyclinder
-  @param[in] clusterSizePhoton size of ECAL cluster from photon
+   @param[in] clusterSizePhoton size of ECAL cluster from photon
    @param[in] clusterSize size of ECAL cluster from hadrons
    @param[in] etaAcceptance max eta for acceptance in endcap
    @param[in] emin minimum energies for acceptance in barrel and endcap default = {0.5, 0.5}
@@ -65,18 +65,20 @@ public:
    */
   double energyResolution(double energy, double eta = 0) const override;
 
-  /** TODO ask Colin for comment details
+  /** Energy response
+   @param[in] energy
+   @param[in] eta angle of arrival
+   @return energy response of the ECAL
    */
   double energyResponse(double energy = 0, double eta = 0) const override;
 
-  // TODOAJR space_resolution(self, ptc):
 private:
   double m_clusterSize;              ///< cluater size for other particles
-  double m_clusterSizePhoton;        ///<cluster size for photon and electron
+  double m_clusterSizePhoton;        ///< cluster size for photon and electron
   std::vector<double> m_emin;        ///< min energy for acceptance in barrel and endcap
   std::vector<double> m_eresBarrel;  ///< energy resolution paremeters for barrel
-  double m_eResponse;                ///<energy response
-  double m_etaAcceptance;            ///<
+  double m_eResponse;                ///< energy response
+  double m_etaAcceptance;            ///< max eta for detection in endcap
 };
 
 }  // end namespace papas
