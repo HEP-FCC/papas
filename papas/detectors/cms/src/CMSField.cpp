@@ -1,7 +1,3 @@
-/**
- * @file CMS.cc
- * @brief Implementation of the CMS detector
- */
 #include "papas/detectors/cms/CMSField.h"
 
 namespace papas {

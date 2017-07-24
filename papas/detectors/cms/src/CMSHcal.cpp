@@ -1,12 +1,7 @@
-/**
- * @file CMS.cc
- * @brief Implementation of the CMS detector
- */
 #include "papas/detectors/cms/CMSHcal.h"
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Path.h"
 #include "papas/utility/TRandom.h"
 
 namespace papas {
@@ -23,20 +18,11 @@ CMSHCAL::CMSHCAL(double innerRadius, double innerZ, double outerRadius, double o
       m_eresp(eresp),
       m_acceptanceParameters(acceptanceParameters) {}
 
-/**
- Cluster_size as a function of the type of particle
- @param ptc particle
- @return size of resulting cluster
- */
 double CMSHCAL::clusterSize(const Particle& ptc) const {
   (void)ptc;             // suppress warning messages for unused parameters;
   return m_clusterSize;  // default 0.2
 }
 
-/* Decides whether a cluster will be seen by a detector
- @param cluster the cluster to be analysed
- @return true is cluster is detected, false it if is too small to be seen
- */
 bool CMSHCAL::acceptance(const Cluster& cluster) const {
   double energy = cluster.energy();
   double eta = fabs(cluster.eta());

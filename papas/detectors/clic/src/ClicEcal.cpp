@@ -1,5 +1,5 @@
 /**
- * @file ClicEcal.cc
+ * @file ClicEcal.cpp
  * @brief Implementation of the Clic ECAL  */
 #include "papas/detectors/clic/ClicEcal.h"
 

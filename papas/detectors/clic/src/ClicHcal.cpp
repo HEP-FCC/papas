@@ -1,13 +1,7 @@
-/**
- * @file Clic.cc
- * @brief Implementation of the Clic detector
- */
 #include "papas/detectors/clic/ClicHcal.h"
 
 #include "papas/datatypes/Cluster.h"
 #include "papas/datatypes/Particle.h"
-#include "papas/datatypes/Path.h"
-#include "papas/utility/TRandom.h"
 
 namespace papas {
 

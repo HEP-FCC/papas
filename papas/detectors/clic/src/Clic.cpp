@@ -1,7 +1,3 @@
-/**
- * @file Clic.cpp
- * @brief Implementation of the Clic detector
- */
 #include "papas/detectors/clic/Clic.h"
 
 #include "papas/datatypes/Particle.h"
