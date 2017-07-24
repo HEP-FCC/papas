@@ -13,18 +13,15 @@ class Material;
 class VolumeCylinder;
 
 /// Clic specific ECAL calorimeter implementation
-///
-///  It is intended to be replicated/modfied by users to match other required detector characteristics
-///
 /// ClicECAL inherits from calorimeter class and must implement clusterSize/acceptance/energyResolution etc methods
 
 class ClicECAL : public Calorimeter {
 public:
   /** Constructor
    *
-   @param[in] innerRadius radius of inner cyclinder of ECAL
+   @param[in] innerRadius radius of inner cylinder of ECAL
    @param[in] innerZ z of inside of ECAL
-   @param[in] depth of ECAL cyclinder
+   @param[in] depth of ECAL cylinder
    @param[in] clusterSizePhoton size of ECAL cluster from photon
    @param[in] clusterSize size of ECAL cluster from hadrons
    @param[in] etaAcceptance max eta for acceptance in endcap
@@ -73,7 +70,7 @@ public:
   double energyResponse(double energy = 0, double eta = 0) const override;
 
 private:
-  double m_clusterSize;              ///< cluater size for other particles
+  double m_clusterSize;              ///< cluster size for particles otehr than photon and electron
   double m_clusterSizePhoton;        ///< cluster size for photon and electron
   std::vector<double> m_emin;        ///< min energy for acceptance in barrel and endcap
   std::vector<double> m_eresBarrel;  ///< energy resolution paremeters for barrel

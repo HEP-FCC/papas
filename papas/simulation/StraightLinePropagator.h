@@ -11,7 +11,7 @@ class Field;
 class SurfaceCylinder;
 
 class StraightLinePropagator : public Propagator {
-  /// Calculates where an uncharged particle crosses a detector cyclinder
+  /// Calculates where an uncharged particle crosses a detector cylinder
 public:
   /** Constructor
   */

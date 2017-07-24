@@ -17,11 +17,10 @@ class VolumeCylinder;
 class ClicHCAL : public Calorimeter {
 public:
   /** Constructor
-   *
-   @param[in] innerRadius radius of inner cyclinder of HCAL
+   @param[in] innerRadius radius of inner cylinder of HCAL
    @param[in] innerZ z of inside of HCAL
-   @param[in] outerRadius radius of outer cyclinder of HCAL
-   @param[in] outerZ z of inside of HCAL
+   @param[in] outerRadius radius of outer cylinder of HCAL
+   @param[in] outerZ z of outside of HCAL
    @param[in] X0 of HCAL material
    @param[in] lambdaI lambdaI of HCAL material
    @param[in] clusterSize size of HCAL clusters
@@ -42,28 +41,31 @@ public:
            double etaAcceptance = 2.76,
            double energyAcceptance = 1.);
 
-  /**Size of a cluster depost in the HCAL
+  /**Size of a cluster deposit in the HCAL
    @param[in] particle particle
    */
   double clusterSize(const Particle& ptc) const override;
+
   /** Decides whether a cluster will be seen by a detector
    @param[in]  cluster the cluster to be analysed
    @return true if cluster is detected, false it if is too small to be seen
    */
   bool acceptance(const Cluster& cluster) const override;
+
   /** energy resolution for the HCAL
    @param[in] energy energy
    @param[in] eta eta   */
   double energyResolution(double energy, double eta = 0) const override;
+
   /** energy response for the HCAL
    @param[in] energy energy
    @param[in] eta eta   */
   double energyResponse(double energy, double eta = 0) const override;
 
 private:
-  double m_clusterSize;              ///<size of cluster in HCAL
+  double m_clusterSize;              ///< size of cluster in HCAL
   std::vector<double> m_eresBarrel;  ///< energy resolution parameters for barrel (length 3)
-  double m_eResponse;                ///< energy response default to 1.
+  double m_eResponse;                ///< energy response, defaults to 1.
   double m_etaAcceptance;            ///< max eta for acceptance
   double m_energyAcceptance;         ///< min energy for acceptance
 };

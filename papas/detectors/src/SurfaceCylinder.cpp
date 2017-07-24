@@ -10,7 +10,7 @@
 namespace papas {
 
 SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {
-  if (m_radius < 0) throw "Invalid cyclinder radius";
+  if (m_radius < 0) throw "Invalid cylinder radius";
 }
 
 std::string SurfaceCylinder::info() const { return string_format("Cylinder : R=%5.2f, z=%5.2f", m_radius, m_z); }

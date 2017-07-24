@@ -42,7 +42,6 @@ public:
               double ptProbabilityHigh = 0.99);
   double resolution(const Track& track) const override;  ///< describes tracker resolution of momentum
   bool acceptance(const Track& track) const override;    ///< determines if a track is detected
-  // TODO space_resolution(self, ptc):
 private:
   double sigmaPtOverPt2(double a, double b, double pt) const;
   const double m_thetaMax;  ///< max theta for acceptance

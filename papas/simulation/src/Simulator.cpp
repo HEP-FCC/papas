@@ -68,9 +68,6 @@ void Simulator::simulatePhoton(const Particle& ptc) {
   // make and smear the cluster
   propagator(ptc.charge())->propagateOne(ptc, m_detector.ecal()->volumeCylinder().inner());
   auto cluster = makeAndStoreEcalCluster(ptc, 1, -1, 't');
-  if (IdCoder::pretty(cluster.id()) == "et21") {
-    auto aaaaa = 0;
-  }
   auto smeared = smearCluster(cluster, papas::Layer::kEcal);
   if (acceptSmearedCluster(smeared)) {
     storeSmearedEcalCluster(std::move(smeared), cluster.id());
@@ -95,7 +92,7 @@ void Simulator::simulateHadron(const Particle& ptc) {
       storeSmearedTrack(std::move(smeared), track.id());
     }
   }
-  // find where it meets the inner Ecal cyclinder
+  // find where it meets the inner Ecal cylinder
   if (ptc.path()->hasNamedPoint(papas::Position::kEcalIn)) {
     double pathLength = ecal_sp->material().pathLength(ptc.isElectroMagnetic());
     if (pathLength < std::numeric_limits<double>::max()) {
@@ -110,9 +107,6 @@ void Simulator::simulateHadron(const Particle& ptc) {
       if (ecal_sp->volumeCylinder().contains(pointDecay)) {
         fracEcal = rootrandom::Random::uniform(0., 0.7);
         auto cluster = makeAndStoreEcalCluster(ptc, fracEcal, -1, 't');
-        if (IdCoder::pretty(cluster.id()) == "et11") {
-          auto aaaaa = 0;
-        }
         // For now, using the hcal resolution and acceptance for hadronic cluster
         // in the Ecal. That's not a bug!
         auto smeared = smearCluster(cluster, papas::Layer::kHcal);
@@ -305,7 +299,6 @@ const Cluster& Simulator::storeSmearedHcalCluster(Cluster&& smearedCluster, Iden
 const Track& Simulator::makeAndStoreTrack(const Particle& ptc) {
   Track track(ptc.p3(), ptc.charge(), ptc.path(), m_tracks.size(), 't');
   Identifier id = track.id();
-  if (IdCoder::pretty(id) == "tt19") auto aaaaa = 0.;
   PDebug::write("Made {}", track);
   m_tracks.emplace(id, std::move(track));
   makeHistoryLink(ptc.id(), id, m_history);

@@ -10,7 +10,6 @@
 #include "papas/detectors/clic/ClicField.h"
 #include "papas/detectors/clic/ClicHcal.h"
 #include "papas/detectors/clic/ClicTracker.h"
-#include "papas/utility/PDebug.h"
 
 #include <cmath>
 

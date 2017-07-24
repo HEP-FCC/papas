@@ -18,9 +18,9 @@ class CMSECAL : public Calorimeter {
 public:
   /** Constructor
    *
-   @param[in] innerRadius radius of inner cyclinder of ECAL
+   @param[in] innerRadius radius of inner cylinder of ECAL
    @param[in] innerZ z of inside of ECAL
-   @param[in] outerRadius radius of outer cyclinder of ECAL
+   @param[in] outerRadius radius of outer cylinder of ECAL
    @param[in] outerZ z of inside of ECAL
    @param[in] x0  X0 of ECAL material
    @param[in] lambdaI lambdaI of ECAL material
@@ -78,7 +78,6 @@ public:
    */
   double energyResponse(double energy = 0, double eta = 0) const override;
 
-  // TODOAJR space_resolution(self, ptc):
 private:
   double m_etaCrack;                         ///< eta that forms boundary between barrel and encap
   double m_clusterSizePhoton;                ///< size of cluster from Photon

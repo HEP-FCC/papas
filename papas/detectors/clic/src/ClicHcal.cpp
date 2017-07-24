@@ -22,23 +22,13 @@ ClicHCAL::ClicHCAL(double innerRadius, double innerZ, double outerRadius, double
       m_eresBarrel(eresBarrel),
       m_eResponse(eResponse),
       m_etaAcceptance(etaAcceptance),
-
       m_energyAcceptance(energyAcceptance) {}
 
-/**
- Cluster_size as a function of the type of particle
- @param ptc particle
- @return size of resulting cluster
- */
 double ClicHCAL::clusterSize(const Particle& ptc) const {
   (void)ptc;  // suppress warning messages for unused parameters;
   return m_clusterSize;
 }
 
-/* Decides whether a cluster will be seen by a detector
- @param cluster the cluster to be analysed
- @return true is cluster is detected, false it if is too small to be seen
- */
 bool ClicHCAL::acceptance(const Cluster& cluster) const {
   auto energy = cluster.energy();
   auto eta = fabs(cluster.position().Eta());

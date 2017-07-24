@@ -5,10 +5,6 @@
 
 namespace papas {
 
-/**
- * @file CMS.h
- * @brief Implementation of CMS detector
- */
 /// CMS specific implementation of Detector
 
 /** Constructor
@@ -39,18 +35,22 @@ public:
       double muonAcceptanceTheta = 80,
       double electronEnergyFactor = 0.1,
       double muonResolution = 0.02);
+
   /**  Return whether or not an electron will be accepted
    @param[in] track track of the electron
    */
   bool electronAcceptance(const Track& track) const;
+
   /** Energy resolution for an electron
    @param[in] particle particle which should be an electron
    */
   double electronEnergyResolution(const Particle& ptc) const;
+
   /**  Return whether or not a muon will be accepted
    @param[in] track track of the muon
    */
   bool muonAcceptance(const Track& track) const;
+
   /** Energy resolution for a muon
    @param[in] particle particle which should be a muon
    */
