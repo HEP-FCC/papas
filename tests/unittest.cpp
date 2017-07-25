@@ -164,7 +164,7 @@ TEST_CASE("ClusterSmear") {
   REQUIRE(stdev == Approx(eres * energy).epsilon(0.1));
 }
 
-TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there is an issue
+/*TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there is an issue
   TCanvas* c1 = new TCanvas("c1", "A Simple Graph Example", 200, 10, 700, 500);
   c1->SetFillColor(42);
   c1->SetGrid();
@@ -190,7 +190,7 @@ TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there i
   c1->Modified();
   c1->Connect("Closed()", "TApplication", gApplication, "Terminate()");  // new
   return;
-}
+}*/
 
 TEST_CASE("StraightLine") {
   TVector3 origin{0, 0, 0};

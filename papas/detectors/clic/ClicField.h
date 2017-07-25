@@ -13,10 +13,10 @@ class ClicField : public Field {
 public:
   /** Constructor
    * @param[in] magnitude field strength
-   * @param[in] field cylinder radius
-   * @param[in] field cylinder z
-   * @param[in] field cylinder material x0
-   * @param[in] field cylinder material lambdaI
+   * @param[in] radius field cylinder radius
+   * @param[in] z field cylinder z
+   * @param[in] x0 field  material x0
+   * @param[in] lambdaI field material lambdaI
    */
   ClicField(double magnitude = 2., double radius = 3.5, double z = 4.8, double x0 = 0., double lambdaI = 0.);
 

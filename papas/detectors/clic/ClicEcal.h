@@ -25,8 +25,8 @@ public:
    @param[in] clusterSizePhoton size of ECAL cluster from photon
    @param[in] clusterSize size of ECAL cluster from hadrons
    @param[in] etaAcceptance max eta for acceptance in endcap
-   @param[in] emin minimum energies for acceptance in barrel and endcap default = {0.5, 0.5}
-   @param[in] eresBarrel energy resolution parameters for barrel  default   {0.165, 0.010, 0.015}
+   @param[in] emin minimum energies for acceptance in barrel and endcap, default = {0.5, 0.5}
+   @param[in] eresBarrel energy resolution parameters for barrel, default is {0.165, 0.010, 0.015}
    @param[in] nX0 number of X0 for material in ECAL
    @param[in] nLambdaI number of lambdaI for material in ECAL
    @param[in] eResponse energy response;
@@ -70,7 +70,7 @@ public:
   double energyResponse(double energy = 0, double eta = 0) const override;
 
 private:
-  double m_clusterSize;              ///< cluster size for particles otehr than photon and electron
+  double m_clusterSize;              ///< cluster size for particles other than photon and electron
   double m_clusterSizePhoton;        ///< cluster size for photon and electron
   std::vector<double> m_emin;        ///< min energy for acceptance in barrel and endcap
   std::vector<double> m_eresBarrel;  ///< energy resolution paremeters for barrel

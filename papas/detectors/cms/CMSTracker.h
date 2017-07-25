@@ -14,13 +14,13 @@ public:
   /** Constructor
    *
    @param[in] radius radius of tracker
-   @param[in] z z of itracker
+   @param[in] z z of tracker
    @param[in] x0 X0 of tracker material
    @param[in] lambdaI lambdaI of tracker material
-   @param[in] resolution   resolution of tracker
+   @param[in] resolution resolution of tracker
    @param[in] ptThreshold minimum pt for acceptance
    @param[in] etaThresholdLow lower eta threshold
-   @param[in] ptProbabilityLow  lower eta acceptance probabilty
+   @param[in] ptProbabilityLow lower eta acceptance probabilty
    @param[in] etaThresholdHigh upper eta threshold
    @param[in] ptProbabilityHigh upper eta acceptance probabilty
    */

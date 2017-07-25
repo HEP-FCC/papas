@@ -24,7 +24,7 @@ public:
    @param[in] X0 of HCAL material
    @param[in] lambdaI lambdaI of HCAL material
    @param[in] clusterSize size of HCAL clusters
-   @param[in] eresBarrel energy resolution parameters for barrel and endcap, length 3,  defaults to {0.6, 0., 0.025}
+   @param[in] eresBarrel energy resolution parameters for barrel, length 3, defaults to {0.6, 0., 0.025}
    @param[in] eResponse energy response
    @param[in] etaAcceptance max eta for acceptance
    @param[in] energyAcceptance min energy for acceptance
@@ -65,7 +65,7 @@ public:
 private:
   double m_clusterSize;              ///< size of cluster in HCAL
   std::vector<double> m_eresBarrel;  ///< energy resolution parameters for barrel (length 3)
-  double m_eResponse;                ///< energy response, defaults to 1.
+  double m_eResponse;                ///< energy response
   double m_etaAcceptance;            ///< max eta for acceptance
   double m_energyAcceptance;         ///< min energy for acceptance
 };

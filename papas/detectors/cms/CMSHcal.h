@@ -20,13 +20,13 @@ public:
    @param[in] innerZ z of inside of HCAL
    @param[in] outerRadius radius of outer cylinder of HCAL
    @param[in] outerZ z of outside of HCAL
-   @param[in] X0 of HCAL material
+   @param[in] X0 X0 of HCAL material
    @param[in] lambdaI lambdaI of HCAL material
    @param[in] clusterSize size of HCAL clusters
    @param[in] etaCrack eta that is on boundary between barrel and endcap
-   @param[in] eres energy resolution parameters for barrel and endcap defaults to {{0.8062, 2.753, 0.1501}, {6.803e-06,
+   @param[in] eres energy resolution parameters for barrel and endcap, defaults to {{0.8062, 2.753, 0.1501}, {6.803e-06,
    6.676, 0.1716}}
-   @param[in] eresp energy response parameters for barrel and endcap defaults to {{1.036, 4.452, -2.458}, {1.071, 9.471,
+   @param[in] eresp energy response parameters for barrel and endcap, defaults to {{1.036, 4.452, -2.458}, {1.071, 9.471,
    -2.823}}
    @param[in] acceptanceParmaters parameters for acceptance. It is a vector of length 15, defaults to {
    1., 1., - 1.9381, -1.75330, 3., 1.1, 10., 1.05634, - 1.66943e-01, 1.05997e-02, 8.09522e-01 ,- 9.90855 , -5.30366,

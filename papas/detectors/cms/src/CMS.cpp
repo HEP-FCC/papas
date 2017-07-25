@@ -56,6 +56,9 @@ double CMS::muonResolution(const Particle& ptc) const {
 }
 
 CMS CreateDefaultCMS() {
+  // This function could be written more briefly as all parameters in the HCAL, ECAL etc have
+  // default values. However this presentation allows all parameters to
+  // be viewed at once, and thus could be used as and easy basis from which to make changes of selected parameters
 
   std::vector<std::vector<double>> eresECAL = {{4.22163e-02, 1.55903e-01, 7.14166e-03},
                                                {-2.08048e-01, 3.25097e-01, 7.34244e-03}};

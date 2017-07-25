@@ -40,31 +40,37 @@ public:
                tracker,
            std::shared_ptr<const Field>
                field);
+  
   /** Returns shared_ptr to detector elements
    * @param[in] layer : enum kEcal, kHcal, kTrack, kField
    */
   std::shared_ptr<const DetectorElement> element(papas::Layer layer) const;
+  
   /// return the ecal or hcal
   /** Returns ecal or hcal
    * @param[in] layer : enum kEcal, kHcal
    */
   std::shared_ptr<const Calorimeter> calorimeter(papas::Layer layer) const;
-  std::shared_ptr<const Calorimeter> ecal() const { return m_ecal; }    ///<access the ecal
-  std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///<access the hcal
-  std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///<access the tracker
-  std::shared_ptr<const Field> field() const { return m_field; };       ///<access the field
+  std::shared_ptr<const Calorimeter> ecal() const { return m_ecal; }    ///< access the ecal
+  std::shared_ptr<const Calorimeter> hcal() const { return m_hcal; }    ///< access the hcal
+  std::shared_ptr<const Tracker> tracker() const { return m_tracker; }  ///< access the tracker
+  std::shared_ptr<const Field> field() const { return m_field; };       ///< access the field
+  
   /**  Return whether or not an electron will be accepted
    @param[in] track track of the electron
    */
   virtual bool electronAcceptance(const Track& track) const = 0;
+  
   /** Energy resolution for an electron
    @param[in] particle particle which should be an electron
    */
   virtual double electronEnergyResolution(const Particle& ptc) const = 0;
+  
   /**  Return whether or not an muon will be accepted
    @param[in] track track of the muon
    */
   virtual bool muonAcceptance(const Track& track) const = 0;
+  
   /** Energy resolution for an muon
    @param[in] particle particle which should be a muon
    */

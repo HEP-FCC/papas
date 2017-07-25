@@ -11,7 +11,7 @@ namespace papas {
 ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, double thetaParam,
                          std::map<int, std::pair<double, double>> resMap, double ptThresholdLow,
                          double ptProbabilityLow, double ptThresholdHigh, double ptProbabilityHigh)
-    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("void", 0, 0)),
+    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("Clic_Tracker", 0, 0)),
       m_thetaMax(thetaParam * M_PI / 180.),  // 0.8
       m_resMap(resMap),                      // m_resMap = {{90, {8.2e-2, 9.1e-2}},
                                              // {80, {8.2e-4, 9.1e-3}},
@@ -47,7 +47,7 @@ double ClicTracker::resolution(const Track& track) const {
   double pt = track.p3().Pt();
   // matching the resmap defined above.
   double theta = fabs(track.theta()) * 180 / M_PI;
-  for (const auto& v : m_resMap) {  // reverse order
+  for (const auto& v : m_resMap) { 
     if (theta < v.first) return sigmaPtOverPt2(v.second.first, v.second.second, pt) * pt;
   }
   throw "tracker resolution not found";

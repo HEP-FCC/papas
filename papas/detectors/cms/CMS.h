@@ -13,9 +13,9 @@ namespace papas {
  @param[in] hcal shared pointer to HCAL class
  @param[in] tracker shared pointer to tracker class
  @param[in] field shared pointer to field class
- @param[in] electronAcceptanceMagnitudetrack energy must exceed this for electron acceptance
+ @param[in] electronAcceptanceMagnitude track energy must exceed this for electron acceptance
  @param[in] electronAcceptanceEta track eta must be less than this for electron acceptance
- @param[in] muonAcceptanceMagnitude track energy must exceed this for muon  acceptance
+ @param[in] muonAcceptanceMagnitude track energy must exceed this for muon acceptance
  @param[in] muonAcceptanceTheta track energy must be less than this for muon acceptance
  @param[in] electronEnergyFactor governs energy resolution for electron
  @param[in] muonResolution energy resolution for muon

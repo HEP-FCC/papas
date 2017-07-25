@@ -26,7 +26,7 @@ double ClicHCAL::clusterSize(const Particle& ptc) const {
 bool ClicHCAL::acceptance(const Cluster& cluster) const {
   auto energy = cluster.energy();
   auto eta = fabs(cluster.position().Eta());
-  if (eta < m_etaAcceptance)               // TODO: check this value
+  if (eta < m_etaAcceptance)  
     return (energy > m_energyAcceptance);  // 1.
   else
     return false;

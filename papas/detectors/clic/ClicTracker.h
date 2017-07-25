@@ -17,12 +17,12 @@ public:
    *
    @param[in] radius radius of tracker
    @param[in] z z of itracker
-   @param[in] x0  X0 of tracker material
+   @param[in] x0 X0 of tracker material
    @param[in] lambdaI lambdaI of tracker material
    @param[in] thetaParam used to determine max value of theta for acceptance
    @param[in] resMap map between angle and response parameters used to find track resolution
    @param[in] ptThresholdLow lower pt threshold
-   @param[in] ptProbabilityLow  lower threshold acceptance probabilty
+   @param[in] ptProbabilityLow lower threshold acceptance probabilty
    @param[in] ptThresholdHigh upper pt threshold
    @param[in] ptProbabilityHigh upper threshold acceptance probabilty
    */
@@ -45,8 +45,8 @@ public:
 private:
   double sigmaPtOverPt2(double a, double b, double pt) const;
   const double m_thetaMax;  ///< max theta for acceptance
-  std::map<int, std::pair<double, double>>
-      m_resMap;                ///<  map between angle and response parameters used to find track resolution
+  /// map between angle and response parameters used to find track resolution
+  std::map<int, std::pair<double, double>> m_resMap;
   double m_ptThresholdLow;     ///< lower pt threshold
   double m_ptProbabilityLow;   ///< lower threshold acceptance probabilty
   double m_ptThresholdHigh;    ///< upper pt threshold

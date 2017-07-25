@@ -22,7 +22,7 @@ public:
    @param[in] innerZ z of inside of ECAL
    @param[in] outerRadius radius of outer cylinder of ECAL
    @param[in] outerZ z of inside of ECAL
-   @param[in] x0  X0 of ECAL material
+   @param[in] x0 X0 of ECAL material
    @param[in] lambdaI lambdaI of ECAL material
    @param[in] clusterSizePhoton size of ECAL cluster from photon
    @param[in] clusterSize size of ECAL cluster from hadrons
@@ -31,10 +31,10 @@ public:
    @param[in] ptAcceptanceThreshold min pt for acceptance in endcap
    @param[in] etaEndcapMin min eta for detection in endcap
    @param[in] etaEndcapMax max eta for detection in endcap
-   @param[in] emin minimum energies for acceptance in barrel and endcap default = {0.3, 1}
-   @param[in] eres energy resolution parameters for barrel and endcap default {{4.22163e-02, 1.55903e-01, 7.14166e-03},
+   @param[in] emin minimum energies for acceptance in barrel and endcap, default = {0.3, 1}
+   @param[in] eres energy resolution parameters for barrel and endcap, default {{4.22163e-02, 1.55903e-01, 7.14166e-03},
    {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
-   @param[in] eresp energy response parameters for barrel and endcap defaults to {{1.00071, -9.04973, -2.48554},
+   @param[in] eresp energy response parameters for barrel and endcap, defaults to {{1.00071, -9.04973, -2.48554},
    {9.95665e-01, -3.31774, -2.11123}});
    */
   CMSECAL(double innerRadius = 1.3,
@@ -55,14 +55,14 @@ public:
                                                    {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
           std::vector<std::vector<double>> eresp = {{1.00071, -9.04973, -2.48554}, {9.95665e-01, -3.31774, -2.11123}});
 
-  /** Minimum size that will be seen by a detector
-   @param[in]  ptc  particle that is to be detected
+  /** Minimum cluster size that will be seen by a detector
+   @param[in] ptc particle that is to be detected
    @return minimum size of cluster that can be seen (TODO units)
    */
   double clusterSize(const Particle& ptc) const override;
 
   /** Decides whether a cluster will be seen by a detector
-   @param[in]  cluster the cluster to be analysed
+   @param[in] cluster the cluster to be analysed
    @return true if cluster is detected, false it if is too small to be seen
    */
   bool acceptance(const Cluster& cluster) const override;
