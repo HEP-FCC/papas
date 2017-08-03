@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
   Log::init();
   Log::info("Logging Papas ");
 
-  auto CMSDetector = CreateDefaultCMS();
-  auto papasManager = papas::PapasManager(CMSDetector);
-  //auto clic = CreateDefaultClic();
-  //auto papasManager = papas::PapasManager(clic);
+  //auto CMSDetector = CreateDefaultCMS();
+  //auto papasManager = papas::PapasManager(CMSDetector);
+  auto clic = CreateDefaultClic();
+  auto papasManager = papas::PapasManager(clic);
 
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;

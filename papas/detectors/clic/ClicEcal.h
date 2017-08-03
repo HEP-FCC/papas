@@ -26,7 +26,7 @@ public:
    @param[in] clusterSize size of ECAL cluster from hadrons
    @param[in] etaAcceptance max eta for acceptance in endcap
    @param[in] emin minimum energies for acceptance in barrel and endcap, default = {0.5, 0.5}
-   @param[in] eresBarrel energy resolution parameters for barrel, default is {0.165, 0.010, 0.015}
+   @param[in] eresBarrel energy resolution parameters for barrel, default is {0.167, 0.010, 0.011}
    @param[in] nX0 number of X0 for material in ECAL
    @param[in] nLambdaI number of lambdaI for material in ECAL
    @param[in] eResponse energy response;
@@ -38,7 +38,7 @@ public:
            double clusterSize = 0.045,
            double etaAcceptance = 2.76,
            const std::vector<double> emin = {0.5, 0.5},
-           const std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
+           const std::vector<double> eresBarrel = {0.167, 0.010, 0.011},
            int nX0 = 23,
            int nLambdaI = 1,
            double eResponse = 1.);
