@@ -6,7 +6,7 @@
 namespace papas {
 
 ClicHCAL::ClicHCAL(double innerRadius, double innerZ, double outerRadius, double outerZ, double clusterSize,
-                   std::vector<double> eresBarrel, double x0, double lambdaI, double eResponse, double etaAcceptance,
+                   const std::vector<double> eresBarrel, double x0, double lambdaI, double eResponse, double etaAcceptance,
                    double energyAcceptance)
     : Calorimeter(Layer::kHcal,
                   VolumeCylinder(Layer::kHcal, outerRadius, outerZ, innerRadius, innerZ),

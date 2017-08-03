@@ -14,9 +14,9 @@ ClicECAL::ClicECAL(double innerRadius,
                    double clusterSizePhoton,
                    double clusterSize,
                    double etaAcceptance,
-                   std::vector<double>
+                   const std::vector<double>
                        emin,
-                   std::vector<double>
+                   const std::vector<double>
                        eresBarrel,
                    int nX0,
                    int nLambdaI,

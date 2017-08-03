@@ -34,7 +34,7 @@ public:
            double outerRadius = 4.8,
            double outerZ = 5.3,
            double clusterSize = 0.25,
-           std::vector<double> eresBarrel = {0.6, 0., 0.025},
+           const std::vector<double> eresBarrel = {0.6, 0., 0.025},
            double x0 = 0.018,
            double lambdaI = 0.17,
            double eResponse = 1.,

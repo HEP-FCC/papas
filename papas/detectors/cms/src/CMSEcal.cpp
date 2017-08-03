@@ -21,11 +21,11 @@ CMSECAL::CMSECAL(double innerRadius,
                  double ptAcceptanceThreshold,
                  double etaEndcapMin,
                  double etaEndcapMax,
-                 std::vector<double>
+                 const std::vector<double>
                      emin,
-                 std::vector<std::vector<double>>
+                 const std::vector<std::vector<double>>
                      eres,
-                 std::vector<std::vector<double>>
+                 const std::vector<std::vector<double>>
                      eresp)
     : Calorimeter(Layer::kEcal,
                   VolumeCylinder(Layer::kEcal, outerRadius, outerZ, innerRadius, innerZ),

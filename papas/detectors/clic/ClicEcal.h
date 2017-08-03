@@ -37,8 +37,8 @@ public:
            double clusterSizePhoton = .015,
            double clusterSize = 0.045,
            double etaAcceptance = 2.76,
-           std::vector<double> emin = {0.5, 0.5},
-           std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
+           const std::vector<double> emin = {0.5, 0.5},
+           const std::vector<double> eresBarrel = {0.165, 0.010, 0.015},
            int nX0 = 23,
            int nLambdaI = 1,
            double eResponse = 1.);

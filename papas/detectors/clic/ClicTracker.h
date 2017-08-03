@@ -31,7 +31,7 @@ public:
               double x0 = 0,
               double lambdaI = 0,
               double thetaParam = 0.8,
-              std::map<int, std::pair<double, double>> resMap = {{90, {8.2e-2, 9.1e-2}},
+              const std::map<int, std::pair<double, double>> resMap = {{90, {8.2e-2, 9.1e-2}},
                                                                  {80, {8.2e-4, 9.1e-3}},
                                                                  {30, {9.9e-5, 3.8e-3}},
                                                                  {20, {3.9e-5, 1.6e-3}},

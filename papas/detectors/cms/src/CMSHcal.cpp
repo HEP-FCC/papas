@@ -7,8 +7,8 @@
 namespace papas {
 
 CMSHCAL::CMSHCAL(double innerRadius, double innerZ, double outerRadius, double outerZ, double clusterSize, double x0,
-                 double lambdaI, double etacrack, std::vector<std::vector<double>> eres,
-                 std::vector<std::vector<double>> eresp, std::vector<double> acceptanceParameters)
+                 double lambdaI, double etacrack, const std::vector<std::vector<double>> eres,
+                 const std::vector<std::vector<double>> eresp, const std::vector<double> acceptanceParameters)
     : Calorimeter(Layer::kHcal,
                   VolumeCylinder(Layer::kHcal, outerRadius, outerZ, innerRadius, innerZ),
                   Material("Clic_HCAL", x0, lambdaI)),

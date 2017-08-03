@@ -40,9 +40,9 @@ public:
           double x0 = 0.,
           double lambdaI = 0.17,
           double etaCrack = 1.3,
-          std::vector<std::vector<double>> eres = {{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
-          std::vector<std::vector<double>> eresp = {{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}},
-          std::vector<double> acceptanceParameters = {1.,  // energy
+          const std::vector<std::vector<double>> eres = {{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}},
+          const std::vector<std::vector<double>> eresp = {{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}},
+          const std::vector<double> acceptanceParameters = {1.,  // energy
                                                       1., -1.9381, -1.75330, 3., 1.1, 10., 1.05634, -1.66943e-01,
                                                       1.05997e-02, 8.09522e-01, -9.90855, -5.30366, 5., 7.});
 

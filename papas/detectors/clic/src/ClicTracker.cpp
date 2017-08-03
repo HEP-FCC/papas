@@ -9,7 +9,7 @@
 namespace papas {
 
 ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, double thetaParam,
-                         std::map<int, std::pair<double, double>> resMap, double ptThresholdLow,
+                         const std::map<int, std::pair<double, double>> resMap, double ptThresholdLow,
                          double ptProbabilityLow, double ptThresholdHigh, double ptProbabilityHigh)
     : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("Clic_Tracker", 0, 0)),
       m_thetaMax(thetaParam * M_PI / 180.),  // 0.8
