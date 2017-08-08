@@ -126,6 +126,35 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
   m_reader.endOfEvent();
 }
 
+void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::PapasManager> papasManager) {
+  // make a papas particle collection from the next event
+  // then run simulate and reconstruct
+  m_reader.goToEvent(eventNo);
+  papasManager->setEventNo(eventNo);
+  const fcc::MCParticleCollection* ptcs;
+  if (m_store.get("GenParticle", ptcs)) {
+    try {
+      papasManager->clear();
+      papas::Particles& genParticles = papasManager->createParticles();
+      makePapasParticlesFromGeneratedParticles(ptcs, genParticles, papasManager->detector());
+      papasManager->addParticles(genParticles);
+      papasManager->simulate('s');
+      papasManager->mergeClusters("es");
+      papasManager->mergeClusters("hs");
+      papasManager->buildBlocks('m', 'm', 's');
+      papasManager->simplifyBlocks('r');
+      papasManager->reconstruct('s');
+    } catch (std::string message) {
+      papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
+    }
+    m_store.clear();
+  }
+  m_reader.endOfEvent();
+}
+
+
+
+
 void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   papas::PFApp myApp{};  // I think this should turn into a PapasManager member
   myApp.display(papasManager.event(), papasManager.detector());
