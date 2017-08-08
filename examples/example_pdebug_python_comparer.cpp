@@ -13,6 +13,7 @@
 #include <TApplication.h>
 #include <chrono>
 #include <iostream>
+#include <memory>
 
 using namespace papas;
 
@@ -20,24 +21,33 @@ int main(int argc, char* argv[]) {
 
   rootrandom::Random::seed(0xdeadbeef);
 
-  if (argc < 2) {
-    std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
+  if (argc < 4) {
+    std::cerr << "Usage: ./example_debug filename detector [logname]" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   PythiaConnector pythiaConnector(fname);
 
-  if (argc == 3) {
-    const char* lname = argv[2];
+  std::string detname = argv[2];
+  
+  if (argc == 4) {
+    const char* lname = argv[3];
     PDebug::File(lname);  // physics debug output
   }
   Log::init();
   Log::info("Logging Papas ");
-
-  //auto CMSDetector = CreateDefaultCMS();
-  //auto papasManager = papas::PapasManager(CMSDetector);
-  auto clic = CreateDefaultClic();
-  auto papasManager = papas::PapasManager(clic);
+  auto cmsdetector = CreateDefaultCMS();
+  auto clicdetector = CreateDefaultClic();
+  
+  std::shared_ptr<papas::PapasManager> papasManager;
+  if (detname=="CMS") {
+       papasManager = std::make_shared<papas::PapasManager>(cmsdetector);
+  }
+  else if (detname=="CLIC")
+      papasManager = std::make_shared<papas::PapasManager>(clicdetector);
+  else
+    std::cerr << "Detector not recognised should be CMS or CLIC " << detname<< std::endl;
+ 
 
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
@@ -52,7 +62,7 @@ int main(int argc, char* argv[]) {
     if (i == eventNo)
       start = std::chrono::steady_clock::now();
     else {
-      papasManager.clear();
+      papasManager->clear();
     }
 
     pythiaConnector.processEvent(i, papasManager);
