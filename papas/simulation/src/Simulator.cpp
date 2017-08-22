@@ -10,6 +10,7 @@
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
 #include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 
@@ -47,6 +48,13 @@ void Simulator::simulateParticle(const Particle& ptc) {
     // to avoid numerical problems in propagation
     return;
   }
+  
+  PAPASLOG_INFO("Simulating info");
+  PAPASLOG_VERBOSE("Simulating verbose");
+  PAPASLOG_DEBUG("Simulating debug");
+  PAPASLOG_WARNING("Simulating warning");
+  PAPASLOG_ERROR("Simulating error");
+  PAPASLOG_FATAL("Simulating fatal");
 
   PDebug::write("Simulating {}", ptc);
   if (pdgid == 22) {

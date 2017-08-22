@@ -7,6 +7,7 @@
 #include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 // STL
@@ -18,7 +19,7 @@
 using namespace papas;
 
 int main(int argc, char* argv[]) {
-
+  
   rootrandom::Random::seed(0xdeadbeef);
 
   if (argc < 4) {
@@ -34,6 +35,10 @@ int main(int argc, char* argv[]) {
     const char* lname = argv[3];
     PDebug::File(lname);  // physics debug output
   }
+  
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG",
+                                                papaslog::Logging::VERBOSE);
+  PAPASLOG_VERBOSE("Starting run");
   Log::init();
   Log::info("Logging Papas ");
   auto cmsdetector = CreateDefaultCMS();
