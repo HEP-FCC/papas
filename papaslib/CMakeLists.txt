@@ -72,7 +72,6 @@ INSTALL(FILES ${files11} DESTINATION include/spdlog/details/)
 FILE(GLOB files10 "${CMAKE_SOURCE_DIR}/spdlog/sinks/*.*")
 INSTALL(FILES ${files10} DESTINATION include/spdlog/sinks/)
 
-
 project(papaslib)
 
 include_directories(

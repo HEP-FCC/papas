@@ -24,7 +24,7 @@ if(APPLE)
   include_directories(${ROOT_INCLUDE_DIRS})
   add_definitions(${ROOT_CXX_FLAGS})
   include("${ROOT_USE_FILE}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 \ -stdlib=libc++")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -latomic")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP_STANDARD_FLAGS} -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter")
@@ -76,7 +76,7 @@ include(cmake/papasCreateConfig.cmake)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
         DESTINATION ${CMAKE_INSTALL_PREFIX})
-
+#message (STATUS "flag ${CMAKE_CXX_FLAGS}")
 add_subdirectory(papaslib)
 add_subdirectory(examples)
 add_subdirectory(tests)
