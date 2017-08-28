@@ -23,7 +23,7 @@
 #include "papas/detectors/Field.h"
 #include "papas/display/PFApp.h"
 #include "papas/simulation/Simulator.h"
-#include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 
 #include <exception>
@@ -119,8 +119,8 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
       papasManager.simplifyBlocks('r');
       papasManager.reconstruct('s');
     } catch (std::string message) {
-      papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
-    }
+      std::string outstring = string_format("An error occurred and event was discarsed. Event no: %i : %s", eventNo, message);
+      PAPASLOG_ERROR(outstring);    }
     m_store.clear();
   }
   m_reader.endOfEvent();
@@ -145,7 +145,8 @@ void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::
       papasManager->simplifyBlocks('r');
       papasManager->reconstruct('s');
     } catch (std::string message) {
-      papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
+      std::string outstring = string_format("An error occurred and event was discarsed. Event no: %i : %s", eventNo, message);
+      PAPASLOG_ERROR(outstring);
     }
     m_store.clear();
   }

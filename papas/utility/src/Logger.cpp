@@ -20,7 +20,7 @@ getDefaultLogger(const std::string& name, const Logging::Level& lvl, std::ostrea
   return std::make_shared<const Logger>(std::move(output), std::move(print));
 }
 
-std::shared_ptr<const papaslog::Logger> papaslogger = papaslog::getDefaultLogger("Papas Logger", papaslog::Logging::WARNING);
+std::shared_ptr<const papaslog::Logger> papaslogger = nullptr;
 std::shared_ptr<const papaslog::Logger> logger() { return papaslogger; };
 
 }  // end of namespace papaslog

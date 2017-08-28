@@ -18,7 +18,8 @@
 #include <sstream>
 #include <string>
 #include <thread>
-
+//Allow easy format of logger strings
+#include "papas/utility/StringFormatter.h"
 
 /// @brief macro for verbose debug output
 /// @ingroup Logging

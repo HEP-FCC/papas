@@ -49,12 +49,12 @@ void Simulator::simulateParticle(const Particle& ptc) {
     return;
   }
   
-  PAPASLOG_INFO("Simulating info");
+  /*PAPASLOG_INFO("Simulating info");
   PAPASLOG_VERBOSE("Simulating verbose");
   PAPASLOG_DEBUG("Simulating debug");
   PAPASLOG_WARNING("Simulating warning");
   PAPASLOG_ERROR("Simulating error");
-  PAPASLOG_FATAL("Simulating fatal");
+  PAPASLOG_FATAL("Simulating fatal");*/
 
   PDebug::write("Simulating {}", ptc);
   if (pdgid == 22) {
