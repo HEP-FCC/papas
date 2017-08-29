@@ -45,8 +45,8 @@ INSTALL(FILES ${files} DESTINATION data/)
 
 # --- adding tests for examples ------------------------------
 add_test(NAME fcc-generate COMMAND $ENV{FCCPHYSICS}/bin/fcc-pythia8-generate $ENV{FCCPHYSICS}/share/ee_ZH_Zmumu_Hbb.txt WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)
 add_test(NAME example_loop  COMMAND $ENV{FCCPAPASCPP}/bin/example_loop ee_ZH_Zmumu_Hbb.root  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
+set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)
 add_test(NAME test_debug_cms COMMAND /bin/bash $ENV{FCCPAPASCPP}/data/pdebug_CMS.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
 set_tests_properties(test_debug_cms PROPERTIES PASS_REGULAR_EXPRESSION "compare.out matches")
 set_property(TEST test_debug_cms PROPERTY DEPENDS fcc-generate)
