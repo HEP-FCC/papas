@@ -19,7 +19,7 @@ public:
    * tracker
    * @param[in] track Track for which the limit of momentum is to be determined
    */
-  virtual double ptResolution(const Track& track) const = 0;
+  virtual double resolution(const Track& track) const = 0;
   /**  @brief virtual function that user must define to calculate the tracker acceptance
    * @param[in] track Track for which the acceptance is needed
    */

@@ -10,7 +10,7 @@
 namespace papas {
 
 SurfaceCylinder::SurfaceCylinder(papas::Position layer, double rad, double z) : m_layer(layer), m_radius(rad), m_z(z) {
-  if (m_radius < 0) throw "Invalid cyclinder radius";
+  if (m_radius < 0) throw "Invalid cylinder radius";
 }
 
 std::string SurfaceCylinder::info() const { return string_format("Cylinder : R=%5.2f, z=%5.2f", m_radius, m_z); }
@@ -20,4 +20,13 @@ std::ostream& operator<<(std::ostream& os, const SurfaceCylinder& cylinder) {
   return os;
 }
 
+double SurfaceCylinder::thetaJunction() const {
+  // Return theta of the barrel endcap junction
+  return atan(m_radius / m_z);
+}
+
+double SurfaceCylinder::etaJunction() const {
+  // Return eta of the barrel endcap junction'''
+  return -log(tan(thetaJunction() / 2.));
+}
 }  // end namespace papas

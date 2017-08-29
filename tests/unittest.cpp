@@ -18,9 +18,9 @@
 #include "papas/datatypes/Event.h"
 #include "papas/datatypes/Helix.h"
 #include "papas/datatypes/HistoryHelper.h"
-#include "papas/detectors/CMS.h"
-#include "papas/detectors/CMSField.h"
 #include "papas/detectors/Calorimeter.h"
+#include "papas/detectors/cms/CMS.h"
+#include "papas/detectors/cms/CMSField.h"
 #include "papas/display/Display.h"
 #include "papas/display/GTrajectory.h"
 #include "papas/display/ViewPane.h"
@@ -84,7 +84,7 @@ TEST_CASE("Helix") {  /// Helix path test
 TEST_CASE("Helixpath") {  /// Helix path test
   SurfaceCylinder cyl1(papas::Position::kEcalIn, 1., 2.);
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2., 1.);
-  std::shared_ptr<const Field> field = std::make_shared<Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8));
+  std::shared_ptr<const Field> field = std::make_shared<Field>(CMSField());
   Particle particle(211, -1, TLorentzVector{2., 0, 1, 5}, 1, 'r', TVector3{0, 0, 0}, 3.8);
   HelixPropagator helixprop(field);
   //(particle.p4(), {0,0,0}, 3.8, -1);
@@ -133,7 +133,7 @@ TEST_CASE("ClusterSmear") {
   // Make a cluster
   double energy = 10.;
   Cluster cluster(energy, TVector3(1, 0, 0), 1., 2, IdCoder::kEcalCluster);
-  CMS CMSDetector;
+  CMS CMSDetector = CreateDefaultCMS();
   auto ecal = CMSDetector.ecal();
   PapasManagerTester tester(CMSDetector);
 
@@ -164,7 +164,7 @@ TEST_CASE("ClusterSmear") {
   REQUIRE(stdev == Approx(eres * energy).epsilon(0.1));
 }
 
-TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there is an issue
+/*TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there is an issue
   TCanvas* c1 = new TCanvas("c1", "A Simple Graph Example", 200, 10, 700, 500);
   c1->SetFillColor(42);
   c1->SetGrid();
@@ -190,11 +190,11 @@ TEST_CASE("Canvas") {  // change to concrete object or unique pointer is there i
   c1->Modified();
   c1->Connect("Closed()", "TApplication", gApplication, "Terminate()");  // new
   return;
-}
+}*/
 
 TEST_CASE("StraightLine") {
   TVector3 origin{0, 0, 0};
-  std::shared_ptr<const Field> field = std::make_shared<Field>(CMSField(VolumeCylinder(Layer::kField, 2.9, 3.6), 3.8));
+  auto field = std::make_shared<Field>(CMSField());
   StraightLinePropagator propStraight(field);
   SurfaceCylinder cyl1(papas::Position::kEcalIn, 1, 2);
   SurfaceCylinder cyl2(papas::Position::kEcalOut, 2, 1);

@@ -19,6 +19,8 @@ public:
   SurfaceCylinder(papas::Position clayer, double rad = 0., double z = 0.);
   double z() const { return m_z; };                  ///<z value
   double radius() const { return m_radius; }         ///<cylinder radius
+  double thetaJunction() const;                      ///<theta of barrel endcap junction
+  double etaJunction() const;                        ///<eta of barrel endcap junction
   papas::Position layer() const { return m_layer; }  ///<cylinder layer
   std::string info() const;
 

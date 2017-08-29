@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #include "PythiaConnector.h"
-#include "papas/detectors/CMS.h"
+#include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
@@ -37,11 +37,11 @@ int main(int argc, char* argv[]) {
     std::cout << "no sort";
 #endif
     // Create CMS detector and PapasManager
-    papas::CMS CMSDetector;
+    papas::CMS CMSDetector = papas::CreateDefaultCMS();
     papas::PapasManager papasManager(CMSDetector);
 
     unsigned int eventNo = 0;
-    unsigned int nEvents = 10000;
+    unsigned int nEvents = 10;
 
     auto start = std::chrono::steady_clock::now();
 

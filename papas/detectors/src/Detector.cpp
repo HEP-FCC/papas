@@ -10,6 +10,17 @@ namespace papas {
 
 Detector::Detector() {}
 
+Detector::Detector(std::shared_ptr<const Calorimeter> ecal,
+                   std::shared_ptr<const Calorimeter>
+                       hcal,
+                   std::shared_ptr<const Tracker>
+                       tracker,
+                   std::shared_ptr<const Field>
+                       field)
+    : m_ecal(ecal), m_hcal(hcal), m_tracker(tracker), m_field(field) {
+  setupElements();
+}
+
 std::shared_ptr<const Calorimeter> Detector::calorimeter(papas::Layer layer) const {
   switch (layer) {
   case papas::Layer::kEcal:
@@ -49,13 +60,4 @@ void Detector::setupElements() {
   }
 }
 
-double Detector::electronAcceptance(const Track& track) const {
-  return track.p3().Mag() > 5 && fabs(track.p3().Eta()) < 2.5;
-}
-
-double Detector::electronEnergyResolution(const Particle& ptc) const { return 0.1 / sqrt(ptc.e()); }
-
-double Detector::muonAcceptance(const Track& track) const {
-  return track.p3().Perp() > 5. && fabs(track.p3().Eta()) < 2.5;
-}
 }  // end namespace papas

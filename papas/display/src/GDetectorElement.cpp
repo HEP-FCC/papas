@@ -23,7 +23,7 @@ void GDetectorElement::Draw(const std::string& projection) {
 };
 
 GDetectorElement::GDetectorElement(std::shared_ptr<const DetectorElement> detElem) {  // For each inner and outer
-                                                                                      // cyclinder create a cyclinder
+                                                                                      // cylinder create a cylinder
                                                                                       // (circular cross section) for xy
                                                                                       // , yz, xz projections
   //        create a box (longways cross section) for thetaphi projections
