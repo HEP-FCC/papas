@@ -2,7 +2,7 @@
 
 namespace papas {
 
-CMSField::CMSField(double magnitude, double radius, double x0, double lambdaI, double z)
-    : Field(VolumeCylinder(Layer::kField, radius, z), Material("void", x0, lambdaI), magnitude) {}
+CMSField::CMSField(double magnitude, double radius, double z)
+    : Field(VolumeCylinder(Layer::kField, radius, z), Material("void", 0., 0.), magnitude) {}
 
 }  // end namespace papas

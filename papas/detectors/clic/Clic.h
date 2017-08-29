@@ -33,7 +33,6 @@ public:
        double electronAcceptanceEta = 2.5,
        double muonAcceptanceMagnitude = 7.5,
        double muonAcceptanceTheta = 80,
-       double electronEnergyFactor = 0.1,
        double muonResolution = 0.02);
 
   /** Return whether or not an electron will be accepted

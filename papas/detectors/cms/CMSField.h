@@ -16,7 +16,7 @@ public:
    * @param[in] x0 field material X0
    * @param[in] lambdaI field material lambdaI
    */
-  CMSField(double magnitude = 3.8, double radius = 2.9, double z = 3.6, double x0 = 0., double lambdaI = 0.);
+  CMSField(double magnitude = 3.8, double radius = 2.9, double z = 3.6);
 
 private:
 };

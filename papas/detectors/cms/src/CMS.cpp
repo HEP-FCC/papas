@@ -112,9 +112,8 @@ CMS CreateDefaultCMS() {
 
   auto field = std::make_shared<const CMSField>(3.8,   // field magnitude
                                                 2.9,   // outerRadius
-                                                3.6,   // outerZ
-                                                0.0,   // material x0
-                                                0.0);  // material lambdaI
+                                                3.6    // outerZ
+                                                );
   return CMS(ecal, hcal, tracker, field);
 }
 

@@ -22,14 +22,12 @@ Clic::Clic(std::shared_ptr<const Calorimeter> ecal,
            double electronAcceptanceEta,
            double muonAcceptanceMagnitude,
            double muonAcceptanceTheta,
-           double electronEnergyFactor,
            double muonResolution)
     : Detector(ecal, hcal, tracker, field),
       m_electronAcceptanceMagnitude(electronAcceptanceMagnitude),
       m_electronAcceptanceEta(electronAcceptanceEta),
       m_muonAcceptanceMagnitude(muonAcceptanceMagnitude),
       m_muonAcceptanceTheta(muonAcceptanceTheta),
-      m_electronEnergyFactor(electronEnergyFactor),
       m_muonResolution(muonResolution) {}
 
 bool Clic::electronAcceptance(const Track& track) const {
@@ -106,9 +104,7 @@ Clic CreateDefaultClic() {
 
   auto field = std::make_shared<const ClicField>(2,     // field magnitude
                                                  3.5,   // outerRadius
-                                                 4.8,   // outerZ
-                                                 0.0,   // material x0
-                                                 0.0);  // material lambdaI
+                                                 4.8);  // material lambdaI
 
   return Clic(ecal, hcal, tracker, field);
 }

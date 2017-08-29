@@ -2,7 +2,7 @@
 
 namespace papas {
 
-ClicField::ClicField(double magnitude, double radius, double z, double x0, double lambdaI)
-    : Field(VolumeCylinder(Layer::kField, radius, z), Material("Clic_Field", x0, lambdaI), magnitude) {}
+ClicField::ClicField(double magnitude, double radius, double z)
+    : Field(VolumeCylinder(Layer::kField, radius, z), Material("Clic_Field", 0, 0), magnitude) {}
 
 }  // end namespace papas
