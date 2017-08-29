@@ -39,6 +39,7 @@ install(TARGETS example_simple DESTINATION bin)
 install(TARGETS example_loop DESTINATION bin)
 install(TARGETS example_pdebug DESTINATION bin)
 install(TARGETS example_plot DESTINATION bin)
+
 FILE(GLOB files "${CMAKE_SOURCE_DIR}/examples/data/*")
 INSTALL(FILES ${files} DESTINATION data/)
 
