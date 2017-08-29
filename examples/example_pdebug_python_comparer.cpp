@@ -6,7 +6,6 @@
 #include "papas/detectors/clic/Clic.h"
 #include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/utility/Log.h"
 #include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
@@ -21,6 +20,8 @@ using namespace papas;
 int main(int argc, char* argv[]) {
 
   rootrandom::Random::seed(0xdeadbeef);
+  //start the logger
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::VERBOSE);
 
   if (argc < 4) {
     std::cerr << "Usage: ./example_debug filename detector [logname]" << std::endl;
@@ -36,10 +37,8 @@ int main(int argc, char* argv[]) {
     PDebug::File(lname);  // physics debug output
   }
 
-  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::VERBOSE);
+ 
   PAPASLOG_VERBOSE("Starting run");
-  Log::init();
-  Log::info("Logging Papas ");
   auto cmsdetector = CreateDefaultCMS();
   auto clicdetector = CreateDefaultClic();
 
@@ -49,7 +48,7 @@ int main(int argc, char* argv[]) {
   } else if (detname == "CLIC")
     papasManager = std::make_shared<papas::PapasManager>(clicdetector);
   else
-    std::cerr << "Detector not recognised should be CMS or CLIC " << detname << std::endl;
+    PAPASLOG_ERROR( "Detector not recognised should be CMS or CLIC ");
 
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;

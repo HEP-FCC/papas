@@ -1,4 +1,7 @@
 #!/bin/bash
+#This file runs a Clic example to produce a physics debug output file
+#The physics output is then compared against the required physics file
+#The required file will need to be updated when the physics changes
 FILE="compare.out"
 PHYSICS="physicsdd.txt"
 MATCHPHYSICS=$FCCPAPASCPP/data/required_clic_physics_dd.txt
@@ -33,4 +36,3 @@ then
 else
    echo "$PHYSICS not found."
 fi
-

@@ -12,7 +12,7 @@
 #include "PythiaConnector.h"
 #include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
-#include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 #include <TApplication.h>
@@ -24,6 +24,7 @@
 int main(int argc, char* argv[]) {
 
   rootrandom::Random::seed(0xdeadbeef);
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::ERROR);
 
   if (argc < 2) {
     std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
@@ -36,8 +37,6 @@ int main(int argc, char* argv[]) {
     const char* lname = argv[2];
     papas::PDebug::File(lname);  // physics debug output
   }
-  papas::Log::init();
-  papas::Log::info("Logging Papas ");
 
   // Create CMS detector and PapasManager
   papas::CMS CMSDetector = papas::CreateDefaultCMS();

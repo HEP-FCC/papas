@@ -58,7 +58,6 @@ private:
   double m_muonAcceptanceTheta;          ///< maximum theta for muon acceptance
   double m_muonResolution;               ///< muon resolution
 };
-
 /* creates a default Clic detector
  */
 Clic CreateDefaultClic();
