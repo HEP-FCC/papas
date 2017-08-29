@@ -23,7 +23,7 @@ void PDebug::init() {  // we either create a null sink or we sink to a file
   plogger->set_pattern("%v");
   spdlog::register_logger(plogger);
 }
-  
+
 void PDebug::consoleinit() {  // for debugging goes to screen instead
   logInitialized = true;
   auto console = spdlog::stdout_logger_mt("pdebug", false);

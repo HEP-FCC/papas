@@ -48,7 +48,7 @@ void Simulator::simulateParticle(const Particle& ptc) {
     // to avoid numerical problems in propagation
     return;
   }
-  
+
   /* temporary for debugging new Gaudi logging
   PAPASLOG_INFO("Simulating info");
   PAPASLOG_VERBOSE("Simulating verbose");

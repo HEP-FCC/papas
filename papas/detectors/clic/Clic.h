@@ -56,13 +56,12 @@ private:
   double m_electronAcceptanceEta;        ///< maximum eta for electron acceptance
   double m_muonAcceptanceMagnitude;      ///< minimum energy for muon acceptance
   double m_muonAcceptanceTheta;          ///< maximum theta for muon acceptance
-  double m_electronEnergyFactor;         ///< electron energy resolution parameter
   double m_muonResolution;               ///< muon resolution
 };
-  
-  /* creates a default Clic detector
-   */
-  Clic CreateDefaultClic();
+
+/* creates a default Clic detector
+ */
+Clic CreateDefaultClic();
 
 }  // end namespace papas
 #endif

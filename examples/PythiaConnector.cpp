@@ -38,7 +38,7 @@
 #include "TTree.h"
 
 PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore()), m_reader(podio::ROOTReader()) {
-  
+
   // check file exists before attempting to open (this is supposed to be a fast way to check)
   if (access(fname, F_OK) != -1) {
     m_reader.openFile(fname);
@@ -54,7 +54,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
   // turns pythia particles into Papas particles and lodges them in the history
   TLorentzVector tlv;
   int countp = 0;
-  
+
   // Sort particles in order of decreasing energy
   std::list<fcc::ConstMCParticle> sortPtcs;
   for (const auto& p : *ptcs) {
@@ -69,7 +69,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
     tlv2.SetXYZM(p4.px, p4.py, p4.pz, p4.mass);
     return tlv.E() > tlv2.E();
   });
-  
+
   for (const auto& ptc : sortPtcs) {
     countp += 1;
     auto p4 = ptc.core().p4;
@@ -80,7 +80,7 @@ void PythiaConnector::makePapasParticlesFromGeneratedParticles(const fcc::MCPart
       startVertex = TVector3(ptc.startVertex().x() * 1e-3, ptc.startVertex().y() * 1e-3, ptc.startVertex().z() * 1e-3);
     }
     if (ptc.core().status == 1) {  // only stable ones
-      
+
       if (tlv.Pt() > 1e-5 && (abs(pdgid) != 12) && (abs(pdgid) != 14) && (abs(pdgid) != 16)) {
         papas::Particle particle(pdgid, (double)ptc.core().charge, tlv, particles.size(), 's', startVertex,
                                  ptc.core().status);
@@ -120,7 +120,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
       papasManager.reconstruct('s');
     } catch (std::string message) {
       std::string outstring =
-      string_format("An error occurred and event was discarded. Event no: %d : %s", eventNo, message.c_str());
+          string_format("An error occurred and event was discarded. Event no: %d : %s", eventNo, message.c_str());
       PAPASLOG_ERROR(outstring);
     } catch (...) {
       PAPASLOG_ERROR("unknown error occured");
@@ -150,7 +150,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::
       papasManager->reconstruct('s');
     } catch (std::string message) {
       std::string outstring =
-      string_format("An error occurred and event was discarded. Event no: %i : %s", eventNo, message.c_str());
+          string_format("An error occurred and event was discarded. Event no: %i : %s", eventNo, message.c_str());
       PAPASLOG_ERROR(outstring);
     } catch (...) {
       PAPASLOG_ERROR("unknown error occured");
@@ -167,18 +167,18 @@ void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
 }
 
 void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
-  
+
   podio::ROOTWriter writer(fname, &m_store);
-  
+
   unsigned int nevents = 10;
   unsigned int eventno = 0;
-  
+
   auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
   auto& pcoll = m_store.create<fcc::ParticleCollection>("GenParticle");
-  
+
   writer.registerForWrite("evtinfo");
   writer.registerForWrite("GenParticle");
-  
+
   auto evinfo = fcc::EventInfo();  // evinfocoll.create();
   evinfo.number(eventno);
   evinfocoll.push_back(evinfo);
@@ -201,31 +201,31 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
 
 /*
  void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
- 
+
  podio::ROOTWriter writer(fname, &m_store);
  unsigned int nevents = 1;
  unsigned int eventno = 0;
  auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
  auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
- 
+
  writer.registerForWrite("evtinfo");
  writer.registerForWrite("Cluster");
- 
+
  auto evinfo = fcc::EventInfo();  // evinfocoll.create();
  evinfo.number(eventno);
  evinfocoll.push_back(evinfo);
  AddClustersToEDM(clusters, ccoll);
- 
+
  auto checkClusters = ConvertClustersToPapas(ccoll,
  0,  // size or 0 for merged
  papas::IdCoder::ItemType::kEcalCluster,
  's');
- 
+
  writer.writeEvent();
  m_store.clearCollections();
  writer.finish();
  }
- 
+
  papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
  float size,
  papas::IdCoder::ItemType itemtype,
@@ -240,7 +240,7 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
  }
  return clusters;
  }
- 
+
  void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters) {
  for (const auto& c : papasClusters) {
  auto clust = fccClusters.create();
@@ -253,7 +253,7 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
  }
  */
 /*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
- 
+
  const fcc::ParticleCollection* ptcs(nullptr);
  if (m_store.get("GenParticle", ptcs)) {
  papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
@@ -263,6 +263,6 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
  papasManager.reconstructEvent();
  m_store.clear();
  }
- 
+
  m_reader.endOfEvent();
  }*/

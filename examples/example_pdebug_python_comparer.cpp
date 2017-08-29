@@ -19,7 +19,7 @@
 using namespace papas;
 
 int main(int argc, char* argv[]) {
-  
+
   rootrandom::Random::seed(0xdeadbeef);
 
   if (argc < 4) {
@@ -30,29 +30,26 @@ int main(int argc, char* argv[]) {
   PythiaConnector pythiaConnector(fname);
 
   std::string detname = argv[2];
-  
+
   if (argc == 4) {
     const char* lname = argv[3];
     PDebug::File(lname);  // physics debug output
   }
-  
-  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG",
-                                                papaslog::Logging::VERBOSE);
+
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::VERBOSE);
   PAPASLOG_VERBOSE("Starting run");
   Log::init();
   Log::info("Logging Papas ");
   auto cmsdetector = CreateDefaultCMS();
   auto clicdetector = CreateDefaultClic();
-  
+
   std::shared_ptr<papas::PapasManager> papasManager;
-  if (detname=="CMS") {
-       papasManager = std::make_shared<papas::PapasManager>(cmsdetector);
-  }
-  else if (detname=="CLIC")
-      papasManager = std::make_shared<papas::PapasManager>(clicdetector);
+  if (detname == "CMS") {
+    papasManager = std::make_shared<papas::PapasManager>(cmsdetector);
+  } else if (detname == "CLIC")
+    papasManager = std::make_shared<papas::PapasManager>(clicdetector);
   else
-    std::cerr << "Detector not recognised should be CMS or CLIC " << detname<< std::endl;
- 
+    std::cerr << "Detector not recognised should be CMS or CLIC " << detname << std::endl;
 
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;
