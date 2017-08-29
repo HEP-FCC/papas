@@ -24,10 +24,6 @@ void PDebug::init() {  // we either create a null sink or we sink to a file
   spdlog::register_logger(plogger);
 }
   
-spdlog::details::line_logger PDebug::write() {
-  PAPASLOG_DEBUG("Simulating debug");
-  return log()->info(); }
-
 void PDebug::consoleinit() {  // for debugging goes to screen instead
   logInitialized = true;
   auto console = spdlog::stdout_logger_mt("pdebug", false);
