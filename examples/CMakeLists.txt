@@ -49,7 +49,5 @@ add_test(NAME example_loop  COMMAND $ENV{FCCPAPASCPP}/bin/example_loop ee_ZH_Zmu
 set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)
 add_test(NAME test_debug_cms COMMAND /bin/bash $ENV{FCCPAPASCPP}/data/pdebug_CMS.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
 set_tests_properties(test_debug_cms PROPERTIES PASS_REGULAR_EXPRESSION "compare.out matches")
-set_property(TEST test_debug_cms PROPERTY DEPENDS fcc-generate)
 add_test(NAME test_debug_clic COMMAND /bin/bash $ENV{FCCPAPASCPP}/data/pdebug_CLIC.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
 set_tests_properties(test_debug_clic PROPERTIES PASS_REGULAR_EXPRESSION "compare.out matches")
-set_property(TEST test_debug_clic PROPERTY DEPENDS fcc-generate)
