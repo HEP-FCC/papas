@@ -53,12 +53,12 @@ public:
   double muonResolution(const Particle& ptc) const;
 
 private:
-  double m_electronAcceptanceMagnitude;  ///< minimum energy for electron acceptance
-  double m_electronAcceptanceEta;        ///< maximum eta for electron acceptance
-  double m_electronAcceptanceEfficiency; ///< efficiency for electron acceptance
-  double m_muonAcceptanceMagnitude;      ///< minimum energy for muon acceptance
-  double m_muonAcceptanceTheta;          ///< maximum theta for muon acceptance
-  double m_muonResolution;               ///< muon resolution
+  double m_electronAcceptanceMagnitude;   ///< minimum energy for electron acceptance
+  double m_electronAcceptanceEta;         ///< maximum eta for electron acceptance
+  double m_electronAcceptanceEfficiency;  ///< efficiency for electron acceptance
+  double m_muonAcceptanceMagnitude;       ///< minimum energy for muon acceptance
+  double m_muonAcceptanceTheta;           ///< maximum theta for muon acceptance
+  double m_muonResolution;                ///< muon resolution
 };
 /* creates a default Clic detector
  */

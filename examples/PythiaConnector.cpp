@@ -146,7 +146,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::
       papasManager->mergeClusters("es");
       papasManager->mergeClusters("hs");
       papasManager->buildBlocks('m', 'm', 's');
-      papasManager->simplifyBlocks('r'); 
+      papasManager->simplifyBlocks('r');
       papasManager->reconstruct('s');
     } catch (std::string message) {
       std::string outstring =

@@ -20,7 +20,7 @@ using namespace papas;
 int main(int argc, char* argv[]) {
 
   rootrandom::Random::seed(0xdeadbeef);
-  //start the logger
+  // start the logger
   papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::VERBOSE);
 
   if (argc < 4) {
@@ -37,7 +37,6 @@ int main(int argc, char* argv[]) {
     PDebug::File(lname);  // physics debug output
   }
 
- 
   PAPASLOG_VERBOSE("Starting run");
   auto cmsdetector = CreateDefaultCMS();
   auto clicdetector = CreateDefaultClic();
@@ -48,7 +47,7 @@ int main(int argc, char* argv[]) {
   } else if (detname == "CLIC")
     papasManager = std::make_shared<papas::PapasManager>(clicdetector);
   else
-    PAPASLOG_ERROR( "Detector not recognised should be CMS or CLIC ");
+    PAPASLOG_ERROR("Detector not recognised should be CMS or CLIC ");
 
   unsigned int eventNo = 0;
   unsigned int nEvents = 10;

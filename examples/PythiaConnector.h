@@ -49,7 +49,8 @@ public:
   void displayEvent(const papas::PapasManager& papasManager);
   void processEvent(unsigned int eventNo, papas::PapasManager& papasManager);  ///<reads and processes a Pythia event
   void processEvent(unsigned int eventNo,
-                    std::shared_ptr<papas::PapasManager> papasManager);  ///<reads and processes a Pythia event
+                    std::shared_ptr<papas::PapasManager>
+                        papasManager);  ///<reads and processes a Pythia event
 
   ///< Takes pythia particles and creates Papas type particles adding them into
   /// an empty Particles collection
