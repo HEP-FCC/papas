@@ -6,6 +6,7 @@
 #include "papas/detectors/clic/ClicField.h"
 #include "papas/detectors/clic/ClicHcal.h"
 #include "papas/detectors/clic/ClicTracker.h"
+#include "papas/utility/TRandom.h"
 
 #include <cmath>
 
@@ -20,17 +21,23 @@ Clic::Clic(std::shared_ptr<const Calorimeter> ecal,
                field,
            double electronAcceptanceMagnitude,
            double electronAcceptanceEta,
+           double electronAcceptanceEfficiency,
            double muonAcceptanceMagnitude,
            double muonAcceptanceTheta,
            double muonResolution)
     : Detector(ecal, hcal, tracker, field),
       m_electronAcceptanceMagnitude(electronAcceptanceMagnitude),
       m_electronAcceptanceEta(electronAcceptanceEta),
+      m_electronAcceptanceEfficiency(electronAcceptanceEfficiency),
       m_muonAcceptanceMagnitude(muonAcceptanceMagnitude),
       m_muonAcceptanceTheta(muonAcceptanceTheta),
       m_muonResolution(muonResolution) {}
 
 bool Clic::electronAcceptance(const Track& track) const {
+  double thetaMax = std::dynamic_pointer_cast<const ClicTracker>(m_tracker)->thetaMax();
+  if (track.p3().Pt() > m_electronAcceptanceMagnitude && fabs(track.theta()) < thetaMax)
+    return rootrandom::Random::uniform(0, 1) > m_electronAcceptanceEfficiency;
+  return false;
   return std::dynamic_pointer_cast<const ClicTracker>(m_tracker)->electronAcceptance(m_electronAcceptanceMagnitude,
                                                                                      track);
 }
@@ -50,7 +57,7 @@ bool Clic::muonAcceptance(const Track& track) const {
 }
 
 double Clic::muonResolution(const Particle& ptc) const {
-  return std::dynamic_pointer_cast<const ClicTracker>(m_tracker)->particleResolution(ptc);
+  return std::dynamic_pointer_cast<const ClicTracker>(m_tracker)->resolution(ptc);
 }
 
 Clic CreateDefaultClic() {
@@ -106,7 +113,13 @@ Clic CreateDefaultClic() {
                                                  3.5,   // outerRadius
                                                  4.8);  // material lambdaI
 
-  return Clic(ecal, hcal, tracker, field);
+  return Clic(ecal, hcal, tracker, field,
+              5.,     // double electronAcceptanceMagnitude
+              2.5,    // double electronAcceptanceEta
+              0.95,   // double electronAcceptanceEfficiency
+              7.5,    // double muonAcceptanceMagnitude
+              80,     // double muonAcceptanceTheta
+              0.02);  // double muonResolution
 }
 
 }  // end namespace papas

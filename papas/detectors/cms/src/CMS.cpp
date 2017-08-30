@@ -114,7 +114,13 @@ CMS CreateDefaultCMS() {
                                                 2.9,  // outerRadius
                                                 3.6   // outerZ
                                                 );
-  return CMS(ecal, hcal, tracker, field);
+
+  return CMS(ecal, hcal, tracker, field,
+             5.,     // double electronAcceptanceMagnitude
+             2.5,    // double electronAcceptanceEta
+             7.5,    // double muonAcceptanceMagnitude
+             80,     // double muonAcceptanceTheta
+             0.02);  // double double muonResolution
 }
 
 }  // end namespace papas
