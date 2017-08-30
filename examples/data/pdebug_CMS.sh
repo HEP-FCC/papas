@@ -5,7 +5,7 @@
 FILE="compare.out"
 PHYSICS="physics.txt"
 MATCHPHYSICS=$FCCPAPASCPP/data/required_cms_physics.txt
-ROOTFILE=ee_ZH_Zmumu_Hbb.root
+ROOTFILE=$FCCPAPASCPP/data/ee_ZH_Zmumu_Hbb.root
 if [ -f $FILE ]
 then
 rm $FILE
