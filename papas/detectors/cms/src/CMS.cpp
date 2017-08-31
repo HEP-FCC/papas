@@ -120,6 +120,7 @@ CMS CreateDefaultCMS() {
              2.5,    // double electronAcceptanceEta
              7.5,    // double muonAcceptanceMagnitude
              80,     // double muonAcceptanceTheta
+             0.1,    // double electronEnergyFactor
              0.02);  // double double muonResolution
 }
 
