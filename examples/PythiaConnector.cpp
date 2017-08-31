@@ -23,7 +23,7 @@
 #include "papas/detectors/Field.h"
 #include "papas/display/PFApp.h"
 #include "papas/simulation/Simulator.h"
-#include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 
 #include <exception>
@@ -43,7 +43,7 @@ PythiaConnector::PythiaConnector(const char* fname) : m_store(podio::EventStore(
   if (access(fname, F_OK) != -1) {
     m_reader.openFile(fname);
   } else {
-    throw "File not found";
+    PAPASLOG_ERROR("File not found");
   }
   m_store.setReader(&m_reader);
 }
@@ -119,7 +119,41 @@ void PythiaConnector::processEvent(unsigned int eventNo, papas::PapasManager& pa
       papasManager.simplifyBlocks('r');
       papasManager.reconstruct('s');
     } catch (std::string message) {
-      papas::Log::error("An error occurred and event was discarsed. Event no: {} : {}", eventNo, message);
+      std::string outstring =
+          string_format("An error occurred and event was discarded. Event no: %d : %s", eventNo, message.c_str());
+      PAPASLOG_ERROR(outstring);
+    } catch (...) {
+      PAPASLOG_ERROR("unknown error occured");
+    }
+    m_store.clear();
+  }
+  m_reader.endOfEvent();
+}
+
+void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::PapasManager> papasManager) {
+  // make a papas particle collection from the next event
+  // then run simulate and reconstruct
+  m_reader.goToEvent(eventNo);
+  papasManager->setEventNo(eventNo);
+  const fcc::MCParticleCollection* ptcs;
+  if (m_store.get("GenParticle", ptcs)) {
+    try {
+      papasManager->clear();
+      papas::Particles& genParticles = papasManager->createParticles();
+      makePapasParticlesFromGeneratedParticles(ptcs, genParticles, papasManager->detector());
+      papasManager->addParticles(genParticles);
+      papasManager->simulate('s');
+      papasManager->mergeClusters("es");
+      papasManager->mergeClusters("hs");
+      papasManager->buildBlocks('m', 'm', 's');
+      papasManager->simplifyBlocks('r');
+      papasManager->reconstruct('s');
+    } catch (std::string message) {
+      std::string outstring =
+          string_format("An error occurred and event was discarded. Event no: %i : %s", eventNo, message.c_str());
+      PAPASLOG_ERROR(outstring);
+    } catch (...) {
+      PAPASLOG_ERROR("unknown error occured");
     }
     m_store.clear();
   }
@@ -166,69 +200,69 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
 }
 
 /*
-void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
+ void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
 
-  podio::ROOTWriter writer(fname, &m_store);
-  unsigned int nevents = 1;
-  unsigned int eventno = 0;
-  auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
-  auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
+ podio::ROOTWriter writer(fname, &m_store);
+ unsigned int nevents = 1;
+ unsigned int eventno = 0;
+ auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
+ auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
 
-  writer.registerForWrite("evtinfo");
-  writer.registerForWrite("Cluster");
+ writer.registerForWrite("evtinfo");
+ writer.registerForWrite("Cluster");
 
-  auto evinfo = fcc::EventInfo();  // evinfocoll.create();
-  evinfo.number(eventno);
-  evinfocoll.push_back(evinfo);
-  AddClustersToEDM(clusters, ccoll);
+ auto evinfo = fcc::EventInfo();  // evinfocoll.create();
+ evinfo.number(eventno);
+ evinfocoll.push_back(evinfo);
+ AddClustersToEDM(clusters, ccoll);
 
-  auto checkClusters = ConvertClustersToPapas(ccoll,
-                                              0,  // size or 0 for merged
-                                              papas::IdCoder::ItemType::kEcalCluster,
-                                              's');
+ auto checkClusters = ConvertClustersToPapas(ccoll,
+ 0,  // size or 0 for merged
+ papas::IdCoder::ItemType::kEcalCluster,
+ 's');
 
-  writer.writeEvent();
-  m_store.clearCollections();
-  writer.finish();
-}
+ writer.writeEvent();
+ m_store.clearCollections();
+ writer.finish();
+ }
 
-papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
-                                                        float size,
-                                                        papas::IdCoder::ItemType itemtype,
-                                                        char subtype) const {
-  papas::Clusters clusters;
-  for (const auto& c : fccClusters) {
-    const auto position = c.core().position;
-    const auto energy = c.core().energy;
-    papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size, clusters.size(), itemtype,
-                           subtype);
-    clusters.emplace(cluster.id(), std::move(cluster));
-  }
-  return clusters;
-}
+ papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
+ float size,
+ papas::IdCoder::ItemType itemtype,
+ char subtype) const {
+ papas::Clusters clusters;
+ for (const auto& c : fccClusters) {
+ const auto position = c.core().position;
+ const auto energy = c.core().energy;
+ papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size, clusters.size(), itemtype,
+ subtype);
+ clusters.emplace(cluster.id(), std::move(cluster));
+ }
+ return clusters;
+ }
 
-void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters) {
-  for (const auto& c : papasClusters) {
-    auto clust = fccClusters.create();
-    clust.core().energy = c.second.energy();
-    auto& p3 = clust.core().position;
-    p3.x = c.second.position().X();
-    p3.y = c.second.position().Y();
-    p3.z = c.second.position().Z();
-  }
-}
-*/
+ void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters) {
+ for (const auto& c : papasClusters) {
+ auto clust = fccClusters.create();
+ clust.core().energy = c.second.energy();
+ auto& p3 = clust.core().position;
+ p3.x = c.second.position().X();
+ p3.y = c.second.position().Y();
+ p3.z = c.second.position().Z();
+ }
+ }
+ */
 /*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
 
-  const fcc::ParticleCollection* ptcs(nullptr);
-  if (m_store.get("GenParticle", ptcs)) {
-    papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
-    papasManager.storeParticles(std::move(papasparticles));
-    papasManager.simulateEvent();
-    papasManager.mergeClusters();
-    papasManager.reconstructEvent();
-    m_store.clear();
-  }
+ const fcc::ParticleCollection* ptcs(nullptr);
+ if (m_store.get("GenParticle", ptcs)) {
+ papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
+ papasManager.storeParticles(std::move(papasparticles));
+ papasManager.simulateEvent();
+ papasManager.mergeClusters();
+ papasManager.reconstructEvent();
+ m_store.clear();
+ }
 
-  m_reader.endOfEvent();
-}*/
+ m_reader.endOfEvent();
+ }*/

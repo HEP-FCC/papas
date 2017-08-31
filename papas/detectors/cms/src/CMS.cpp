@@ -110,11 +110,18 @@ CMS CreateDefaultCMS() {
                                                     2.5,     // double etaThresholdHigh = 2.5,
                                                     0.9);    // double ptProbabilityHigh = 0.9);
 
-  auto field = std::make_shared<const CMSField>(3.8,   // field magnitude
-                                                2.9,   // outerRadius
-                                                3.6    // outerZ
+  auto field = std::make_shared<const CMSField>(3.8,  // field magnitude
+                                                2.9,  // outerRadius
+                                                3.6   // outerZ
                                                 );
-  return CMS(ecal, hcal, tracker, field);
+
+  return CMS(ecal, hcal, tracker, field,
+             5.,     // double electronAcceptanceMagnitude
+             2.5,    // double electronAcceptanceEta
+             7.5,    // double muonAcceptanceMagnitude
+             80,     // double muonAcceptanceTheta
+             0.1,    // double electronEnergyFactor
+             0.02);  // double double muonResolution
 }
 
 }  // end namespace papas

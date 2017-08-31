@@ -12,6 +12,7 @@
 #include "PythiaConnector.h"
 #include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 
@@ -22,6 +23,7 @@ using namespace papas;
 int main(int argc, char* argv[]) {
 
   rootrandom::Random::seed(0xdeadbeef);
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::ERROR);
 
   if (argc < 2) {
     std::cerr << "Usage: ./example_plot filename [logname]" << std::endl;
