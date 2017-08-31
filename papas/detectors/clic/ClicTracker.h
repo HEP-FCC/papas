@@ -43,7 +43,6 @@ public:
               double ptProbabilityHigh = 0.99);
   double resolution(const Track& track) const override;           ///< describes tracker resolution of momentum
   bool acceptance(const Track& track) const override;             ///< determines if a track is detected
-  bool electronAcceptance(double mag, const Track& track) const;  ///< electron acceptance
   double resolution(const Particle& ptc) const;  ///< short term solution (same as resolution but takes particle)
   bool thetaMax() const {return m_thetaMax;};
 private:

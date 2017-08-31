@@ -68,12 +68,4 @@ double ClicTracker::resolution(const Particle& ptc) const {
   return 0;
 }
 
-bool ClicTracker::electronAcceptance(double mag, const Track& track) const {
-  if (track.p3().Pt() > mag && fabs(track.theta()) < m_thetaMax) return rootrandom::Random::uniform(0, 1) > 0.95;
-  return false;
-}
-
-  
-  
-
 }  // end namespace papas

@@ -38,8 +38,6 @@ bool Clic::electronAcceptance(const Track& track) const {
   if (track.p3().Pt() > m_electronAcceptanceMagnitude && fabs(track.theta()) < thetaMax)
     return rootrandom::Random::uniform(0, 1) > m_electronAcceptanceEfficiency;
   return false;
-  return std::dynamic_pointer_cast<const ClicTracker>(m_tracker)->electronAcceptance(m_electronAcceptanceMagnitude,
-                                                                                     track);
 }
 
 double Clic::electronEnergyResolution(const Particle& ptc) const {
