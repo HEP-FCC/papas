@@ -52,8 +52,9 @@ public:
           double etaEndcapMax = 3.,
           const std::vector<double> emin = {0.3, 1},  // emin barrel and endcap
           const std::vector<std::vector<double>> eres = {{4.22163e-02, 1.55903e-01, 7.14166e-03},
-                                                   {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
-          const std::vector<std::vector<double>> eresp = {{1.00071, -9.04973, -2.48554}, {9.95665e-01, -3.31774, -2.11123}});
+                                                         {-2.08048e-01, 3.25097e-01, 7.34244e-03}},
+          const std::vector<std::vector<double>> eresp = {{1.00071, -9.04973, -2.48554},
+                                                          {9.95665e-01, -3.31774, -2.11123}});
 
   /** Minimum cluster size that will be seen by a detector
    @param[in] ptc particle that is to be detected

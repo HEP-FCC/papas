@@ -9,7 +9,7 @@
 #include "papas/detectors/Tracker.h"
 #include "papas/simulation/HelixPropagator.h"
 #include "papas/simulation/StraightLinePropagator.h"
-#include "papas/utility/Log.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 
@@ -47,6 +47,14 @@ void Simulator::simulateParticle(const Particle& ptc) {
     // to avoid numerical problems in propagation
     return;
   }
+
+  /* temporary for debugging new Gaudi logging
+  PAPASLOG_INFO("Simulating info");
+  PAPASLOG_VERBOSE("Simulating verbose");
+  PAPASLOG_DEBUG("Simulating debug");
+  PAPASLOG_WARNING("Simulating warning");
+  PAPASLOG_ERROR("Simulating error");
+  PAPASLOG_FATAL("Simulating fatal");*/
 
   PDebug::write("Simulating {}", ptc);
   if (pdgid == 22) {
@@ -218,9 +226,9 @@ Cluster Simulator::makeAndStoreEcalCluster(const Particle& ptc, double fraction,
     m_ecalClusters.emplace(id, std::move(cluster));
     return m_ecalClusters[id];
   } else {
-    Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
-              "to EcalIn cylinder \n",
-              ptc, ptc.startVertex().Perp(), ptc.startVertex().Z());
+    std::string outstring =
+    string_format("SimulationError : cannot make cluster for particle:%s with vertex rho %d, z %d. Cannot be extrapolated to EcalIn cylinder", IdCoder::pretty(ptc.id()).c_str(), ptc.startVertex().Perp(), ptc.startVertex().Z());
+    PAPASLOG_WARNING(outstring);
     std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
                           "now, problem will be solved :-)";
     throw message;
@@ -241,9 +249,9 @@ Cluster Simulator::makeAndStoreHcalCluster(const Particle& ptc, double fraction,
     m_hcalClusters.emplace(id, std::move(cluster));
     return m_hcalClusters[id];
   } else {
-    Log::warn("SimulationError : cannot make cluster for particle:{} with vertex rho {}, z {}. Cannot be extrapolated "
-              "to HcalIn cylinder \n",
-              ptc, ptc.startVertex().Perp(), ptc.startVertex().Z());
+    std::string outstring =
+    string_format("SimulationError : cannot make cluster for particle:%s with vertex rho %d, z %d. Cannot be extrapolated to HcalIn cylinder", IdCoder::pretty(ptc.id()).c_str(), ptc.startVertex().Perp(), ptc.startVertex().Z());
+    PAPASLOG_WARNING(outstring);
     std::string message = "Particle not extrapolated to the detector, so cannot make a cluster there. No worries for "
                           "now, problem will be solved :-)";
     throw message;

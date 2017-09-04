@@ -1,7 +1,7 @@
 #include "papas/detectors/clic/ClicTracker.h"
 
-#include "papas/datatypes/Track.h"
 #include "papas/datatypes/Particle.h"
+#include "papas/datatypes/Track.h"
 #include "papas/utility/TRandom.h"
 
 #include <cmath>
@@ -12,7 +12,7 @@ namespace papas {
 ClicTracker::ClicTracker(double radius, double z, double x0, double lambdaI, double thetaParam,
                          const std::map<int, std::pair<double, double>> resMap, double ptThresholdLow,
                          double ptProbabilityLow, double ptThresholdHigh, double ptProbabilityHigh)
-    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("Clic_Tracker", 0, 0)),
+    : Tracker(Layer::kTracker, VolumeCylinder(Layer::kTracker, radius, z), Material("Clic_Tracker", x0, lambdaI)),
       m_thetaMax(thetaParam * M_PI / 180.),  // 80
       m_resMap(resMap),                      // m_resMap = {{90, {8.2e-2, 9.1e-2}},
                                              // {80, {8.2e-4, 9.1e-3}},
@@ -48,30 +48,24 @@ double ClicTracker::resolution(const Track& track) const {
   double pt = track.p3().Pt();
   // matching the resmap defined above.
   double theta = fabs(track.theta()) * 180 / M_PI;
-  for (const auto& v : m_resMap) { 
+  for (const auto& v : m_resMap) {
     if (theta < v.first) return sigmaPtOverPt2(v.second.first, v.second.second, pt) * pt;
   }
   throw "tracker resolution not found";
   return 0;
 }
 
-  double ClicTracker::particleResolution(const Particle& ptc) const {
-    //not very nice due to particle being fed through into a track parameter in python
-    //will do for now
-    double pt = ptc.p3().Pt();
-    // matching the resmap defined above.
-    double theta = fabs(ptc.theta()) * 180 / M_PI;
-    for (const auto& v : m_resMap) {
-      if (theta < v.first) return sigmaPtOverPt2(v.second.first, v.second.second, pt) * pt;
-    }
-    throw "tracker particle resolution not found";
-    return 0;
+double ClicTracker::resolution(const Particle& ptc) const {
+  // not very nice due to particle being fed through into a track parameter in python
+  // will do for now
+  double pt = ptc.p3().Pt();
+  // matching the resmap defined above.
+  double theta = fabs(ptc.theta()) * 180 / M_PI;
+  for (const auto& v : m_resMap) {
+    if (theta < v.first) return sigmaPtOverPt2(v.second.first, v.second.second, pt) * pt;
   }
-  
-  bool ClicTracker::electronAcceptance(double mag, const Track& track) const {
-    if ( track.p3().Pt() > mag && fabs(track.theta()) < m_thetaMax)
-      return rootrandom::Random::uniform(0, 1) > 0.95;
-    return false;
-  }
-  
-}// end namespace papas
+  throw "tracker particle resolution not found";
+  return 0;
+}
+
+}  // end namespace papas

@@ -31,6 +31,7 @@ public:
            field,
        double electronAcceptanceMagnitude = 5.,
        double electronAcceptanceEta = 2.5,
+       double electronAcceptanceEfficiency = 0.95,
        double muonAcceptanceMagnitude = 7.5,
        double muonAcceptanceTheta = 80,
        double muonResolution = 0.02);
@@ -54,15 +55,14 @@ public:
 private:
   double m_electronAcceptanceMagnitude;  ///< minimum energy for electron acceptance
   double m_electronAcceptanceEta;        ///< maximum eta for electron acceptance
+  double m_electronAcceptanceEfficiency; ///< efficiency for electron acceptance
   double m_muonAcceptanceMagnitude;      ///< minimum energy for muon acceptance
   double m_muonAcceptanceTheta;          ///< maximum theta for muon acceptance
-  double m_electronEnergyFactor;         ///< electron energy resolution parameter
   double m_muonResolution;               ///< muon resolution
 };
-  
-  /* creates a default Clic detector
-   */
-  Clic CreateDefaultClic();
+/* creates a default Clic detector
+ */
+Clic CreateDefaultClic();
 
 }  // end namespace papas
 #endif

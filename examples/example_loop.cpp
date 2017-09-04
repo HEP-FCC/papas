@@ -11,6 +11,7 @@
 #include "PythiaConnector.h"
 #include "papas/detectors/cms/CMS.h"
 #include "papas/reconstruction/PapasManager.h"
+#include "papas/utility/Logger.h"
 #include "papas/utility/PDebug.h"
 #include "papas/utility/TRandom.h"
 
@@ -22,7 +23,8 @@ int main(int argc, char* argv[]) {
 
   papas::PDebug::File("physics.txt");
   rootrandom::Random::seed(0xdeadbeef);
-
+  papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::ERROR);
+ 
   if (argc != 2) {
     std::cerr << "Usage: ./mainexe filename" << std::endl;
     return 1;

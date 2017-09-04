@@ -6,8 +6,8 @@
 namespace papas {
 
 ClicHCAL::ClicHCAL(double innerRadius, double innerZ, double outerRadius, double outerZ, double clusterSize,
-                   const std::vector<double> eresBarrel, double x0, double lambdaI, double eResponse, double etaAcceptance,
-                   double energyAcceptance)
+                   const std::vector<double> eresBarrel, double x0, double lambdaI, double eResponse,
+                   double etaAcceptance, double energyAcceptance)
     : Calorimeter(Layer::kHcal,
                   VolumeCylinder(Layer::kHcal, outerRadius, outerZ, innerRadius, innerZ),
                   Material("Clic_HCAL", x0, lambdaI)),
@@ -26,7 +26,7 @@ double ClicHCAL::clusterSize(const Particle& ptc) const {
 bool ClicHCAL::acceptance(const Cluster& cluster) const {
   auto energy = cluster.energy();
   auto eta = fabs(cluster.position().Eta());
-  if (eta < m_etaAcceptance)  
+  if (eta < m_etaAcceptance)
     return (energy > m_energyAcceptance);  // 1.
   else
     return false;
