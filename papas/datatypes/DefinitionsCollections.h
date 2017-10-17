@@ -1,7 +1,9 @@
 #ifndef DefinitionsCollections_h
 #define DefinitionsCollections_h
 
+#include "papas/utility/PapasPreProcessor.h"
 #include "papas/datatypes/IdCoder.h"
+
 
 #include <list>
 #include <unordered_map>
@@ -20,7 +22,7 @@ class Particle;
 
 typedef std::list<Particle> ListParticles;         ///< list of Particles
 typedef std::unordered_map<uint64_t, Edge> Edges;  ///< collection of Edge objects
-#if WITHSORT
+#if PAPASWITHSORT
 typedef std::set<Identifier, std::greater<Identifier>> Ids;  ///< set containing Identifiers
 #else
 typedef std::unordered_set<Identifier> Ids;  ///< set containing Identifiers

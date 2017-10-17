@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   // open the Pythia file fname
   try {
     PythiaConnector pythiaConnector(fname);
-#if WITHSORT
+#if PAPASWITHSORT
     std::cout << "doing sorting";
 #else
     std::cout << "no sort";

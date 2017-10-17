@@ -7,18 +7,15 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable(example_simple example_simple.cpp PythiaConnector.cpp )
-target_compile_definitions(example_simple PRIVATE WITHSORT=1)
 target_link_libraries(example_simple papas ${ROOT_LIBRARIES}   datamodel datamodelDict podio utilities)
 
 add_executable(example_loop example_loop.cpp PythiaConnector.cpp)
-target_compile_definitions(example_loop PRIVATE WITHSORT=1)
 target_link_libraries(example_loop papas ${ROOT_LIBRARIES}  datamodel datamodelDict podio utilities)
 
 add_executable(example_pair example_dag_pair.cpp)
 target_link_libraries(example_pair papas ${ROOT_LIBRARIES} )
 
 add_executable(example_pdebug example_pdebug_python_comparer.cpp  PythiaConnector.cpp )
-target_compile_definitions(example_pdebug PRIVATE WITHSORT=1)
 target_link_libraries(example_pdebug papas ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
 
 add_executable(example_plot example_plot.cpp  PythiaConnector.cpp )

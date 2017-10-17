@@ -19,7 +19,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 #--- Declare ROOT dependency ---------------------------------------------------
 if(APPLE)
 	set(CMAKE_MACOSX_RPATH 1)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
+	#set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
   find_package(ROOT REQUIRED COMPONENTS RIO Tree)
   include_directories(${ROOT_INCLUDE_DIRS})
   add_definitions(${ROOT_CXX_FLAGS})
