@@ -7,7 +7,7 @@
 
 #include <list>
 #include <unordered_map>
-#if WITHSORT
+#if WITHSORT or PAPASWITHSORT
 #include <set>
 #else
 #include <unordered_set>
