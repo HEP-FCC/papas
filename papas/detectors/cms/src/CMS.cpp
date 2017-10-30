@@ -81,7 +81,7 @@ CMS CreateDefaultCMS() {
                                               eresECAL,
                                               erespECAL);
 
-  std::vector<std::vector<double>> eresHCAL = {{0.8062, 2.753, 0.1501}, {6.803e-06, 6.676, 0.1716}};
+  std::vector<std::vector<double>> eresHCAL = {{1.1, 0., 0.09}, {1.1, 0., 0.09}};
   std::vector<std::vector<double>> erespHCAL = {{1.036, 4.452, -2.458}, {1.071, 9.471, -2.823}};
   std::vector<double> acceptanceParameters = {1.,  // energy
                                               1.,           -1.9381,     -1.75330,    3.,       1.1,      10., 1.05634,

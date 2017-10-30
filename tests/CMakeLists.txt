@@ -11,7 +11,6 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 message(${MAINDIR} ${INCLUDE_DIRECTORIES})
 
 add_executable(utests unittest.cpp )
-target_compile_definitions(utests PRIVATE WITHSORT=1)
 target_link_libraries(utests  papas ${ROOT_LIBRARIES} datamodel datamodelDict podio utilities)
 
 
