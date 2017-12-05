@@ -30,7 +30,7 @@ You need to install:
 
 - The FCC packages needed to produce and read events in the FCC event data model (EDM):
  * podio (add link to tutorial): a package allowing to define event data models and to manipulate EDM events.
- * fcc-edm (add link to tutorial): definition of the FCC EDM, based on podio
+ * fcc-edm (add link to tutorial): definition of the FCC EDM, based on podio.
 
 - You may also find it useful to have
  * pythia8 (add link)
