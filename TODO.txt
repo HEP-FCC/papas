@@ -50,4 +50,3 @@ Others
 Attend to TODOs and comments in the existing code
 
 
-In progress: Constructors syntax remove {}

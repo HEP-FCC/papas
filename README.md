@@ -30,7 +30,7 @@ If you're working on lxplus, all the necessary software has been preinstalled fo
 Before installing and everytime you want to use this software on lxplus, set up your environment.
 
 ```bash
-source init.sh
+source ./init.sh
 ```
 
 

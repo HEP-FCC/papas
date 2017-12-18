@@ -1,11 +1,4 @@
-
-//
-//  example_simple.cpp
-//
-//  Created by Alice Robson on 14/01/16.
-//
-//
-// C++
+// Produces an event display via ROOT (includes writing jpg files)
 #include <iostream>
 #include <stdio.h>
 
@@ -25,13 +18,9 @@ int main(int argc, char* argv[]) {
   rootrandom::Random::seed(0xdeadbeef);
   papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::ERROR);
 
-  if (argc < 2) {
-    std::cerr << "Usage: ./example_plot filename [logname]" << std::endl;
+  if (argc != 2) {
+    std::cerr << "Usage: ./example_plot filename " << std::endl;
     return 1;
-  }
-  if (argc == 3) {
-    const char* lname = argv[2];
-    PDebug::File(lname);  // physics debug output
   }
 
   const char* fname = argv[1];
@@ -44,7 +33,9 @@ int main(int argc, char* argv[]) {
   unsigned int eventNo = 0;
   pythiaConnector.processEvent(eventNo, papasManager);
   TApplication tApp("theApp", &argc, argv);
+  //display to screen and to jpeg
   pythiaConnector.displayEvent(papasManager);
   papasManager.clear();
+  tApp.Run();
   return EXIT_SUCCESS;
 }

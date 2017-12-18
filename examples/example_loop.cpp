@@ -1,10 +1,4 @@
-//
-//  example_loop.cpp
-//
-//  Created by Alice Robson on 14/01/16.
-//
-//
-// C++
+// Example to run a sequence of events in papas
 #include <iostream>
 #include <stdio.h>
 

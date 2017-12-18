@@ -11,7 +11,6 @@
 #include "papas/reconstruction/PapasManager.h"
 #include "papas/reconstruction/PapasManager.h"
 
-//#include "datamodel/CaloClusterCollection.h"
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ParticleCollection.h"
 #include "utilities/ParticleUtils.h"
@@ -163,7 +162,7 @@ void PythiaConnector::processEvent(unsigned int eventNo, std::shared_ptr<papas::
 void PythiaConnector::displayEvent(const papas::PapasManager& papasManager) {
   papas::PFApp myApp{};  // I think this should turn into a PapasManager member
   myApp.display(papasManager.event(), papasManager.detector());
-  // gSystem->ProcessEvents();
+  myApp.jpg();
 }
 
 void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particles& particles) {
@@ -199,70 +198,3 @@ void PythiaConnector::writeParticlesROOT(const char* fname, const papas::Particl
   writer.finish();
 }
 
-/*
- void PythiaConnector::writeClustersROOT(const char* fname, const papas::Clusters& clusters) {
-
- podio::ROOTWriter writer(fname, &m_store);
- unsigned int nevents = 1;
- unsigned int eventno = 0;
- auto& evinfocoll = m_store.create<fcc::EventInfoCollection>("evtinfo");
- auto& ccoll = m_store.create<fcc::CaloClusterCollection>("Cluster");
-
- writer.registerForWrite("evtinfo");
- writer.registerForWrite("Cluster");
-
- auto evinfo = fcc::EventInfo();  // evinfocoll.create();
- evinfo.number(eventno);
- evinfocoll.push_back(evinfo);
- AddClustersToEDM(clusters, ccoll);
-
- auto checkClusters = ConvertClustersToPapas(ccoll,
- 0,  // size or 0 for merged
- papas::IdCoder::ItemType::kEcalCluster,
- 's');
-
- writer.writeEvent();
- m_store.clearCollections();
- writer.finish();
- }
-
- papas::Clusters PythiaConnector::ConvertClustersToPapas(const fcc::CaloClusterCollection& fccClusters,
- float size,
- papas::IdCoder::ItemType itemtype,
- char subtype) const {
- papas::Clusters clusters;
- for (const auto& c : fccClusters) {
- const auto position = c.core().position;
- const auto energy = c.core().energy;
- papas::Cluster cluster(energy, TVector3(position.x, position.y, position.z), size, clusters.size(), itemtype,
- subtype);
- clusters.emplace(cluster.id(), std::move(cluster));
- }
- return clusters;
- }
-
- void PythiaConnector::AddClustersToEDM(const papas::Clusters& papasClusters, fcc::CaloClusterCollection& fccClusters) {
- for (const auto& c : papasClusters) {
- auto clust = fccClusters.create();
- clust.core().energy = c.second.energy();
- auto& p3 = clust.core().position;
- p3.x = c.second.position().X();
- p3.y = c.second.position().Y();
- p3.z = c.second.position().Z();
- }
- }
- */
-/*void PythiaConnector::readClustersROOT(unsigned int eventNo, papas::PapasManager& papasManager) {
-
- const fcc::ParticleCollection* ptcs(nullptr);
- if (m_store.get("GenParticle", ptcs)) {
- papas::Particles papasparticles = makePapasClustersFromCaloClusts(ptcs);
- papasManager.storeParticles(std::move(papasparticles));
- papasManager.simulateEvent();
- papasManager.mergeClusters();
- papasManager.reconstructEvent();
- m_store.clear();
- }
-
- m_reader.endOfEvent();
- }*/
