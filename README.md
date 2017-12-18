@@ -1,10 +1,14 @@
 # PAPAS (PArametrized PArticle Simulation)
 
-UNDER Development and Testing
+# Overview
+
+PAPAS (PArametrized PArticle Simulation) provides particle simulation and reconstruction algorithms to allow users to test the performance of detector designs. The approach is fast simulation/ reconstruction. 
+
+CMS and Clic detectors have already been implemented in Papas. Other detectors can be added in by users by providing simple C++ classes to define key detector parameters eg tracker acceptance and calorimeter radius and length. See https://github.com/HEP-FCC/papas/blob/master/doc/defining_a_detector.md for more details.
+
+This version of Papas is implemented in C++ as a library. The library is interfaced from FCCSW to allow the papas algorithms to be run. It is also possible to run papas as a standalone, or (if using Heppy) as a Python version.
 
 # Introduction
-
-PAPAS (PArametrized PArticle Simulation) provides simulation and reconstruction reconstruction algorithm which is designed to allow users to test the performance of detector design. The approach is fast simulation/ reconstruction. Users must provide simple C++ classes to define key detector parameters eg tracker acceptance and calorimeter radius and length. An implementation of the CMS detector is provided as a starting point.
 
 PAPAS propagates stable generated particles through a simple detector model.
 
@@ -12,39 +16,31 @@ In the tracker, charged particles may be detected as tracks, taking into account
 
 In the calorimeters, particles are detected as energy deposits. The energy deposits are modelled by taking into account the following detector properties: energy resolution, acceptance, energy thresholds and characteristic size. The latter is defined as the distance between two clusters below which the two clusters cannot be resolved and are considered as a single cluster.
 
-A particle flow algorithm then runs over the simulated tracks and clusters to identify and reconstruct charged hadrons, photons, and neutral hadrons. These particles can then be used as an input to higher-level algorithms like jet clustering, or directly in the analysis.
+A particle flow algorithm then runs over the simulated tracks and clusters to identify and reconstruct charged hadrons, photons, and neutral hadrons. These particles can then be used as an input to higher-level algorithms like jet clustering via Heppy.
 
-TIP Electrons and muons are passed through PAPAS without any modification, and the user is responsible for applying is own efficiency and resolution models. The hadronic decay products of tau leptons are simulated just like other hadrons and photons.
+In Papas, electrons and muons do not simulate energy deposits in the calorimeters. The hadronic decay products of tau leptons are simulated just like other hadrons and photons.
 
-A CMS-like detector model is provided as an example.
+A CMS and Clic detector model have been implemented.
 
 ## Installing
 
-### Required software
 
-If you're working on lxplus, all the necessary software has been preinstalled for you and you can just proceed with installing the fcc-physics package.
+If you're working on lxplus, all the necessary software has been preinstalled for you and you can just proceed with installing the papas package.
 
-The other supported operating systems are ubuntu 14, macos X, and slc6 (other than lxplus nodes).
-
-You need to install:
-
-- The FCC packages needed to produce and read events in the FCC event data model (EDM):
- * podio (add link to tutorial): a package allowing to define event data models and to manipulate EDM events.
- * fcc-edm (add link to tutorial): definition of the FCC EDM, based on podio
-
-- You may also find it useful to have
- * pythia8 (add link)
-
-
-### Installing the Papas package
-
-Before installing and everytime you want to use this software on lxplus, set up your environment:
+Before installing and everytime you want to use this software on lxplus, set up your environment.
 
 ```bash
 source init.sh
 ```
 
-On other systems make sure you have PODIO, FFCEDM and ROOT environment variables set up.
+
+The other supported operating systems are Mac OSX, and slc6 (other than lxplus nodes).
+
+For these you need to install:
+    PODIO
+    DAG
+    FCCEDM
+    ROOT 
 
 
 ### Compilation
@@ -81,7 +77,7 @@ To run example_simple:
 
  1. create a Pythia example.root file eg by following:-
 
-https://twiki.cern.ch/twiki/bin/view/FCC/FccSoftwareHeppy
+http://fccsw.web.cern.ch/fccsw/tutorials/fcc-tutorials/FccSoftwareGettingStartedFastSim.html
 
  2. Then run Papas on this file
 
@@ -125,10 +121,11 @@ The example will also produce an output root file containing the reconstructed p
 mkdir xbuild
 cd xbuild
 cmake -G Xcode ../
-make
+open papas.xcodeproj
 ´´´
 
-NB for now will be necessary to set in edit screen/ run.
+NB It will necessary to set DYLD_LIBRARY_PATH in edit screen/ run.
 ```
+eg:-
 DYLD_LIBRARY_PATH=Users/alice/local/root/lib:/Users/alice/fccwork/fcc-edm/install/lib:/Users/alice/fccwork/podio/install/lib:/Users/alice/local/lib
 ```
