@@ -1,6 +1,6 @@
 # Key Design/Implementation Details
 
-PAPAS uses directed Acyclic graph structures together with object unique identifiers to keep track of the links between particles and structures.
+PAPAS uses Directed Acyclic Graph structures together with object unique identifiers to keep track of the links between particles and structures.
 
 ## Identifiers
 
@@ -8,7 +8,7 @@ In PAPAS each cluster, track, particle etc is given a unique Identifier.
 
 An Identifier is a 64 bit unsigned integer encoded using bit shifts:-
  * a unique id (counter 1, 2, 3 etc) and
- * the item type: ecal, hcal, track, particle...
+ * the item type: ecal, hcal, track, particle... (an enumeration)
  * the object subtype eg
       *  't' = true
       *  's' = smeared/simulated
@@ -27,7 +27,6 @@ In a Directed Acyclic Graph (DAG)
 
 ￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼PAPAS includes a  DirectedAcyclicTool library that provides (templated) classes/ algorithms & allows graph to be traversed, subgraphs to be identified
 
-TODO add link to DAG tool documentation
 
 ## PAPAS approach
 

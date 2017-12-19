@@ -1,11 +1,5 @@
 
-//
-//  example_simple.cpp
-//
-//  Created by Alice Robson on 14/01/16.
-//
-//
-// C++
+//Example to run papas and create output root file and plots (to screen and to jpeg)
 #include <iostream>
 #include <stdio.h>
 
@@ -26,17 +20,12 @@ int main(int argc, char* argv[]) {
   rootrandom::Random::seed(0xdeadbeef);
   papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::ERROR);
 
-  if (argc < 2) {
-    std::cerr << "Usage: ./example_debug filename [logname]" << std::endl;
+  if (argc != 2) {
+    std::cerr << "Usage: ./example_debug filename" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
   PythiaConnector pythiaConnector(fname);
-
-  if (argc == 3) {
-    const char* lname = argv[2];
-    papas::PDebug::File(lname);  // physics debug output
-  }
 
   // Create CMS detector and PapasManager
   papas::CMS CMSDetector = papas::CreateDefaultCMS();
@@ -55,17 +44,15 @@ int main(int argc, char* argv[]) {
       std::cout << "  " << p.second << std::endl;
     }
     std::cout << "Reconstructed Particles: " << std::endl << papasManager.event().particles('r').size() << std::endl;
-    ;
     for (const auto& p : papasManager.event().particles('r')) {
       std::cout << "  " << p.second << std::endl;
     }
-
-    // testing (move elsewhere)
-    // pythiaConnector.writeClustersROOT("simpleeg.root", papasManager.event().clusters("em"));
-
-    // produce papas display
     TApplication tApp("theApp", &argc, argv);
+    //display to screen and to jpeg
     pythiaConnector.displayEvent(papasManager);
+    papasManager.clear();
+    tApp.Run();
+
     return EXIT_SUCCESS;
   } catch (std::runtime_error& err) {
     std::cerr << err.what() << ". Quitting." << std::endl;

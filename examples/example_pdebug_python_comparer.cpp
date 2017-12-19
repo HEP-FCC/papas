@@ -1,4 +1,4 @@
-
+//Example to produce physics debug output
 #include <iostream>
 #include <stdio.h>
 
@@ -23,8 +23,8 @@ int main(int argc, char* argv[]) {
   //start the logger
   papaslog::papaslogger = papaslog::getDefaultLogger("Papas LOG", papaslog::Logging::VERBOSE);
 
-  if (argc < 4) {
-    std::cerr << "Usage: ./example_debug filename detector [logname]" << std::endl;
+  if (argc != 4) {
+    std::cerr << "Usage: ./example_debug filename detector pdebug_log_name" << std::endl;
     return 1;
   }
   const char* fname = argv[1];
@@ -32,11 +32,8 @@ int main(int argc, char* argv[]) {
 
   std::string detname = argv[2];
 
-  if (argc == 4) {
-    const char* lname = argv[3];
-    PDebug::File(lname);  // physics debug output
-  }
-
+  const char* lname = argv[3];
+  PDebug::File(lname);  // physics debug output
  
   PAPASLOG_VERBOSE("Starting run");
   auto cmsdetector = CreateDefaultCMS();
@@ -67,9 +64,6 @@ int main(int argc, char* argv[]) {
     }
 
     pythiaConnector.processEvent(i, papasManager);
-    /*if (i==0)
-      papasManager.display();
-    gSystem->ProcessEvents();*/
   }
 
   auto end = std::chrono::steady_clock::now();

@@ -80,14 +80,6 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 add_subdirectory(papaslib)
 add_subdirectory(examples)
 add_subdirectory(tests)
-#add_subdirectory(graphtools)
-#add_subdirectory(dageg)
-
-#
-#this test only if R/Rcpp/Rinside are installed version 3.2+
-#note there are a lot of R related warnings (originating from R)
-#add_subdirectory(tests/rtest)
-
 
 
 
