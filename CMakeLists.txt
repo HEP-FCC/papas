@@ -6,6 +6,7 @@ set( papas_VERSION_MINOR 1 )
 set( papas_VERSION_PATCH 0 )
 set( papas_VERSION "${papas_VERSION_MAJOR}.${papas_VERSION_MINOR}" )
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")

@@ -2,10 +2,10 @@
 #This file runs a Clic example to produce a physics debug output file
 #The physics output is then compared against the required physics file
 #The required file will need to be updated when the physics changes
-FILE="compare.out"
-PHYSICS="physicsdd.txt"
-MATCHPHYSICS=$FCCPAPASCPP/data/required_clic_physics_dd.txt
-ROOTFILE=$FCCPAPASCPP/data/ee_Z_ddbar.root
+FILE="examples/compare.out"
+PHYSICS="examples/physicsdd.txt"
+MATCHPHYSICS=data/required_clic_physics_dd.txt
+ROOTFILE=data/ee_Z_ddbar.root
 if [ -f $FILE ]
 then
   rm $FILE
@@ -14,7 +14,7 @@ if [ -f $PHYSICS ]
 then
   rm $PHYSICS
 fi
-$FCCPAPASCPP/bin/example_pdebug $ROOTFILE CLIC $PHYSICS
+example_pdebug $ROOTFILE CLIC $PHYSICS
 if ([ -f $PHYSICS ] && [ -f $MATCHPHYSICS ])
 then
 #echo "difference files"

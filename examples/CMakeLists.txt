@@ -40,10 +40,12 @@ install(TARGETS example_plot DESTINATION bin)
 FILE(GLOB files "${CMAKE_SOURCE_DIR}/examples/data/*")
 INSTALL(FILES ${files} DESTINATION data/)
 
+file(COPY "${CMAKE_SOURCE_DIR}/examples/data" DESTINATION "${CMAKE_BINARY_DIR}" )
+
 # --- adding tests for examples ------------------------------
-add_test(NAME example_loop  COMMAND example_loop ${CMAKE_SOURCE_DIR}/examples/data/ee_ZH_Zmumu_Hbb.root WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} )
+add_test(NAME example_loop  COMMAND bin/example_loop data/ee_ZH_Zmumu_Hbb.root WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 set_property(TEST example_loop PROPERTY DEPENDS fcc-generate)
-add_test(NAME test_debug_cms COMMAND /bin/bash ${CMAKE_PREFIX_PATH}/data/pdebug_CMS.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
+add_test(NAME test_debug_cms COMMAND /bin/bash data/pdebug_CMS.sh WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 set_tests_properties(test_debug_cms PROPERTIES PASS_REGULAR_EXPRESSION "compare.out matches")
-add_test(NAME test_debug_clic COMMAND /bin/bash ${CMAKE_PREFIX_PATH}/data/pdebug_CLIC.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}  )
+add_test(NAME test_debug_clic COMMAND /bin/bash data/pdebug_CLIC.sh WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 set_tests_properties(test_debug_clic PROPERTIES PASS_REGULAR_EXPRESSION "compare.out matches")
