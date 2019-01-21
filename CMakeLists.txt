@@ -29,8 +29,9 @@ else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -latomic")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP_STANDARD_FLAGS} -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter")
   set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-  find_package(ROOT REQUIRED COMPONENTS RIO Tree)
+  find_package(ROOT REQUIRED COMPONENTS RIO Tree Graf)
   include_directories(${ROOT_INCLUDE_DIR})
+  include(${ROOT_USE_FILE})
 endif(APPLE)
 
 #---PODIO and FCC-EDM-----------------------------------------------------------
@@ -87,8 +88,3 @@ add_subdirectory(tests)
 #this test only if R/Rcpp/Rinside are installed version 3.2+
 #note there are a lot of R related warnings (originating from R)
 #add_subdirectory(tests/rtest)
-
-
-
-
-

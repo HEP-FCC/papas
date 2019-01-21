@@ -79,6 +79,6 @@ ${CMAKE_SOURCE_DIR}
 )
 
 add_library(papas SHARED ${sources} )
-target_link_libraries(  papas ${ROOT_LIBRARIES} )
+target_link_libraries(  papas ROOT::RIO ROOT::Tree ROOT::Physics ROOT::Core ROOT::Graf ROOT::Gpad)
 install(TARGETS papas DESTINATION lib)
 
