@@ -1,22 +1,10 @@
-platform='unknown'
-sw_afs=0
-unamestr=`uname`
+# Detect os
+TOOLSPATH=/cvmfs/fcc.cern.ch/sw/0.8.3/tools/
+OS=`python $TOOLSPATH/hsf_get_platform.py --get os`
 
-if [ -z ${FCCPAPASCPP+x} ]; then
-    unset $FCCPAPASCPP
-    echo "FCCPAPASCPP is unset, setting to $PWD/install";
-    export FCCPAPASCPP=$PWD/install
-    export PATH=$FCCPAPASCPP/bin:$PATH    
-fi
+# source FCC externals
+source /cvmfs/fcc.cern.ch/sw/views/releases/externals/93.0.0/x86_64-$OS-gcc62-opt/setup.sh
 
-if [[ "$unamestr" == 'Linux' ]]; then
-    platform='Linux'
-    export LD_LIBRARY_PATH=$FCCPAPASCPP/lib:$LD_LIBRARY_PATH
-    source /cvmfs/fcc.cern.ch/sw/0.8.1/init_fcc_stack.sh $1
-#export LCGPATH=/afs/cern.ch/sw/lcg/views/LCG_83/x86_64-slc6-gcc49-opt
-elif [[ "$unamestr" == 'Darwin' ]]; then
-    platform='Darwin'
-    export DYLD_LIBRARY_PATH=$FCCPAPASCPP/lib:$DYLD_LIBRARY_PATH
-fi
-echo platform detected: $platform
-export PYTHONPATH=$FCCPAPASCPP/python:$PYTHONPATH
+# CMakeLists.txt relies on some environment variables
+export PODIO=$FCCVIEW
+
