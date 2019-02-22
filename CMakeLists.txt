@@ -17,18 +17,32 @@ option(papas_documentation "Whether or not to create doxygen doc target." ON)
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} $ENV{PODIO} $ENV{FCCEDM})
 
+#--- C++ Standard --------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14 CACHE STRING "")
+
+if(NOT CMAKE_CXX_STANDARD MATCHES "14|17")
+  message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
+endif()
+
+message (STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
+if(APPLE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}\ -stdlib=libc++")
+else() 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}\ -latomic")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP_STANDARD_FLAGS} -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter")
+endif(APPLE)
+
 #--- Declare ROOT dependency ---------------------------------------------------
 if(APPLE)
-	set(CMAKE_MACOSX_RPATH 1)
-	#set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
+  set(CMAKE_MACOSX_RPATH 1)
+  #set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
   find_package(ROOT REQUIRED COMPONENTS RIO Tree)
   include_directories(${ROOT_INCLUDE_DIRS})
   add_definitions(${ROOT_CXX_FLAGS})
   include("${ROOT_USE_FILE}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -stdlib=libc++")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14\ -latomic")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DDROP_CGAL ${CPP_STANDARD_FLAGS} -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter")
   set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
   find_package(ROOT REQUIRED COMPONENTS RIO Tree Graf)
   include_directories(${ROOT_INCLUDE_DIR})
