@@ -65,7 +65,7 @@ message(STATUS "Found fcc-edm: ${fccedm_DIR}")
 link_directories(${fccedm_DIR})
 
 include_directories(
-"${podio_INCLUDE_DIRS}"
+"${podio_INCLUDE_DIR}"
 "${FCCEDM_INCLUDE_DIRS}"
 )
 
